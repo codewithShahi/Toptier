@@ -1,1 +1,1 @@
-export {default as FeatureHotels} from "./featureHotels";
+export {default as FeaturedHotels} from "./featureHotels";

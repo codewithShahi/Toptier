@@ -54,13 +54,7 @@ export const fetchAppData = async () => {
       headers: {
         // Don’t set Content-Type (fetch will do it automatically for FormData)
         "Accept": "application/json, text/plain, */*",
-        "User-Agent":
-          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 " +
-          "(KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36",
-        "Accept-Language": "en-US,en;q=0.9",
-        "Cache-Control": "no-cache",
-        "Pragma": "no-cache",
-        "Connection": "keep-alive",
+
       },
     });
 
@@ -81,15 +75,17 @@ export const fetchAppData = async () => {
 
 export const fetchCountries = async () => {
   try {
+    const formData = new FormData();
+    formData.append("api_key", api_key ?? "");
+
     const response = await fetch(`${baseUrl}/countries`, {
       method: "POST",
-      body: JSON.stringify({
-        domain: "booknow.co",
-      }),
- headers: await getHeaders("application/json"),
+      body: formData,
+      headers: await getHeaders("application/json"), // do NOT set Content-Type manually
     });
 
     const data = await response.json().catch(() => null);
+    // console.log('countries',data)
     if (!response.ok || data?.status === false) {
       return { error: data?.message || "Something went wrong" };
     }
@@ -99,6 +95,7 @@ export const fetchCountries = async () => {
     return { error: (error as Error).message || "An error occurred" };
   }
 };
+
 // ---------------------------- FETCH DISTINATION FOR FLIGHT INPUT ------------------------//
 
 export const fetchDestinations = async (city: string) => {
@@ -129,27 +126,33 @@ export const sign_up = async (signUpData: {
   first_name: string;
   last_name: string;
   email: string;
-  country_id: number;
+  phone: string;
+  phone_country_code: number | string;
   password: string;
-  // terms: boolean;
+  // terms?: boolean;
 }) => {
   try {
+    const formData = new FormData();
+    formData.append("first_name", signUpData.first_name);
+    formData.append("last_name", signUpData.last_name);
+    formData.append("email", signUpData.email);
+    formData.append("phone", signUpData.phone);
+    formData.append("phone_country_code", String(signUpData.phone_country_code));
+    formData.append("password", signUpData.password);
+    formData.append("api_key", api_key ?? "");
+    formData.append("user_type", "agent");
+
+    // if (signUpData.terms !== undefined) {
+    //   formData.append("terms", signUpData.terms ? "1" : "0");
+    // }
+
     const response = await fetch(`${baseUrl}/signup`, {
       method: "POST",
-      body: new URLSearchParams({
-
-        first_name: signUpData.first_name,
-        last_name: signUpData.last_name,
-        email: signUpData.email,
-        country_id: signUpData.country_id.toString(),
-        password: signUpData.password,
-        // terms: signUpData.terms.toString(),
-      }).toString(),
-             headers: await getHeaders("application/x-www-form-urlencoded"),
-
+      body: formData,
     });
 
     const data = await response.json().catch(() => null);
+
     if (!response.ok || data?.status === false) {
       return { error: data?.message || "Something went wrong" };
     }
@@ -160,29 +163,36 @@ export const sign_up = async (signUpData: {
   }
 };
 
+
 //---------------------------- LOGIN --------------------------------------//
 export const signIn = async (payload: { email: string; password: string }) => {
   try {
+    const formData = new FormData();
+    formData.append("email", payload.email);
+    formData.append("password", payload.password);
+    formData.append("api_key", api_key ?? ""); // ✅ add api_key if needed
+
     const response = await fetch(`${baseUrl}/login`, {
       method: "POST",
-      body: new URLSearchParams({
-        ...payload,
-      }).toString(),
-           headers: await getHeaders("application/x-www-form-urlencoded"),
-
+      body: formData,
+      // ❌ don't set Content-Type, browser sets it for FormData
     });
 
     const data = await response.json().catch(() => null);
+    console.log('login token',data)
     if (!response.ok || data?.status === false) {
       return { error: data?.message || "Something went wrong" };
     }
-    const user = decodeBearerToken(data.data);
-    await createSession(user);
+const userinfo=data?.data
+    // const user = decodeBearerToken(data.data);
+    await createSession(userinfo);
+
     return { success: "Logged in successfully" };
   } catch (error) {
     return { error: (error as Error).message || "An error occurred" };
   }
 };
+
 export const signOut = async () => {
   try {
     await logout();
@@ -230,18 +240,19 @@ export const forget_password = async (payload: {
 // --------------------- ACTIVATE ACCOUNT --------------------------------------//
 export const activate_account = async (payload: {
   user_id: string;
-  token: string;
+  email_code: string;
 }) => {
   try {
-    const response = await fetch(`${baseUrl}/account-activate`, {
+    const formData = new FormData();
+    formData.append("user_id", payload.user_id);
+    formData.append("email_code", payload.email_code);
+    // formData.append("api_key", api_key ?? ""); // ✅ if your API always needs api_key
+
+    const response = await fetch(`${baseUrl}/activation`, {
       method: "POST",
-      body: new URLSearchParams({
-
-        ...payload,
-      }).toString(),
-             headers: await getHeaders("application/x-www-form-urlencoded"),
-
+      body: formData,
     });
+
     const data = await response.json().catch(() => null);
     if (!response.ok || data?.status === false) {
       return { error: data?.message || "Something went wrong" };
@@ -252,6 +263,7 @@ export const activate_account = async (payload: {
     return { error: (error as Error).message || "An error occurred" };
   }
 };
+
 
 //---------------------------- UPDATE PROFILE ---------------------------
 interface User {

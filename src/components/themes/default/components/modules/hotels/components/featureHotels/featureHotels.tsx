@@ -1,210 +1,198 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 import { Icon } from "@iconify/react";
-import { useAppSelector } from "@lib/redux/store";
-// import CustomRating from "@components/core/customRating/customRating";
-type Hotel = {
+
+// ✅ Define Hotel type
+interface Hotel {
   id: number;
   name: string;
   location: string;
-  rating: number;
+  price: number;
+  oldPrice: number;
   reviews: number;
-  amenities: string[];
-  originalPrice: number;
-  discountedPrice: number;
-  discount: string;
-  imageUrl: string;
-};
-const FeatureHotels: React.FC = () => {
-  const { hotels = [] } = useAppSelector((state) => state?.appData?.data?.featured);
-// Manual Star Rating Component (no external lib)
-  const StarRating = ({ rating = 0 }: { rating: number }) => {
-    return (
-      <div className="flex">
-        {[1, 2, 3, 4, 5].map((star) => (
-          <span
-            key={star}
-            className={`text-xs ${
-              star <= rating ? "text-yellow-400" : "text-gray-300"
-            }`}
-          >
-            ★
-          </span>
-        ))}
-      </div>
-    );
-  };
-  const activeHotels = hotels.filter((hotel: any) => hotel.status);
-  if (activeHotels.length === 0) {
-    return (
-      <div className="w-full text-center py-12">
-        <div className="w-16 h-16 bg-gray-100 dark:bg-gray-600 rounded-full flex items-center justify-center mx-auto mb-4">
-          <Icon icon="material-symbols-light:hotel" className="text-2xl text-gray-300" />
-        </div>
-        <h3 className="text-lg font-medium text-gray-700 dark:text-gray-300">No feature hotels available</h3>
-        <p className="text-sm text-gray-500 dark:text-gray-400">Check back later for new listings.</p>
-      </div>
-    );
-  }
+  image: string;
+}
+
+const FeaturedHotels: React.FC = () => {
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+
+  const hotels: Hotel[] = [
+    {
+      id: 1,
+      name: "Marmaris Resort",
+      location: "Marmaris, Turkey",
+      price: 420,
+      oldPrice: 560,
+      reviews: 245,
+      image: "https://images.unsplash.com/photo-1618773928121-c32242e63f39?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    },
+    {
+      id: 2,
+      name: "Istanbul Luxury",
+      location: "Istanbul, Turkey",
+      price: 380,
+      oldPrice: 500,
+      reviews: 180,
+      image: "https://images.unsplash.com/photo-1618773928121-c32242e63f39?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    },
+    {
+      id: 3,
+      name: "Antalya Paradise",
+      location: "Antalya, Turkey",
+      price: 450,
+      oldPrice: 600,
+      reviews: 310,
+      image: "https://images.unsplash.com/photo-1618773928121-c32242e63f39?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    },
+    {
+      id: 4,
+      name: "Antalya Paradise",
+      location: "Antalya, Turkey",
+      price: 450,
+      oldPrice: 600,
+      reviews: 310,
+      image: "https://images.unsplash.com/photo-1618773928121-c32242e63f39?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    },
+  ];
 
   return (
-    <div className="h-full bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-50 py-3 animate-fade-in">
-      <div className="w-full mx-auto">
-        <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {hotels && hotels.length > 0 ? (hotels
-            .filter((hotel: any) => hotel.status)
+    <div className="appHorizantalSpacing py-6">
+      {/* Heading */}
 
-            .map((hotel: any , i:number) => {
+         <div className="text-center mb-12">
+            <h1
+              className="text-4xl font-bold text-gray-900 mb-4"
+              style={{ fontFamily: 'Urbanist, sans-serif' }}
+            >
+            Featured Hotels
+            </h1>
+            <p
+              className="text-lg text-[#697488] max-w-md mx-auto leading-relaxed"
+              style={{ fontFamily: 'Urbanist, sans-serif' }}
+            >
+               Experience world-class comfort and unmatched hospitality in the heart
+          of paradise
+            </p>
+          </div>
 
-              // Support both string and array for amenities
-              let amenitiesArr = [];
-              if (Array.isArray(hotel.amenities)) {
-                amenitiesArr = hotel.amenities;
-              } else if (typeof hotel.amenities === "string") {
-                amenitiesArr = hotel.amenities
-                  .split(",")
-                  .map((a: any) => a.trim());
-              } else {
-                amenitiesArr = ["No amenities listed"];
-              }
-              // console.log("Hotel Data:", hotel);
-              return (
-                <div
-                  key={i}
-                  className="bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-50 rounded-2xl shadow-lg overflow-hidden border border-gray-100 dark:border-gray-700 transition-transform duration-300 group hover:scale-[1.02] hover:shadow-2xl hover:z-10"
-                >
-                  {/* Top Section with Background Image and Zoom Effect */}
-                  <div className="relative h-44 overflow-hidden">
-                    <div
-                      className="w-full h-full bg-cover bg-center transition-transform duration-700 ease-out group-hover:scale-110"
-                      style={{
-                        backgroundImage: `url('${hotel.imageUrl ||
-                          hotel.img ||
-                          "https://iata.co/assets/img/no_image.png"
-                          }')`,
-                      }}
-                    />
-                    {/* Rating Badge */}
-                    <div className="absolute top-3 left-3 bg-white dark:bg-gray-900 bg-opacity-90 text-gray-800 dark:text-yellow-300 px-2 py-1 rounded-lg flex items-center gap-1">
-                      <Icon
-                        icon="material-symbols:star"
-                        width={16}
-                        className="text-yellow-300"
-                      />
-                      <span className="text-xs font-semibold">
-                        {hotel.rating || "4.0"}
-                      </span>
-                    </div>
-                    {/* Discount Badge */}
-                    <div className="absolute top-3 right-3 bg-red-500 text-white px-3 py-1 rounded-lg">
-                      <span className="text-xs font-bold">
-                        {" "}
-                        {hotel.regular_price && hotel.sale_price
-                          ? `-${Math.round(
-                            ((Number(hotel.regular_price) -
-                              Number(hotel.sale_price)) /
-                              Number(hotel.regular_price)) *
-                            100
-                          )}% OFF`
-                          : ""}
-                      </span>
-                    </div>
-                  </div>
-                  {/* Content Section */}
-                  <div className="p-4">
-                    {/* Hotel Name */}
-                    <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-50 mb-2">
-                      {hotel.name || hotel.title || "Hotel Name"}
-                    </h3>
-                    {/* Location */}
-                    <div className="flex items-center gap-1 mb-3">
-                      <Icon
-                        icon="material-symbols:location-on-outline"
-                        width={18}
-                        className="text-blue-500"
-                      />
-                      <span className="text-sm text-gray-600 dark:text-gray-300">
-                        {hotel.location || "Unknown Location"}
-                      </span>
-                    </div>
-                    {/* Amenities */}
-                    <div className="flex gap-3 mb-4">
-                      {amenitiesArr.map((amenity: any, index: number) => (
-                        <div key={index} className="flex items-center gap-1">
-                          <span className="text-xs bg-blue-50 dark:bg-blue-50 rounded-md px-2 py-1 text-blue-600 dark:text-blue-600 font-medium">
-                            {amenity || "Amenity"}
-                          </span>
+      {/* Cards */}
+      <div className="grid grid-cols-3 gap-4">
+        {hotels.map((hotel, index) => (
+          <div
+            key={hotel.id}
+            className="bg-[#F5F5F5] p-[8px] rounded-[55px] shadow cursor-pointer"
+            onMouseEnter={() => setHoveredIndex(index)}
+            onMouseLeave={() => setHoveredIndex(null)}
+          >
+            <img
+              src={hotel.image}
+              alt={hotel.name}
+              className="w-full h-[393px] object-cover rounded-[55px]"
+            />
+            <div className="px-4 pt-[16px]">
+              {/* Title & Reviews */}
+              <div className="flex text-center items-center justify-between">
+                <p className="font-[800] text-[28px]">{hotel.name}</p>
+                <div className="flex text-center items-center">
+                  <Icon
+                    icon="material-symbols:star-rate-rounded"
+                    className="text-[#FE9A00]"
+                    width="22"
+                    height="22"
+                  />
+                  <p className="text-[#5B697E] text-[17px] font-[400]">
+                    ({hotel.reviews} reviews)
+                  </p>
+                </div>
+              </div>
+
+              {/* Location */}
+              <p className="text-[18px] my-2 font-[400] text-[#5B697E]">
+                {hotel.location}
+              </p>
+
+              {/* Price */}
+              <div className="flex justify-between">
+                <div className="flex gap-2 text-center items-center">
+                  <p className="text-[30px] font-[900]">${hotel.price}</p>
+                  <p className="text-[17px] font-[500] text-[#90A1B9]">
+                    ${hotel.oldPrice}
+                  </p>
+                  <p className="text-[17px] font-[400] text-[#5B697E]">/night</p>
+                </div>
+                <div className="flex text-center items-center gap-2">
+                  <Icon
+                    icon="material-symbols:circle"
+                    className="text-[#00A63E]"
+                    width="11px"
+                    height="11px"
+                  />
+                  <p className="text-[16px] text-[#00A63E] font-[500]">
+                    2 rooms left
+                  </p>
+                </div>
+              </div>
+
+              {/* Extra details only on hover */}
+              <div
+                className={`overflow-hidden transition-all duration-500 ease-in-out ${
+                  hoveredIndex === index ? "max-h-[500px]" : "max-h-0"
+                }`}
+              >
+                <div className="py-[16px]">
+                  <div className="border-t border-[#E1E1E1] pt-[20px] mt-[24px]">
+                    <div className="flex justify-between">
+                      <div className="flex gap-2 items-center ">
+                        <div className="bg-[#FFF6D1] rounded-[11px] p-[11px]">
+                          <Icon icon="mdi:waves" width="20" height="20" />
                         </div>
-                      ))}
-                    </div>
-                    {/* Rating and Reviews */}
-                    <div className="flex items-center gap-1 mb-4 pb-2">
-                      <StarRating rating={hotel.rating} />
-
-
-                      <span className="text-xs text-gray-500 dark:text-gray-400 ml-1">
-                        ({hotel.rating ? hotel.rating.toLocaleString() : "0"})
-                      </span>
-                    </div>
-                    <div className="flex flex-col gap-2  border-b border-gray-100 dark:border-gray-700 pb-2">
-                      {/* Features */}
-                      <div className="flex items-center gap-2 text-gray-700 dark:text-gray-200">
-                        <Icon
-                          icon="material-symbols:check-circle-outline"
-                          className="text-green-500"
-                          width={25}
-                        />
-                        <span className="text-xs">
-                          Hotel accommodation included
-                        </span>
+                        <p className="text-[17px] font-[500]">Private Beach</p>
                       </div>
-                      <div className="flex items-center gap-2 text-gray-700 dark:text-gray-200">
-                        <Icon
-                          icon="material-symbols:check-circle-outline"
-                          className="text-green-500"
-                          width={25}
-                        />
-                        <span className="text-xs">
-                          Professional guide & transport
-                        </span>
-                      </div>
-                    </div>
-                    {/* Pricing and Book Button */}
-                    <div className="flex justify-between items-center pt-2">
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <span className="text-xs text-gray-400 dark:text-gray-400 line-through">
-                            $
-                            {hotel.originalPrice ||
-                              hotel.regular_price ||
-                              "1000.00"}
-                          </span>
-                          <span className="text-md font-bold text-gray-800 dark:text-gray-50">
-                            $
-                            {hotel.discountedPrice ||
-                              hotel.sale_price ||
-                              "800.00"}
-                          </span>
+                      <div className="flex gap-2 items-center">
+                        <div className="bg-[#FFE0D8] rounded-[11px] p-[11px]">
+                          <Icon icon="mdi:local-restaurant" width="24" height="24" />
                         </div>
-                        <span className="text-xs text-gray-500 dark:text-gray-400">
-                          per night
-                        </span>
+                        <p className="text-[17px] font-[500]">5 Restaurants</p>
                       </div>
-                      <button className="bg-blue-600 hover:bg-blue-700 cursor-pointer text-white px-6 py-2 rounded-lg font-medium transition-colors text-sm duration-200">
-                        Book
-                      </button>
+                    </div>
+                    <div className="flex justify-between mt-6">
+                      <div className="flex gap-2 items-center ">
+                        <div className="bg-[#E5F2FF] rounded-[11px] p-[11px]">
+                          <Icon icon="mdi:car-hatchback" width="24" height="24" />
+                        </div>
+                        <p className="text-[17px] font-[500]">Valet Parking</p>
+                      </div>
+                      <div className="flex gap-2 items-center">
+                        <div className="bg-[#D1FFE8] rounded-[11px] p-[11px]">
+                          <Icon icon="mdi:gym" width="24" height="24" />
+                        </div>
+                        <p className="text-[17px] font-[500]">Fitness Center</p>
+                      </div>
                     </div>
                   </div>
                 </div>
-              );
-            })) : (
-            <div className="col-span-3 text-center text-gray-500 dark:text-gray-400">
-              No featured hotels available at the moment.
+              </div>
             </div>
-          )}
-        </div>
+
+            {/* Bottom buttons */}
+            <div className="flex items-center px-4 py-[16px] justify-between">
+              <button className="text-[20px] font-[600] px-2 bg-[#163D8C] text-white rounded-full py-[16px] w-[291px]">
+                Book Now
+              </button>
+              <div className="bg-[#EBEFF4] rounded-full p-[18px]">
+                <Icon
+                  icon="mdi:heart-outline"
+                  className="rounded-full"
+                  width="28"
+                  height="28"
+                />
+              </div>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );
 };
-export default FeatureHotels;
+
+export default FeaturedHotels;

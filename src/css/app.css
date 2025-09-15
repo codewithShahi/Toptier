@@ -183,6 +183,9 @@ body:is(.dark *) {
     @apply text-[#112233CC] font-medium text-sm hover:text-[#163C8C] transition-colors duration-100 ease-in-out;
 }
 
+/* ============= APP appHorizantalSpacing ================ */
 
-
+.appHorizantalSpacing{
+@apply px-4 sm:px-6 md:px-8
+}
 

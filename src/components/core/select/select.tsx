@@ -114,7 +114,7 @@ function Select<
                     control: (state) =>
                         cn(
                             'flex items-center justify-between border border-gray-300 dark:border-gray-700 rounded-xl transition duration-150',
-                            CONTROL_SIZES[selectSize].minH,
+                            CONTROL_SIZES[selectSize]?.minH,
                             state.isDisabled && 'opacity-50 cursor-not-allowed',
                             (() => {
                                 const classes: string[] = [

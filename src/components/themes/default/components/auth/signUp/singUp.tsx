@@ -14,6 +14,8 @@ import { useMutation } from "@tanstack/react-query";
 import { sign_up } from "@src/actions";
 import Button from "@components/core/button";
 import Alert from "@components/core/alert";
+import { toast } from "react-toastify";
+
 import Link from "next/link";
 import { useAppSelector } from "@lib/redux/store";
 import { mode as selectMode } from "@lib/redux/base/selectors";
@@ -24,21 +26,36 @@ import type { StylesConfig, ControlProps, OptionProps, MenuProps, SingleValuePro
 
 
 
-
 const schema = zod.object({
   first_name: zod.string().min(1, "First name is required"),
   last_name: zod.string().min(1, "Last name is required"),
   email: zod.string().email("Invalid email address"),
-  country_id: zod.string().min(1, "Country is required"),
+  phone: zod.string()
+    .min(8, "Phone number is required")
+    .regex(/^\+?[1-9]\d{7,14}$/, "Enter a valid international phone number"),
+  phone_country_code: zod.string().min(1, "Country code is required"),
   password: zod.string().min(6, "Password must be at least 6 characters"),
   terms: zod.boolean().refine(val => val === true, {
-    message: 'You must accept the terms and conditions',
+    message: "You must accept the terms and conditions",
+  }),
+   human: zod.boolean().refine(val => val === true, {
+    message: "Please confirm you are human",
   }),
 });
+
 // ----- generate automatic type from schema obhect
 type Values = zod.infer<typeof schema>;
-const defaultValues = { first_name: "", last_name: "", email: "", country_id: "", password: "", terms: false } satisfies Values;
 
+const defaultValues: Values = {
+  first_name: "",
+  last_name: "",
+  email: "",
+  phone: "",
+  phone_country_code: "",
+  password: "",
+  terms: false,
+  human: false,   // ✅ new
+};
 
 
 
@@ -47,7 +64,7 @@ export default function SignUpForm() {
   const {
     control,
     handleSubmit,
-    setError,
+    setError,watch,
     formState: { errors },
     //--------- adding default values , and connecting from-hook with zode librery
   } = useForm<Values>({ defaultValues, resolver: zodResolver(schema) });
@@ -60,7 +77,7 @@ export default function SignUpForm() {
   // Individual hover states for each input
 
   const [loading, setLoading] = useState<boolean>(false);
-  const mutate = useMutation({
+   const mutate = useMutation({
     mutationFn: sign_up,
     onSuccess: (data) => {
       if (data.error) {
@@ -69,29 +86,32 @@ export default function SignUpForm() {
           setError("password", { type: "manual", message });
         } else if (message.toLowerCase().includes("email")) {
           setError("email", { type: "manual", message });
+        } else if (message.toLowerCase().includes("phone")) {
+          setError("phone", { type: "manual", message });
         } else {
           setError("root", { type: "manual", message });
         }
         setLoading(false);
         return;
       }
-      // Redirect to login page after successful sign up
+      toast.success("Signup successful! 🎉")
       router.push(`/${lang}/auth/login`);
     }
-  })
-  const onSubmit = useCallback(
-    async (values: Values): Promise<void> => {
-      setLoading(true);
-      const { error } = await mutate.mutateAsync({
-        first_name: values.first_name,
-        last_name: values.last_name,
-        email: values.email,
-        country_id: parseInt(values.country_id, 10),
-        password: values.password,
-      });
-    },
-    [router, setError]
-  );
+  });
+
+  const onSubmit = useCallback(async (values: Values) => {
+    setLoading(true);
+    await mutate.mutateAsync({
+      first_name: values.first_name,
+      last_name: values.last_name,
+      email: values.email,
+      phone: values.phone, // ✅ NEW
+      phone_country_code: parseInt(values.phone_country_code, 10),
+      password: values.password,
+    });
+
+  }, [router,setError, mutate,]);
+
   // Helper to get input style with hover
   const [isDarkMode] = useDarkMode();
 
@@ -155,28 +175,28 @@ export default function SignUpForm() {
   };
   const mode = useAppSelector(selectMode);
   const { countries, selectedCountry, isLoading: isCountriesLoading } = useCountries();
+
+
   const countryOptions = (countries || []).map((country: any) => ({
     label: country.label || country.name,
     value: country.value || country.id,
     icon: country.icon,
   }));
   return (
-    <div className="relative w-full min-h-screen  flex flex-col lg:flex-row">
+    <div className="relative w-full min-h-screen  flex flex-col lg:flex-row  border-t border-gray-300 ">
       {/* Left Side - Form */}
-      <div className="w-full  flex items-center justify-center p-4 sm:p-6 lg:p-8 bg-white dark:bg-gray-900">
+      <div className="w-full  flex items-center justify-center p-4 sm:p-6 md:p-10 bg-white dark:bg-gray-900">
         <div className="w-full max-w-md space-y-6 sm:space-y-8 animate-fade-in">
           <div className="text-start">
-            <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2 dark:text-gray-100">
-              {isLoading
-                ? "Loading..."
-                : dict?.signup_form?.title || "Create an Account"}
+            <h2 className="text-lg sm:text-3xl font-meduim text-gray-900 mb-2 dark:text-gray-100">
+              Create an Account
             </h2>
-            <p className="text-gray-600 text-sm sm:text-sm dark:text-gray-100">
-              {isLoading
-                ? "Loading..."
-                : dict?.signup_form?.subtitle ||
-                "Join us and start your journey today"}
-            </p>
+           <p className="text-base text-gray-500 mt-1">
+          Already have an account?{" "}
+          <Link href="/auth/login" className="text-blue-900 hover:underline">
+            Sign in
+          </Link>
+        </p>
 
           </div>
 
@@ -203,7 +223,8 @@ export default function SignUpForm() {
 
                         {...field}
                         type="text"
-                        placeholder={dict?.signup_form?.fields?.first_name?.placeholder}
+                        // placeholder={dict?.signup_form?.fields?.first_name?.placeholder}
+                        placeholder="First Name"
                         size="lg"
                         // className={`w-full px-3 py-2 h-11 text-sm border rounded-lg font-medium placeholder-gray-400 dark:placeholder-gray-400 text-gray-800 dark:text-gray-50 focus:outline-none  transition-all duration-200 bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 border-gray-300 dark:border-gray-600 ${direction === "rtl" ? "pr-10 pl-10" : "pl-10 pr-10"}`}
                         className="w-full text-xs focus:ring-none "
@@ -235,7 +256,8 @@ export default function SignUpForm() {
                       <Input
                         {...field}
                         type="text"
-                        placeholder={dict?.signup_form?.fields?.last_name?.placeholder}
+                        placeholder="Last Name"
+                        // placeholder={dict?.signup_form?.fields?.last_name?.placeholder}
                         size="lg"
 
                         invalid={!!errors.last_name}
@@ -255,7 +277,69 @@ export default function SignUpForm() {
                   )} />
               </div>
             </div>
+<div>
+     <label className="block text-sm font-medium text-gray-700  mb-2 dark:text-gray-100">
+                  {
+                    "Select country"
+                  }
+                </label>
+                           <Controller
+  name="phone_country_code"
+  control={control}
+  render={({ field }) => (
+    <Select
+      {...field}
+      options={countryOptions}
+      value={countryOptions.find((option :any) => option.value === field.value)}
+      onChange={(option) => field.onChange(option?.value)}
+      // placeholder={dict?.signup_form?.fields?.country?.placeholder}
+      placeholder="Select Country"
+      size="lg"
+      styles={customStyles}
+      isSearchable
+      isLoading={isCountriesLoading}
+    />
+  )}
+/>
+{errors.phone_country_code && (
+  <p className="text-red-500 text-xs">{errors.phone_country_code.message}</p>
+)}
 
+</div>
+
+              <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2 dark:text-gray-100">
+                {/* {dict?.signup_form?.fields?.email?.label} */}
+                Phone Number
+              </label>
+              <Controller
+                name="phone"
+                control={control}
+                render={({ field }) => (
+                  <div className="relative flex flex-col gap-2">
+                    <Input
+                      {...field}
+                      type="text"
+                      // placeholder={dict?.signup_form?.fields?.email?.placeholder}
+                      placeholder="Phone Number (+92xxxxxxxxxxx)"
+                      size="lg"
+                      className="w-full text-xs"
+                      invalid={!!errors.phone}
+
+                    />
+                    {errors.phone && (
+                      <div className="text-red-500 flex items-center gap-1 text-xs">
+                        <span>
+                          <Icon icon="mdi:warning-circle" width="15" height="15" />
+                        </span>
+                         <span>{errors.phone.message}</span>
+                      </div>
+                    )}
+                  </div>
+
+                )}
+              />
+            </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2 dark:text-gray-100">
                 {dict?.signup_form?.fields?.email?.label}
@@ -268,7 +352,8 @@ export default function SignUpForm() {
                     <Input
                       {...field}
                       type="email"
-                      placeholder={dict?.signup_form?.fields?.email?.placeholder}
+                      // placeholder={dict?.signup_form?.fields?.email?.placeholder}
+                      placeholder="Email Address"
                       size="lg"
                       className="w-full text-xs"
                       invalid={!!errors.email}
@@ -288,41 +373,6 @@ export default function SignUpForm() {
               />
             </div>
 
-            <div className="relative">
-              <label className="block text-sm font-medium text-gray-700 mb-2 dark:text-gray-100">
-                {dict?.signup_form?.fields?.country?.label}
-              </label>
-              <Controller
-                name="country_id"
-                control={control}
-                render={({ field }) => (
-                  <div className="relative flex flex-col gap-2">
-                    <Select
-                      {...field}
-                      options={countryOptions}
-                      value={countryOptions.find((option: CountryOptionType) => option.value === field.value)}
-                      onChange={(option: CountryOptionType | null) => field.onChange(option?.value)}
-                      placeholder={dict?.signup_form?.fields?.country?.placeholder}
-                      size="sm"
-                      isSearchable
-                      invalid={!!errors.country_id}
-                      styles={customStyles}
-                      isLoading={isCountriesLoading}
-                      isDisabled={isCountriesLoading}
-                    />
-                    {errors.country_id && (
-                      <div className="text-red-500 flex items-center gap-1 text-xs">
-                        <span>
-                          <Icon icon="mdi:warning-circle" width="15" height="15" />
-                        </span>
-                        <span>{errors.country_id.message}</span>
-                      </div>
-                    )}
-                  </div>
-                )}
-              />
-            </div>
-
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2 dark:text-gray-100">
                 {isLoading
@@ -338,7 +388,8 @@ export default function SignUpForm() {
                       <Input
                         {...field}
                         type={showPassword ? "text" : "password"}
-                        placeholder={dict?.login_form?.fields?.password?.placeholder}
+                        // placeholder={dict?.login_form?.fields?.password?.placeholder}
+                        placeholder="Enter Password"
                         size="lg"
                         className="w-full"
                         invalid={!!errors.password}
@@ -368,6 +419,36 @@ export default function SignUpForm() {
                 />
               </div>
             </div>
+{/* I am human checkbox */}
+<div className="">
+<div className="flex items-start space-x-3 gap-2 mb-2">
+  <Controller
+    name="human"
+    control={control}
+    render={({ field }) => (
+      <Checkbox
+        {...field}
+        id="human_checkbox"
+        checked={field.value}
+        onChange={(value: boolean) => {
+          field.onChange(value);
+        }}
+      />
+    )}
+  />
+  <label
+    htmlFor="human_checkbox"
+    className="text-sm text-gray-600 dark:text-gray-100 leading-relaxed cursor-pointer flex-1"
+  >
+    I am human
+  </label>
+</div>
+{errors.human && (
+  <div className="text-red-500 flex items-center gap-1 text-xs mt-1">
+    <Icon icon="mdi:warning-circle" width="15" height="15" />
+    <span>{errors.human.message}</span>
+  </div>
+)}
 
             <div className="flex items-start space-x-3 gap-2">
               <Controller
@@ -390,10 +471,10 @@ export default function SignUpForm() {
                 htmlFor="terms-checkbox"
                 className="text-sm text-gray-600 dark:text-gray-100 leading-relaxed cursor-pointer flex-1"
               >
-                By creating an account, you agree to our{" "}
+                I am agree to the{" "}
                 <a
                   href="/terms-and-conditions"
-                  className="text-blue-600 hover:text-blue-800 font-medium underline"
+                  className="text-blue-900 hover:text-blue-800 font-medium "
                   target="_blank"
                 >
                   Terms of Use
@@ -401,7 +482,7 @@ export default function SignUpForm() {
                 and{" "}
                 <a
                   href="/privacy-policy"
-                  className="text-blue-600 hover:text-blue-800 font-medium underline"
+                  className="text-blue-900 hover:text-blue-800 font-medium "
                   target="_blank"
                 >
                   Privacy Policy
@@ -416,30 +497,23 @@ export default function SignUpForm() {
                 <span>{errors.terms.message}</span>
               </div>
             )}
+</div>
 
-            <Button size="lg"
 
-              {...(loading && {
-                icon: <Icon icon="line-md:loading-twotone-loop" width="24" height="24" />
-              })}
+           <Button
+  size="lg"
+  {...(loading && {
+    icon: <Icon icon="line-md:loading-twotone-loop" width="24" height="24" />,
+  })}
+  disabled={loading || !watch("terms") || !watch("human")}   // ✅ disable logic
+  className={`bg-blue-900 hover:bg-blue-700 hover:border-none w-full flex gap-2 justify-center border-none hover:text-white text-white rounded-lg py-3 font-medium ${isDarkMode ? "hover:bg-gray-600" : "hover:bg-[#101828]"}`}
+  type="submit"
+>
+  <span>{dict?.signup_form?.create_account_button}</span>
+  <Icon icon="mdi:arrow-right" width="20" height="20" />
+</Button>
 
-              disabled={loading} variant="solid" className={`w-full flex gap-2 justify-center rounded-lg py-3 font-medium  ${isDarkMode ? "hover:bg-gray-600" : "hover:bg-[#101828]"}`} type="submit">
-              <span>{dict?.signup_form?.create_account_button}</span>
-              <Icon icon="mdi:arrow-right" width="20" height="20" />
-              </Button>
 
-            <div className="text-center mt-4 md:mt-6">
-              <p className="text-sm text-gray-600 dark:text-gray-100">
-                {dict?.signup_form?.sign_in_prompt}
-                {" "}
-                <Link
-                  href={`/${lang}/auth/login`}
-                  className="text-blue-600 hover:text-blue-800 font-medium underline"
-                >
-                  {dict?.signup_form?.sign_in_link}
-                </Link>
-              </p>
-            </div>
           </form>
         </div>
       </div>

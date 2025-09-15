@@ -10,7 +10,7 @@ const HeaderMenus = () => {
 
   return (
     <header className="w-full  shadow-sm">
-      <div className="flex items-center justify-between h-22 px-6 md:px-12">
+      <div className="flex items-center justify-between h-22 appHorizantalSpacing">
         {/* Left: Logo + Menu */}
         <div className="flex items-center gap-10">
           {/* Logo */}

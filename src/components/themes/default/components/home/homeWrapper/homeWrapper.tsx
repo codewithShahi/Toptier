@@ -3,6 +3,9 @@ import React, { ReactElement } from "react";
 import { Icon } from "@iconify/react";
 import {
   HeroSection,
+  FeaturedDestinations,
+  OfferSection,
+  TestimonialSection,FeaturedHotels,NewsLatter
 
 } from "@components/themes/default";
 import { baseUrl, token, siteUrl } from "@src/actions";
@@ -24,12 +27,28 @@ export default function HomeWrapper({dict}:{dict:any}) {
   const isFeaturesLoading = !dict ;
 
   return (
-    <div className="w-full bg-white dark:bg-gray-800 min-h-full" dir={direction}>
+    <div className=" bg-white dark:bg-gray-800 min-h-full " dir={direction}>
       {/* HERO SECTION */}
       <div>
         <HeroSection />
       </div>
-      {/* FEATURED MODULES */}
+      {/* FEATURED destination */}
+      <div>
+       <FeaturedDestinations/>
+      </div>
+      <div>
+        <FeaturedHotels/>
+      </div>
+      <div>
+        <OfferSection/>
+      </div>
+      <div>
+        <TestimonialSection/>
+      </div>
+      <div>
+        <NewsLatter/>
+      </div>
+
       <div>
 
 

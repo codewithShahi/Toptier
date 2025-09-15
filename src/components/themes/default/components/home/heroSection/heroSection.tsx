@@ -50,13 +50,17 @@ const HeroSection = () => {
 
       {/* Gradient Overlay */}
 <div className="absolute inset-0 bg-black/40 bg-opacity-50 z-0 pointer-events-none" />
-
-
       {/* Content Container */}
-      <div className="bg-white dark:bg-gray-800 dark:text-gray-50">
-       {/* <HotelSearch/>
-       <h1>hello world</h1> */}
-      </div>
+     {/* Content Container */}
+<div className="relative max-w-[1200px] w-full mx-auto  z-10 min-h-[500px] flex items-center justify-center flex-col text-center px-4">
+  <p className="text-4xl font-extrabold text-white mb-6 max-w-xl">
+    Discover the <br/> World's Hidden Treasures
+  </p>
+  <div className="w-full ">
+    <HotelSearch />
+  </div>
+</div>
+
     </motion.section>
   );
 };

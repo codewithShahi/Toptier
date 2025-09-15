@@ -68,16 +68,16 @@ export default function Login({ ...props }): React.JSX.Element {
 
 
   return (
-    <div className="relative w-full  flex flex-col justify-between h-full ">
+    <div className="relative w-full  flex flex-col justify-between items-center h-full border-t border-gray-300">
       {/* Left Side - Form */}
       <div className="w-full  flex items-center justify-center p-6 lg:p-8 bg-white dark:bg-gray-800">
         <div className="w-full max-w-md space-y-6 sm:space-y-8 animate-fade-in">
           <div className="text-start">
-            <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2 dark:text-gray-100">
-              {dict?.login_form?.title || "Login to Your Account"}
+            <h2 className="text-lg sm:text-3xl font-meduim text-gray-900 mb-2 dark:text-gray-100">
+              Sign in
             </h2>
-            <p className="text-gray-600 text-sm sm:text-sm dark:text-gray-100">
-              {dict?.login_form?.subtitle || "Welcome back! Please enter your details."}
+            <p className="text-gray-600 text-base dark:text-gray-100">
+              { "New user ? "} <Link href={`/auth/signup`} className="text-blue-900 hover:underline">Create an account</Link>
             </p>
           </div>
 
@@ -163,19 +163,7 @@ export default function Login({ ...props }): React.JSX.Element {
               />
 
             </div>
-
-
-            <Button size="lg"
-
-              {...(loading && {
-                icon: <Icon icon="line-md:loading-twotone-loop" width="24" height="24" />
-              })}
-
-              disabled={loading} variant="solid" className={`w-full flex gap-2 justify-center rounded-lg py-3 font-medium  ${isDarkMode ? "hover:bg-gray-600" : "hover:bg-[#101828]"}`} type="submit">
-              <span>{dict?.login_form?.login_button || "Login"}</span>
-              {/* <Icon icon="mdi:arrow-right" width="20" height="20" /> */}
-            </Button>
-            <div className="flex items-center justify-between mt-2.5">
+ <div className="flex items-center justify-between mt-2.5">
               <div className="flex items-start  gap-2">
                 <Controller
                   name="keep_logged_in"
@@ -193,7 +181,10 @@ export default function Login({ ...props }): React.JSX.Element {
 
                         }}
                         // className=""
-                        children={<p className="text-xs tex-gray-800 font-light">{dict?.login_form?.keep_logged_in}</p>}
+                        children={<p className="text-sm tex-gray-700 font-normal">
+                          {/* {dict?.login_form?.keep_logged_in} */}
+                           Remmember me
+                          </p>}
                       />
 
 
@@ -204,36 +195,31 @@ export default function Login({ ...props }): React.JSX.Element {
 
               <Link
                 href={`/${lang}/auth/forget-password`}
-                className="text-blue-600 hover:text-blue-800 font-medium "
+                className="text-blue-900 hover:text-blue-800 font-medium "
               >
-                <span className="text-gray-900 dark:text-gray-100 hover:text-blue-600 text-xs">
+                <span className="text-blue-900 dark:text-blue-100 hover:text-blue-600 text-sm">
                   {dict?.login_form?.forgot_password}
                 </span>
               </Link>
             </div>
 
-            <div className="text-center pt-4">
-              <p className="text-sm text-gray-600 dark:text-gray-100">
-                {dict?.login_form?.no_account_prompt || "Don't have an Account?"}
-                <Link
-                  href={`/${lang}/auth/signup`}
-                  className="text-gray-600  dark:text-gray-100 hover:text-blue-600 pl-1 font-semibold underline"
-                >
-                  {dict?.signup_form?.create_account_button || "Create an Account"}
-                </Link>
-              </p>
-            </div>
+            <Button size="lg"
+
+              {...(loading && {
+                icon: <Icon icon="line-md:loading-twotone-loop" width="24" height="24" />
+              })}
+
+              disabled={loading} className={`w-full bg-blue-900 text-white hover:bg-blue-800 hover:text-white border-none hover:border-none flex gap-2 justify-center rounded-lg py-3 font-medium  ${isDarkMode ? "hover:bg-gray-600" : "hover:bg-[#101828]"}`} type="submit">
+              <span>{dict?.login_form?.login_button || "Login"}</span>
+              {/* <Icon icon="mdi:arrow-right" width="20" height="20" /> */}
+            </Button>
+
+
+
           </form>
 
         </div>
 
-      </div>
-
-      {/* Right Side - Hero Section */}
-      <div className="  pb-10 left-0  w-full flex  gap-2 text-xs justify-center  text-gray-500">
-        <span className="border-r-gray-400 h-5"> {dict?.forget_passForm?.policy?.policy || "Privacy Policy"}</span>|
-        <span>{dict?.forget_passForm?.policy?.terms || "Terms and Conditions"}</span>|
-        <span>{dict?.forget_passForm?.policy?.status || "System Status"}</span>
       </div>
     </div>
   );

@@ -172,12 +172,12 @@ export default function HotelSearch() {
   ];
 
   return (
-    <div className="md:w-full mx-auto p-4 min-w-md bg-white">
+    <div className="md:w-full mx-auto p-4 ">
       <form onSubmit={handleSubmit}>
         <div className="bg-white dark:bg-gray-800 dark:text-gray-50 w-full rounded-xl shadow-lg p-6 space-y-6">
           {/* Destination */}
           <div className="relative" ref={destinationDropdownRef}>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            <label className="block text-sm text-start font-medium text-gray-700 dark:text-gray-300 mb-2">
               {isLoading ? "Loading..." : dict?.hotel_search?.destination_input?.title}
             </label>
             <div className="relative">
@@ -208,7 +208,7 @@ export default function HotelSearch() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {/* Check-in Date */}
             <div className="relative">
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label className="block text-sm text-start font-medium text-gray-700 dark:text-gray-300 mb-2">
                 {isLoading ? "Loading..." : dict?.hotel_search?.checkin?.title}
               </label>
               <DatePicker
@@ -236,7 +236,7 @@ export default function HotelSearch() {
 
             {/* Check-out Date */}
             <div className="relative">
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label className="block text-sm font-medium text-start text-gray-700 dark:text-gray-300 mb-2">
                 {isLoading ? "Loading..." : dict?.hotel_search?.checkout?.title}
               </label>
               <DatePicker
@@ -264,7 +264,7 @@ export default function HotelSearch() {
 
             {/* Guests Dropdown */}
             <div className="relative" ref={guestsDropdownRef}>
-              <label className="block text-sm font-medium text-gray-700 mb-2 dark:text-gray-300">
+              <label className="block text-sm text-start font-medium text-gray-700 mb-2 dark:text-gray-300">
                 {isLoading ? "Loading..." : dict?.hotel_search?.guest_button?.title}
               </label>
               <button
@@ -430,7 +430,7 @@ export default function HotelSearch() {
                 type="submit"
                 onClick={handleSubmit}
                 disabled={isSearching}
-                className="w-full bg-blue-600  py-2.5 px-6 font-medium flex items-center
+                className="w-full bg-blue-900  py-2 px-6 font-medium flex items-center
                 hover:bg-gray-800 hover:border-gray-300 border border-gray-200 rounded-lg text-white
                 dark:border-gray-600  dark:hover:bg-gray-700 dark:hover:border-gray-500
                 justify-center gap-2  focus:outline-none  transition-all duration-200"
