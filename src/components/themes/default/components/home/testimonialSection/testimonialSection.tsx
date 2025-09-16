@@ -24,7 +24,6 @@ const Star = ({ className }: { className: string }) => (
 
 const TestimonialSection = () => {
   const { testimonials } = useAppSelector((state) => state.appData.data);
-console.log('tesi',testimonials)
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
 
@@ -96,10 +95,10 @@ console.log('tesi',testimonials)
                   className={`flex-shrink-0 px-2 sm:px-3 transition-all duration-500 ${
                     index === currentIndex
                       ? 'w-full sm:w-[75%] opacity-100 scale-100'
-                      : 'w-full sm:w-[60%] opacity-50 scale-95 hidden sm:block'
+                      : 'w-full sm:w-[60%]  hidden sm:block'
                   }`}
                 >
-                  <div className="bg-[#F8F9FA] rounded-2xl shadow-lg p-4 sm:p-6 lg:p-8 min-h-[350px] sm:h-[390px] relative overflow-hidden border-gray-100">
+                  <div className="bg-[#F8F9FA] rounded-2xl  p-4 sm:p-6 lg:p-8 min-h-[350px] sm:h-[390px] relative overflow-hidden border-gray-100">
                     {/* mobile view */}
                     <div className="block sm:hidden">
                       <div className="flex items-start gap-3 mb-4">
@@ -108,7 +107,7 @@ console.log('tesi',testimonials)
   alt={testimonial.name}
   width={64}
   height={64}
-  className="w-12 sm:w-16 h-12 sm:h-16 rounded-full object-cover shadow-sm"
+  className="w-12 sm:w-16 h-12 sm:h-16 rounded-full z-100 object-cover shadow-sm"
 />
 
                         <div className="flex-1">

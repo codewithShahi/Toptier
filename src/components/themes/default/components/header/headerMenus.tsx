@@ -4,10 +4,12 @@ import Link from "next/link";
 import { Icon } from "@iconify/react";
 import Button from "@components/core/button";
 import HeaderLogo from "@components/themes/layout/components/common/headerLogo";
+import { useUser } from "@hooks/use-user";
+import Alert from "@components/core/alert";
 
 const HeaderMenus = () => {
   const [isOpen, setIsOpen] = useState(false);
-
+    const { user, error, isLoading: userLoading, checkSession } = useUser();
   return (
     <header className="w-full  max-w-[1200px] mx-auto">
       <div className="flex items-center justify-between h-22 appHorizantalSpacing">
@@ -36,19 +38,21 @@ const HeaderMenus = () => {
         </div>
 
         {/* Right: Auth Buttons */}
-        <div className="hidden md:flex items-center gap-3">
-             <Button
+        {!(user || userLoading) && <div className="hidden md:flex items-center gap-3">
+             <Link
+             href="/auth/signup"
               className="border border-blue-900 text-blue-900 text-center rounded-full px-7 py-1.5 hover:bg-blue-50"
             >
               Sign up
-            </Button>
+            </Link>
 
-            <Button
+            <Link
+            href="/auth/login"
               className="bg-[#163C8C] text-center border-none hover:text-white ring-0 text-white rounded-full px-10 py-3 transition"
             >
               Login
-            </Button>
-        </div>
+            </Link>
+        </div>}
 
         {/* Mobile Toggle */}
         <button
@@ -108,19 +112,21 @@ const HeaderMenus = () => {
           </Link>
 
           {/* Auth Buttons */}
-          <div className="mt-8 flex flex-col gap-3">
-           <Button
-              className="border w-full flex justify-center border-blue-800 text-blue-800 text-center rounded-full px-7 py-1.5 hover:bg-blue-50"
+           {!(user || userLoading) && <div className="hidden md:flex items-center gap-3">
+             <Link
+             href="/auth/signup"
+              className="border border-blue-900 text-blue-900 text-center rounded-full px-7 py-1.5 hover:bg-blue-50"
             >
               Sign up
-            </Button>
+            </Link>
 
-            <Button
-              className="bg-[#163C8C] justify-center border-none hover:text-white ring-0 text-white rounded-full px-10 py-3 transition"
+            <Link
+            href="/auth/login"
+              className="bg-[#163C8C] text-center border-none hover:text-white ring-0 text-white rounded-full px-10 py-3 transition"
             >
               Login
-            </Button>
-          </div>
+            </Link>
+        </div>}
         </nav>
       </div>
 
