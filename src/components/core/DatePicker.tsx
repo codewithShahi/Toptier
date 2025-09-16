@@ -69,7 +69,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
                         className={`z-10 text-gray-400 dark:text-gray-400 cursor-pointer ${direction === "rtl" ? "ml-2" : "mr-2"}`}
                         onClick={() => setOpen((v) => !v)}
                     >
-                      <Icon icon="material-symbols:calendar-today-outline" width="25" height="25" className={direction === "rtl" ? "scale-x-[-1]" : ""} />
+                  <Icon icon="material-symbols-light:calendar-today-outline-rounded" width="24" height="24" className={direction === "rtl" ? "scale-x-[-1]" : ""} />
                     </span>
                 )}
                 <input

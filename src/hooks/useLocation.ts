@@ -6,7 +6,7 @@ import { setCountry } from "@lib/redux/base";
 import { useEffect, useState } from "react";
 import { count } from "console";
 
-const useCountries = () => {
+const useLocations = () => {
   const [countries, setCountries] = useState<any>([]);
   const [selectedCountry, setSelectedCountry] = useState<any>(null);
   const defaultCountry =
@@ -53,4 +53,4 @@ useEffect(() => {
   return { countries, isLoading, selectedCountry };
 };
 
-export default useCountries;
+export default useLocations;

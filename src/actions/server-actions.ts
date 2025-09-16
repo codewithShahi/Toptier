@@ -95,6 +95,60 @@ export const fetchCountries = async () => {
     return { error: (error as Error).message || "An error occurred" };
   }
 };
+//=============== FETCH HOTEL DESTINATIN FOR HOTEL SEARCH ==================
+export const fetchHotelsLocations = async (city: string) => {
+  try {
+    const url = new URL(`${baseUrl}/hotels_locations`);
+    url.searchParams.append("city", city); // attach query param
+
+    const response = await fetch(url.toString(), {
+      method: "GET",
+      headers: {
+        Accept: "application/json, text/plain, */*",
+      },
+    });
+
+    const data = await response.json().catch(() => null);
+    console.log('destinaiton', data)
+    if (!response.ok || data?.status === false) {
+      return { error: data?.message || "Something went wrong" };
+    }
+
+    return data;
+  } catch (error) {
+    return { error: (error as Error).message || "An error occurred" };
+  }
+};
+//================ NEWSLATTER =========================
+interface Payload {
+  name: string;
+  email: string;
+}
+
+export const subscribe_to_newsLatter = async (payload: Payload) => {
+  try {
+    const formData = new FormData();
+    formData.append("name", payload.name);
+    formData.append("email", payload.email);
+
+    const response = await fetch(`${baseUrl}/app`, {
+      method: "POST",
+      body: formData,
+      headers: {
+        Accept: "application/json, text/plain, */*",
+      },
+    });
+
+    const data = await response.json().catch(() => null);
+    if (!response.ok || data?.status === false) {
+      return { error: data?.message || "Something went wrong" };
+    }
+
+    return data;
+  } catch (error) {
+    return { error: (error as Error).message || "An error occurred" };
+  }
+};
 
 // ---------------------------- FETCH DISTINATION FOR FLIGHT INPUT ------------------------//
 

@@ -9,7 +9,7 @@ const HeaderMenus = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <header className="w-full  shadow-sm">
+    <header className="w-full  max-w-[1200px] mx-auto">
       <div className="flex items-center justify-between h-22 appHorizantalSpacing">
         {/* Left: Logo + Menu */}
         <div className="flex items-center gap-10">

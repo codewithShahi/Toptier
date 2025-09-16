@@ -17,30 +17,30 @@ const FeaturedDestinations: React.FC = () => {
     {
       id: 2,
       name: "Kyoto, Japan",
-      image: "./images/fd2.jpg",
+      image: "https://images.unsplash.com/photo-1613395877344-13d4a8e0d49e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
       isLiked: false
     },
     {
       id: 3,
       name: "Cape Town, South Africa",
-      image: "./images/fd3.jpg",
+      image: "https://images.unsplash.com/photo-1613395877344-13d4a8e0d49e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
     },
     {
       id: 4,
       name: "Paris, France",
-      image: "./images/fd4.jpg",
+      image: "https://images.unsplash.com/photo-1613395877344-13d4a8e0d49e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
       isLiked: false
     },
     {
       id: 5,
       name: "Bali, Indonesia",
-    image: "./images/fd5.jpg",
+    image: "https://images.unsplash.com/photo-1613395877344-13d4a8e0d49e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
       isLiked: false
     },
     {
       id: 6,
       name: "Banff, Canada",
-      image: "./images/fd6.jpg",
+      image: "https://images.unsplash.com/photo-1613395877344-13d4a8e0d49e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
       isLiked: false
     }
   ];
@@ -57,16 +57,15 @@ const FeaturedDestinations: React.FC = () => {
     });
   };
   const handleExploreNow = (destination: Destination) => {
-    console.log(`Exploring ${destination.name}`);
   };
   return (
     <>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
       <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
-      <div className=" py-6 appHorizantalSpacing">
-        <div className="w-full max-w-[1200px] mx-auto">
-          <div className="text-center mb-6">
+      <div className="bg-gray-50 min-h-screen py-12 appHorizantalSpacing">
+        <div className="w-full ">
+          <div className="text-center mb-12">
             <h1 className="text-4xl font-bold text-gray-900 mb-4" style={{ fontFamily: 'Urbanist, sans-serif' }}>
               Featured Destination
             </h1>
