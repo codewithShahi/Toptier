@@ -2,8 +2,7 @@
 import { useState, useEffect } from "react";
 import { Icon } from "@iconify/react";
 import { useAppSelector } from "@lib/redux/store";
-import { addToFavourite } from "@src/actions"; // 👈 import API
-
+import { addToFavourite } from "@src/actions"; // :point_left: import API
 interface Hotel {
   id: string;
   name: string;
@@ -16,73 +15,64 @@ interface Hotel {
   amenities?: string[];
   favorite?: number; // 1 = liked, 0 = not liked
 }
-
 const FeaturedHotels: React.FC = () => {
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [hotels, setHotels] = useState<Hotel[]>([]);
-
   const { featured_hotels } = useAppSelector((state) => state.appData?.data);
-
   // simulate userId (replace with real auth value)
   const userId = "123";
-
   // Sync redux → local state
   useEffect(() => {
     if (featured_hotels && Array.isArray(featured_hotels)) {
       setHotels(featured_hotels);
     }
   }, [featured_hotels]);
-
-  // ⭐ Star Rating Renderer
-  const renderStars = (stars: number) => {
-    const fullStars = Math.floor(stars);
-    const hasHalfStar = stars % 1 >= 0.5;
-    const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
-
-    const starsArr = [];
-    for (let i = 0; i < fullStars; i++) {
-      starsArr.push(
-        <Icon
-          key={`full-${i}`}
-          icon="material-symbols:star-rate-rounded"
-          className="text-[#FE9A00]"
-          width="24"
-          height="24"
-        />
-      );
-    }
-    if (hasHalfStar) {
-      starsArr.push(
-        <Icon
-          key="half"
-          icon="material-symbols:star-half"
-          className="text-[#FE9A00]"
-          width="24"
-          height="24"
-        />
-      );
-    }
-    for (let i = 0; i < emptyStars; i++) {
-      starsArr.push(
-        <Icon
-          key={`empty-${i}`}
-          icon="material-symbols:star-rate-rounded"
-          className="text-gray-300"
-          width="20"
-          height="20"
-        />
-      );
-    }
-    return starsArr;
-  };
-
+//  const renderStars = (stars: number) => {
+//     const fullStars = Math.floor(stars);
+//     const hasHalfStar = stars % 1 >= 0.5;
+//     const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+//     const starsArr = [];
+//     for (let i = 0; i < fullStars; i++) {
+//       starsArr.push(
+//         <Icon
+//           key={`full-${i}`}
+//           icon="material-symbols:star-rate-rounded"
+//           className="text-[#FE9A00]"
+//           width="24"
+//           height="24"
+//         />
+//       );
+//     }
+//     if (hasHalfStar) {
+//       starsArr.push(
+//         <Icon
+//           key="half"
+//           icon="material-symbols:star-half"
+//           className="text-[#FE9A00]"
+//           width="24"
+//           height="24"
+//         />
+//       );
+//     }
+//     for (let i = 0; i < emptyStars; i++) {
+//       starsArr.push(
+//         <Icon
+//           key={`empty-${i}`}
+//           icon="material-symbols:star-rate-rounded"
+//           className="text-gray-300"
+//           width="20"
+//           height="20"
+//         />
+//       );
+//     }
+//     return starsArr;
+//   };
+  // :star: Star Rating Renderer
 const renderStars = (stars: number) => {
   const fullStars = Math.floor(stars); // whole stars
   const hasHalfStar = stars % 1 >= 0.5; // check if half star
   const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
-
   const starsArr = [];
-
   for (let i = 0; i < fullStars; i++) {
     starsArr.push(
       <Icon
@@ -94,8 +84,6 @@ const renderStars = (stars: number) => {
       />
     );
   }
-
-
   if (hasHalfStar) {
     starsArr.push(
       <Icon
@@ -107,7 +95,6 @@ const renderStars = (stars: number) => {
       />
     );
   }
-
   for (let i = 0; i < emptyStars; i++) {
     starsArr.push(
       <Icon
@@ -119,27 +106,21 @@ const renderStars = (stars: number) => {
       />
     );
   }
-
   return starsArr;
 };
-
-
-  // ❤️ Handle Favorite API
+  // :heart: Handle Favorite API
   const toggleLike = async (hotel: Hotel) => {
     try {
       const payload = {
         item_id: String(hotel.id),
-        module: "hotels", // 👈 confirm with backend
+        module: "hotels", // :point_left: confirm with backend
         user_id: userId,
       };
-
       const res = await addToFavourite(payload);
-
       if (res?.error) {
         console.error("Error updating favourite:", res.error);
         return;
       }
-
       // update local state
       setHotels((prev) =>
         prev.map((h) =>
@@ -150,7 +131,6 @@ const renderStars = (stars: number) => {
       console.error("toggleLike error:", err);
     }
   };
-
   return (
     <div className="w-full max-w-[1200px] mx-auto appHorizantalSpacing py-6">
       <div className="text-center mb-8 md:mb-12">
@@ -168,7 +148,6 @@ const renderStars = (stars: number) => {
           of paradise
         </p>
       </div>
-
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 items-start">
         {hotels?.map((hotel) => (
           <div
@@ -188,20 +167,15 @@ const renderStars = (stars: number) => {
                 <p className="font-[800] text-[20px] sm:text-[24px] lg:text-[25px] leading-tight">
                   {hotel.name}
                 </p>
-
-                {renderStars(Number(hotel.stars))}
-
+                {/* {renderStars(Number(hotel.stars))} */}
               </div>
-
               <p className="text-[16px] sm:text-[17px] lg:text-[18px] my-2 font-[400] text-[#5B697E]">
                 {hotel.city}, {hotel.country}
               </p>
-
               {/* Stars - now above pricing */}
               <div className="flex items-center gap-1 mb-2">
                 {renderStars(Number(hotel.stars))}
               </div>
-
               {/* Price & Rooms */}
               <div className="flex justify-between items-center">
                 <div className="flex gap-2 items-center">
@@ -225,7 +199,6 @@ const renderStars = (stars: number) => {
                   </p>
                 </div> */}
               </div>
-
               <div
                 className={`overflow-hidden transition-all duration-700 ease-in-out ${
                   hoveredId === hotel.id ? "max-h-[500px]" : "max-h-0"
@@ -246,7 +219,7 @@ const renderStars = (stars: number) => {
               </div>
             </div>
             <div className="flex items-center px-4 py-[16px] justify-between gap-3">
-              <button className="text-[16px] sm:text-[18px] lg:text-[20px] font-[600] px-4 sm:px-6 bg-[#163D8C] text-white rounded-full py-[12px] sm:py-[16px] flex-1 transition-all duration-200 hover:bg-[#1a4299]">
+              <button className="text-[16px] sm:text-[18px] lg:text-[20px] font-[600] px-4 sm:px-6 bg-[#163D8C] text-white rounded-full py-[12px] sm:py-[16px] flex-1 transition-all duration-200 hover:bg-[#1A4299]">
                 Book Now
               </button>
               <button
@@ -264,16 +237,15 @@ const renderStars = (stars: number) => {
   >
     <path
       d="M6.22371 1.44739C3.27589 1.44739 0.885498 3.98725 0.885498 7.11938C0.885498 13.3881 11 20.5526 11 20.5526C11 20.5526 21.1145 13.3881 21.1145 7.11938C21.1145 3.23878 18.7241 1.44739 15.7763 1.44739C13.686 1.44739 11.8766 2.72406 11 4.58288C10.1234 2.72406 8.31404 1.44739 6.22371 1.44739Z"
-      stroke={hotel.favorite === 1 ? "#ef4444" : "#6b7280"}  // ✅ red if fav
+      stroke={hotel.favorite === 1 ? "#EF4444" : "#6B7280"}  // :white_tick: red if fav
       strokeOpacity="0.8"
       strokeWidth="1.5"
       strokeLinecap="round"
       strokeLinejoin="round"
-      fill={hotel.favorite === 1 ? "#ef4444" : "none"}       // ✅ filled red if fav
+      fill={hotel.favorite === 1 ? "#EF4444" : "none"}       // :white_tick: filled red if fav
     />
   </svg>
 </button>
-
             </div>
           </div>
         ))}
@@ -281,5 +253,9 @@ const renderStars = (stars: number) => {
     </div>
   );
 };
-
 export default FeaturedHotels;
+
+
+
+
+

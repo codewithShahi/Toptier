@@ -122,7 +122,7 @@ export default function HotelSearch() {
         if (res?.status && Array.isArray(res.data) && res.data.length > 0) {
           setHotelLocations(res.data);
         } else if (res.error) {
-          console.log('erro',res.error)
+          console.log('erro', res.error)
           setHotelLocations([]);
           setLocationError("Try different search");
         }
@@ -194,29 +194,29 @@ export default function HotelSearch() {
     }
   };
 
-const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
-  try {
-    setSubmitting(true); // ✅ start spinner
-    hotelSearchSchema.parse(form);
-    setErrors({});
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      setSubmitting(true); // ✅ start spinner
+      hotelSearchSchema.parse(form);
+      setErrors({});
 
-    // 🔹 Call your real API here
-    // await searchHotels(form);
+      // 🔹 Call your real API here
+      // await searchHotels(form);
 
-    console.log("valid form ready to submit:", form);
-  } catch (err) {
-    if (err instanceof z.ZodError) {
-      const msgMap: Record<string, string> = {};
-      err.errors.forEach((zErr) => {
-        msgMap[zErr.path[0] as string] = zErr.message;
-      });
-      setErrors(msgMap);
+      console.log("valid form ready to submit:", form);
+    } catch (err) {
+      if (err instanceof z.ZodError) {
+        const msgMap: Record<string, string> = {};
+        err.errors.forEach((zErr) => {
+          msgMap[zErr.path[0] as string] = zErr.message;
+        });
+        setErrors(msgMap);
+      }
+    } finally {
+      setSubmitting(false); // ✅ stop spinner
     }
-  } finally {
-    setSubmitting(false); // ✅ stop spinner
-  }
-};
+  };
 
 
   const ErrorMessage = ({ error }: { error?: string }) =>
@@ -247,7 +247,11 @@ const handleSubmit = async (e: React.FormEvent) => {
             </label>
             <div className="relative">
               <div className={`absolute ${direction === "ltr" ? "left-2" : "right-2"} top-1/2 transform -translate-y-1/2 text-gray-400`}>
-              <Icon icon="lucide:map-pin" width={22} height={22} />
+                <svg width="16" height="18" viewBox="0 0 16 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M8.19514 17.1038C8.04735 17.2098 7.86998 17.2667 7.68803 17.2667C7.50607 17.2667 7.3287 17.2098 7.18091 17.1038C2.80793 13.9933 -1.83309 7.59516 2.85865 2.97186C4.14667 1.70746 5.88127 0.999208 7.68803 1C9.49916 1 11.2369 1.7094 12.5174 2.97096C17.2091 7.59426 12.5681 13.9915 8.19514 17.1038Z" stroke="#5B697E" stroke-opacity="0.7" stroke-width="1.35554" stroke-linecap="round" stroke-linejoin="round" />
+                  <path d="M7.68772 9.13333C8.16806 9.13333 8.62873 8.94291 8.96838 8.60396C9.30803 8.26501 9.49885 7.80529 9.49885 7.32594C9.49885 6.84659 9.30803 6.38688 8.96838 6.04793C8.62873 5.70898 8.16806 5.51855 7.68772 5.51855C7.20738 5.51855 6.74671 5.70898 6.40706 6.04793C6.0674 6.38688 5.87659 6.84659 5.87659 7.32594C5.87659 7.80529 6.0674 8.26501 6.40706 8.60396C6.74671 8.94291 7.20738 9.13333 7.68772 9.13333Z" stroke="#5B697E" stroke-opacity="0.7" stroke-width="1.35554" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+
               </div>
 
               <input
@@ -305,7 +309,7 @@ const handleSubmit = async (e: React.FormEvent) => {
                       <span>{locationError}</span>
                     </div>
                   )}
-                   {!locationLoading && hotelLocations.length === 0  && (
+                  {!locationLoading && hotelLocations.length === 0 && (
                     <div className="flex bg-white items-center justify-center gap-2 p-4 min-h-25 text-sm text-gray-500">
                       <Icon icon="mdi:map-marker-off-outline" width={18} height={18} />
                       <span>No Hotel Destination Found</span>
@@ -366,146 +370,154 @@ const handleSubmit = async (e: React.FormEvent) => {
                 className={`w-full flex items-center justify-between ${direction === "ltr" ? "pl-12 pr-4" : "pr-12 pl-4"} py-2.5 text-xs hover:bg-gray-100 hover:border-gray-300 border border-gray-200 rounded-xl text-gray-900 dark:bg-gray-800 dark:border-gray-600 cursor-pointer dark:hover:bg-gray-700 dark:hover:border-gray-500 transition-all duration-200`}
               >
                 <div className={`absolute ${direction === "ltr" ? "left-4" : "right-4"} top-12 transform -translate-y-1/2 text-gray-400`}>
-                  <Icon icon="mdi:account-group-outline" width={20} height={20} />
+                  {/* <Icon icon="mdi:account-group-outline" width={20} height={20} /> */}
+                  <svg width="14" height="17" viewBox="0 0 14 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M7.01698 6.91855C8.65463 6.91855 9.98221 5.59097 9.98221 3.95332C9.98221 2.31568 8.65463 0.988098 7.01698 0.988098C5.37933 0.988098 4.05176 2.31568 4.05176 3.95332C4.05176 5.59097 5.37933 6.91855 7.01698 6.91855Z" stroke="#8C96A5" stroke-width="1.11196" />
+                    <path d="M12.9476 12.4783C12.9476 14.3205 12.9476 15.8142 7.01712 15.8142C1.08667 15.8142 1.08667 14.3205 1.08667 12.4783C1.08667 10.6362 3.74203 9.14246 7.01712 9.14246C10.2922 9.14246 12.9476 10.6362 12.9476 12.4783Z" stroke="#8C96A5" stroke-width="1.11196" />
+                  </svg>
                 </div>
                 <span className="font-medium">{form.adults + form.children} {isLoading ? "Loading..." : dict?.hotel_search?.guest_button?.guest_title}, {form.rooms} {isLoading ? "Loading..." : dict?.hotel_search?.guest_button?.room_title}</span>
                 <Icon icon="mdi:chevron-down" width={20} height={20} className={`text-gray-400 transition-transform duration-200 ${showGuestsDropdown ? "rotate-180" : ""}`} />
               </button>
 
               {/* Guests dropdown content omitted for brevity (same as your original) */}
-            {showGuestsDropdown && (
-  <div className="absolute z-20 w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg mt-1 md:min-w-[350px] max-h-80 overflow-y-auto">
-    <div className="p-4 space-y-4">
-      {/* Adults */}
-      <div className="flex items-center justify-between">
-        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-          Adults
-        </span>
-        <div className="flex items-center gap-2">
-          <button
-            type="button"
-            onClick={() =>
-              setForm((prev) => ({
-                ...prev,
-                adults: Math.max(1, prev.adults - 1),
-              }))
-            }
-            className="w-8 h-8 flex items-center justify-center rounded-full border dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700"
-          >
-            -
-          </button>
-          <span>{form.adults}</span>
-          <button
-            type="button"
-            onClick={() =>
-              setForm((prev) => ({
-                ...prev,
-                adults: Math.min(16, prev.adults + 1),
-              }))
-            }
-            className="w-8 h-8 flex items-center justify-center rounded-full border dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700"
-          >
-            +
-          </button>
-        </div>
-      </div>
+              {showGuestsDropdown && (
+                <div className="absolute z-20 w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg mt-1 md:min-w-[350px] max-h-80 overflow-y-auto">
+                  <div className="p-4 space-y-4">
+                    {/* Adults */}
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                        Adults
+                      </span>
+                      <div className="flex items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setForm((prev) => ({
+                              ...prev,
+                              adults: Math.max(1, prev.adults - 1),
+                            }))
+                          }
+                          className="w-8 h-8 flex items-center justify-center rounded-full border dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700"
+                        >
+                          -
+                        </button>
+                        <span>{form.adults}</span>
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setForm((prev) => ({
+                              ...prev,
+                              adults: Math.min(16, prev.adults + 1),
+                            }))
+                          }
+                          className="w-8 h-8 flex items-center justify-center rounded-full border dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700"
+                        >
+                          +
+                        </button>
+                      </div>
+                    </div>
 
-      {/* Children */}
-      <div className="flex items-center justify-between">
-        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-          Children
-        </span>
-        <div className="flex items-center gap-2">
-          <button
-            type="button"
-            onClick={() =>
-              setForm((prev) => ({
-                ...prev,
-                children: Math.max(0, prev.children - 1),
-              }))
-            }
-            className="w-8 h-8 flex items-center justify-center rounded-full border dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700"
-          >
-            -
-          </button>
-          <span>{form.children}</span>
-          <button
-            type="button"
-            onClick={() =>
-              setForm((prev) => ({
-                ...prev,
-                children: Math.min(10, prev.children + 1),
-              }))
-            }
-            className="w-8 h-8 flex items-center  cursor-pointer justify-center rounded-full border dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700"
-          >
-            +
-          </button>
-        </div>
-      </div>
+                    {/* Children */}
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                        Children
+                      </span>
+                      <div className="flex items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setForm((prev) => ({
+                              ...prev,
+                              children: Math.max(0, prev.children - 1),
+                            }))
+                          }
+                          className="w-8 h-8 flex items-center justify-center rounded-full border dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700"
+                        >
+                          -
+                        </button>
+                        <span>{form.children}</span>
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setForm((prev) => ({
+                              ...prev,
+                              children: Math.min(10, prev.children + 1),
+                            }))
+                          }
+                          className="w-8 h-8 flex items-center  cursor-pointer justify-center rounded-full border dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700"
+                        >
+                          +
+                        </button>
+                      </div>
+                    </div>
 
-      {/* Rooms */}
-      <div className="flex items-center justify-between">
-        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-          Rooms
-        </span>
-        <div className="flex items-center gap-2">
-          <button
-            type="button"
-            onClick={() =>
-              setForm((prev) => ({
-                ...prev,
-                rooms: Math.max(1, prev.rooms - 1),
-              }))
-            }
-            className="w-8 h-8 flex items-center   cursor-pointer justify-center rounded-full border dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700"
-          >
-            -
-          </button>
-          <span>{form.rooms}</span>
-          <button
-            type="button"
-            onClick={() =>
-              setForm((prev) => ({
-                ...prev,
-                rooms: Math.min(8, prev.rooms + 1),
-              }))
-            }
-            className="w-8 h-8 flex cursor-pointer items-center justify-center rounded-full border dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700"
-          >
-            +
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-)}
+                    {/* Rooms */}
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                        Rooms
+                      </span>
+                      <div className="flex items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setForm((prev) => ({
+                              ...prev,
+                              rooms: Math.max(1, prev.rooms - 1),
+                            }))
+                          }
+                          className="w-8 h-8 flex items-center   cursor-pointer justify-center rounded-full border dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700"
+                        >
+                          -
+                        </button>
+                        <span>{form.rooms}</span>
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setForm((prev) => ({
+                              ...prev,
+                              rooms: Math.min(8, prev.rooms + 1),
+                            }))
+                          }
+                          className="w-8 h-8 flex cursor-pointer items-center justify-center rounded-full border dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700"
+                        >
+                          +
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
 
             </div>
 
             {/* Search button */}
             <div className="sm:col-span-2 lg:col-span-1">
-  <div className="mt-3 md:mt-7" />
-  <button
-    type="submit"
-    disabled={submitting}
-    className="w-full bg-blue-900 py-2 px-6 cursor-pointer font-medium flex items-center hover:bg-gray-800 border border-gray-200 rounded-xl text-white dark:border-gray-600 dark:hover:bg-gray-700 justify-center gap-2 focus:outline-none transition-all duration-200"
-  >
-    {submitting ? (
-      <>
-        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-        <span>Searching...</span>
-      </>
-    ) : (
-      <>
-        <Icon icon="tabler:search" width={25} height={20} className="text-white dark:text-gray-50" />
-        <span className="hidden md:block text-white dark:text-gray-50">
-          {isLoading ? "Loading..." : dict?.hotel_search?.search_btnText}
-        </span>
-      </>
-    )}
-  </button>
-</div>
+              <div className="mt-3 md:mt-7" />
+              <button
+                type="submit"
+                disabled={submitting}
+                className="w-full bg-blue-900 py-2 px-6 cursor-pointer font-medium flex items-center hover:bg-gray-800 border border-gray-200 rounded-xl text-white dark:border-gray-600 dark:hover:bg-gray-700 justify-center gap-2 focus:outline-none transition-all duration-200"
+              >
+                {submitting ? (
+                  <>
+                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                    <span>Searching...</span>
+                  </>
+                ) : (
+                  <>
+
+                    <svg width="17" height="18" viewBox="0 0 17 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M12.7761 13.5548L15.635 16.4137M14.7318 8.524C14.7318 10.3703 13.9984 12.141 12.6929 13.4465C11.3873 14.7521 9.61664 15.4855 7.77033 15.4855C5.92403 15.4855 4.15335 14.7521 2.84781 13.4465C1.54228 12.141 0.808838 10.3703 0.808838 8.524C0.808838 6.67769 1.54228 4.90701 2.84781 3.60148C4.15335 2.29594 5.92403 1.5625 7.77033 1.5625C9.61664 1.5625 11.3873 2.29594 12.6929 3.60148C13.9984 4.90701 14.7318 6.67769 14.7318 8.524Z" stroke="white" stroke-width="1.3923" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+
+                    <span className="hidden md:block text-white dark:text-gray-50">
+                      {isLoading ? "Loading..." : dict?.hotel_search?.search_btnText}
+                    </span>
+                  </>
+                )}
+              </button>
+            </div>
 
           </div>
         </div>
