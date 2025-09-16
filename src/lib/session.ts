@@ -53,6 +53,9 @@ export async function logout() {
 export async function getSession() {
   const session = (await cookies()).get("access-token")?.value;
   if (!session) return null;
+  // const userinfo= decrypt(session)
+  // console.log('sestion token' ,userinfo)
+
   return await decrypt(session);
 }
 
