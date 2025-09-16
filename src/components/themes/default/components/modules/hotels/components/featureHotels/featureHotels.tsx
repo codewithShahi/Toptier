@@ -64,7 +64,7 @@ const FeaturedHotels: React.FC = () => {
       price: 450,
       oldPrice: 600,
       reviews: 310,
-      image: "./images/fh4.jpg",
+      image: "./images/fh6.jpg",
     },
   ];
 
