@@ -42,6 +42,7 @@ export async function getHeaders(contentType: string = "application/x-www-form-u
 
 // ---------------- Fetch App Data ---------------- //
 export const fetchAppData = async () => {
+
   try {
     const formData = new FormData();
     formData.append("api_key", api_key ?? "");
@@ -131,7 +132,7 @@ export const subscribe_to_newsLatter = async (payload: Payload) => {
     formData.append("name", payload.name);
     formData.append("email", payload.email);
 
-    const response = await fetch(`${baseUrl}/app`, {
+    const response = await fetch(`${baseUrl}/newsletter-subscribe`, {
       method: "POST",
       body: formData,
       headers: {
@@ -149,7 +150,42 @@ export const subscribe_to_newsLatter = async (payload: Payload) => {
     return { error: (error as Error).message || "An error occurred" };
   }
 };
+//================ NEWSLATTER =========================
+interface newsLaterPayload {
+  item_id: string;
+  module: string;
+  user_id:string
+}
 
+export const addToFavourite = async (payload: newsLaterPayload) => {
+   const userInfo=await getSession()
+console.log('user id',userInfo)
+
+  try {
+    const formData = new FormData();
+    formData.append("item_id", payload.item_id);
+    formData.append("module", payload.module);
+     formData.append("user_id", payload.item_id);
+
+    const response = await fetch(`${baseUrl}/favourites`, {
+      method: "POST",
+      body: formData,
+      headers: {
+        Accept: "application/json, text/plain, */*",
+      },
+    });
+
+    const data = await response.json().catch(() => null);
+    console.log('faoutire ',data)
+    if (!response.ok || data?.status === false) {
+      return { error: data?.message || "Something went wrong" };
+    }
+
+    return data;
+  } catch (error) {
+    return { error: (error as Error).message || "An error occurred" };
+  }
+};
 // ---------------------------- FETCH DISTINATION FOR FLIGHT INPUT ------------------------//
 
 export const fetchDestinations = async (city: string) => {
