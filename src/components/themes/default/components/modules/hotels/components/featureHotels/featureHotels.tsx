@@ -32,49 +32,49 @@ const FeaturedHotels: React.FC = () => {
       setHotels(featured_hotels);
     }
   }, [featured_hotels]);
+//  const renderStars = (stars: number) => {
+//     const fullStars = Math.floor(stars);
+//     const hasHalfStar = stars % 1 >= 0.5;
+//     const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
 
+//     const starsArr = [];
+//     for (let i = 0; i < fullStars; i++) {
+//       starsArr.push(
+//         <Icon
+//           key={`full-${i}`}
+//           icon="material-symbols:star-rate-rounded"
+//           className="text-[#FE9A00]"
+//           width="24"
+//           height="24"
+//         />
+//       );
+//     }
+//     if (hasHalfStar) {
+//       starsArr.push(
+//         <Icon
+//           key="half"
+//           icon="material-symbols:star-half"
+//           className="text-[#FE9A00]"
+//           width="24"
+//           height="24"
+//         />
+//       );
+//     }
+//     for (let i = 0; i < emptyStars; i++) {
+//       starsArr.push(
+//         <Icon
+//           key={`empty-${i}`}
+//           icon="material-symbols:star-rate-rounded"
+//           className="text-gray-300"
+//           width="20"
+//           height="20"
+//         />
+//       );
+//     }
+//     return starsArr;
+//   };
   // ⭐ Star Rating Renderer
-  const renderStars = (stars: number) => {
-    const fullStars = Math.floor(stars);
-    const hasHalfStar = stars % 1 >= 0.5;
-    const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
 
-    const starsArr = [];
-    for (let i = 0; i < fullStars; i++) {
-      starsArr.push(
-        <Icon
-          key={`full-${i}`}
-          icon="material-symbols:star-rate-rounded"
-          className="text-[#FE9A00]"
-          width="24"
-          height="24"
-        />
-      );
-    }
-    if (hasHalfStar) {
-      starsArr.push(
-        <Icon
-          key="half"
-          icon="material-symbols:star-half"
-          className="text-[#FE9A00]"
-          width="24"
-          height="24"
-        />
-      );
-    }
-    for (let i = 0; i < emptyStars; i++) {
-      starsArr.push(
-        <Icon
-          key={`empty-${i}`}
-          icon="material-symbols:star-rate-rounded"
-          className="text-gray-300"
-          width="20"
-          height="20"
-        />
-      );
-    }
-    return starsArr;
-  };
 
 const renderStars = (stars: number) => {
   const fullStars = Math.floor(stars); // whole stars
@@ -189,7 +189,7 @@ const renderStars = (stars: number) => {
                   {hotel.name}
                 </p>
 
-                {renderStars(Number(hotel.stars))}
+                {/* {renderStars(Number(hotel.stars))} */}
 
               </div>
 
