@@ -188,4 +188,6 @@ body:is(.dark *) {
 .appHorizantalSpacing{
 @apply px-4 sm:px-6
 }
-
+.sectionVerticalSpacing{
+    @apply py-6 md:py-10 lg:py-12
+}

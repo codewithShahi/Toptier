@@ -15,8 +15,8 @@ const OfferSection = () => {
         href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap"
         rel="stylesheet"
       />
-      <div className="py-6 appHorizantalSpacing">
-        <div className="max-w-[1200px] mx-auto">
+      <div className="py-6 ">
+        <div className="max-w-[1200px] mx-auto appHorizantalSpacing">
           {/* Heading */}
           <div className="text-center mb-12">
             <h1

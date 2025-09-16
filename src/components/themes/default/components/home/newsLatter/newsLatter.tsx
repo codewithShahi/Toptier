@@ -66,9 +66,9 @@ const NewsLatter: React.FC = () => {
   };
 
   return (
-  <div className="p-4 sm:p-6 lg:p-8">
-  <div className="max-w-[1200px] mx-auto">
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-14">
+  <div className="py-4 sm:py-6 lg:py-8">
+  <div className="max-w-[1200px] mx-auto  ">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-14 appHorizantalSpacing">
       {/* Image */}
       <div className="order-2 lg:order-1">
         <Image
@@ -82,14 +82,19 @@ const NewsLatter: React.FC = () => {
       </div>
 
       {/* Form Section */}
-      <div className="flex flex-col gap-3 sm:gap-4 order-1 lg:order-2">
-        <button className="text-white bg-[#010101]/60 hover:bg-black/60 transition cursor-pointer text-sm font-medium px-3 w-[91px] h-[28px] rounded-md">
+      <div className="flex flex-col gap-2 sm:gap-4 order-1 lg:order-2 ">
+        <button className="text-white bg-[#010101]/60 hover:bg-black/60 transition cursor-pointer text-sm font-medium px-3 w-[91px] h-[28px] rounded-md mb-2">
           Newsletter
         </button>
-
-        <p className="text-[28px] sm:text-[36px] lg:text-[44px] text-[#051036] font-[900] ">
-          Your Travel Journey Starts Here
+       <div>
+ <p className="text-[28px] sm:text-[36px] lg:text-[44px] text-[#051036] font-[900] leading-8 ">
+          Your Travel
         </p>
+         <p className="text-[28px] sm:text-[36px] lg:text-[44px] text-[#051036] font-[900] ">
+          Journey Starts Here
+        </p>
+       </div>
+
         <p className="text-[16px] sm:text-[17px] lg:text-[18px] font-[400] text-[#697488] ">
           Begin your adventure with handpicked stays, exclusive deals, and
           effortless booking — everything you need for a perfect getaway, all
@@ -154,11 +159,11 @@ const NewsLatter: React.FC = () => {
         </div>
 
         {/* Submit Button */}
-        <div className="mt-6">
+        <div className="mt-3">
           <button
             onClick={handleSubmit}
             disabled={loading}
-            className="rounded-lg bg-[#163C8C] text-white w-full py-2 h-[45px] sm:h-[47px] lg:h-[49px] flex items-center justify-center"
+            className="rounded-lg bg-[#163C8C] cursor-pointer text-white w-full py-2 h-[45px] sm:h-[47px] lg:h-[49px] flex items-center justify-center"
           >
             {loading ? (
               <Icon
