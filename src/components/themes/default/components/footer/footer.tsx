@@ -27,7 +27,7 @@ const Footer = () => {
   (page:any) => page.name === "Footer" && page.category === "downloads"
 );
 
-  console.log('app',app.app)
+
   // Define footer sections as arrays
   const footerItems = [
     {
@@ -55,7 +55,7 @@ const Footer = () => {
   return (
     <footer className="bg-white border-t border-gray-200">
       {/* Top Section */}
-      <div className="max-w-7xl mx-auto appHorizantalSpacing py-12">
+      <div className="max-w-[1200px] mx-auto appHorizantalSpacing py-12">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
           <div>
             <h1 className="text-2xl font-bold text-blue-900">{home_title}</h1>
@@ -115,7 +115,7 @@ const Footer = () => {
 
       {/* Bottom Bar */}
       <div className="border-t border-gray-200 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col md:flex-row justify-between items-center">
+        <div className="max-w-[1200px] mx-auto appHorizantalSpacing py-6 flex flex-col md:flex-row justify-between items-center">
           <p className="text-lg text-gray-900 font-normal">
             © 2025 {business_name}. All rights reserved.
           </p>
