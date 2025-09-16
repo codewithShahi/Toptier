@@ -31,6 +31,7 @@ const FeaturedHotels: React.FC = () => {
 //     const fullStars = Math.floor(stars);
 //     const hasHalfStar = stars % 1 >= 0.5;
 //     const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+
 //     const starsArr = [];
 //     for (let i = 0; i < fullStars; i++) {
 //       starsArr.push(
@@ -67,7 +68,7 @@ const FeaturedHotels: React.FC = () => {
 //     }
 //     return starsArr;
 //   };
-  // :star: Star Rating Renderer
+
 const renderStars = (stars: number) => {
   const fullStars = Math.floor(stars); // whole stars
   const hasHalfStar = stars % 1 >= 0.5; // check if half star
@@ -167,7 +168,7 @@ const renderStars = (stars: number) => {
                 <p className="font-[800] text-[20px] sm:text-[24px] lg:text-[25px] leading-tight">
                   {hotel.name}
                 </p>
-                {/* {renderStars(Number(hotel.stars))} */}
+
               </div>
               <p className="text-[16px] sm:text-[17px] lg:text-[18px] my-2 font-[400] text-[#5B697E]">
                 {hotel.city}, {hotel.country}
