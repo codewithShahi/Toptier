@@ -25,12 +25,12 @@ export async function getDomain(): Promise<string> {
 }
 // ============== COMMON HEADER ================
 export async function getHeaders(contentType: string = "application/x-www-form-urlencoded") {
-  const domain = await getDomain();
+  // const domain = await getDomain();
 
   const headers: Record<string, string> = {
     Accept: "application/json",
-    Authorization: `Bearer ${token}`,
-    domain,
+    // Authorization: `Bearer ${token}`,
+
   };
 
   if (contentType) {
