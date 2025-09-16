@@ -55,6 +55,7 @@ const renderStars = (stars: number) => {
     );
   }
 
+
   // Half Star
   if (hasHalfStar) {
     starsArr.push(
@@ -83,6 +84,7 @@ const renderStars = (stars: number) => {
 
   return starsArr;
 };
+
 
   return (
     <div className="w-full max-w-[1200px] mx-auto appHorizantalSpacing py-6">
