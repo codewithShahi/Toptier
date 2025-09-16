@@ -1,6 +1,7 @@
 "use client";
 
 import { useAppSelector } from '@lib/redux/store';
+import Image from 'next/image';
 import React, { useState } from 'react';
 
 const ChevronLeft = () => (
@@ -23,7 +24,7 @@ const Star = ({ className }: { className: string }) => (
 
 const TestimonialSection = () => {
   const { testimonials } = useAppSelector((state) => state.appData.data);
-
+console.log('tesi',testimonials)
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
 
@@ -101,12 +102,15 @@ const TestimonialSection = () => {
                   <div className="bg-[#F8F9FA] rounded-2xl shadow-lg p-4 sm:p-6 lg:p-8 min-h-[350px] sm:h-[390px] relative overflow-hidden border border-gray-100">
                     {/* mobile view */}
                     <div className="block sm:hidden">
-                      <div className="flex items-start gap-3 mb-4">
-                        <img
-                          src={testimonial.photo || testimonial.profile_photo}
-                          alt={testimonial.name}
-                          className="w-12 h-12 rounded-full object-cover shadow-sm flex-shrink-0"
-                        />
+                      <div className="flex items-start gap-3 mb-4 border">
+<Image
+  src={testimonial.photo  || "/images/default-user.jpg"}
+  alt={testimonial.name}
+  width={64}
+  height={64}
+  className="w-12 sm:w-16 h-12 sm:h-16 rounded-full object-cover shadow-sm"
+/>
+
                         <div className="flex-1">
                           <h3 className="text-lg font-bold text-black mb-1">
                             {testimonial.name}
@@ -129,11 +133,15 @@ const TestimonialSection = () => {
                     <div className="hidden sm:block">
                       <div className="w-[60%] pr-4">
                         <div className="mb-4">
-                          <img
-                            src={testimonial.photo || testimonial.profile_photo}
-                            alt={testimonial.name}
-                            className="w-12 sm:w-16 h-12 sm:h-16 rounded-full object-cover shadow-sm"
-                          />
+<img
+  src={testimonial.profile_photo}
+  alt={testimonial.name}
+  onError={(e) => {
+    (e.target as HTMLImageElement).src = "/images/default-user.jpg";
+  }}
+  className="w-12 sm:w-16 h-12 sm:h-16 rounded-full object-cover shadow-sm"
+/>
+
                         </div>
                         <h3 className="text-lg sm:text-xl font-bold text-black mb-2">
                           {testimonial.name}
