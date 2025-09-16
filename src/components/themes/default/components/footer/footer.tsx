@@ -27,7 +27,7 @@ const Footer = () => {
   (page:any) => page.name === "Footer" && page.category === "downloads"
 );
 
-  console.log('app',app.app)
+ 
   // Define footer sections as arrays
   const footerItems = [
     {

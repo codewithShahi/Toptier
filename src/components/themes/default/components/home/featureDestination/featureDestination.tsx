@@ -8,10 +8,9 @@ interface Destination {
   location: string;
   image: string;
 }
-const FeaturedDestinations: React.FC = () => {
+
   const { featured_tours } = useAppSelector(state => state.appData?.data);
   console.log('app data ', featured_tours);
-
   const [likedDestinations, setLikedDestinations] = React.useState<Set<number>>(new Set());
 
 
@@ -41,7 +40,9 @@ const FeaturedDestinations: React.FC = () => {
   };
   
   const handleExploreNow = (destination: Destination) => {
+
     console.log(`Exploring ${destination.location}, ${destination.country}`);
+
   };
 
   if (!featured_tours) {
@@ -68,10 +69,12 @@ const FeaturedDestinations: React.FC = () => {
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
       <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+
       
       <div className="py-6 appHorizantalSpacing">
         <div className="w-full max-w-[1200px] mx-auto">
           <div className="text-center mb-6">
+
             <h1 className="text-4xl font-bold text-gray-900 mb-4" style={{ fontFamily: 'Urbanist, sans-serif' }}>
               Featured Destination
             </h1>
