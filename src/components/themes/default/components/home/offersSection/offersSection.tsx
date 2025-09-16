@@ -83,9 +83,9 @@ const OfferSection = () => {
     alt={service.title}
     width={idx === 0 ? 200 : idx === 1 ? 150 : 120}
     height={idx === 0 ? 200 : idx === 1 ? 150 : 120}
-    className={`object-contain 
-      ${idx === 0 ? "w-[220px] h-[180px]" : ""} 
-      ${idx === 1 ? "w-[200px] h-[160px]" : ""} 
+    className={`object-contain
+      ${idx === 0 ? "w-[220px] h-[180px]" : ""}
+      ${idx === 1 ? "w-[200px] h-[160px]" : ""}
       ${idx === 2 ? "w-[120px] h-[140px]" : ""}`}
   />
 </div>
