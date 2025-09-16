@@ -8,8 +8,8 @@ const OfferSection = () => {
         href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap"
         rel="stylesheet"
       />
-      <div className="bg-gray-50 min-h-screen py-12 appHorizantalSpacing">
-        <div className="max-w-7xl mx-auto">
+      <div className="py-6 appHorizantalSpacing">
+        <div className="max-w-[1200px] mx-auto">
           <div className="text-center mb-12">
             <h1
               className="text-4xl font-bold text-gray-900 mb-4"
@@ -52,21 +52,8 @@ const OfferSection = () => {
                   Book with Confidence
                 </button>
               </div>
-              <div className="absolute -right-6 -bottom-6 opacity-30">
-                <svg width="100" height="100" viewBox="0 0 100 100" fill="none">
-                  <path
-                    d="M25 35 L75 35 Q80 35 80 40 L80 70 Q80 75 75 75 L25 75 Q20 75 20 70 L20 40 Q20 35 25 35 Z"
-                    fill="currentColor"
-                  />
-                  <circle cx="35" cy="25" r="3" fill="currentColor" />
-                  <circle cx="65" cy="25" r="3" fill="currentColor" />
-                  <path
-                    d="M30 45 L70 45 M30 55 L55 55 M30 65 L65 65"
-                    stroke="rgba(255,255,255,0.7)"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                  />
-                </svg>
+              <div className="absolute -right-3 -bottom-1 opacity-100">
+                <img src="./images/offer1.png" alt="" className="w-[130px] h-[130px] object-contain" />
               </div>
             </div>
             {/* CARD 2 */}
@@ -95,21 +82,8 @@ const OfferSection = () => {
                   Start Booking
                 </button>
               </div>
-              <div className="absolute -right-6 -bottom-6 opacity-30">
-                <svg width="100" height="100" viewBox="0 0 100 100" fill="none">
-                  <path
-                    d="M25 35 L75 35 Q80 35 80 40 L80 70 Q80 75 75 75 L25 75 Q20 75 20 70 L20 40 Q20 35 25 35 Z"
-                    fill="currentColor"
-                  />
-                  <circle cx="35" cy="25" r="3" fill="currentColor" />
-                  <circle cx="65" cy="25" r="3" fill="currentColor" />
-                  <path
-                    d="M30 45 L70 45 M30 55 L55 55 M30 65 L65 65"
-                    stroke="rgba(255,255,255,0.7)"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                  />
-                </svg>
+              <div className="absolute -right-3 -bottom-1 opacity-100">
+                <img src="./images/offer2.png" alt="" className="w-[190px] h-[160px] object-contain" />
               </div>
             </div>
             {/* CARD 3 */}
@@ -138,21 +112,8 @@ const OfferSection = () => {
                   Contact Support
                 </button>
               </div>
-              <div className="absolute -right-6 -bottom-6 opacity-30">
-                <svg width="100" height="100" viewBox="0 0 100 100" fill="none">
-                  <path
-                    d="M25 35 L75 35 Q80 35 80 40 L80 70 Q80 75 75 75 L25 75 Q20 75 20 70 L20 40 Q20 35 25 35 Z"
-                    fill="currentColor"
-                  />
-                  <circle cx="35" cy="25" r="3" fill="currentColor" />
-                  <circle cx="65" cy="25" r="3" fill="currentColor" />
-                  <path
-                    d="M30 45 L70 45 M30 55 L55 55 M30 65 L65 65"
-                    stroke="rgba(255,255,255,0.7)"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                  />
-                </svg>
+              <div className="absolute -right-3 -bottom-1 opacity-100">
+                <img src="./images/offer3.png" alt="" className="w-[215px] h-[150px] object-contain" />
               </div>
             </div>
           </div>
