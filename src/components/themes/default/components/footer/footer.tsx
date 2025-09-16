@@ -53,20 +53,20 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="bg-white border-t border-gray-200">
+    <footer className="bg-white border-t  border-gray-200">
       {/* Top Section */}
-      <div className="max-w-[1200px] mx-auto appHorizantalSpacing py-12">
+      <div className="max-w-[1200px] mx-auto appHorizantalSpacing py-12 lg:py-12">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
           <div>
             <h1 className="text-2xl font-bold text-blue-900">{home_title}</h1>
           </div>
-          <div className="text-base text-[#11223399] max-w-md mt-4 md:mt-0 lead-6">
+          <div className="text-base text-[#11223399] max-w-md  lg:mt-4 md:mt-0 lead-6">
             Unlock extraordinary stays with our expert-curated hotels and exclusive access to the world's finest destinations.
           </div>
         </div>
 
         {/* Grid Layout for Links */}
-        <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+        <div className="mt-8 lg:mt-12 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
           {footerItems.map((page, index) => (
             <div key={index}>
               <h3 className="text-lg font-bold text-gray-800 mb-4">{page.title}</h3>

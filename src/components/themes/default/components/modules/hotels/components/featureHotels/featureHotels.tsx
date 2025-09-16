@@ -20,7 +20,6 @@ const FeaturedHotels: React.FC = () => {
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [likedDestinations, setLikedDestinations] = useState<Set<string>>(new Set());
 
-  // ✅ get dynamic data from Redux
   const { featured_hotels } = useAppSelector((state) => state.appData?.data);
 
   const toggleLike = (hotelId: string) => {
@@ -34,7 +33,6 @@ const FeaturedHotels: React.FC = () => {
       return newSet;
     });
   };
-// ⭐ Star Rating Renderer
 const renderStars = (stars: number) => {
   const fullStars = Math.floor(stars); // whole stars
   const hasHalfStar = stars % 1 >= 0.5; // check if half star
@@ -42,7 +40,6 @@ const renderStars = (stars: number) => {
 
   const starsArr = [];
 
-  // Full Stars
   for (let i = 0; i < fullStars; i++) {
     starsArr.push(
       <Icon
@@ -56,7 +53,6 @@ const renderStars = (stars: number) => {
   }
 
 
-  // Half Star
   if (hasHalfStar) {
     starsArr.push(
       <Icon
@@ -69,7 +65,6 @@ const renderStars = (stars: number) => {
     );
   }
 
-  // Empty Stars
   for (let i = 0; i < emptyStars; i++) {
     starsArr.push(
       <Icon
@@ -118,28 +113,21 @@ const renderStars = (stars: number) => {
               className="w-full h-[280px] sm:h-[320px] md:h-[360px] lg:h-[393px] object-cover rounded-[55px]"
             />
             <div className="px-4 pt-[16px]">
-              {/* Title & Stars */}
+              {/* Title */}
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                 <p className="font-[800] text-[20px] sm:text-[24px] lg:text-[25px] leading-tight">
                   {hotel.name}
                 </p>
-                {/* <div className="flex items-center gap-1">
-                  <Icon
-                    icon="material-symbols:star-rate-rounded"
-                    className="text-[#FE9A00]"
-                    width="22"
-                    height="22"
-                  />
-                  <p className="text-[#5B697E] text-[14px] sm:text-[16px] lg:text-[14px] font-[400]">
-                    {hotel.stars} Stars
-                  </p>
-                </div> */}
-                  {renderStars(Number(hotel.stars))}
               </div>
 
               <p className="text-[16px] sm:text-[17px] lg:text-[18px] my-2 font-[400] text-[#5B697E]">
                 {hotel.city}, {hotel.country}
               </p>
+
+              {/* Stars - now above pricing */}
+              <div className="flex items-center gap-1 mb-2">
+                {renderStars(Number(hotel.stars))}
+              </div>
 
               {/* Price & Rooms */}
               <div className="flex justify-between items-center">
@@ -151,7 +139,8 @@ const renderStars = (stars: number) => {
                     /night
                   </p>
                 </div>
-                <div className="flex items-center gap-2">
+                {/* Commented out green rooms left text */}
+                {/* <div className="flex items-center gap-2">
                   <Icon
                     icon="material-symbols:circle"
                     className="text-[#00A63E]"
@@ -161,10 +150,9 @@ const renderStars = (stars: number) => {
                   <p className="text-[14px] sm:text-[15px] lg:text-[16px] text-[#00A63E] font-[500]">
                     {hotel.left_rooms} rooms left
                   </p>
-                </div>
+                </div> */}
               </div>
 
-              {/* Hover amenities */}
               <div
                 className={`overflow-hidden transition-all duration-700 ease-in-out ${
                   hoveredId === hotel.id ? "max-h-[500px]" : "max-h-0"
@@ -184,8 +172,6 @@ const renderStars = (stars: number) => {
                 </div>
               </div>
             </div>
-
-            {/* Book & Like */}
             <div className="flex items-center px-4 py-[16px] justify-between gap-3">
               <button className="text-[16px] sm:text-[18px] lg:text-[20px] font-[600] px-4 sm:px-6 bg-[#163D8C] text-white rounded-full py-[12px] sm:py-[16px] flex-1 transition-all duration-200 hover:bg-[#1a4299]">
                 Book Now

@@ -70,7 +70,7 @@ console.log('tesi',testimonials)
       >
         <div className="flex flex-col sm:flex-row justify-between items-start mb-8 sm:mb-12 gap-6 sm:gap-8">
           <div className="flex-1">
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
+            <h2 className="text-3xl  sm:text-4xl lg:text-5xl font-bold text-gray-900  lg:mb-2">
               What Our<br />
               Guests Are Saying
             </h2>
@@ -99,10 +99,10 @@ console.log('tesi',testimonials)
                       : 'w-full sm:w-[60%] opacity-50 scale-95 hidden sm:block'
                   }`}
                 >
-                  <div className="bg-[#F8F9FA] rounded-2xl shadow-lg p-4 sm:p-6 lg:p-8 min-h-[350px] sm:h-[390px] relative overflow-hidden border border-gray-100">
+                  <div className="bg-[#F8F9FA] rounded-2xl shadow-lg p-4 sm:p-6 lg:p-8 min-h-[350px] sm:h-[390px] relative overflow-hidden border-gray-100">
                     {/* mobile view */}
                     <div className="block sm:hidden">
-                      <div className="flex items-start gap-3 mb-4 border">
+                      <div className="flex items-start gap-3 mb-4">
 <Image
   src={testimonial.photo  || "/images/default-user.jpg"}
   alt={testimonial.name}
