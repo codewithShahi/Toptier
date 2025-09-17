@@ -41,17 +41,33 @@ export async function getHeaders(contentType: string = "application/x-www-form-u
 }
 
 // ---------------- Fetch App Data ---------------- //
+// define what your session looks like
+interface SessionUser {
+  user?: {
+    id?: string;
+    user_id?: string;
+    first_name?: string;
+    last_name?: string;
+    email?: string;
+    // ... add other fields you need
+  };
+  iat?: number;
+  exp?: number;
+}
+
 export const fetchAppData = async () => {
   try {
-    const userinfo = await getSession();
+    // explicitly type userinfo
+    const userinfo = (await getSession()) as SessionUser | null;
     const user_id = userinfo?.user?.user_id ?? "";
+
     const formData = new FormData();
     formData.append("api_key", api_key ?? "");
     formData.append("language", "en");
     formData.append("currency", "usd");
 
     if (user_id) {
-      formData.append("user_id", user_id); // no need for .toString(), it's already a string
+      formData.append("user_id", user_id);
     }
 
     const response = await fetch(`${baseUrl}/app`, {
