@@ -21,7 +21,7 @@ const FeaturedHotels: React.FC = () => {
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [hotels, setHotels] = useState<Hotel[]>([]);
   const { featured_hotels } = useAppSelector((state) => state.appData?.data);
-    const { user } = useUser();
+  const { user } = useUser();
 
   // simulate userId (replace with real auth value)
   const userId = "123";
@@ -32,53 +32,53 @@ const FeaturedHotels: React.FC = () => {
     }
   }, [featured_hotels]);
 
-const renderStars = (stars: number) => {
-  const fullStars = Math.floor(stars); // whole stars
-  const hasHalfStar = stars % 1 >= 0.5; // check if half star
-  const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
-  const starsArr = [];
-  for (let i = 0; i < fullStars; i++) {
-    starsArr.push(
-      <Icon
-        key={`full-${i}`}
-        icon="material-symbols:star-rate-rounded"
-        className="text-[#FE9A00]"
-        width="24"
-        height="24"
-      />
-    );
-  }
-  if (hasHalfStar) {
-    starsArr.push(
-      <Icon
-        key="half"
-        icon="material-symbols:star-half"
-        className="text-[#FE9A00]"
-        width="24"
-        height="24"
-      />
-    );
-  }
-  for (let i = 0; i < emptyStars; i++) {
-    starsArr.push(
-      <Icon
-        key={`empty-${i}`}
-        icon="material-symbols:star-rate-rounded"
-        className="text-gray-300"
-        width="20"
-        height="20"
-      />
-    );
-  }
-  return starsArr;
-};
+  const renderStars = (stars: number) => {
+    const fullStars = Math.floor(stars); // whole stars
+    const hasHalfStar = stars % 1 >= 0.5; // check if half star
+    const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+    const starsArr = [];
+    for (let i = 0; i < fullStars; i++) {
+      starsArr.push(
+        <Icon
+          key={`full-${i}`}
+          icon="material-symbols:star-rate-rounded"
+          className="text-[#FE9A00]"
+          width="24"
+          height="24"
+        />
+      );
+    }
+    if (hasHalfStar) {
+      starsArr.push(
+        <Icon
+          key="half"
+          icon="material-symbols:star-half"
+          className="text-[#FE9A00]"
+          width="24"
+          height="24"
+        />
+      );
+    }
+    for (let i = 0; i < emptyStars; i++) {
+      starsArr.push(
+        <Icon
+          key={`empty-${i}`}
+          icon="material-symbols:star-rate-rounded"
+          className="text-gray-300"
+          width="20"
+          height="20"
+        />
+      );
+    }
+    return starsArr;
+  };
   // :heart: Handle Favorite API
   const toggleLike = async (hotel: Hotel) => {
     try {
-       if (!user) {
-            toast.error("User must be logged to mark as favourite ");
-            return;
-          }
+      if (!user) {
+        toast.error("User must be logged to mark as favourite ");
+        return;
+      }
 
       const payload = {
         item_id: String(hotel.id),
@@ -97,7 +97,7 @@ const renderStars = (stars: number) => {
           h.id === hotel.id ? { ...h, favorite: h.favorite === 1 ? 0 : 1 } : h
         )
       );
-    toast.success(res?.message || "Updated favourites ✅");
+      toast.success(res?.message || "Updated favourites ✅");
 
     } catch (err) {
       console.error("toggleLike error:", err);
@@ -128,28 +128,30 @@ const renderStars = (stars: number) => {
             onMouseEnter={() => setHoveredId(hotel.id)}
             onMouseLeave={() => setHoveredId(null)}
           >
-            <img
-              src={hotel.img}
-              alt={hotel.name}
-              className="w-full h-[280px] sm:h-[320px] md:h-[360px] lg:h-[393px] object-cover rounded-[55px]"
-            />
-            <div className="px-4 pt-[16px]">
-              {/* Title */}
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                <p className="font-[800] text-[20px] sm:text-[24px] lg:text-[25px] leading-tight">
-                  {hotel.name}
-                </p>
-
-              </div>
-              <p className="text-[16px] sm:text-[17px] lg:text-[18px] my-2 font-[400] text-[#5B697E]">
+            <div className="relative overflow-hidden rounded-[55px] aspect-square">
+              <img
+                src={hotel.img}
+                alt={hotel.name}
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <div className="p-3">
+              <h3
+                className="text-xl font-extrabold text-gray-900 mb-4 pl-4
+                               sm:text-2xl md:text-xl lg:text-2xl"
+                style={{ fontFamily: "Urbanist, sans-serif" }}
+              >
+                {hotel.name}
+              </h3>
+              <p className="text-[16px] sm:text-[17px] lg:text-[18px] my-2 font-[400] text-[#5B697E] pl-4">
                 {hotel.city}, {hotel.country}
               </p>
               {/* Stars - now above pricing */}
-              <div className="flex items-center gap-1 mb-2">
+              <div className="flex items-center gap-1 mb-2 pl-4">
                 {renderStars(Number(hotel.stars))}
               </div>
               {/* Price & Rooms */}
-              <div className="flex justify-between items-center">
+              <div className="flex justify-between items-center pl-4">
                 <div className="flex gap-2 items-center">
                   <p className="text-[24px] sm:text-[28px] lg:text-[30px] font-[900]">
                     ${hotel.price}
@@ -172,59 +174,58 @@ const renderStars = (stars: number) => {
                 </div> */}
               </div>
               <div
-                className={`overflow-hidden transition-all duration-700 ease-in-out ${
-                  hoveredId === hotel.id ? "max-h-[500px]" : "max-h-0"
-                }`}
+                className={`overflow-hidden transition-all duration-700 ease-in-out ${hoveredId === hotel.id ? "max-h-[500px]" : "max-h-0"
+                  }`}
               >
                 <div className="py-[16px]">
                   <div className="border-t border-[#E1E1E1] pt-[20px] mt-[24px] space-y-2">
-                  {hotel.amenities && hotel.amenities.length > 0 ? (
-    hotel.amenities.slice(0, 4).map((amenity, idx) => (
-      <div key={idx} className="flex gap-2 items-center">
-        <Icon icon="mdi:check-circle-outline" className="text-blue-600" width={24} height={24} />
-        <p className="text-[14px] sm:text-[16px] lg:text-[17px] font-[500]">
-          {amenity}
-        </p>
-      </div>
-    ))
-  ) : (
-    <div className="flex flex-col items-center justify-center py-3.5">
+                    {hotel.amenities && hotel.amenities.length > 0 ? (
+                      hotel.amenities.slice(0, 4).map((amenity, idx) => (
+                        <div key={idx} className="flex gap-2 items-center">
+                          <Icon icon="mdi:check-circle-outline" className="text-blue-600" width={24} height={24} />
+                          <p className="text-[14px] sm:text-[16px] lg:text-[17px] font-[500]">
+                            {amenity}
+                          </p>
+                        </div>
+                      ))
+                    ) : (
+                      <div className="flex flex-col items-center justify-center py-3.5">
 
-      <p className="text-gray-500 text-sm sm:text-base">No amenities found</p>
-    </div>
-  )}
+                        <p className="text-gray-500 text-sm sm:text-base">No amenities found</p>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
             </div>
-            <div className="flex items-center px-4 py-[16px] justify-between gap-3">
-              <button className="text-[16px] sm:text-[18px] lg:text-[20px] font-[600] px-4 sm:px-6 bg-[#163D8C] text-white rounded-full py-[12px] sm:py-[16px] flex-1 transition-all duration-200 hover:bg-[#1A4299]">
+            <div className="flex items-center gap-3 px-2">
+              <button className="flex-1 ml-3 bg-[#163D8C] hover:bg-gray-800 text-white font-medium py-3 px-3 text-sm sm:text-base md:text-sm lg:text-base rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
                 Book Now
               </button>
               <button
-  onClick={() => toggleLike(hotel)}
-  className="bg-[#EBEFF4] hover:bg-gray-200 rounded-full transition-all duration-200
+                onClick={() => toggleLike(hotel)}
+                className="bg-[#EBEFF4] mr-3 hover:bg-gray-200 rounded-full transition-all duration-200
              flex items-center justify-center flex-shrink-0
-             w-12 h-12 sm:w-14 sm:h-14 md:w-12 md:h-12 lg:w-16 lg:h-16"
-  aria-label={`${hotel.favorite === 1 && user ? "Unlike" : "Like"} ${hotel.name}`}
->
-  <svg
-    className="transition-colors duration-200 w-5 h-5 sm:w-6 sm:h-6 md:w-5 md:h-5 lg:w-6 lg:h-6"
-    viewBox="0 0 22 22"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <path
-      d="M6.22371 1.44739C3.27589 1.44739 0.885498 3.98725 0.885498 7.11938C0.885498 13.3881 11 20.5526 11 20.5526C11 20.5526 21.1145 13.3881 21.1145 7.11938C21.1145 3.23878 18.7241 1.44739 15.7763 1.44739C13.686 1.44739 11.8766 2.72406 11 4.58288C10.1234 2.72406 8.31404 1.44739 6.22371 1.44739Z"
-      stroke={hotel.favorite === 1 && user ? "#EF4444" : "#6B7280"}  // :white_tick: red if fav
-      strokeOpacity="0.8"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      fill={hotel.favorite === 1 && user ? "#EF4444" : "none"}       // :white_tick: filled red if fav
-    />
-  </svg>
-</button>
+             w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16"
+                aria-label={`${hotel.favorite === 1 && user ? "Unlike" : "Like"} ${hotel.name}`}
+              >
+                <svg
+                  className="transition-colors duration-200 w-5 h-5 sm:w-6 sm:h-6 md:w-5 md:h-5 lg:w-6 lg:h-6"
+                  viewBox="0 0 22 22"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M6.22371 1.44739C3.27589 1.44739 0.885498 3.98725 0.885498 7.11938C0.885498 13.3881 11 20.5526 11 20.5526C11 20.5526 21.1145 13.3881 21.1145 7.11938C21.1145 3.23878 18.7241 1.44739 15.7763 1.44739C13.686 1.44739 11.8766 2.72406 11 4.58288C10.1234 2.72406 8.31404 1.44739 6.22371 1.44739Z"
+                    stroke={hotel.favorite === 1 && user ? "#EF4444" : "#6B7280"}  
+                    strokeOpacity="0.8"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    fill={hotel.favorite === 1 && user ? "#EF4444" : "none"}      
+                  />
+                </svg>
+              </button>
             </div>
           </div>
         ))}
@@ -233,8 +234,3 @@ const renderStars = (stars: number) => {
   );
 };
 export default FeaturedHotels;
-
-
-
-
-

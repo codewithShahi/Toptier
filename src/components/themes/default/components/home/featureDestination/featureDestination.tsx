@@ -101,7 +101,7 @@ const FeaturedDestinations: React.FC = () => {
                 className="bg-[#F5F5F5] rounded-[65px] w-full"
               >
                 {/* Image */}
-                <div className="relative overflow-hidden rounded-[55px] m-3 aspect-[4/3]">
+                <div className="relative overflow-hidden rounded-[55px] m-3 aspect-square">
                   <img
                     src={tour.img}
                     alt={`${tour.location}, ${tour.country}`}
@@ -123,15 +123,15 @@ const FeaturedDestinations: React.FC = () => {
                     {tour.location}, {tour.country}
                   </h3>
 
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-3 px-2">
                     <button
                       onClick={() =>
                         console.log(`Exploring ${tour.location}, ${tour.country}`)
                       }
-                      className="flex-1 ml-3 bg-[#163C8C] hover:bg-blue-700 text-white font-medium
+                      className="flex-1 ml-3 bg-[#163C8C] hover:bg-gray-800 text-white font-medium
                                  py-3 px-3 text-sm sm:text-base md:text-sm lg:text-base
                                  rounded-full transition-colors duration-200
-                                 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                                 focus:outline-none focus:ring-2 focus:ring-gray-800 focus:ring-offset-2"
                       style={{ fontFamily: "Inter, sans-serif" }}
                     >
                       Explore Now
@@ -171,7 +171,7 @@ const FeaturedDestinations: React.FC = () => {
         )}
       </div>
     </div>
-  );
+  
    </>
   );
 };
