@@ -3,6 +3,8 @@ import { useState, useEffect } from "react";
 import { Icon } from "@iconify/react";
 import { useAppSelector } from "@lib/redux/store";
 import { addToFavourite } from "@src/actions"; // :point_left: import API
+import { useUser } from "@hooks/use-user";
+import { toast } from "react-toastify";
 interface Hotel {
   id: string;
   name: string;
@@ -19,6 +21,8 @@ const FeaturedHotels: React.FC = () => {
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [hotels, setHotels] = useState<Hotel[]>([]);
   const { featured_hotels } = useAppSelector((state) => state.appData?.data);
+    const { user } = useUser();
+
   // simulate userId (replace with real auth value)
   const userId = "123";
   // Sync redux → local state
@@ -27,96 +31,61 @@ const FeaturedHotels: React.FC = () => {
       setHotels(featured_hotels);
     }
   }, [featured_hotels]);
-  //  const renderStars = (stars: number) => {
-  //     const fullStars = Math.floor(stars);
-  //     const hasHalfStar = stars % 1 >= 0.5;
-  //     const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
 
-  //     const starsArr = [];
-  //     for (let i = 0; i < fullStars; i++) {
-  //       starsArr.push(
-  //         <Icon
-  //           key={`full-${i}`}
-  //           icon="material-symbols:star-rate-rounded"
-  //           className="text-[#FE9A00]"
-  //           width="24"
-  //           height="24"
-  //         />
-  //       );
-  //     }
-  //     if (hasHalfStar) {
-  //       starsArr.push(
-  //         <Icon
-  //           key="half"
-  //           icon="material-symbols:star-half"
-  //           className="text-[#FE9A00]"
-  //           width="24"
-  //           height="24"
-  //         />
-  //       );
-  //     }
-  //     for (let i = 0; i < emptyStars; i++) {
-  //       starsArr.push(
-  //         <Icon
-  //           key={`empty-${i}`}
-  //           icon="material-symbols:star-rate-rounded"
-  //           className="text-gray-300"
-  //           width="20"
-  //           height="20"
-  //         />
-  //       );
-  //     }
-  //     return starsArr;
-  //   };
-
-  const renderStars = (stars: number) => {
-    const fullStars = Math.floor(stars); // whole stars
-    const hasHalfStar = stars % 1 >= 0.5; // check if half star
-    const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
-    const starsArr = [];
-    for (let i = 0; i < fullStars; i++) {
-      starsArr.push(
-        <Icon
-          key={`full-${i}`}
-          icon="material-symbols:star-rate-rounded"
-          className="text-[#FE9A00]"
-          width="24"
-          height="24"
-        />
-      );
-    }
-    if (hasHalfStar) {
-      starsArr.push(
-        <Icon
-          key="half"
-          icon="material-symbols:star-half"
-          className="text-[#FE9A00]"
-          width="24"
-          height="24"
-        />
-      );
-    }
-    for (let i = 0; i < emptyStars; i++) {
-      starsArr.push(
-        <Icon
-          key={`empty-${i}`}
-          icon="material-symbols:star-rate-rounded"
-          className="text-gray-300"
-          width="20"
-          height="20"
-        />
-      );
-    }
-    return starsArr;
-  };
+const renderStars = (stars: number) => {
+  const fullStars = Math.floor(stars); // whole stars
+  const hasHalfStar = stars % 1 >= 0.5; // check if half star
+  const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+  const starsArr = [];
+  for (let i = 0; i < fullStars; i++) {
+    starsArr.push(
+      <Icon
+        key={`full-${i}`}
+        icon="material-symbols:star-rate-rounded"
+        className="text-[#FE9A00]"
+        width="24"
+        height="24"
+      />
+    );
+  }
+  if (hasHalfStar) {
+    starsArr.push(
+      <Icon
+        key="half"
+        icon="material-symbols:star-half"
+        className="text-[#FE9A00]"
+        width="24"
+        height="24"
+      />
+    );
+  }
+  for (let i = 0; i < emptyStars; i++) {
+    starsArr.push(
+      <Icon
+        key={`empty-${i}`}
+        icon="material-symbols:star-rate-rounded"
+        className="text-gray-300"
+        width="20"
+        height="20"
+      />
+    );
+  }
+  return starsArr;
+};
   // :heart: Handle Favorite API
   const toggleLike = async (hotel: Hotel) => {
     try {
+       if (!user) {
+            toast.error("User must be logged to mark as favourite ");
+            return;
+          }
+
       const payload = {
         item_id: String(hotel.id),
-        module: "hotels", // :point_left: confirm with backend
-        user_id: userId,
+        module: "tours",
+        user_id: String(user?.user_id) || "",
       };
+
       const res = await addToFavourite(payload);
       if (res?.error) {
         console.error("Error updating favourite:", res.error);
@@ -128,6 +97,8 @@ const FeaturedHotels: React.FC = () => {
           h.id === hotel.id ? { ...h, favorite: h.favorite === 1 ? 0 : 1 } : h
         )
       );
+    toast.success(res?.message || "Updated favourites ✅");
+
     } catch (err) {
       console.error("toggleLike error:", err);
     }
@@ -136,7 +107,7 @@ const FeaturedHotels: React.FC = () => {
     <div className="w-full max-w-[1200px] mx-auto appHorizantalSpacing py-6">
       <div className="text-center mb-8 md:mb-12">
         <h1
-          className="text-2xl sm:text-3xl md:text-4xl font-[800] text-[#112233] mb-4"
+          className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-4"
           style={{ fontFamily: "Urbanist, sans-serif" }}
         >
           Featured Hotels
@@ -153,7 +124,7 @@ const FeaturedHotels: React.FC = () => {
         {hotels?.map((hotel) => (
           <div
             key={hotel.id}
-            className="bg-[#F5F5F5] p-2 rounded-[55px]  transition-all duration-300 "
+            className="bg-[#F5F5F5] p-[8px] rounded-[55px] shadow cursor-pointer transition-all duration-300 hover:shadow-lg"
             onMouseEnter={() => setHoveredId(hotel.id)}
             onMouseLeave={() => setHoveredId(null)}
           >
@@ -201,65 +172,52 @@ const FeaturedHotels: React.FC = () => {
                 </div> */}
               </div>
               <div
-                className={`overflow-hidden transition-all duration-700 ease-in-out ${hoveredId === hotel.id ? "max-h-[500px]" : "max-h-0"
-                  }`}
+                className={`overflow-hidden transition-all duration-700 ease-in-out ${
+                  hoveredId === hotel.id ? "max-h-[500px]" : "max-h-0"
+                }`}
               >
-                
-
                 <div className="py-[16px]">
                   <div className="border-t border-[#E1E1E1] pt-[20px] mt-[24px] space-y-4">
-                    {hotel.amenities && hotel.amenities.length > 0 ? (
-                      hotel.amenities.slice(0, 4).map((amenity, idx) => (
-                        <div key={idx} className="flex gap-2 items-center">
-                          <Icon icon="mdi:check-circle" className="text-blue-600" />
-                          <p className="text-[14px] sm:text-[16px] lg:text-[17px] font-[500]">
-                            {amenity}
-                          </p>
-                        </div>
-                      ))
-                    ) : (
-                      [
-                        "No amenities available",
-                      ].map((amenity, idx) => (
-                        <div key={idx} className="flex gap-2 items-center justify-center">
-                          <p className="text-[14px] sm:text-[16px] lg:text-[17px] font-[500]">
-                            {amenity}
-                          </p>
-                        </div>
-                      ))
-                    )}
+                    {hotel.amenities?.slice(0, 4).map((amenity, idx) => (
+                      <div key={idx} className="flex gap-2 items-center">
+                        <Icon icon="mdi:check-circle" className="text-blue-600" />
+                        <p className="text-[14px] sm:text-[16px] lg:text-[17px] font-[500]">
+                          {amenity}
+                        </p>
+                      </div>
+                    ))}
                   </div>
                 </div>
               </div>
             </div>
-            <div className="flex items-center px-4 py-3 justify-between gap-3">
-              <button className="text-[16px] sm:text-[18px] lg:text-[18px] font-[600] cursor-pointer px-4 sm:px-6 bg-[#163C8C] text-white rounded-full py-3 sm:py-[10px] flex-1 transition-all duration-200 hover:bg-[#1A4299]">
+            <div className="flex items-center px-4 py-[16px] justify-between gap-3">
+              <button className="text-[16px] sm:text-[18px] lg:text-[20px] font-[600] px-4 sm:px-6 bg-[#163D8C] text-white rounded-full py-[12px] sm:py-[16px] flex-1 transition-all duration-200 hover:bg-[#1A4299]">
                 Book Now
               </button>
               <button
-                onClick={() => toggleLike(hotel)}
-                className="bg-[#EBEFF4] hover:bg-gray-200 rounded-full transition-all duration-200
+  onClick={() => toggleLike(hotel)}
+  className="bg-[#EBEFF4] hover:bg-gray-200 rounded-full transition-all duration-200
              flex items-center justify-center flex-shrink-0
              w-12 h-12 sm:w-14 sm:h-14 md:w-12 md:h-12 lg:w-16 lg:h-16"
-                aria-label={`${hotel.favorite === 1 ? "Unlike" : "Like"} ${hotel.name}`}
-              >
-                <svg
-                  className="transition-colors duration-200 w-5 h-5 sm:w-6 sm:h-6 md:w-5 md:h-5 lg:w-6 lg:h-6 cursor-pointer"
-                  viewBox="0 0 22 22"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M6.22371 1.44739C3.27589 1.44739 0.885498 3.98725 0.885498 7.11938C0.885498 13.3881 11 20.5526 11 20.5526C11 20.5526 21.1145 13.3881 21.1145 7.11938C21.1145 3.23878 18.7241 1.44739 15.7763 1.44739C13.686 1.44739 11.8766 2.72406 11 4.58288C10.1234 2.72406 8.31404 1.44739 6.22371 1.44739Z"
-                    stroke={hotel.favorite === 1 ? "#EF4444" : "#6B7280"}  // :white_tick: red if fav
-                    strokeOpacity="0.8"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    fill={hotel.favorite === 1 ? "#EF4444" : "none"}       // :white_tick: filled red if fav
-                  />
-                </svg>
-              </button>
+  aria-label={`${hotel.favorite === 1 && user ? "Unlike" : "Like"} ${hotel.name}`}
+>
+  <svg
+    className="transition-colors duration-200 w-5 h-5 sm:w-6 sm:h-6 md:w-5 md:h-5 lg:w-6 lg:h-6"
+    viewBox="0 0 22 22"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M6.22371 1.44739C3.27589 1.44739 0.885498 3.98725 0.885498 7.11938C0.885498 13.3881 11 20.5526 11 20.5526C11 20.5526 21.1145 13.3881 21.1145 7.11938C21.1145 3.23878 18.7241 1.44739 15.7763 1.44739C13.686 1.44739 11.8766 2.72406 11 4.58288C10.1234 2.72406 8.31404 1.44739 6.22371 1.44739Z"
+      stroke={hotel.favorite === 1 && user ? "#EF4444" : "#6B7280"}  // :white_tick: red if fav
+      strokeOpacity="0.8"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      fill={hotel.favorite === 1 && user ? "#EF4444" : "none"}       // :white_tick: filled red if fav
+    />
+  </svg>
+</button>
             </div>
           </div>
         ))}
