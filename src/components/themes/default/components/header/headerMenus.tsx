@@ -43,7 +43,7 @@ const HeaderMenus = () => {
         {/* Right: Auth Buttons - Desktop Only */}
         {!(user || userLoading) ? <div className="hidden md:flex items-center gap-3">
           <Link
-            href="/auth/signup" 
+            href="/auth/signup"
             className="border border-[#061026] text-[#061026] cursor-pointer text-center text-[16px] rounded-full w-[113px] h-[39px] pt-1.5 hover:bg-blue-50"
           >
             Sign up
@@ -137,7 +137,7 @@ const HeaderMenus = () => {
             >
               Login
             </Link>
-          </div> : <button 
+          </div> : <button
             className="bg-[#163C8C] text-center border-none hover:text-white ring-0 text-white rounded-full px-9 py-2 transition mt-4"
             onClick={async () => {
               await signOut();

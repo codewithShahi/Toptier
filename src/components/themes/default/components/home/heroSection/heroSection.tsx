@@ -21,6 +21,7 @@ const HeroSection = () => {
   const app = useAppSelector((state) => state?.appData?.data);
   const { locale } = useLocale();
   const { data: dict } = useDictionary(locale as any);
+  console.log('app hero data',app)
 
   // =====> Background image with fallback
   const coverImage =

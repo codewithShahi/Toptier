@@ -177,15 +177,22 @@ const renderStars = (stars: number) => {
                 }`}
               >
                 <div className="py-[16px]">
-                  <div className="border-t border-[#E1E1E1] pt-[20px] mt-[24px] space-y-4">
-                    {hotel.amenities?.slice(0, 4).map((amenity, idx) => (
-                      <div key={idx} className="flex gap-2 items-center">
-                        <Icon icon="mdi:check-circle" className="text-blue-600" />
-                        <p className="text-[14px] sm:text-[16px] lg:text-[17px] font-[500]">
-                          {amenity}
-                        </p>
-                      </div>
-                    ))}
+                  <div className="border-t border-[#E1E1E1] pt-[20px] mt-[24px] space-y-2">
+                  {hotel.amenities && hotel.amenities.length > 0 ? (
+    hotel.amenities.slice(0, 4).map((amenity, idx) => (
+      <div key={idx} className="flex gap-2 items-center">
+        <Icon icon="mdi:check-circle-outline" className="text-blue-600" width={24} height={24} />
+        <p className="text-[14px] sm:text-[16px] lg:text-[17px] font-[500]">
+          {amenity}
+        </p>
+      </div>
+    ))
+  ) : (
+    <div className="flex flex-col items-center justify-center py-3.5">
+
+      <p className="text-gray-500 text-sm sm:text-base">No amenities found</p>
+    </div>
+  )}
                   </div>
                 </div>
               </div>
