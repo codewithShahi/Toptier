@@ -105,7 +105,7 @@ const FeaturedDestinations: React.FC = () => {
                   <img
                     src={tour.img}
                     alt={`${tour.location}, ${tour.country}`}
-                    className="w-[405px] h-[393px] object-cover"
+                    className="w-full h-full object-cover"
                     onError={(e) => {
                       (e.target as HTMLImageElement).src =
                         "./images/destinations/default.jpg";
