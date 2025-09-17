@@ -6,8 +6,10 @@ import { fetchAppData } from '@src/actions'
 import { Metadata } from 'next/types'
 
 export const generateMetadata = async (): Promise<Metadata> => {
-  const { data }: any = await fetchAppData()
-  const meta_data = data?.app
+  const data = await fetchAppData()
+  const appData=data.app
+  // console.log('appp DAta',data.data.app)
+  const meta_data = data.data.app
   if (!meta_data) {
     return {
       title: '404',
@@ -15,7 +17,8 @@ export const generateMetadata = async (): Promise<Metadata> => {
     }
   }
 
-  const { agency_name, meta_title, domain, meta_description, logo, favicon } = meta_data
+  const { agency_name, meta_title, domain, meta_description, logo, favicon_img } = meta_data
+  // console.log('adfff', data, favicon)
 
   return {
     metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL!),
@@ -27,7 +30,7 @@ export const generateMetadata = async (): Promise<Metadata> => {
       },
     },
     icons: {
-      icon: favicon,
+      icon: favicon_img,
       shortcut: logo,
       apple: logo,
     },
