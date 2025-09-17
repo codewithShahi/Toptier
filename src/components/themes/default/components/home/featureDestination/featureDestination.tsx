@@ -72,7 +72,7 @@ const FeaturedDestinations: React.FC = () => {
   return (
    <>
 
-  return (
+  {/* return ( */}
     <div className="sectionVerticalSpacing">
       <div className="w-full max-w-[1200px] mx-auto appHorizantalSpacing">
         <div className="text-center mb-6">
@@ -105,7 +105,7 @@ const FeaturedDestinations: React.FC = () => {
                   <img
                     src={tour.img}
                     alt={`${tour.location}, ${tour.country}`}
-                    className="w-full h-full object-cover"
+                    className="w-[405px] h-[393px] object-cover"
                     onError={(e) => {
                       (e.target as HTMLImageElement).src =
                         "./images/destinations/default.jpg";
