@@ -1,9 +1,11 @@
+import { useUser } from "@hooks/use-user";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { fetchAppData } from "@src/actions";
 
 export const setAppData = createAsyncThunk(
   "websiteContent/fetchWebContent",
   async (_, { rejectWithValue }) => {
+   
     try {
       const response = await fetchAppData();
 

@@ -21,7 +21,6 @@ export async function getDomain(): Promise<string> {
     return parts.slice(-2).join(".");
   }
 
-  console.log("getDomain() =========>>>> fun name domain", host);
   return host;
 }
 // ============== COMMON HEADER ================
@@ -43,25 +42,27 @@ export async function getHeaders(contentType: string = "application/x-www-form-u
 
 // ---------------- Fetch App Data ---------------- //
 export const fetchAppData = async () => {
-
   try {
+    const userinfo = await getSession();
+    const user_id = userinfo?.user?.user_id ?? "";
     const formData = new FormData();
     formData.append("api_key", api_key ?? "");
     formData.append("language", "en");
     formData.append("currency", "usd");
 
+    if (user_id) {
+      formData.append("user_id", user_id); // no need for .toString(), it's already a string
+    }
+
     const response = await fetch(`${baseUrl}/app`, {
       method: "POST",
       body: formData,
       headers: {
-        // Don’t set Content-Type (fetch will do it automatically for FormData)
-        "Accept": "application/json, text/plain, */*",
-
+        Accept: "application/json, text/plain, */*",
       },
     });
 
     const data = await response.json().catch(() => null);
-    // console.log("fetchAppData data", JSON.stringify(data,));
 
     if (!response.ok || data?.status === false) {
       return { error: data?.message || "Something went wrong" };
@@ -72,6 +73,7 @@ export const fetchAppData = async () => {
     return { error: (error as Error).message || "An error occurred" };
   }
 };
+
 
 //--------------------------- FETCH COUNTRY LIST ----------------------//
 
@@ -87,7 +89,6 @@ export const fetchCountries = async () => {
     });
 
     const data = await response.json().catch(() => null);
-    // console.log('countries',data)
     if (!response.ok || data?.status === false) {
       return { error: data?.message || "Something went wrong" };
     }
@@ -111,7 +112,6 @@ export const fetchHotelsLocations = async (city: string) => {
     });
 
     const data = await response.json().catch(() => null);
-    console.log('destinaiton', data)
     if (!response.ok || data?.status === false) {
       return { error: data?.message || "Something went wrong" };
     }
@@ -159,8 +159,7 @@ interface newsLaterPayload {
 }
 
 export const addToFavourite = async (payload: newsLaterPayload) => {
-   const userInfo=await getSession()
-// console.log('user id',userInfo)
+
 
   try {
     const formData = new FormData();
@@ -177,7 +176,6 @@ export const addToFavourite = async (payload: newsLaterPayload) => {
     });
 
     const data = await response.json().catch(() => null);
-    console.log('faoutire ',data)
     if (!response.ok || data?.status === false) {
       return { error: data?.message || "Something went wrong" };
     }
@@ -262,7 +260,6 @@ export const signIn = async (payload: { email: string; password: string }) => {
     formData.append("email", payload.email);
     formData.append("password", payload.password);
     formData.append("api_key", api_key ?? ""); // ✅ add api_key if needed
-console.log('login url',`${baseUrl}/logi`)
     const response = await fetch(`${baseUrl}/login`, {
       method: "POST",
       body: formData,
@@ -270,7 +267,6 @@ console.log('login url',`${baseUrl}/logi`)
     });
 
     const data = await response.json().catch(() => null);
-    console.log('login token',data)
     if (!response.ok || data?.status === false) {
       return { error: data?.message || "Something went wrong" };
     }
