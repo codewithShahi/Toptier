@@ -360,137 +360,141 @@ export default function HotelSearch() {
             </div>
 
             {/* Guests */}
-            <div className="relative" ref={guestsDropdownRef}>
-              <label className="block text-sm text-start font-medium text-gray-700 mb-2 dark:text-gray-300">
-                {isLoading ? "Loading..." : dict?.hotel_search?.guest_button?.title}
-              </label>
-              <button
-                type="button"
-                onClick={() => setShowGuestsDropdown((s) => !s)}
-                className={`w-full flex items-center justify-between ${direction === "ltr" ? "pl-12 pr-4" : "pr-12 pl-4"} py-2.5 text-xs hover:bg-gray-100 hover:border-gray-300 border border-gray-200 rounded-xl text-gray-900 dark:bg-gray-800 dark:border-gray-600 cursor-pointer dark:hover:bg-gray-700 dark:hover:border-gray-500 transition-all duration-200`}
-              >
-                <div className={`absolute ${direction === "ltr" ? "left-4" : "right-4"} top-12 transform -translate-y-1/2 text-gray-400`}>
-                  {/* <Icon icon="mdi:account-group-outline" width={20} height={20} /> */}
-                  <svg width="14" height="17" viewBox="0 0 14 17" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M7.01698 6.91855C8.65463 6.91855 9.98221 5.59097 9.98221 3.95332C9.98221 2.31568 8.65463 0.988098 7.01698 0.988098C5.37933 0.988098 4.05176 2.31568 4.05176 3.95332C4.05176 5.59097 5.37933 6.91855 7.01698 6.91855Z" stroke="#8C96A5" stroke-width="1.11196" />
-                    <path d="M12.9476 12.4783C12.9476 14.3205 12.9476 15.8142 7.01712 15.8142C1.08667 15.8142 1.08667 14.3205 1.08667 12.4783C1.08667 10.6362 3.74203 9.14246 7.01712 9.14246C10.2922 9.14246 12.9476 10.6362 12.9476 12.4783Z" stroke="#8C96A5" stroke-width="1.11196" />
-                  </svg>
-                </div>
-                <span className="font-medium text-[14px]">{form.adults + form.children} {isLoading ? "Loading..." : dict?.hotel_search?.guest_button?.guest_title}, {form.rooms} {isLoading ? "Loading..." : dict?.hotel_search?.guest_button?.room_title}</span>
-                <Icon icon="mdi:chevron-down" width={20} height={20} className={`text-gray-400 transition-transform duration-200 ${showGuestsDropdown ? "rotate-180" : ""}`} />
-              </button>
+          <div className="relative" ref={guestsDropdownRef}>
+  <label className="block text-sm text-start font-medium text-gray-700 mb-2 dark:text-gray-300">
+    {isLoading ? "Loading..." : dict?.hotel_search?.guest_button?.title}
+  </label>
+  <button
+    type="button"
+    onClick={() => setShowGuestsDropdown((s) => !s)}
+    className={`w-full flex items-center justify-between ${direction === "ltr" ? "pl-12 pr-4" : "pr-12 pl-4"} py-2.5 text-xs hover:bg-gray-100 hover:border-gray-300 border border-gray-200 rounded-xl text-gray-900 dark:bg-gray-800 dark:border-gray-600 cursor-pointer dark:hover:bg-gray-700 dark:hover:border-gray-500 transition-all duration-200`}
+  >
+    <div className={`absolute ${direction === "ltr" ? "left-4" : "right-4"} top-12 transform -translate-y-1/2 text-gray-400`}>
+      <svg width="18" height="18" viewBox="0 0 14 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M7.01698 6.91855C8.65463 6.91855 9.98221 5.59097 9.98221 3.95332C9.98221 2.31568 8.65463 0.988098 7.01698 0.988098C5.37933 0.988098 4.05176 2.31568 4.05176 3.95332C4.05176 5.59097 5.37933 6.91855 7.01698 6.91855Z" stroke="#8C96A5" strokeWidth="1.11196" />
+        <path d="M12.9476 12.4783C12.9476 14.3205 12.9476 15.8142 7.01712 15.8142C1.08667 15.8142 1.08667 14.3205 1.08667 12.4783C1.08667 10.6362 3.74203 9.14246 7.01712 9.14246C10.2922 9.14246 12.9476 10.6362 12.9476 12.4783Z" stroke="#8C96A5" strokeWidth="1.11196" />
+      </svg>
+    </div>
+    <span className="font-medium text-[14px]">
+      {form.adults + form.children} {isLoading ? "Loading..." : dict?.hotel_search?.guest_button?.guest_title}, {form.rooms} {isLoading ? "Loading..." : dict?.hotel_search?.guest_button?.room_title}
+    </span>
+    <Icon icon="mdi:chevron-down" width={20} height={20} className={`text-gray-400 transition-transform duration-200 ${showGuestsDropdown ? "rotate-180" : ""}`} />
+  </button>
 
-              {/* Guests dropdown content omitted for brevity (same as your original) */}
-              {showGuestsDropdown && (
-                <div className="absolute z-20 w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg mt-1 md:min-w-[350px] max-h-80 overflow-y-auto">
-                  <div className="p-4 space-y-4">
-                    {/* Adults */}
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                        Adults
-                      </span>
-                      <div className="flex items-center gap-2">
-                        <button
-                          type="button"
-                          onClick={() =>
-                            setForm((prev) => ({
-                              ...prev,
-                              adults: Math.max(1, prev.adults - 1),
-                            }))
-                          }
-                          className="w-8 h-8 flex items-center justify-center rounded-full border dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700"
-                        >
-                          -
-                        </button>
-                        <span>{form.adults}</span>
-                        <button
-                          type="button"
-                          onClick={() =>
-                            setForm((prev) => ({
-                              ...prev,
-                              adults: Math.min(16, prev.adults + 1),
-                            }))
-                          }
-                          className="w-8 h-8 flex items-center justify-center rounded-full border dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700"
-                        >
-                          +
-                        </button>
-                      </div>
-                    </div>
+  {showGuestsDropdown && (
+    <div className="absolute z-20 w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg mt-1 md:min-w-[350px] max-h-80 overflow-y-auto">
+      <div className="p-4 space-y-4">
+        {/* Adults */}
+        <div className="flex items-center justify-between">
+          <span className="text-sm font-medium text-blue-900 dark:text-blue-300">
+            Adults
+          </span>
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={() =>
+                setForm((prev) => ({
+                  ...prev,
+                  adults: Math.max(1, prev.adults - 1),
+                }))
+              }
+              className="w-8 h-8 flex items-center cursor-pointer justify-center rounded-full border dark:border-gray-600 text-blue-900 dark:text-blue-300 bg-white dark:bg-gray-800 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors"
+            >
+              -
+            </button>
+            <span className="text-blue-900 dark:text-blue-300 min-w-[1.25rem] text-center font-medium">
+              {form.adults}
+            </span>
+            <button
+              type="button"
+              onClick={() =>
+                setForm((prev) => ({
+                  ...prev,
+                  adults: prev.adults + 1,
+                }))
+              }
+              className="w-8 h-8 flex  cursor-pointer  items-center justify-center rounded-full border dark:border-gray-600 text-blue-900 dark:text-blue-300 bg-white dark:bg-gray-800 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors"
+            >
+              +
+            </button>
+          </div>
+        </div>
 
-                    {/* Children */}
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                        Children
-                      </span>
-                      <div className="flex items-center gap-2">
-                        <button
-                          type="button"
-                          onClick={() =>
-                            setForm((prev) => ({
-                              ...prev,
-                              children: Math.max(0, prev.children - 1),
-                            }))
-                          }
-                          className="w-8 h-8 flex items-center justify-center rounded-full border dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700"
-                        >
-                          -
-                        </button>
-                        <span>{form.children}</span>
-                        <button
-                          type="button"
-                          onClick={() =>
-                            setForm((prev) => ({
-                              ...prev,
-                              children: Math.min(10, prev.children + 1),
-                            }))
-                          }
-                          className="w-8 h-8 flex items-center  cursor-pointer justify-center rounded-full border dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700"
-                        >
-                          +
-                        </button>
-                      </div>
-                    </div>
+        {/* Children */}
+        <div className="flex items-center justify-between">
+          <span className="text-sm font-medium text-blue-900 dark:text-blue-300">
+            Children
+          </span>
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={() =>
+                setForm((prev) => ({
+                  ...prev,
+                  children: Math.max(0, prev.children - 1),
+                }))
+              }
+              className="w-8 h-8  cursor-pointer  flex items-center justify-center rounded-full border dark:border-gray-600 text-blue-900 dark:text-blue-300 bg-white dark:bg-gray-800 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors"
+            >
+              -
+            </button>
+            <span className="text-blue-900 dark:text-blue-300 min-w-[1.25rem] text-center font-medium">
+              {form.children}
+            </span>
+            <button
+              type="button"
+              onClick={() =>
+                setForm((prev) => ({
+                  ...prev,
+                  children: prev.children + 1,
+                }))
+              }
+              className="w-8 h-8 flex items-center  cursor-pointer  justify-center rounded-full border dark:border-gray-600 text-blue-900 dark:text-blue-300 bg-white dark:bg-gray-800 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors"
+            >
+              +
+            </button>
+          </div>
+        </div>
 
-                    {/* Rooms */}
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                        Rooms
-                      </span>
-                      <div className="flex items-center gap-2">
-                        <button
-                          type="button"
-                          onClick={() =>
-                            setForm((prev) => ({
-                              ...prev,
-                              rooms: Math.max(1, prev.rooms - 1),
-                            }))
-                          }
-                          className="w-8 h-8 flex items-center   cursor-pointer justify-center rounded-full border dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700"
-                        >
-                          -
-                        </button>
-                        <span>{form.rooms}</span>
-                        <button
-                          type="button"
-                          onClick={() =>
-                            setForm((prev) => ({
-                              ...prev,
-                              rooms: Math.min(8, prev.rooms + 1),
-                            }))
-                          }
-                          className="w-8 h-8 flex cursor-pointer items-center justify-center rounded-full border dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700"
-                        >
-                          +
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-            </div>
-
+        {/* Rooms */}
+        <div className="flex items-center justify-between">
+          <span className="text-sm font-medium text-blue-900 dark:text-blue-300">
+            Rooms
+          </span>
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={() =>
+                setForm((prev) => ({
+                  ...prev,
+                  rooms: Math.max(1, prev.rooms - 1),
+                }))
+              }
+              className="w-8 h-8 flex items-center justify-center rounded-full border dark:border-gray-600 text-blue-900 dark:text-blue-300 bg-white dark:bg-gray-800 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors"
+            >
+              -
+            </button>
+            <span className="text-blue-900 dark:text-blue-300 min-w-[1.25rem] text-center font-medium">
+              {form.rooms}
+            </span>
+            <button
+              type="button"
+              onClick={() =>
+                setForm((prev) => ({
+                  ...prev,
+                  rooms: prev.rooms + 1,
+                }))
+              }
+              className="w-8 h-8 flex items-center justify-center rounded-full border dark:border-gray-600 text-blue-900 dark:text-blue-300 bg-white dark:bg-gray-800 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors"
+            >
+              +
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  )}
+</div>
             {/* Search button */}
             <div className="sm:col-span-2 lg:col-span-1">
               <div className="mt-3 md:mt-7" />
