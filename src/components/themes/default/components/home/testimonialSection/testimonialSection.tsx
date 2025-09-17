@@ -147,6 +147,11 @@ const TestimonialSection = () => {
                             (e.target as HTMLImageElement).style.display = 'none';
                           }}
                         />
+                        <div className="absolute bottom-3 right-7">
+                            <button className="bg-black/70 text-white cursor-pointer px-3 py-2 rounded-md text-sm font-medium hover:bg-black transition">
+                              See Room
+                            </button>
+                          </div>
                       </div>
                     )}
                   </div>

@@ -376,7 +376,7 @@ export default function HotelSearch() {
                     <path d="M12.9476 12.4783C12.9476 14.3205 12.9476 15.8142 7.01712 15.8142C1.08667 15.8142 1.08667 14.3205 1.08667 12.4783C1.08667 10.6362 3.74203 9.14246 7.01712 9.14246C10.2922 9.14246 12.9476 10.6362 12.9476 12.4783Z" stroke="#8C96A5" stroke-width="1.11196" />
                   </svg>
                 </div>
-                <span className="font-medium">{form.adults + form.children} {isLoading ? "Loading..." : dict?.hotel_search?.guest_button?.guest_title}, {form.rooms} {isLoading ? "Loading..." : dict?.hotel_search?.guest_button?.room_title}</span>
+                <span className="font-medium text-[14px]">{form.adults + form.children} {isLoading ? "Loading..." : dict?.hotel_search?.guest_button?.guest_title}, {form.rooms} {isLoading ? "Loading..." : dict?.hotel_search?.guest_button?.room_title}</span>
                 <Icon icon="mdi:chevron-down" width={20} height={20} className={`text-gray-400 transition-transform duration-200 ${showGuestsDropdown ? "rotate-180" : ""}`} />
               </button>
 
