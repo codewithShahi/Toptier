@@ -81,9 +81,9 @@ const OfferSection = () => {
                     {service.background_image && (
                       <div
                         className={`opacity-100
-    ${idx === 0 ? "pr-3 pb-3" : ""}     // pehle wale card ke liye padding-right aur padding-top
-    ${idx === 1 ? "pl-4 pb-4" : ""}     // dusre wale card ke liye padding-left aur padding-bottom
-    ${idx === 2 ? "pr-2 pt-5" : ""}     // teesre wale card ke liye padding-right aur padding-top
+    ${idx === 0 ? "pr-3 pb-3 max-w-52 max-h-52" : ""}     // pehle wale card ke liye padding-right aur padding-top
+    ${idx === 1 ? "pl-4 pb-4 max-w-52 max-h-52" : ""}     // dusre wale card ke liye padding-left aur padding-bottom
+    ${idx === 2 ? "pr-2 pt-5 max-w-52 max-h-52" : ""}     // teesre wale card ke liye padding-right aur padding-top
   `}
                       >
                         <Image
@@ -92,9 +92,9 @@ const OfferSection = () => {
                           width={idx === 0 ? 200 : idx === 1 ? 150 : 120}
                           height={idx === 0 ? 200 : idx === 1 ? 150 : 120}
                           className={`object-contain
-      ${idx === 0 ? "w-[220px] h-[180px]" : ""}
-      ${idx === 1 ? "w-[200px] h-[160px]" : ""}
-      ${idx === 2 ? "w-[120px] h-[140px]" : ""}`}
+      ${idx === 0 ? "max-w-30 max-h-52" : ""}
+      ${idx === 1 ? "max-w-52 max-h-52" : ""}
+      ${idx === 2 ? "max-w-52 max-h-52" : ""}`}
                         />
                       </div>
 
