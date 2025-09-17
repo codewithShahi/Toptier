@@ -82,7 +82,7 @@ const NewsLatter: React.FC = () => {
 
           {/* Form Section */}
           <div className="flex flex-col gap-2 sm:gap-4 order-1 lg:order-2">
-            <button className="text-white bg-[#010101]/60 hover:bg-black/60 transition cursor-pointer text-sm font-medium px-3 w-[91px] h-[28px] rounded-md mb-2">
+            <button className="text-white bg-[#010101]/60 hover:bg-black/70 transition cursor-pointer text-sm font-medium px-3 w-[91px] h-[28px] rounded-md mb-2">
               Newsletter
             </button>
             <div>
@@ -104,23 +104,29 @@ const NewsLatter: React.FC = () => {
             <div className="flex flex-col sm:flex-row gap-6 sm:gap-4">
               {/* Name */}
               <div className="relative w-full sm:w-1/2">
-                <Icon
+                {/* <Icon
                   icon="mdi:account-outline"
                   width="20"
                   height="20"
                   className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none"
-                />
+                /> */}
+                <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none">
+                  <svg width="14" height="17" viewBox="0 0 14 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M6.79251 7.05181C8.39207 7.05181 9.68878 5.75511 9.68878 4.15554C9.68878 2.55598 8.39207 1.25928 6.79251 1.25928C5.19294 1.25928 3.89624 2.55598 3.89624 4.15554C3.89624 5.75511 5.19294 7.05181 6.79251 7.05181Z" stroke="#8C96A5" stroke-width="1.0861" />
+                    <path d="M12.5851 12.4824C12.5851 14.2817 12.5851 15.7407 6.79253 15.7407C1 15.7407 1 14.2817 1 12.4824C1 10.6831 3.59361 9.22412 6.79253 9.22412C9.99146 9.22412 12.5851 10.6831 12.5851 12.4824Z" stroke="#8C96A5" stroke-width="1.0861" />
+                  </svg>
+
+                </div>
                 <input
                   type="text"
                   name="name"
                   placeholder="Name"
                   value={formData.name}
                   onChange={handleChange}
-                  className={`w-full bg-[#F3F3F3] pl-10 px-4 h-[45px] sm:h-[47px] lg:h-[49px] rounded-lg focus:outline-none focus:ring-2 ${
-                    errors.name
-                      ? "focus:ring-red-500 border border-red-500"
-                      : "focus:ring-blue-500"
-                  }`}
+                  className={`w-full bg-[#F3F3F3] pl-10 px-4 h-[45px] sm:h-[47px] lg:h-[49px] rounded-lg focus:outline-none focus:ring-2 ${errors.name
+                    ? "focus:ring-red-500 border border-red-500"
+                    : "focus:ring-blue-500"
+                    }`}
                 />
                 {errors.name && (
                   <p className="absolute -bottom-5 left-2 text-red-500 text-xs">
@@ -131,23 +137,27 @@ const NewsLatter: React.FC = () => {
 
               {/* Email */}
               <div className="relative w-full sm:w-1/2">
-                <Icon
+                {/* <Icon
                   icon="mdi:email-outline"
                   width="20"
                   height="20"
                   className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none"
-                />
+                /> */}
+                <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none">
+                  <svg width="18" height="15" viewBox="0 0 18 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M3.3241 0.789551H14.9557C15.6676 0.789551 16.3503 1.07235 16.8537 1.57574C17.3571 2.07913 17.6399 2.76186 17.6399 3.47376V11.5264C17.6399 12.2383 17.3571 12.921 16.8537 13.4244C16.3503 13.9278 15.6676 14.2106 14.9557 14.2106H3.3241C2.61221 14.2106 1.92947 13.9278 1.42608 13.4244C0.922693 12.921 0.639893 12.2383 0.639893 11.5264V3.47376C0.639893 2.76186 0.922693 2.07913 1.42608 1.57574C1.92947 1.07235 2.61221 0.789551 3.3241 0.789551ZM3.3241 1.68429C2.87673 1.68429 2.48305 1.83639 2.17884 2.10481L9.13989 6.60534L16.1009 2.10481C15.7967 1.83639 15.4031 1.68429 14.9557 1.68429H3.3241ZM9.13989 7.68797L1.65095 2.82955C1.57937 3.02639 1.53463 3.25008 1.53463 3.47376V11.5264C1.53463 12.001 1.72316 12.4562 2.05875 12.7917C2.39435 13.1273 2.84951 13.3159 3.3241 13.3159H14.9557C15.4303 13.3159 15.8854 13.1273 16.221 12.7917C16.5566 12.4562 16.7452 12.001 16.7452 11.5264V3.47376C16.7452 3.25008 16.7004 3.02639 16.6288 2.82955L9.13989 7.68797Z" fill="#8C96A5" />
+                  </svg>
+                </div>
                 <input
                   type="email"
                   name="email"
                   placeholder="Email"
                   value={formData.email}
                   onChange={handleChange}
-                  className={`w-full bg-[#F3F3F3] pl-10 px-4 h-[45px] sm:h-[47px] lg:h-[49px] rounded-lg focus:outline-none focus:ring-2 ${
-                    errors.email
-                      ? "focus:ring-red-500 border border-red-500"
-                      : "focus:ring-blue-500"
-                  }`}
+                  className={`w-full bg-[#F3F3F3] pl-10 px-4 h-[45px] sm:h-[47px] lg:h-[49px] rounded-lg focus:outline-none focus:ring-2 ${errors.email
+                    ? "focus:ring-red-500 border border-red-500"
+                    : "focus:ring-blue-500"
+                    }`}
                 />
                 {errors.email && (
                   <p className="absolute -bottom-5 left-2 text-red-500 text-xs">

@@ -153,7 +153,7 @@ const FeaturedHotels: React.FC = () => {
         {hotels?.map((hotel) => (
           <div
             key={hotel.id}
-            className="bg-[#F5F5F5] p-2 rounded-[55px]  cursor-pointer transition-all duration-300 "
+            className="bg-[#F5F5F5] p-2 rounded-[55px]  transition-all duration-300 "
             onMouseEnter={() => setHoveredId(hotel.id)}
             onMouseLeave={() => setHoveredId(null)}
           >
@@ -233,7 +233,7 @@ const FeaturedHotels: React.FC = () => {
               </div>
             </div>
             <div className="flex items-center px-4 py-3 justify-between gap-3">
-              <button className="text-[16px] sm:text-[18px] lg:text-[18px] font-[600] px-4 sm:px-6 bg-[#163C8C] text-white rounded-full py-3 sm:py-[10px] flex-1 transition-all duration-200 hover:bg-[#1A4299]">
+              <button className="text-[16px] sm:text-[18px] lg:text-[18px] font-[600] cursor-pointer px-4 sm:px-6 bg-[#163C8C] text-white rounded-full py-3 sm:py-[10px] flex-1 transition-all duration-200 hover:bg-[#1A4299]">
                 Book Now
               </button>
               <button

@@ -146,7 +146,7 @@ const FeaturedDestinations: React.FC = () => {
                     <div className="flex items-center gap-3 px-1 py-3">
                       <button
                         onClick={() => handleExploreNow(destination)}
-                        className="flex-1 ml-3 bg-[#163C8C] hover:bg-[#1A4299] text-white font-medium
+                        className="flex-1 ml-3 bg-[#163C8C] hover:bg-[#1A4299] cursor-pointer text-white font-medium
                                    py-3 px-3 text-sm sm:text-base md:text-sm lg:text-base
                                    rounded-full transition-colors duration-200
                                    focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
