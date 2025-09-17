@@ -54,7 +54,7 @@ const HeaderMenus = () => {
           >
             Login
           </Link>
-        </div> : <button className="hidden md:block bg-[#163C8C] border border-[#061026] cursor-pointer text-center border-none hover:text-white ring-0 text-white rounded-full px-9 py-2 transition"
+        </div> : <button className="hidden md:block bg-[#163C8C] border hover:bg-gray-800 border-[#061026] cursor-pointer text-center border-none hover:text-white ring-0 text-white rounded-full px-9 py-2 transition"
           onClick={async () => {
             await signOut();
             await checkSession?.();
