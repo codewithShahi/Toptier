@@ -15,12 +15,12 @@ const OfferSection = () => {
         href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap"
         rel="stylesheet"
       />
-      <div className="py-6 ">
-        <div className="max-w-[1200px] mx-auto appHorizantalSpacing">
+      <div className="py-6 mt-6">
+        <div className="max-w-[1200px] mx-auto ">
           {/* Heading */}
           <div className="text-center mb-12">
             <h1
-              className="text-4xl font-bold text-gray-900 mb-4"
+              className="text-4xl  text-[#112233] mb-4 font-[900]"
               style={{ fontFamily: "Urbanist, sans-serif" }}
             >
               Why Choose Us
@@ -35,7 +35,7 @@ const OfferSection = () => {
           </div>
 
           {/* Dynamic Cards */}
-          <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 place-items-center">
+          <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 place-items-center appHorizantalSpacing">
             {our_services?.map((service: any, idx: number) => (
               <div
                 key={idx}

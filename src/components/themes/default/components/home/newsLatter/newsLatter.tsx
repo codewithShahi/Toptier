@@ -6,9 +6,7 @@ import { subscribe_to_newsLatter } from "@src/actions";
 import Image from "next/image";
 import React, { useState, ChangeEvent } from "react";
 import { z } from "zod";
-// import Alert from "@src/components/core/Alert";
 
-// ✅ Define schema
 const newsLatterSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   email: z.string().email("Invalid email address"),
@@ -38,7 +36,6 @@ const NewsLatter: React.FC = () => {
     setMessage(null);
 
     try {
-      // ✅ Validate with Zod
       newsLatterSchema.parse(formData);
 
       setLoading(true);

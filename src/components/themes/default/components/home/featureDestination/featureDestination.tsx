@@ -93,13 +93,13 @@ const FeaturedDestinations: React.FC = () => {
         <div className="w-full max-w-[1200px] mx-auto appHorizantalSpacing">
           <div className="text-center mb-6">
             <h1
-              className="text-4xl font-bold text-gray-900 mb-2 md:mb-4"
+              className="text-4xl font-[800] text-[#112233] mb-2 md:mb-4"
               style={{ fontFamily: "Urbanist, sans-serif" }}
             >
               Featured Destination
             </h1>
             <p
-              className="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed"
+              className="text-lg text-[#697488] max-w-2xl mx-auto leading-relaxed"
               style={{ fontFamily: "Urbanist, sans-serif" }}
             >
               Discover the most stunning and sought-after travel spots, curated
@@ -121,7 +121,7 @@ const FeaturedDestinations: React.FC = () => {
                   className="bg-[#F5F5F5] rounded-[65px] w-full"
                 >
                   {/* Image */}
-                  <div className="relative overflow-hidden rounded-[55px] m-3 aspect-[4/3]">
+                  <div className="relative overflow-hidden rounded-[55px] m-2.5 aspect-[4/3]">
                     <img
                       src={destination.image}
                       alt={`${destination.location}, ${destination.country}`}
@@ -143,10 +143,10 @@ const FeaturedDestinations: React.FC = () => {
                       {destination.location}, {destination.country}
                     </h3>
 
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-3 px-1 py-3">
                       <button
                         onClick={() => handleExploreNow(destination)}
-                        className="flex-1 ml-3 bg-[#163C8C] hover:bg-blue-700 text-white font-medium
+                        className="flex-1 ml-3 bg-[#163C8C] hover:bg-[#1A4299] text-white font-medium
                                    py-3 px-3 text-sm sm:text-base md:text-sm lg:text-base
                                    rounded-full transition-colors duration-200
                                    focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
@@ -163,19 +163,19 @@ const FeaturedDestinations: React.FC = () => {
   aria-label={`${destination.favorite === 1 ? "Unlike" : "Like"} ${destination.location}, ${destination.country}`}
 >
   <svg
-    className="w-5 h-5 sm:w-6 sm:h-6 lg:w-6 lg:h-6 transition-colors duration-200"
+    className="w-5 h-5 sm:w-6 sm:h-6 lg:w-6 lg:h-6 transition-colors duration-200 cursor-pointer"
     viewBox="0 0 22 22"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
   >
     <path
       d="M6.22371 1.44739C3.27589 1.44739 0.885498 3.98725 0.885498 7.11938C0.885498 13.3881 11 20.5526 11 20.5526C11 20.5526 21.1145 13.3881 21.1145 7.11938C21.1145 3.23878 18.7241 1.44739 15.7763 1.44739C13.686 1.44739 11.8766 2.72406 11 4.58288C10.1234 2.72406 8.31404 1.44739 6.22371 1.44739Z"
-      stroke={destination.favorite === 1 ? "#EF4444" : "#6B7280"}  // ✅ red if liked
+      stroke={destination.favorite === 1 ? "#EF4444" : "#6B7280"}  
       strokeOpacity="0.8"
       strokeWidth="1.5"
       strokeLinecap="round"
       strokeLinejoin="round"
-      fill={destination.favorite === 1 ? "#EF4444" : "none"}       // ✅ fill red if liked
+      fill={destination.favorite === 1 ? "#EF4444" : "none"}      
     />
   </svg>
 </button>
