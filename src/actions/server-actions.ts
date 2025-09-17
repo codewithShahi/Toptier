@@ -5,7 +5,8 @@ import { decodeBearerToken } from "@src/utils/decodeToken";
 import { headers } from "next/headers";
 
 
-console.log(baseUrl);
+console.log("base",baseUrl);
+
 // ============== GET DYNAMIC DOMAIN ===============
 export async function getDomain(): Promise<string> {
   const h =await  headers();
@@ -60,7 +61,7 @@ export const fetchAppData = async () => {
     });
 
     const data = await response.json().catch(() => null);
-    // console.log("fetchAppData data", data);
+    // console.log("fetchAppData data", JSON.stringify(data,));
 
     if (!response.ok || data?.status === false) {
       return { error: data?.message || "Something went wrong" };
@@ -159,13 +160,13 @@ interface newsLaterPayload {
 
 export const addToFavourite = async (payload: newsLaterPayload) => {
    const userInfo=await getSession()
-console.log('user id',userInfo)
+// console.log('user id',userInfo)
 
   try {
     const formData = new FormData();
     formData.append("item_id", payload.item_id);
     formData.append("module", payload.module);
-     formData.append("user_id", payload.item_id);
+     formData.append("user_id", payload.user_id);
 
     const response = await fetch(`${baseUrl}/favourites`, {
       method: "POST",
@@ -261,7 +262,7 @@ export const signIn = async (payload: { email: string; password: string }) => {
     formData.append("email", payload.email);
     formData.append("password", payload.password);
     formData.append("api_key", api_key ?? ""); // ✅ add api_key if needed
-
+console.log('login url',`${baseUrl}/logi`)
     const response = await fetch(`${baseUrl}/login`, {
       method: "POST",
       body: formData,

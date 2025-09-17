@@ -6,10 +6,13 @@ import Button from "@components/core/button";
 import HeaderLogo from "@components/themes/layout/components/common/headerLogo";
 import { useUser } from "@hooks/use-user";
 import Alert from "@components/core/alert";
+import { signOut } from "@src/actions";
+import { Router } from "next/router";
 
 const HeaderMenus = () => {
   const [isOpen, setIsOpen] = useState(false);
     const { user, error, isLoading: userLoading, checkSession } = useUser();
+    // const router=Router()
   return (
     <header className="w-full  max-w-[1200px] mx-auto">
       <div className="flex items-center justify-between h-22 appHorizantalSpacing">
@@ -38,7 +41,7 @@ const HeaderMenus = () => {
         </div>
 
         {/* Right: Auth Buttons */}
-        {!(user || userLoading) && <div className="hidden md:flex items-center gap-3">
+        {!(user || userLoading) ? <div className="hidden md:flex items-center gap-3">
              <Link
              href="/auth/signup"
               className="border border-blue-900 text-blue-900 text-center rounded-full px-7 py-1.5 hover:bg-blue-50"
@@ -52,7 +55,16 @@ const HeaderMenus = () => {
             >
               Login
             </Link>
-        </div>}
+        </div>: <button
+         onClick={async () => {
+                    await signOut();
+                    await checkSession?.();
+                    // router.refresh();
+                  }}
+
+        >
+logout
+          </button>}
 
         {/* Mobile Toggle */}
         <button
