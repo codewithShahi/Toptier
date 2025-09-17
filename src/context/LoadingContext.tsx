@@ -17,6 +17,7 @@ export const useLoading = () => useContext(LoadingContext);
 
 export const LoadingProvider = ({ children }: { children: React.ReactNode }) => {
     const dispatch = useAppDispatch();
+
     const app = useAppSelector((state) => state?.appData?.data?.app);
     const appStatus = app?.status;
     const [loading, setLoading] = useState(true); // Start loading
@@ -28,7 +29,7 @@ useEffect(() => {
     try {
       const resultAction = await dispatch(setAppData());
       const appData = (resultAction as any)?.payload;
- console.log('appp dataaaaaaa',appData)
+//  console.log('appp dataaaaaaa',appData)
       // Now you can check agency status from response
 
     } catch (err) {

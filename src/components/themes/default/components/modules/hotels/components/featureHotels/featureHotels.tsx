@@ -82,7 +82,7 @@ const renderStars = (stars: number) => {
 
       const payload = {
         item_id: String(hotel.id),
-        module: "tours",
+        module: "hotels",
         user_id: String(user?.user_id) || "",
       };
 
