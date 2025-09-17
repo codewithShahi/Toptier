@@ -148,13 +148,13 @@ const FeaturedDestinations: React.FC = () => {
                       onClick={() => toggleLike(tour)}
                       className="bg-[#EBEFF4] mr-3 hover:bg-gray-200 rounded-full cursor-pointer transition-all duration-200
                                  flex items-center justify-center flex-shrink-0
-                                 w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16"
+                                 w-12 h-12 sm:w-14 sm:h-14 lg:w-12 lg:h-12"
                       aria-label={`${
                         tour.favorite === 1 ? "Unlike" : "Like"
                       } ${tour.location}, ${tour.country}`}
                     >
                       <svg
-                        className="w-5 h-5 sm:w-6 sm:h-6 lg:w-6 lg:h-6 transition-colors duration-200"
+                        className="w-5 h-5 sm:w-6 sm:h-6 lg:w-5 lg:h-5 transition-colors duration-200"
                         viewBox="0 0 22 22"
                         fill="none"
                         xmlns="http://www.w3.org/2000/svg"

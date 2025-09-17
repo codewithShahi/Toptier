@@ -138,7 +138,7 @@ const FeaturedHotels: React.FC = () => {
             <div className="p-3">
               <h3
                 className="text-xl font-extrabold text-gray-900 mb-4 pl-4
-                               sm:text-2xl md:text-xl lg:text-2xl"
+                               sm:text-2xl md:text-xl lg:text-2xl text-ellipsis overflow-hidden whitespace-nowrap"
                 style={{ fontFamily: "Urbanist, sans-serif" }}
               >
                 {hotel.name}
@@ -206,11 +206,11 @@ const FeaturedHotels: React.FC = () => {
                 onClick={() => toggleLike(hotel)}
                 className="bg-[#EBEFF4] mr-3 cursor-pointer hover:bg-gray-200 rounded-full transition-all duration-200
              flex items-center justify-center flex-shrink-0
-             w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16"
+             w-12 h-12 sm:w-14 sm:h-14 lg:w-12 lg:h-12"
                 aria-label={`${hotel.favorite === 1 && user ? "Unlike" : "Like"} ${hotel.name}`}
               >
                 <svg
-                  className="transition-colors duration-200 w-5 h-5 sm:w-6 sm:h-6 md:w-5 md:h-5 lg:w-6 lg:h-6"
+                  className="transition-colors duration-200 w-5 h-5 sm:w-6 sm:h-6 md:w-5 md:h-5 lg:w-5 lg:h-5"
                   viewBox="0 0 22 22"
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
