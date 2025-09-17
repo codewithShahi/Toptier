@@ -172,7 +172,7 @@ const NewsLatter: React.FC = () => {
               <button
                 onClick={handleSubmit}
                 disabled={loading}
-                className="rounded-lg bg-[#163C8C] cursor-pointer text-white w-full py-2 h-[45px] sm:h-[47px] lg:h-[49px] flex items-center justify-center"
+                className="rounded-lg bg-[#163C8C] cursor-pointer text-white hover:bg-gray-800 w-full py-2 h-[45px] sm:h-[47px] lg:h-[49px] flex items-center justify-center"
               >
                 {loading ? (
                   <Icon
