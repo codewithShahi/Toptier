@@ -25,8 +25,15 @@ const OfferSection = () => {
             >
               Why Choose Us
             </h1>
-            <p
+            {/* <p
               className="text-lg text-[#697488] max-w-md mx-auto leading-relaxed"
+              style={{ fontFamily: "Urbanist, sans-serif" }}
+            >
+              Experience world-class comfort and unmatched hospitality — all in
+              the heart of paradise.
+            </p> */}
+            <p
+              className="text-base sm:text-lg text-[#697488] max-w-md mx-auto mt-4 leading-relaxed px-6"
               style={{ fontFamily: "Urbanist, sans-serif" }}
             >
               Experience world-class comfort and unmatched hospitality — all in
@@ -60,37 +67,38 @@ const OfferSection = () => {
                   {/* Button with slug */}
                   <Link
                     href={`/${service.slug}`}
-                    className="bg-white text-[#112233] cursor-pointer px-7 py-2.5 rounded-full text-sm font-semibold hover:bg-gray-100 transition-colors w-fit"
+                    className="bg-white text-[#112233] cursor-pointer px-5 sm:px-6 md:px-7 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm md:text-base font-semibold hover:bg-gray-100 transition-colors w-fit"
                     style={{ fontFamily: "Urbanist, sans-serif" }}
                   >
                     {service.button_text}
                   </Link>
+
                 </div>
 
                 {/* Background Image */}
                 {service.background_image && (
                   <div className="absolute -right-3 -bottom-4 opacity-100">
-{service.background_image && (
-  <div
-  className={`opacity-100
+                    {service.background_image && (
+                      <div
+                        className={`opacity-100
     ${idx === 0 ? "pr-3 pb-3" : ""}     // pehle wale card ke liye padding-right aur padding-top
     ${idx === 1 ? "pl-4 pb-4" : ""}     // dusre wale card ke liye padding-left aur padding-bottom
     ${idx === 2 ? "pr-2 pt-5" : ""}     // teesre wale card ke liye padding-right aur padding-top
   `}
->
-  <Image
-    src={service.background_image}
-    alt={service.title}
-    width={idx === 0 ? 200 : idx === 1 ? 150 : 120}
-    height={idx === 0 ? 200 : idx === 1 ? 150 : 120}
-    className={`object-contain
+                      >
+                        <Image
+                          src={service.background_image}
+                          alt={service.title}
+                          width={idx === 0 ? 200 : idx === 1 ? 150 : 120}
+                          height={idx === 0 ? 200 : idx === 1 ? 150 : 120}
+                          className={`object-contain
       ${idx === 0 ? "w-[220px] h-[180px]" : ""}
       ${idx === 1 ? "w-[200px] h-[160px]" : ""}
       ${idx === 2 ? "w-[120px] h-[140px]" : ""}`}
-  />
-</div>
+                        />
+                      </div>
 
-)}
+                    )}
 
                   </div>
                 )}

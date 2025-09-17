@@ -75,9 +75,15 @@ const TestimonialSection = () => {
             </h2>
           </div>
           <div className="flex-1 sm:max-w-md">
-            <p className="text-[10px] text-base sm:text-lg leading-relaxed">
+            {/* <p className="text-[10px] text-gray-600 text-base sm:text-lg leading-relaxed">
               See why travelers trust us — real reviews of comfort, convenience, and unforgettable stays
-            </p>
+            </p> */}
+            <p
+          className="text-base sm:text-lg text-[#697488] max-w-md mx-auto mt-4 leading-relaxed px-6"
+          style={{ fontFamily: "Urbanist, sans-serif" }}
+        >
+          See why travelers trust us — real reviews of comfort, convenience, and unforgettable stays
+        </p>
           </div>
         </div>
 
@@ -86,7 +92,7 @@ const TestimonialSection = () => {
             <div
               className={`flex transition-transform duration-500 ease-in-out ${isAnimating ? 'pointer-events-none' : ''}`}
               style={{
-                transform: `translateX(-${currentIndex * (typeof window !== "undefined" && window.innerWidth < 768 ? 100 : 60)}%)`
+                transform: `translateX(-${currentIndex * (typeof window !== "undefined" && window.innerWidth < 768 ? 52 : 60)}%)`
               }}
             >
               {testimonials?.map((testimonial: any, index: number) => (

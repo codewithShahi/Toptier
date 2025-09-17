@@ -10,7 +10,7 @@ interface Destination {
   country: string;
   location: string;
   img: string;
-  favorite: number; // 0 = not liked, 1 = liked
+  favorite: number; 
 }
 
 const FeaturedDestinations: React.FC = () => {
@@ -82,13 +82,20 @@ const FeaturedDestinations: React.FC = () => {
           >
             Featured Destination
           </h1>
-          <p
+          {/* <p
             className="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed"
             style={{ fontFamily: "Urbanist, sans-serif" }}
           >
             Discover the most stunning and sought-after travel spots, curated
             for unforgettable experiences around the globe.
-          </p>
+          </p> */}
+          <p
+          className="text-base sm:text-lg text-[#697488] max-w-xl mx-auto mt-4 leading-relaxed px-6"
+          style={{ fontFamily: "Urbanist, sans-serif" }}
+        >
+           Discover the most stunning and sought-after travel spots, curated
+            for unforgettable experiences around the globe.
+        </p>
         </div>
 
         {destinations.length === 0 ? (
@@ -128,7 +135,7 @@ const FeaturedDestinations: React.FC = () => {
                       onClick={() =>
                         console.log(`Exploring ${tour.location}, ${tour.country}`)
                       }
-                      className="flex-1 ml-3 bg-[#163C8C] hover:bg-gray-800 text-white font-medium
+                      className="flex-1 ml-3 bg-[#163C8C] cursor-pointer hover:bg-gray-800 text-white font-medium
                                  py-3 px-3 text-sm sm:text-base md:text-sm lg:text-base
                                  rounded-full transition-colors duration-200
                                  focus:outline-none focus:ring-2 focus:ring-gray-800 focus:ring-offset-2"
@@ -139,7 +146,7 @@ const FeaturedDestinations: React.FC = () => {
 
                     <button
                       onClick={() => toggleLike(tour)}
-                      className="bg-[#EBEFF4] mr-3 hover:bg-gray-200 rounded-full transition-all duration-200
+                      className="bg-[#EBEFF4] mr-3 hover:bg-gray-200 rounded-full cursor-pointer transition-all duration-200
                                  flex items-center justify-center flex-shrink-0
                                  w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16"
                       aria-label={`${

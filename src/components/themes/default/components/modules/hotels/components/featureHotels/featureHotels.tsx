@@ -15,7 +15,7 @@ interface Hotel {
   left_rooms: string;
   img: string;
   amenities?: string[];
-  favorite?: number; // 1 = liked, 0 = not liked
+  favorite?: number; 
 }
 const FeaturedHotels: React.FC = () => {
   const [hoveredId, setHoveredId] = useState<string | null>(null);
@@ -199,12 +199,12 @@ const FeaturedHotels: React.FC = () => {
               </div>
             </div>
             <div className="flex items-center gap-3 px-2">
-              <button className="flex-1 ml-3 bg-[#163D8C] hover:bg-gray-800 text-white font-medium py-3 px-3 text-sm sm:text-base md:text-sm lg:text-base rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+              <button className="flex-1 ml-3 cursor-pointer bg-[#163D8C] hover:bg-gray-800 text-white font-medium py-3 px-3 text-sm sm:text-base md:text-sm lg:text-base rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
                 Book Now
               </button>
               <button
                 onClick={() => toggleLike(hotel)}
-                className="bg-[#EBEFF4] mr-3 hover:bg-gray-200 rounded-full transition-all duration-200
+                className="bg-[#EBEFF4] mr-3 cursor-pointer hover:bg-gray-200 rounded-full transition-all duration-200
              flex items-center justify-center flex-shrink-0
              w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16"
                 aria-label={`${hotel.favorite === 1 && user ? "Unlike" : "Like"} ${hotel.name}`}
