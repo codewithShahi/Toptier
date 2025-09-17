@@ -69,13 +69,13 @@ const TestimonialSection = () => {
       >
         <div className="flex flex-col sm:flex-row justify-between items-start mb-8 sm:mb-12 gap-6 sm:gap-8">
           <div className="flex-1">
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 lg:mb-2">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-[900] text-[#051036] lg:mb-2">
               What Our<br />
               Guests Are Saying
             </h2>
           </div>
           <div className="flex-1 sm:max-w-md">
-            <p className="text-gray-600 text-base sm:text-lg leading-relaxed">
+            <p className="text-[10px] text-base sm:text-lg leading-relaxed">
               See why travelers trust us — real reviews of comfort, convenience, and unforgettable stays
             </p>
           </div>
@@ -100,7 +100,7 @@ const TestimonialSection = () => {
                       : 'w-full sm:w-[60%] opacity-70 scale-95 hidden md:block'
                   }`}
                 >
-                  <div className="bg-[#F8F9FA] rounded-2xl p-4 sm:p-6 lg:p-8 min-h-[350px] sm:min-h-[390px] relative overflow-hidden border border-gray-100">
+                  <div className="bg-[#F5F6F7] rounded-2xl p-4 sm:p-6 lg:p-8 min-h-[350px] sm:min-h-[390px] relative overflow-hidden border border-gray-100">
 
                     {/* Profile section - responsive layout */}
                     <div className="flex md:block items-start gap-3 md:gap-0 mb-4">
@@ -137,12 +137,12 @@ const TestimonialSection = () => {
 
                     {/* Background image - only on desktop */}
                     {testimonial.photo && (
-                      <div className="absolute hidden md:block top-0 right-0 w-[50%] h-full">
+                      <div className="absolute hidden md:block top-2 bottom-2 right-2.5 w-[50%] h-[370px] rounded-md">
                         <Image
                           src={testimonial.photo}
                           alt={`${testimonial.name} testimonial image`}
                           fill
-                          className="object-cover rounded-r-2xl"
+                          className=""
                           onError={(e) => {
                             (e.target as HTMLImageElement).style.display = 'none';
                           }}

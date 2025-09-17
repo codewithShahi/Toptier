@@ -44,14 +44,14 @@ const HeaderMenus = () => {
         {!(user || userLoading) ? <div className="hidden md:flex items-center gap-3">
              <Link
              href="/auth/signup"
-              className="border border-blue-900 text-blue-900 text-center rounded-full px-7 py-1.5 hover:bg-blue-50"
+              className="border border-[#061026] text-[#061026] text-center rounded-full px-7 py-2 hover:bg-blue-50"
             >
               Sign up
             </Link>
 
             <Link
             href="/auth/login"
-              className="bg-[#163C8C] text-center border-none hover:text-white ring-0 text-white rounded-full px-10 py-3 transition"
+              className="bg-[#163C8C] border border-[#061026] text-center border-none hover:text-white ring-0 text-white rounded-full px-9 py-2 transition"
             >
               Login
             </Link>
