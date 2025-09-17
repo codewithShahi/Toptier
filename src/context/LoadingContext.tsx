@@ -27,8 +27,8 @@ useEffect(() => {
     setLoading(true);
     try {
       const resultAction = await dispatch(setAppData());
-      const appData = (resultAction as any)?.payload?.app;
-
+      const appData = (resultAction as any)?.payload;
+ console.log('appp dataaaaaaa',appData)
       // Now you can check agency status from response
 
     } catch (err) {
