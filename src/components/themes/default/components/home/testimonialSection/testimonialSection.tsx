@@ -137,12 +137,12 @@ const TestimonialSection = () => {
 
                     {/* Background image - only on desktop */}
                     {testimonial.photo && (
-                      <div className="absolute hidden md:block top-2 bottom-2 right-2.5 w-[50%] h-[370px] rounded-md">
+                      <div className="absolute hidden md:block top-2 bottom-2 right-2.5 w-[50%] h-[370px] ">
                         <Image
                           src={testimonial.photo}
                           alt={`${testimonial.name} testimonial image`}
                           fill
-                          className=""
+                          className="rounded-lg"
                           onError={(e) => {
                             (e.target as HTMLImageElement).style.display = 'none';
                           }}

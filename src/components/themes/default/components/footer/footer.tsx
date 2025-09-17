@@ -122,7 +122,7 @@ const Footer = () => {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="bg-blue-900 text-white py-4 px-8 rounded-full hover:bg-blue-800 transition-colors duration-200 font-medium whitespace-nowrap flex items-center gap-2"
+                  className="bg-blue-900 text-white w-[119px] h-[54px] pl-6 rounded-full cursor-pointer hover:bg-blue-800 transition-colors duration-200 font-medium whitespace-nowrap flex items-center gap-2"
                 >
                   {loading ? (
                     <>
