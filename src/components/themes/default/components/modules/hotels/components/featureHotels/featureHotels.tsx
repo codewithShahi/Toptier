@@ -15,13 +15,44 @@ interface Hotel {
   left_rooms: string;
   img: string;
   amenities?: string[];
-  favorite?: number; 
+  favorite?: number;
 }
 const FeaturedHotels: React.FC = () => {
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [hotels, setHotels] = useState<Hotel[]>([]);
   const { featured_hotels } = useAppSelector((state) => state.appData?.data);
   const { user } = useUser();
+// Amenity keyword → Iconify icon name
+const amenityIcons: Record<string, string> = {
+  pool: "mdi:pool",
+  swimming: "mdi:pool",
+  fitness: "mdi:dumbbell",
+  gym: "mdi:dumbbell",
+  spa: "mdi:spa",
+  restaurant: "mdi:silverware-fork-knife",
+  bar: "mdi:glass-cocktail",
+  wifi: "mdi:wifi",
+  shuttle: "mdi:bus",
+  airport: "mdi:airplane",
+  non: "mdi:smoke-detector-off", // Non-smoking rooms
+  smoke: "mdi:smoke-detector-off",
+  coffee: "mdi:coffee",
+  tea: "mdi:coffee",
+  beach: "mdi:beach",
+  breakfast: "mdi:food-croissant",
+  room: "mdi:bed",
+  hair: "mdi:hair-dryer",
+  luxury: "mdi:crown",
+};
+const getAmenityIcon = (amenity: string): string => {
+  const lower = amenity.toLowerCase();
+  for (const key in amenityIcons) {
+    if (lower.includes(key)) {
+      return amenityIcons[key];
+    }
+  }
+  return "mdi:check-circle-outline"; // fallback icon
+};
 
   // simulate userId (replace with real auth value)
   const userId = "123";
@@ -103,6 +134,20 @@ const FeaturedHotels: React.FC = () => {
       console.error("toggleLike error:", err);
     }
   };
+  const bgColors = [
+  "bg-red-100",
+  "bg-yellow-100",
+  "bg-green-100",
+  "bg-blue-100",
+  "bg-pink-100",
+  "bg-purple-100",
+  "bg-teal-100",
+  "bg-orange-100",
+];
+const getRandomBg = (idx: number) => {
+  return bgColors[idx % bgColors.length]; // rotates through colors
+};
+
   return (
     <div className="w-full max-w-[1200px] mx-auto appHorizantalSpacing py-6">
       <div className="text-center mb-8 md:mb-12">
@@ -179,21 +224,36 @@ const FeaturedHotels: React.FC = () => {
               >
                 <div className="py-[16px]">
                   <div className="border-t border-[#E1E1E1] pt-[20px] mt-[24px] space-y-2">
-                    {hotel.amenities && hotel.amenities.length > 0 ? (
-                      hotel.amenities.slice(0, 4).map((amenity, idx) => (
-                        <div key={idx} className="flex gap-2 items-center">
-                          <Icon icon="mdi:check-circle-outline" className="text-blue-600" width={24} height={24} />
-                          <p className="text-[14px] sm:text-[16px] lg:text-[17px] font-[500]">
-                            {amenity}
-                          </p>
-                        </div>
-                      ))
-                    ) : (
-                      <div className="flex flex-col items-center justify-center py-3.5">
+{hotel.amenities && hotel.amenities.length > 0 ? (
+  <div className="grid  grid-cols-2 gap-x-2 gap-y-4">
+    {hotel.amenities.slice(0, 4).map((amenity, idx) => (
+      <div key={idx} className="flex gap-3 items-center">
+        <div
+          className={`min-w-10 min-h-10  flex items-center justify-center rounded-lg ${getRandomBg(
+            idx
+          )}`}
+        >
+          <Icon
+            icon={getAmenityIcon(amenity)}
+            className="text-gray-700"
+            width={20}
+            height={20}
+          />
+        </div>
+        <p className="text-base font-[500] text-gray-700">
+          {amenity}
+        </p>
+      </div>
+    ))}
+  </div>
+) : (
+  <div className="flex flex-col items-center justify-center py-3.5">
+    <p className="text-gray-500 text-sm sm:text-base">No amenities found</p>
+  </div>
+)}
 
-                        <p className="text-gray-500 text-sm sm:text-base">No amenities found</p>
-                      </div>
-                    )}
+
+
                   </div>
                 </div>
               </div>
@@ -217,12 +277,12 @@ const FeaturedHotels: React.FC = () => {
                 >
                   <path
                     d="M6.22371 1.44739C3.27589 1.44739 0.885498 3.98725 0.885498 7.11938C0.885498 13.3881 11 20.5526 11 20.5526C11 20.5526 21.1145 13.3881 21.1145 7.11938C21.1145 3.23878 18.7241 1.44739 15.7763 1.44739C13.686 1.44739 11.8766 2.72406 11 4.58288C10.1234 2.72406 8.31404 1.44739 6.22371 1.44739Z"
-                    stroke={hotel.favorite === 1 && user ? "#EF4444" : "#6B7280"}  
+                    stroke={hotel.favorite === 1 && user ? "#EF4444" : "#6B7280"}
                     strokeOpacity="0.8"
                     strokeWidth="1.5"
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    fill={hotel.favorite === 1 && user ? "#EF4444" : "none"}      
+                    fill={hotel.favorite === 1 && user ? "#EF4444" : "none"}
                   />
                 </svg>
               </button>
