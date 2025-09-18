@@ -6,6 +6,8 @@ import { useAppSelector } from '@lib/redux/store'
 import Alert from '@src/components/core/alert'
 import LanguageDropdown from './languageDropdown'
 import CurrencyDropdown from './currenciesDropDown'
+import { subscribe_to_newsLatter } from '@src/actions'
+import { toast } from 'react-toastify'
 
 const Footer = () => {
   const app = useAppSelector((state) => state.appData?.data)
@@ -37,14 +39,21 @@ const {languages,currencies }=useAppSelector((state) => state.appData?.data)
         email,
       }
 
-      // simulate API
-      await new Promise((res) => setTimeout(res, 1500))
+        const res = await subscribe_to_newsLatter(payload);
 
-      // success
-      setAlert({ type: 'success', msg: 'You have successfully subscribed!' })
+            if (res?.error) {
+                     toast.error(res.error);
+              // setMessage({ type: "danger", text: res.error });
+            } else {
+              toast.success("Subscribed successfully!");
+             setEmail("")
+            }
+      //      // success
+      // setAlert({ type: 'success', msg: 'You have successfully subscribed!' })
       setEmail('')
     } catch (err) {
-      setAlert({ type: 'danger', msg: 'Something went wrong. Please try again.' })
+       toast.error("Something went wrong!");
+      // setAlert({ type: 'danger', msg: 'Something went wrong. Please try again.' })
     } finally {
       setLoading(false)
     }
@@ -103,13 +112,7 @@ const {languages,currencies }=useAppSelector((state) => state.appData?.data)
             </p>
 
             {/* Alert */}
-            {alert && (
-              <div className="mb-4">
-                <Alert type={alert.type} closable showIcon>
-                  {alert.msg}
-                </Alert>
-              </div>
-            )}
+
 
             <form onSubmit={handleSubscribe} className="flex flex-col items-center gap-4">
               <input
@@ -124,7 +127,7 @@ const {languages,currencies }=useAppSelector((state) => state.appData?.data)
                 <button
                   type="submit"
                   disabled={loading}
-                  className="bg-blue-900 text-white w-[119px] h-[54px] pl-6 rounded-full cursor-pointer hover:bg-gray-800 transition-colors duration-200 font-medium whitespace-nowrap flex items-center gap-2"
+                  className="bg-blue-900 text-white w-auto h-[54px] px-6 rounded-full cursor-pointer hover:bg-gray-800 transition-colors duration-200 font-medium whitespace-nowrap flex items-center gap-2"
                 >
                   {loading ? (
                     <>

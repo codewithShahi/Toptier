@@ -6,6 +6,7 @@ import { useAppSelector } from "@lib/redux/store";
 import { subscribe_to_newsLatter } from "@src/actions";
 import Image from "next/image";
 import React, { useState, ChangeEvent } from "react";
+import { toast } from "react-toastify";
 import { z } from "zod";
 
 const newsLatterSchema = z.object({
@@ -44,9 +45,10 @@ const NewsLatter: React.FC = () => {
       const res = await subscribe_to_newsLatter(formData);
 
       if (res?.error) {
-        setMessage({ type: "danger", text: res.error });
+               toast.error(res.error);
+        // setMessage({ type: "danger", text: res.error });
       } else {
-        setMessage({ type: "success", text: "Subscribed successfully!" });
+        toast.success("Subscribed successfully!");
         setFormData({ name: "", email: "" });
       }
     } catch (err) {
@@ -190,9 +192,9 @@ const NewsLatter: React.FC = () => {
             {/* Status Message using Alert */}
             {message && (
               <div className="mt-3">
-                <Alert type={message.type} closable showIcon>
+                {/* <Alert type={message.type} closable showIcon>
                   {message.text}
-                </Alert>
+                </Alert> */}
               </div>
             )}
           </div>
