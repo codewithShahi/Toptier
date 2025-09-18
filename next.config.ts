@@ -31,6 +31,12 @@ const nextConfig: NextConfig = {
       port: "",
       pathname: "/**", // Unsplash doesn't need /storage
     },
+        {
+      protocol: "https",
+      hostname: "flagpedia.net",
+      port: "",
+      pathname: "/**", // Unsplash doesn't need /storage
+    },
     ],
   },
 };

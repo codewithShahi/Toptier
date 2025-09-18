@@ -76,32 +76,19 @@ const OfferSection = () => {
                 </div>
 
                 {/* Background Image */}
-                {service.background_image && (
-                  <div className="absolute -right-3 -bottom-4 opacity-100">
-                    {service.background_image && (
-                      <div
-                        className={`opacity-100
-    ${idx === 0 ? "pr-3 pb-3 max-w-52 max-h-52" : ""}     // pehle wale card ke liye padding-right aur padding-top
-    ${idx === 1 ? "pl-4 pb-4 max-w-52 max-h-52" : ""}     // dusre wale card ke liye padding-left aur padding-bottom
-    ${idx === 2 ? "pr-2 pt-5 max-w-52 max-h-52" : ""}     // teesre wale card ke liye padding-right aur padding-top
-  `}
-                      >
-                        <div className="w-52 h-52 flex items-center justify-center">
-  <Image
-    src={service.background_image}
-    alt={service.title}
-    width={208}   // w-52 = 208px
-    height={208}  // h-52 = 208px
-    className="w-full h-full object-contain"
-  />
-</div>
+{service.background_image && (
+  <div className="absolute -right-15 top-30 opacity-100">
+    <div className="opacity-100 w-[180px] h-[180px] flex items-center justify-center">
+      <img
+        src={service.background_image}
+        alt={service.title}
+        className="w-full h-full object-cover -rotate-10"
+      />
+    </div>
+  </div>
+)}
 
-                      </div>
 
-                    )}
-
-                  </div>
-                )}
               </div>
             ))}
           </div>
