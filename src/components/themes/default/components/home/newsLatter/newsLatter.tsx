@@ -170,7 +170,7 @@ console.log('app newslate',app.app)
             </div>
 
             {/* Submit Button */}
-            <div className="mt-3">
+            <div className="mt-1">
               <button
                 onClick={handleSubmit}
                 disabled={loading}

@@ -28,7 +28,7 @@ const FeaturedDestinations: React.FC = () => {
 
   const toggleLike = async (tour: Destination) => {
     if (!user) {
-     toast.error("User must be logged to mark as favourite ");
+     toast.error("User must be logged in to mark as favourite ");
       return;
     }
 
@@ -130,7 +130,7 @@ const FeaturedDestinations: React.FC = () => {
                     {tour.location}, {tour.country}
                   </h3>
 
-                  <div className="flex items-center gap-3 px-2">
+                  <div className="flex items-center gap-3 px-2 mb-3">
                     <button
                       onClick={() =>
                         console.log(`Exploring ${tour.location}, ${tour.country}`)
