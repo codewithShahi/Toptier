@@ -16,8 +16,8 @@ const Footer = () => {
     business_name,
     home_title,
   } = app.app
-const {languages,currencies }=useAppSelector((state) => state.appData?.data)
-// console.log('land', languages,currencies)
+  const { languages, currencies } = useAppSelector((state) => state.appData?.data)
+  // console.log('land', languages,currencies)
   // states
   const [email, setEmail] = useState('')
   const [loading, setLoading] = useState(false)
@@ -123,149 +123,163 @@ const {languages,currencies }=useAppSelector((state) => state.appData?.data)
                 <button
                   type="submit"
                   disabled={loading}
-                  className="bg-blue-900 text-white w-[119px] h-[54px] pl-6 rounded-full cursor-pointer hover:bg-gray-800 transition-colors duration-200 font-medium whitespace-nowrap flex items-center gap-2"
+                  className="bg-blue-900 text-white w-[150px] h-[54px] rounded-full cursor-pointer hover:bg-gray-800 transition-colors duration-200 font-medium whitespace-nowrap flex items-center justify-center gap-2"
                 >
                   {loading ? (
                     <>
-                      <Icon icon="eos-icons:loading" className="animate-spin" width="20" height="20" />
-                      Subscribing...
+                      <Icon
+                        icon="eos-icons:loading"
+                        className="animate-spin"
+                        width="20"
+                        height="20"
+                      />
+                      <span>Subscribing...</span>
                     </>
                   ) : (
-                    'Subscribe'
+                    <span>Subscribe</span>
                   )}
                 </button>
+
               </div>
             </form>
           </div>
         </div>
       </div>
 
-     {/* <footer className="bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 py-6"> */}
-  <div className="max-w-[1200px] mx-auto py-6 border-t border-gray-200 px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-4">
-    {/* Copyright */}
-    <p className="text-base font-medium text-gray-800 dark:text-gray-400">
-      © 2025  {home_title.toUpperCase()} All rights reserved.
-    </p>
+      {/* <footer className="bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 py-6"> */}
+      <div className="max-w-[1200px] mx-auto py-6 border-t border-gray-200 px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-4">
+        {/* Copyright */}
+        <p className="text-base font-medium text-gray-800 dark:text-gray-400">
+          © 2025  {home_title.toUpperCase()} All rights reserved.
+        </p>
 
-    {/* Language & Currency Dropdowns */}
-    <div className='flex items-center gap-5'>
-   <div className="flex items-center gap-5">
-  <div className="flex items-center text-sm text-gray-600 dark:text-gray-400 space-x-4">
+        {/* Language & Currency Dropdowns */}
+        <div className='flex items-center gap-5'>
+          <div className="flex items-center gap-5">
+            <div className="flex items-center text-sm text-gray-600 dark:text-gray-400 space-x-4">
 
-  {/* Language Select with Custom Arrow */}
-  <div className="relative w-19"> {/* 👈 Fixed width for alignment */}
-    <select
-      id="language-select"
-      className="w-full bg-transparent border-none outline-none cursor-pointer hover:text-gray-800 dark:hover:text-gray-200 transition-colors appearance-none pr-2 text-left"
-      style={{ WebkitAppearance: 'none', MozAppearance: 'none' }}
-    >
-      {languages
-        .filter((lang: any) => lang.status === "1")
-        .map((lang: any) => (
-          <option key={lang.id} value={lang.language_code}>
-            {lang.name}
-          </option>
-        ))}
-    </select>
-    {/* Custom Dropdown Arrow */}
-    <svg
-      className="w-4 h-4 absolute right-2 top-1/2 transform -translate-y-1/2 pointer-events-none text-gray-500 dark:text-gray-400"
-      fill="none"
-      stroke="currentColor"
-      viewBox="0 0 24 24"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-    </svg>
-  </div>
+              {/* Language Select with Custom Arrow */}
+              <div className="relative ">
+                <select
+                  id="language-select"
+                  className="w-full appearance-none rounded-lg px-4 py-3  text-sm font-medium bg-white text-gray-700 dark:text-gray-200 cursor-pointer focus:outline-none focus:ring-0 dark:hover:bg-gray-700 transition-colors"
+                  style={{ WebkitAppearance: 'none', MozAppearance: 'none' }}
+                >
+                  {languages
+                    .filter((lang: any) => lang.status === "1")
+                    .map((lang: any) => (
+                      <option key={lang.id} value={lang.language_code}>
+                        {lang.name}
+                      </option>
+                    ))}
+                </select>
 
-  {/* Currency Select with Custom Arrow */}
-  <div className="relative w-15"> {/* 👈 Fixed width for alignment (USD, EUR, JPY are short) */}
-    <select
-      id="currency-select"
-      className="w-full bg-transparent border-none outline-none cursor-pointer hover:text-gray-800 dark:hover:text-gray-200 transition-colors appearance-none pr-2 text-left"
-      style={{ WebkitAppearance: 'none', MozAppearance: 'none' }}
-    >
-      {currencies
-        .filter((curr: any) => curr.status === "1")
-        .map((curr: any) => (
-          <option key={curr.iso} value={curr.iso}>
-            {curr.name}
-          </option>
-        ))}
-    </select>
-    {/* Custom Dropdown Arrow */}
-    <svg
-      className="w-4 h-4 absolute right-2 top-1/2 transform -translate-y-1/2 pointer-events-none text-gray-500 dark:text-gray-400"
-      fill="none"
-      stroke="currentColor"
-      viewBox="0 0 24 24"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-    </svg>
-  </div>
+                {/* Custom Dropdown Arrow */}
+                <svg
+                  className="w-4 h-4 absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none text-gray-500 dark:text-gray-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M19 9l-7 7-7-7"
+                  />
+                </svg>
+              </div>
 
-</div>
+              {/* Currency Select with Custom Arrow */}
+              <div className="relative">
+                <select
+                  id="currency-select"
+                  className="w-full appearance-none  rounded-lg px-4 py-2 pr-8 text-sm font-medium bg-white text-gray-700 dark:text-gray-200 cursor-pointer focus:outline-none focus:ring-0  dark:hover:bg-gray-700 transition-colors"
+                  style={{ WebkitAppearance: 'none', MozAppearance: 'none' }}
+                >
+                  {currencies
+                    .filter((curr: any) => curr.status === "1")
+                    .map((curr: any) => (
+                      <option key={curr.iso} value={curr.iso}>
+                        {curr.name}
+                      </option>
+                    ))}
+                </select>
 
-  {/* Social Icons */}
-  <div className="flex space-x-5">
-    {/* ... your social icons here ... */}
-  </div>
-</div>
-    {/* Social Icons */}
+                {/* Custom Dropdown Arrow */}
+                <svg
+                  className="w-4 h-4 absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none text-gray-500 dark:text-gray-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </div>
 
 
-<div className="flex space-x-5">
-  {/* Facebook */}
-  <a
-    href={social_facebook}
-    aria-label="Follow us on Facebook"
-    className="text-blue-900 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors"
-  >
-    <Icon icon="mdi:facebook" width="24" height="24" />
-  </a>
+            </div>
 
-  {/* Twitter */}
-  <a
-    href={social_twitter}
-    aria-label="Follow us on Twitter"
-    className="text-blue-900 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors"
-  >
-    <Icon icon="mdi:twitter" width="24" height="24" />
-  </a>
+            {/* Social Icons */}
+            <div className="flex space-x-5">
+              {/* ... your social icons here ... */}
+            </div>
+          </div>
+          {/* Social Icons */}
 
-  {/* Instagram */}
-  <a
-    href={social_instagram}
-    aria-label="Follow us on Instagram"
-    className="text-blue-900 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors"
-  >
-    <Icon icon="mdi:instagram" width="24" height="24" />
-  </a>
 
-  {/* LinkedIn */}
-  <a
-    href={social_linkedin}
-    aria-label="Follow us on LinkedIn"
-    className="text-blue-900 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors"
-  >
-    <Icon icon="mdi:linkedin" width="24" height="24" />
-  </a>
+          <div className="flex space-x-5">
+            {/* Facebook */}
+            <a
+              href={social_facebook}
+              aria-label="Follow us on Facebook"
+              className="text-blue-900 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors"
+            >
+              <Icon icon="mdi:facebook" width="24" height="24" />
+            </a>
 
-  {/* YouTube */}
-  <a
-    href={social_youtube}
-    aria-label="Follow us on YouTube"
-    className="text-blue-900 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors"
-  >
-    <Icon icon="mdi:youtube" width="24" height="24" />
-  </a>
-</div>
-    </div>
+            {/* Twitter */}
+            <a
+              href={social_twitter}
+              aria-label="Follow us on Twitter"
+              className="text-blue-900 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors"
+            >
+              <Icon icon="mdi:twitter" width="24" height="24" />
+            </a>
 
-  </div>
-{/* </footer> */}
+            {/* Instagram */}
+            <a
+              href={social_instagram}
+              aria-label="Follow us on Instagram"
+              className="text-blue-900 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors"
+            >
+              <Icon icon="mdi:instagram" width="24" height="24" />
+            </a>
+
+            {/* LinkedIn */}
+            <a
+              href={social_linkedin}
+              aria-label="Follow us on LinkedIn"
+              className="text-blue-900 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors"
+            >
+              <Icon icon="mdi:linkedin" width="24" height="24" />
+            </a>
+
+            {/* YouTube */}
+            <a
+              href={social_youtube}
+              aria-label="Follow us on YouTube"
+              className="text-blue-900 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors"
+            >
+              <Icon icon="mdi:youtube" width="24" height="24" />
+            </a>
+          </div>
+        </div>
+
+      </div>
+      {/* </footer> */}
     </footer>
   )
 }

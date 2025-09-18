@@ -86,16 +86,16 @@ const OfferSection = () => {
     ${idx === 2 ? "pr-2 pt-5 max-w-52 max-h-52" : ""}     // teesre wale card ke liye padding-right aur padding-top
   `}
                       >
-                        <Image
-                          src={service.background_image}
-                          alt={service.title}
-                          width={idx === 0 ? 200 : idx === 1 ? 150 : 120}
-                          height={idx === 0 ? 200 : idx === 1 ? 150 : 120}
-                          className={`object-contain
-      ${idx === 0 ? "max-w-30 max-h-52" : ""}
-      ${idx === 1 ? "max-w-52 max-h-52" : ""}
-      ${idx === 2 ? "max-w-52 max-h-52" : ""}`}
-                        />
+                        <div className="w-52 h-52 flex items-center justify-center">
+  <Image
+    src={service.background_image}
+    alt={service.title}
+    width={208}   // w-52 = 208px
+    height={208}  // h-52 = 208px
+    className="w-full h-full object-contain"
+  />
+</div>
+
                       </div>
 
                     )}
