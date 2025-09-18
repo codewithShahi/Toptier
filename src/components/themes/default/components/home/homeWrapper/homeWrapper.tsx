@@ -5,7 +5,8 @@ import {
   HeroSection,
   FeaturedDestinations,
   OfferSection,
-  TestimonialSection,FeaturedHotels,NewsLatter
+  TestimonialSection,FeaturedHotels,NewsLatter,
+  // HotelsListing
 
 } from "@components/themes/default";
 // import { baseUrl, token, siteUrl } from "@src/actions";
