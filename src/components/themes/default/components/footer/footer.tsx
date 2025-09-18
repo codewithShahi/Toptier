@@ -191,6 +191,7 @@ const {languages,currencies }=useAppSelector((state) => state.appData?.data)
 <div className="flex space-x-5">
   {/* Facebook */}
   <a
+    target="_blank"
     href={social_facebook}
     aria-label="Follow us on Facebook"
     className="text-blue-900 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors"
@@ -201,6 +202,7 @@ const {languages,currencies }=useAppSelector((state) => state.appData?.data)
   {/* Twitter */}
   <a
     href={social_twitter}
+      target="_blank"
     aria-label="Follow us on Twitter"
     className="text-blue-900 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors"
   >
@@ -210,6 +212,7 @@ const {languages,currencies }=useAppSelector((state) => state.appData?.data)
   {/* Instagram */}
   <a
     href={social_instagram}
+      target="_blank"
     aria-label="Follow us on Instagram"
     className="text-blue-900 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors"
   >
@@ -219,6 +222,7 @@ const {languages,currencies }=useAppSelector((state) => state.appData?.data)
   {/* LinkedIn */}
   <a
     href={social_linkedin}
+      target="_blank"
     aria-label="Follow us on LinkedIn"
     className="text-blue-900 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors"
   >
@@ -228,6 +232,7 @@ const {languages,currencies }=useAppSelector((state) => state.appData?.data)
   {/* YouTube */}
   <a
     href={social_youtube}
+      target="_blank"
     aria-label="Follow us on YouTube"
     className="text-blue-900 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors"
   >

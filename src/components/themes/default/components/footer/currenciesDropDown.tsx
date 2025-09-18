@@ -60,8 +60,8 @@ console.log('cur',currencies)
         >
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
         </svg>
+        
       </button>
-
       {/* Dropdown List */}
       {open && (
         <div className="absolute bottom-10 z-10 w-52 md:w-60 p-2 mt-1 space-y-1 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">

@@ -12,7 +12,6 @@ const newsLatterSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   email: z.string().email("Invalid email address"),
 });
-
 interface FormData {
   name: string;
   email: string;
@@ -26,7 +25,6 @@ const NewsLatter: React.FC = () => {
 
     const app = useAppSelector((state) => state?.appData?.data);
       const {newsletter_description, newsletter_image,newsletter_title}=app.app
-console.log('app newslate',app.app)
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
