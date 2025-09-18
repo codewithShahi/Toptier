@@ -2,6 +2,7 @@
 
 import Alert from "@components/core/alert";
 import { Icon } from "@iconify/react";
+import { useAppSelector } from "@lib/redux/store";
 import { subscribe_to_newsLatter } from "@src/actions";
 import Image from "next/image";
 import React, { useState, ChangeEvent } from "react";
@@ -23,6 +24,9 @@ const NewsLatter: React.FC = () => {
   const [message, setMessage] = useState<{ type: "success" | "danger"; text: string } | null>(null);
   const [errors, setErrors] = useState<Partial<FormData>>({});
 
+    const app = useAppSelector((state) => state?.appData?.data);
+      const {newsletter_description, newsletter_image,newsletter_title}=app.app
+console.log('app newslate',app.app)
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -71,7 +75,7 @@ const NewsLatter: React.FC = () => {
           {/* Image */}
           <div className="order-2 lg:order-1">
             <Image
-              src="/images/newsletter.jpg"
+              src={newsletter_image || "/images/newsletter.jpg"}
               width={1200}
               height={393}
               alt="Newsletter Banner"
@@ -86,18 +90,16 @@ const NewsLatter: React.FC = () => {
               Newsletter
             </button>
             <div>
-              <p className="text-[28px] sm:text-[36px] lg:text-[44px] text-[#051036] font-[900] leading-8">
-                Your Travel
+              <p className="text-[28px] sm:text-[36px] lg:text-[44px] text-[#051036] font-[900] w-full lg:max-w-100 leading-13">
+               {newsletter_title}
               </p>
-              <p className="text-[28px] sm:text-[36px] lg:text-[44px] text-[#051036] font-[900]">
+              {/* <p className="text-[28px] sm:text-[36px] lg:text-[44px] text-[#051036] font-[900]">
                 Journey Starts Here
-              </p>
+              </p> */}
             </div>
 
             <p className="text-[16px] sm:text-[17px] lg:text-[18px] font-[400] text-[#697488]">
-              Begin your adventure with handpicked stays, exclusive deals, and
-              effortless booking — everything you need for a perfect getaway, all
-              in one place.
+             { newsletter_description}
             </p>
 
             {/* Input Fields */}

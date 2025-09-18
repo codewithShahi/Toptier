@@ -48,6 +48,7 @@ module.exports = {
 				'monospace',
 			],
 			  urbanist: ['Urbanist', 'sans-serif'], // 👈 Optional alias
+			   helvetica: ['"Helvetica Neue"', 'Helvetica', 'Arial', 'sans-serif'], // 👈 explicit alias
 		},
 		screens: {
 			xs: '576px',

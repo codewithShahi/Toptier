@@ -8,13 +8,14 @@ import { useUser } from "@hooks/use-user";
 import Alert from "@components/core/alert";
 import { signOut } from "@src/actions";
 import { Router } from "next/router";
+import ProfileDropdown from "./userDropDown"
 
 const HeaderMenus = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { user, error, isLoading: userLoading, checkSession } = useUser();
   // const router=Router()
   return (
-    <header className="w-full  max-w-[1200px] mx-auto">
+    <header className="w-full  max-w-[1200px] mx-auto overflow-visible">
       <div className="flex items-center justify-between h-22 appHorizantalSpacing">
         {/* Left: Logo + Menu */}
         <div className="flex items-center gap-10">
@@ -54,15 +55,11 @@ const HeaderMenus = () => {
           >
             Login
           </Link>
-        </div> : <button className="hidden md:block bg-[#163C8C] border hover:bg-gray-800 border-[#061026] cursor-pointer text-center border-none hover:text-white ring-0 text-white rounded-full px-9 py-2 transition"
-          onClick={async () => {
-            await signOut();
-            await checkSession?.();
-            // router.refresh();
-          }}
-
-        >Logout
-        </button>}
+        </div> :
+        <div className="hidden md:block">
+          <ProfileDropdown/>
+          </div>
+        }
 
         {/* Mobile Toggle */}
         <button
@@ -137,16 +134,9 @@ const HeaderMenus = () => {
             >
               Login
             </Link>
-          </div> : <button
-            className="bg-[#163C8C] text-center border-none hover:text-white hover:bg-gray-800 ring-0 text-white rounded-full px-9 py-2 transition mt-4"
-            onClick={async () => {
-              await signOut();
-              await checkSession?.();
-              setIsOpen(false);
-            }}
-          >
-            Logout
-          </button>}
+          </div> :   <div className="">
+          <ProfileDropdown/>
+          </div>}
         </nav>
       </div>
 

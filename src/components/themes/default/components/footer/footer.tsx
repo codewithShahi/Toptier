@@ -4,6 +4,8 @@ import Link from 'next/link'
 import { Icon } from '@iconify/react'
 import { useAppSelector } from '@lib/redux/store'
 import Alert from '@src/components/core/alert'
+import LanguageDropdown from './languageDropdown'
+import CurrencyDropdown from './currenciesDropDown'
 
 const Footer = () => {
   const app = useAppSelector((state) => state.appData?.data)
@@ -17,7 +19,6 @@ const Footer = () => {
     home_title,
   } = app.app
 const {languages,currencies }=useAppSelector((state) => state.appData?.data)
-// console.log('land', languages,currencies)
   // states
   const [email, setEmail] = useState('')
   const [loading, setLoading] = useState(false)
@@ -154,9 +155,9 @@ const {languages,currencies }=useAppSelector((state) => state.appData?.data)
 
   {/* Language Select with Custom Arrow */}
   <div className="relative w-19"> {/* 👈 Fixed width for alignment */}
-    <select
+    {/* <select
       id="language-select"
-      className="w-full bg-transparent border-none outline-none cursor-pointer hover:text-gray-800 dark:hover:text-gray-200 transition-colors appearance-none pr-2 text-left"
+      className="w-full bg-transparent border-none outline-none cursor-pointer hover:text-gray-800 dark:hover:text-gray-200 transition-colors appearance-none pr-2 text-leftnp"
       style={{ WebkitAppearance: 'none', MozAppearance: 'none' }}
     >
       {languages
@@ -166,44 +167,15 @@ const {languages,currencies }=useAppSelector((state) => state.appData?.data)
             {lang.name}
           </option>
         ))}
-    </select>
+    </select> */}
+    <LanguageDropdown/>
     {/* Custom Dropdown Arrow */}
-    <svg
-      className="w-4 h-4 absolute right-2 top-1/2 transform -translate-y-1/2 pointer-events-none text-gray-500 dark:text-gray-400"
-      fill="none"
-      stroke="currentColor"
-      viewBox="0 0 24 24"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-    </svg>
+
   </div>
 
   {/* Currency Select with Custom Arrow */}
   <div className="relative w-15"> {/* 👈 Fixed width for alignment (USD, EUR, JPY are short) */}
-    <select
-      id="currency-select"
-      className="w-full bg-transparent border-none outline-none cursor-pointer hover:text-gray-800 dark:hover:text-gray-200 transition-colors appearance-none pr-2 text-left"
-      style={{ WebkitAppearance: 'none', MozAppearance: 'none' }}
-    >
-      {currencies
-        .filter((curr: any) => curr.status === "1")
-        .map((curr: any) => (
-          <option key={curr.iso} value={curr.iso}>
-            {curr.name}
-          </option>
-        ))}
-    </select>
-    {/* Custom Dropdown Arrow */}
-    <svg
-      className="w-4 h-4 absolute right-2 top-1/2 transform -translate-y-1/2 pointer-events-none text-gray-500 dark:text-gray-400"
-      fill="none"
-      stroke="currentColor"
-      viewBox="0 0 24 24"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-    </svg>
+  <CurrencyDropdown/>
   </div>
 
 </div>
