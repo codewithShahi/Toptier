@@ -42,7 +42,7 @@ const HeaderMenus = () => {
         </div>
 
         {/* Right: Auth Buttons - Desktop Only */}
-        {!(user || userLoading) ? <div className="hidden md:flex items-center gap-3">
+        {!(user ) ? <div className="hidden md:flex items-center gap-3">
           <Link
             href="/auth/signup"
             className="border border-[#061026] text-[#061026] cursor-pointer text-center text-[16px] rounded-full w-[113px] h-[39px] pt-1.5 hover:bg-blue-50"
@@ -118,7 +118,7 @@ const HeaderMenus = () => {
           </Link>
 
           {/* Mobile Auth Buttons */}
-          {!(user || userLoading) ? <div className="flex flex-col gap-3 pt-4">
+          {!(user) ? <div className="flex flex-col gap-3 pt-4">
             <Link
               href="/auth/signup"
               className="border border-[#061026] text-[#061026] text-center rounded-full px-7 py-2 hover:bg-blue-50"

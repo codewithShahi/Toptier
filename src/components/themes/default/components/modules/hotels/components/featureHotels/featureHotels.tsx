@@ -107,7 +107,7 @@ const getAmenityIcon = (amenity: string): string => {
   const toggleLike = async (hotel: Hotel) => {
     try {
       if (!user) {
-        toast.error("User must be logged to mark as favourite ");
+        toast.error("User must be logged in to mark as favourite ");
         return;
       }
 
@@ -258,7 +258,7 @@ const getRandomBg = (idx: number) => {
                 </div>
               </div>
             </div>
-            <div className="flex items-center gap-3 px-2">
+            <div className="flex items-center gap-3 px-2 mb-3">
               <button className="flex-1 ml-3 cursor-pointer bg-[#163D8C] hover:bg-gray-800 text-white font-medium py-3 px-3 text-sm sm:text-base md:text-sm lg:text-base rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
                 Book Now
               </button>
