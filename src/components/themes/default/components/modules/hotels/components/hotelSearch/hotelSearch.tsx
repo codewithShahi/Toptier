@@ -6,7 +6,8 @@ import useDictionary from "@hooks/useDict";
 import useDirection from "@hooks/useDirection";
 import { useParams } from "next/navigation";
 import { z } from "zod";
-import { fetchHotelsLocations } from "@src/actions";
+import { fetchHotelsLocations, hotel_search } from "@src/actions";
+import { useRouter } from "next/navigation";
 
 const hotelSearchSchema = z
   .object({
@@ -80,7 +81,7 @@ export default function HotelSearch() {
   const [activeIndex, setActiveIndex] = useState(-1); // keyboard nav
 
   const debouncedDestination = useDebounce(form.destination, 450);
-
+  const router = useRouter();
   const guestsDropdownRef = useRef<HTMLDivElement>(null);
   const destinationDropdownRef = useRef<HTMLDivElement>(null);
   const destInputRef = useRef<HTMLInputElement | null>(null);
@@ -194,29 +195,70 @@ export default function HotelSearch() {
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      setSubmitting(true); // ✅ start spinner
-      hotelSearchSchema.parse(form);
-      setErrors({});
+  // const handleSubmit = async (e: React.FormEvent) => {
+  //   e.preventDefault();
+  //   try {
+  //     setSubmitting(true); // ✅ start spinner
+  //     hotelSearchSchema.parse(form);
+  //      const url = `/hotel/`;
+  //       router.push(url);
+  //     setErrors({});
 
-      // 🔹 Call your real API here
-      // await searchHotels(form);
+  //     // 🔹 Call your real API here
+  //     // await searchHotels(form);
 
-      console.log("valid form ready to submit:", form);
-    } catch (err) {
-      if (err instanceof z.ZodError) {
-        const msgMap: Record<string, string> = {};
-        err.errors.forEach((zErr) => {
-          msgMap[zErr.path[0] as string] = zErr.message;
-        });
-        setErrors(msgMap);
-      }
-    } finally {
-      setSubmitting(false); // ✅ stop spinner
+  //     console.log("valid form ready to submit:", form);
+  //   } catch (err) {
+  //     if (err instanceof z.ZodError) {
+  //       const msgMap: Record<string, string> = {};
+  //       err.errors.forEach((zErr) => {
+  //         msgMap[zErr.path[0] as string] = zErr.message;
+  //       });
+  //       setErrors(msgMap);
+  //     }
+  //   } finally {
+  //     setSubmitting(false); // ✅ stop spinner
+  //   }
+  // };
+
+
+
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  try {
+    setSubmitting(true);
+    hotelSearchSchema.parse(form); // ✅ validate
+
+    const res = await hotel_search(form); // 🔹 call server action
+    if (res?.error) {
+      setErrors({ destination: res.error }); // show API error
+      return;
     }
-  };
+
+    // Redirect with query params (optional)
+    // const queryParams = new URLSearchParams({
+    //   destination: form.destination,
+    //   checkin: form.checkin,
+    //   checkout: form.checkout,
+    //   rooms: String(form.rooms),
+    //   adults: String(form.adults),
+    //   children: String(form.children),
+    //   nationality: form.nationality,
+    // }).toString();
+
+    router.push("/hotel_search"); // 🔹 navigate to search page
+  } catch (err) {
+    if (err instanceof z.ZodError) {
+      const msgMap: Record<string, string> = {};
+      err.errors.forEach((zErr) => {
+        msgMap[zErr.path[0] as string] = zErr.message;
+      });
+      setErrors(msgMap);
+    }
+  } finally {
+    setSubmitting(false);
+  }
+};
 
 
   const ErrorMessage = ({ error }: { error?: string }) =>

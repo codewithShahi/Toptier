@@ -9,13 +9,13 @@ const HeaderLogo = ({ mode, className, imgClass }: { mode?: Mode; className?: st
     const defaultMode = useAppSelector((state) => state.root.mode)
 
     return (
-        <Link href={'/'}>
+        // <Link href={'/'}>
             <Logo
                 imgClass={classNames('max-h-16', imgClass)}
                 mode={mode || (defaultMode === 'light' || defaultMode === 'dark' ? defaultMode : undefined)}
                 className={className}
             />
-        </Link>
+
     )
 }
 
