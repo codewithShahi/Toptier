@@ -409,7 +409,7 @@ const handleSubmit = async (e: React.FormEvent) => {
   <button
     type="button"
     onClick={() => setShowGuestsDropdown((s) => !s)}
-    className={`w-full flex items-center justify-between ${direction === "ltr" ? "pl-9 pr-4" : "pr-12 pl-4"} py-2.5 text-xs hover:bg-gray-100 hover:border-gray-300 border border-gray-200 rounded-xl text-gray-900 dark:bg-gray-800 dark:border-gray-600 cursor-pointer dark:hover:bg-gray-700 dark:hover:border-gray-500 transition-all duration-200`}
+    className={`w-full flex items-center justify-between ${direction === "ltr" ? "pl-10 pr-4" : "pr-12 pl-4"} py-2.5 text-xs hover:bg-gray-100 hover:border-gray-300 border border-gray-200 rounded-xl text-gray-900 dark:bg-gray-800 dark:border-gray-600 cursor-pointer dark:hover:bg-gray-700 dark:hover:border-gray-500 transition-all duration-200`}
   >
     <div className={`absolute ${direction === "ltr" ? "left-3" : "right-4"} top-12 transform -translate-y-1/2 text-gray-400`}>
       <svg width="18" height="18" viewBox="0 0 14 17" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -512,7 +512,7 @@ const handleSubmit = async (e: React.FormEvent) => {
                   rooms: Math.max(1, prev.rooms - 1),
                 }))
               }
-              className="w-8 h-8 flex items-center justify-center rounded-full border dark:border-gray-600 text-blue-900 dark:text-blue-300 bg-white dark:bg-gray-800 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors"
+              className="w-8 h-8 flex items-center cursor-pointer justify-center rounded-full border dark:border-gray-600 text-blue-900 dark:text-blue-300 bg-white dark:bg-gray-800 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors"
             >
               -
             </button>
@@ -527,7 +527,7 @@ const handleSubmit = async (e: React.FormEvent) => {
                   rooms: prev.rooms + 1,
                 }))
               }
-              className="w-8 h-8 flex items-center justify-center rounded-full border dark:border-gray-600 text-blue-900 dark:text-blue-300 bg-white dark:bg-gray-800 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors"
+              className="w-8 h-8 flex items-center cursor-pointer justify-center rounded-full border dark:border-gray-600 text-blue-900 dark:text-blue-300 bg-white dark:bg-gray-800 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors"
             >
               +
             </button>
