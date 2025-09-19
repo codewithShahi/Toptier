@@ -12,15 +12,20 @@
 //   id: number;
 //   name: string;
 //   location: string;
+//   city?: string;
+//   country?: string;
 //   price: number;
 //   originalPrice: number;
 //   image: string;
+//   img?: string;
 //   rating: number;
 //   reviews: number;
 //   availableRooms: number;
+//   left_rooms?: number;
 //   stars: number;
 //   amenities: string[];
 //   category: string[];
+//   favorite?: number;
 // }
 
 // interface Amenity {
@@ -40,18 +45,20 @@
 //   const [mobileFiltersOpen, setMobileFiltersOpen] = useState<boolean>(false);
 //   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
 //   const [searchLocation, setSearchLocation] = useState<string>("");
+//   const [hoveredId, setHoveredId] = useState<number | null>(null);
+//   const [user, setUser] = useState(true);
 
 //   // Filter chips data
 //   const filterChips: FilterChip[] = [
-//     { icon: "emojione-monotone:hotel", label: "Luxury Hotel", category: "luxury" },
-//     { icon: "mdi:briefcase", label: "Business", category: "business" },
-//     { icon: "noto:beach-with-umbrella", label: "Resort", category: "resort" },
-//     { icon: "mdi:cash", label: "Budget", category: "budget" },
-//     { icon: "mdi:star", label: "Top Rated", category: "top-rated" },
-//     { icon: "mdi:city", label: "City Center", category: "city-center" },
-//     { icon: "mdi:food", label: "Fine Dining", category: "fine-dining" },
-//     { icon: "noto:beach-with-umbrella", label: "Beachfront", category: "beachfront" },
-//     { icon: "mdi:snowflake", label: "Lake View", category: "lake-view" },
+//     { icon: "🏨", label: "Luxury Hotel", category: "luxury" },
+//     { icon: "💼", label: "Business", category: "business" },
+//     { icon: "🏖️", label: "Resort", category: "resort" },
+//     { icon: "💰", label: "Budget", category: "budget" },
+//     { icon: "⭐", label: "Top Rated", category: "top-rated" },
+//     { icon: "🏙️", label: "City Center", category: "city-center" },
+//     { icon: "🍽️", label: "Fine Dining", category: "fine-dining" },
+//     { icon: "🏖️", label: "Beachfront", category: "beachfront" },
+//     { icon: "🏔️", label: "Lake View", category: "lake-view" },
 //     { label: "Near Airport", category: "near-airport" },
 //   ];
 
@@ -61,139 +68,126 @@
 //       id: 1,
 //       name: "Marmaris Resort & Spa",
 //       location: "Marmaris, Turkey",
+//       city: "Marmaris",
+//       country: "Turkey",
 //       price: 420,
 //       originalPrice: 560,
 //       image: "https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=400&h=300&fit=crop",
+//       img: "https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=400&h=300&fit=crop",
 //       rating: 4.8,
 //       reviews: 245,
 //       availableRooms: 2,
+//       left_rooms: 2,
 //       stars: 5,
-//       amenities: ["wifi", "pool", "spa", "restaurant", "beach"],
-//       category: ["luxury", "resort", "beachfront"]
+//       amenities: ["WiFi", "Pool", "Spa", "Restaurant"],
+//       category: ["luxury", "resort", "beachfront"],
+//       favorite: 0
 //     },
 //     {
 //       id: 2,
 //       name: "Grand Marina Hotel",
 //       location: "Istanbul, Turkey",
+//       city: "Istanbul",
+//       country: "Turkey",
 //       price: 320,
 //       originalPrice: 420,
 //       image: "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=400&h=300&fit=crop",
+//       img: "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=400&h=300&fit=crop",
 //       rating: 4.5,
 //       reviews: 189,
 //       availableRooms: 5,
+//       left_rooms: 5,
 //       stars: 4,
-//       amenities: ["wifi", "gym", "business", "restaurant"],
-//       category: ["business", "city-center"]
+//       amenities: ["WiFi", "Gym", "Restaurant", "Parking"],
+//       category: ["business", "city-center"],
+//       favorite: 1
 //     },
 //     {
 //       id: 3,
 //       name: "Seaside Paradise Resort",
 //       location: "Antalya, Turkey",
+//       city: "Antalya",
+//       country: "Turkey",
 //       price: 650,
 //       originalPrice: 780,
 //       image: "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400&h=300&fit=crop",
+//       img: "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400&h=300&fit=crop",
 //       rating: 4.9,
 //       reviews: 312,
 //       availableRooms: 1,
+//       left_rooms: 1,
 //       stars: 5,
-//       amenities: ["wifi", "pool", "spa", "gym", "restaurant", "beach"],
-//       category: ["luxury", "resort", "beachfront", "top-rated"]
+//       amenities: ["WiFi", "Pool", "Spa", "Gym", "Restaurant"],
+//       category: ["luxury", "resort", "beachfront", "top-rated"],
+//       favorite: 0
 //     },
 //     {
 //       id: 4,
 //       name: "Budget Inn Central",
 //       location: "Ankara, Turkey",
+//       city: "Ankara", 
+//       country: "Turkey",
 //       price: 85,
 //       originalPrice: 120,
 //       image: "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=400&h=300&fit=crop",
+//       img: "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=400&h=300&fit=crop",
 //       rating: 4.1,
 //       reviews: 67,
 //       availableRooms: 8,
+//       left_rooms: 8,
 //       stars: 3,
-//       amenities: ["wifi", "restaurant"],
-//       category: ["budget", "city-center"]
+//       amenities: ["WiFi", "Restaurant"],
+//       category: ["budget", "city-center"],
+//       favorite: 0
 //     },
 //     {
 //       id: 5,
 //       name: "Lakeside Retreat",
 //       location: "Bolu, Turkey",
+//       city: "Bolu",
+//       country: "Turkey", 
 //       price: 280,
 //       originalPrice: 350,
 //       image: "https://images.unsplash.com/photo-1564501049412-61c2a3083791?w=400&h=300&fit=crop",
+//       img: "https://images.unsplash.com/photo-1564501049412-61c2a3083791?w=400&h=300&fit=crop",
 //       rating: 4.6,
 //       reviews: 156,
 //       availableRooms: 3,
+//       left_rooms: 3,
 //       stars: 4,
-//       amenities: ["wifi", "spa", "restaurant"],
-//       category: ["resort", "lake-view"]
+//       amenities: ["WiFi", "Spa", "Restaurant"],
+//       category: ["resort", "lake-view"],
+//       favorite: 1
 //     },
 //     {
 //       id: 6,
 //       name: "Airport Business Hotel",
 //       location: "Istanbul, Turkey",
+//       city: "Istanbul",
+//       country: "Turkey",
 //       price: 180,
 //       originalPrice: 220,
 //       image: "https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=400&h=300&fit=crop",
+//       img: "https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=400&h=300&fit=crop",
 //       rating: 4.2,
 //       reviews: 298,
 //       availableRooms: 12,
+//       left_rooms: 12,
 //       stars: 3,
-//       amenities: ["wifi", "gym", "business"],
-//       category: ["business", "near-airport"]
-//     },
-//     {
-//       id: 7,
-//       name: "Gourmet Palace Hotel",
-//       location: "Bodrum, Turkey",
-//       price: 520,
-//       originalPrice: 640,
-//       image: "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=400&h=300&fit=crop",
-//       rating: 4.7,
-//       reviews: 203,
-//       availableRooms: 4,
-//       stars: 5,
-//       amenities: ["wifi", "pool", "spa", "gym", "restaurant"],
-//       category: ["luxury", "fine-dining", "beachfront"]
-//     },
-//     {
-//       id: 8,
-//       name: "City Center Plaza",
-//       location: "Izmir, Turkey",
-//       price: 240,
-//       originalPrice: 300,
-//       image: "https://images.unsplash.com/photo-1595576508898-0ad5c879a061?w=400&h=300&fit=crop",
-//       rating: 4.3,
-//       reviews: 134,
-//       availableRooms: 6,
-//       stars: 4,
-//       amenities: ["wifi", "gym", "business", "restaurant"],
-//       category: ["business", "city-center"]
-//     },
-//     {
-//       id: 9,
-//       name: "Luxury Beach Villa",
-//       location: "Kas, Turkey",
-//       price: 890,
-//       originalPrice: 1100,
-//       image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=300&fit=crop",
-//       rating: 4.9,
-//       reviews: 89,
-//       availableRooms: 2,
-//       stars: 5,
-//       amenities: ["wifi", "pool", "spa", "gym", "restaurant", "beach"],
-//       category: ["luxury", "resort", "beachfront", "top-rated"]
-//     },
+//       amenities: ["WiFi", "Gym", "Restaurant"],
+//       category: ["business", "near-airport"],
+//       favorite: 0
+//     }
 //   ];
 
 //   // Amenities data
 //   const amenities: Amenity[] = [
-//     { icon: "mdi:wifi", label: "Wi-Fi", key: "wifi" },
-//     { icon: "mdi:pool", label: "Pool", key: "pool" },
-//     { icon: "mdi:spa", label: "Spa", key: "spa" },
-//     { icon: "mdi:dumbbell", label: "Gym", key: "gym" },
-//     { icon: "mdi:food", label: "Restaurant", key: "restaurant" },
-//     { icon: "noto:beach-with-umbrella", label: "Beach Access", key: "beach" },
-//     { icon: "mdi:briefcase", label: "Business Center", key: "business" },
+//     { icon: "mdi:wifi", label: "Wi-Fi", key: "WiFi" },
+//     { icon: "mdi:pool", label: "Pool", key: "Pool" },
+//     { icon: "mdi:spa", label: "Spa", key: "Spa" },
+//     { icon: "mdi:dumbbell", label: "Gym", key: "Gym" },
+//     { icon: "mdi:food", label: "Restaurant", key: "Restaurant" },
+//     { icon: "mdi:car", label: "Parking", key: "Parking" },
 //   ];
 
 //   // Filter and sort hotels
@@ -306,14 +300,48 @@
 
 //   // Render star ratings
 //   const renderStars = (rating: number) => {
-//     const rounded = Math.round(rating);
-//     return Array.from({ length: 5 }, (_, index) => (
-//       <Icon
-//         key={index}
-//         icon="mdi:star"
-//         className={`w-4 h-4 ${index < rounded ? 'text-yellow-400' : 'text-gray-300'}`}
-//       />
-//     ));
+//     const stars = [];
+//     const fullStars = Math.floor(rating);
+    
+//     for (let i = 0; i < fullStars; i++) {
+//       stars.push(
+//         <Icon key={i} icon="mdi:star" className="h-4 w-4 text-yellow-400" />
+//       );
+//     }
+    
+//     return stars;
+//   };
+
+//   // Get amenity icon
+//   const getAmenityIcon = (amenity: string) => {
+//     const iconMap = {
+//       'WiFi': 'mdi:wifi',
+//       'Parking': 'mdi:car',
+//       'Restaurant': 'mdi:food',
+//       'Gym': 'mdi:dumbbell',
+//       'Pool': 'mdi:pool',
+//       'Spa': 'mdi:spa',
+//     };
+    
+//     return iconMap[amenity] || 'mdi:wifi';
+//   };
+
+//   // Get random background color
+//   const getRandomBg = (index: number) => {
+//     const colors = [
+//       'bg-blue-100',
+//       'bg-green-100', 
+//       'bg-yellow-100',
+//       'bg-purple-100',
+//       'bg-pink-100',
+//       'bg-indigo-100'
+//     ];
+//     return colors[index % colors.length];
+//   };
+
+//   // Toggle like function
+//   const toggleLike = (hotel: Hotel) => {
+//     console.log('Toggle like for:', hotel.name);
 //   };
 
 //   // Custom slider component
@@ -518,7 +546,7 @@
 //                     : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
 //                 }`}
 //               >
-//                 {chip.icon && <Icon icon={chip.icon} className="text-sm lg:text-base" />}
+//                 {chip.icon && <span className="text-sm lg:text-base">{chip.icon}</span>}
 //                 {chip.label}
 //               </button>
 //             ))}
@@ -663,7 +691,7 @@
 //                     {filteredAndSortedHotels.length} hotels found
 //                   </span>
 //                   <button className="p-1.5 lg:p-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
-//                     <Icon icon="mdi:chart-bar" className="h-3 w-3 lg:h-4 lg:w-4 text-blue-600" />
+//                     <span className="h-3 w-3 lg:h-4 lg:w-4 text-blue-600">📊</span>
 //                   </button>
 //                 </div>
 //                 <div className="flex items-center justify-between sm:justify-end gap-3 lg:gap-4">
@@ -701,71 +729,83 @@
 //               </div>
 //             </div>
 
-//             {/* Hotel Grid/List */}
-//             <div className={`grid gap-4 lg:gap-6 ${
-//               viewMode === 'grid'
-//                 ? 'grid-cols-1 sm:grid-cols-2 xl:grid-cols-3'
-//                 : 'grid-cols-1'
+//             {/* Hotel Grid */}
+//             <div className={`${
+//               viewMode === 'grid' 
+//                 ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 items-start'
+//                 : 'space-y-4 md:space-y-6'
 //             }`}>
 //               {filteredAndSortedHotels.map((hotel) => (
-//                 <div key={hotel.id} className={`bg-white rounded-[2.8rem] lg:rounded-[3rem] border border-gray-200 overflow-hidden hover:shadow-lg transition-all duration-300 ${
-//                   viewMode === 'list' ? 'flex flex-col sm:flex-row' : ''
-//                 }`}>
-//                   <div className={`relative ${viewMode === 'list' ? 'sm:w-80 flex-shrink-0' : ''}`}>
+//                 <div
+//                   key={hotel.id}
+//                   className={`bg-white p-[8px] rounded-[45px] shadow cursor-pointer transition-all duration-300 hover:shadow-lg ${
+//                     viewMode === 'list' ? 'flex flex-col sm:flex-row max-w-none' : ''
+//                   }`}
+//                 >
+//                   <div className={`relative overflow-hidden rounded-[40px] ${
+//                     viewMode === 'list' 
+//                       ? 'sm:w-80 sm:h-64 flex-shrink-0 aspect-square sm:aspect-auto' 
+//                       : 'aspect-square'
+//                   }`}>
 //                     <img
-//                       src={hotel.image}
+//                       src={hotel.image || hotel.img}
 //                       alt={hotel.name}
-//                       className={`w-full object-cover rounded-[2.5rem] lg:rounded-[2.8rem] m-2 ${
-//                         viewMode === 'list' ? 'h-48 sm:h-[calc(100%-1rem)]' : 'h-60 sm:h-72 lg:h-80'
-//                       }`}
+//                       className="w-full h-full object-cover"
 //                     />
-//                     <button className="absolute top-4 lg:top-6 right-4 lg:right-6 p-3 lg:p-4 bg-gray-100 rounded-full hover:bg-gray-200 transition-colors">
-//                       <Icon icon="mdi:heart-outline" className="h-4 w-4 lg:h-5 lg:w-5 text-gray-500" />
-//                     </button>
-//                     <div className="absolute top-4 lg:top-6 left-4 lg:left-6 flex items-center gap-1">
-//                       <Icon
-//                         icon="mdi:star"
-//                         className="h-3 w-3 lg:h-4 lg:w-4 text-yellow-400"
-//                       />
-//                       <span className="text-xs lg:text-sm font-semibold text-white bg-black bg-opacity-50 px-2 py-1 rounded">
-//                         {hotel.rating}
-//                       </span>
-//                     </div>
 //                   </div>
-
-//                   <div className={`p-4 lg:p-6 ${viewMode === 'list' ? 'flex-1 flex flex-col justify-between' : ''}`}>
+//                   <div className={`p-3 ${viewMode === 'list' ? 'flex-1 flex flex-col justify-between' : ''}`}>
 //                     <div>
-//                       <div className="flex items-start justify-between mb-2">
-//                         <h3 className="text-lg lg:text-xl font-bold text-gray-900 pr-2">{hotel.name}</h3>
-//                         <span className="text-xs lg:text-sm text-gray-500 whitespace-nowrap">({hotel.reviews} reviews)</span>
+//                       <h3
+//                         className="text-xl font-extrabold text-gray-900 mb-4 pl-4 sm:text-2xl md:text-xl lg:text-2xl text-ellipsis overflow-hidden whitespace-nowrap"
+//                         style={{ fontFamily: "Urbanist, sans-serif" }}
+//                       >
+//                         {hotel.name}
+//                       </h3>
+//                       <p className="text-[16px] sm:text-[17px] lg:text-[18px] my-2 font-[400] text-[#5B697E] pl-4">
+//                         {hotel.city && hotel.country ? `${hotel.city}, ${hotel.country}` : hotel.location}
+//                       </p>
+//                       {/* Stars - now above pricing */}
+//                       <div className="flex items-center gap-1 mb-2 pl-4">
+//                         {renderStars(Number(hotel.stars))}
 //                       </div>
-
-//                       <div className="flex items-center gap-2 mb-2">
-//                         <Icon icon="mdi:map-marker" className="h-4 w-4 text-gray-400" />
-//                         <span className="text-sm text-gray-600">{hotel.location}</span>
-//                       </div>
-
-//                       <div className="flex items-center gap-1 mb-4">
-//                         {renderStars(hotel.rating)}
-//                         <span className="text-sm text-gray-500 ml-1">({hotel.stars} star hotel)</span>
+//                       {/* Price & Rooms */}
+//                       <div className={`flex ${viewMode === 'list' ? 'flex-col sm:flex-row sm:justify-between' : 'justify-between'} items-start sm:items-center pl-4 mb-4`}>
+//                         <div className="flex gap-2 items-center mb-2 sm:mb-0">
+//                           <p className="text-[24px] sm:text-[28px] lg:text-[30px] font-[900]">
+//                             ${hotel.price}
+//                           </p>
+//                           <p className="text-[14px] sm:text-[16px] lg:text-[17px] font-[400] text-[#5B697E]">
+//                             /night
+//                           </p>
+//                         </div>
 //                       </div>
 //                     </div>
 
-//                     <div className="space-y-4">
-//                       <div className="flex items-center justify-between">
-//                         <div className="flex items-center gap-2">
-//                           <span className="text-xl lg:text-2xl font-black text-gray-900">${hotel.price}</span>
-//                           <span className="text-sm text-gray-400 line-through">${hotel.originalPrice}</span>
-//                           <span className="text-sm text-gray-600">/night</span>
-//                         </div>
-//                         <div className="flex items-center gap-2">
-//                           <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-//                           <span className="text-sm text-green-600 font-medium">{hotel.availableRooms} rooms left</span>
-//                         </div>
-//                       </div>
-
-//                       <button className="w-full bg-blue-600 text-white py-3 lg:py-4 rounded-full font-semibold hover:bg-blue-700 transition-colors text-sm lg:text-base">
-//                         Book now
+//                     <div className={`flex items-center gap-3  ${viewMode === 'list' ? 'mt-auto' : ''}`}>
+//                       <button className="flex-1 cursor-pointer bg-[#163D8C] hover:bg-gray-800 text-white font-medium py-2.5 px-3 text-sm sm:text-base md:text-sm lg:text-base rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+//                         Book Now
+//                       </button>
+//                       <button
+//                         onClick={() => toggleLike(hotel)}
+//                         className="bg-[#EBEFF4]  cursor-pointer hover:bg-gray-200 rounded-full transition-all duration-200 flex items-center justify-center flex-shrink-0 w-12 h-12 sm:w-14 sm:h-14 lg:w-11.5 lg:h-11.5"
+//                         aria-label={`${hotel.favorite === 1 && user ? "Unlike" : "Like"} ${hotel.name}`}
+//                       >
+//                         <svg
+//                           className="transition-colors duration-200 w-5 h-5 sm:w-6 sm:h-6 md:w-5 md:h-5 lg:w-4.5 lg:h-4.5"
+//                           viewBox="0 0 22 22"
+//                           fill="none"
+//                           xmlns="http://www.w3.org/2000/svg"
+//                         >
+//                           <path
+//                             d="M6.22371 1.44739C3.27589 1.44739 0.885498 3.98725 0.885498 7.11938C0.885498 13.3881 11 20.5526 11 20.5526C11 20.5526 21.1145 13.3881 21.1145 7.11938C21.1145 3.23878 18.7241 1.44739 15.7763 1.44739C13.686 1.44739 11.8766 2.72406 11 4.58288C10.1234 2.72406 8.31404 1.44739 6.22371 1.44739Z"
+//                             stroke={hotel.favorite === 1 && user ? "#EF4444" : "#6B7280"}
+//                             strokeOpacity="0.8"
+//                             strokeWidth="1.5"
+//                             strokeLinecap="round"
+//                             strokeLinejoin="round"
+//                             fill={hotel.favorite === 1 && user ? "#EF4444" : "none"}
+//                           />
+//                         </svg>
 //                       </button>
 //                     </div>
 //                   </div>
@@ -829,7 +869,7 @@
 //                   <select
 //                     value={selectedSort}
 //                     onChange={(e) => setSelectedSort(e.target.value)}
-//                     className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+//                     className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm text-gray-600 focus:outline-none focus:ring-2 focus:ring-[#163C8C] focus:border-transparent"
 //                   >
 //                     <option>Popularity</option>
 //                     <option>Price Low to High</option>
