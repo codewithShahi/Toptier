@@ -4,6 +4,8 @@ import { Icon } from '@iconify/react'
 // import { HomeWrapper } from '@components/themes/default'
 import TransitionLayout from '@src/utils/pageTransition'
 import HomeWrapper from '@components/themes/default/components/home/homeWrapper/homeWrapper'
+import { HotelsListingMain } from '@components/themes/default'
+
 export default async function Page({ params }: {
   params: Promise<{ lang: 'en' | 'ar' }>
 }) {
@@ -14,9 +16,7 @@ export default async function Page({ params }: {
     // <div>home page</div>
     <TransitionLayout>
       <div className="flex  flex-col bg-white dark:bg-gray-900  dark:text-gray-50 " >
-        {/* <HomeWrapper  dict={dict} /> */}
-        <p>hotel listing page
-        </p>
+         <HotelsListingMain/>
       </div>
     </TransitionLayout>
   )
