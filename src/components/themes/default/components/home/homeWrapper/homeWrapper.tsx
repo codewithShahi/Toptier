@@ -6,6 +6,7 @@ import {
   FeaturedDestinations,
   OfferSection,
   TestimonialSection,FeaturedHotels,NewsLatter,
+  // HotelsListing,
   // HotelsListing
 
 } from "@components/themes/default";
