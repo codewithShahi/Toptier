@@ -437,4 +437,56 @@ export const change_password = async (payload: {
   }
 };
 
+// =================== HOTEL SEARCH ===================
+interface HotelSearchPayload {
+  destination: string;
+  checkin: string;
+  checkout: string;
+  rooms: number;
+  adults: number;
+  children: number;
+  nationality: string;
+}
+
+export const hotel_search = async (payload: HotelSearchPayload) => {
+  try {
+    const formData = new FormData();
+    formData.append("city", payload.destination);
+    formData.append("checkin", payload.checkin);
+    formData.append("checkout", payload.checkout);
+    formData.append("rooms", String(payload.rooms));
+    formData.append("adults", String(payload.adults));
+    formData.append("childs", String(payload.children));
+    formData.append("nationality", "PK");
+    formData.append("language","en")
+    formData.append("currency","usd")
+    formData.append("child_age","0")
+    formData.append('module_name',"hotels")
+     formData.append("pagination","1")
+    formData.append("price_from","0")
+    formData.append('price_to',"100000")
+    formData.append('price_low_to_high',"1")
+
+
+    console.log('seaarch_payaod',formData)
+    const response = await fetch(`${baseUrl}/hotel_search`, {
+      method: "POST",
+      body: formData,
+      headers: {
+        Accept: "application/json, text/plain, */*",
+      },
+    });
+
+    const data = await response.json().catch(() => null);
+    // console.log('search result ',data)
+    if (!response.ok || data?.status === false) {
+      return { error: data?.message || "Something went wrong" };
+    }
+
+    return data;
+  } catch (error) {
+    return { error: (error as Error).message || "An error occurred" };
+  }
+};
+
 

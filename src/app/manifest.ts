@@ -14,12 +14,12 @@ export default async function manifest(): Promise<MetadataRoute.Manifest> {
     icons: [
       {
         src: `${base_url}/images/logo.png`,
-        sizes: "192x192",
+        sizes: "150x50",
         type: "image/png",
       },
       {
         src: `${base_url}/images/logo.png`,
-        sizes: "512x512",
+        sizes: "150x50",
         type: "image/png",
       },
     ],

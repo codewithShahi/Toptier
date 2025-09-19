@@ -25,7 +25,9 @@ export default function CurrencyDropdown() {
   const [selected, setSelected] = useState<string>("USD"); // default currency
   const [open, setOpen] = useState(false);
   const { currencies } = useAppSelector((state) => state.appData?.data);
+
 // console.log('cur',currencies)
+
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const selectedCurrency = currencies?.find((c: any) => c.name === selected);
@@ -60,7 +62,7 @@ export default function CurrencyDropdown() {
         >
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
         </svg>
-        
+
       </button>
       {/* Dropdown List */}
       {open && (
