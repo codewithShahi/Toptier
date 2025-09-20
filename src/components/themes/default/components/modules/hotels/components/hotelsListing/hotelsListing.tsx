@@ -1,5 +1,5 @@
 "use client"
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Icon } from "@iconify/react";
 import useHotelFilter from "@hooks/useHotelFilter";
 import useHotelSearch from "@hooks/useHotelSearchFilters";
@@ -36,7 +36,12 @@ export default function HotelSearchApp() {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [user, setUser] = useState(true);
-  const { hotels_Data:hotelsData, isSearching:isLoading } = useHotelSearch()
+  const { hotels_Data:hotelsData, isSearching:isLoading ,loadMoreData} = useHotelSearch()
+  const safeHotelsData = Array.isArray(hotelsData) && hotelsData.length > 0
+  ? hotelsData
+  : Array.isArray(hotelsData)
+    ? hotelsData
+    : [];
 //   console.log('hotelslisting after search',hotelsData)
 
   // Use the hotel filter hook
@@ -54,8 +59,28 @@ export default function HotelSearchApp() {
     updateSortBy,
     resetFilters,
     hasActiveFilters
-  } = useHotelFilter({ hotelsData: hotelsData ?? [],  isLoading });
-console.log('filters data',filteredHotels)
+  } = useHotelFilter({ hotelsData: safeHotelsData ?? [],  isLoading });
+  // 🚀 Infinite scroll handler
+  useEffect(() => {
+  const handleScroll = async () => {
+    const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
+
+    if (scrollTop + clientHeight >= scrollHeight - 100) {
+      const result = await loadMoreData(event); // 👈 pass event or null if not needed
+
+      if (result?.success) {
+        console.log("Fetched more hotels:", result.data);
+      } else if (result?.error) {
+        console.error("Failed to load more:", result.error);
+      }
+    }
+  };
+
+  window.addEventListener("scroll", handleScroll);
+  return () => window.removeEventListener("scroll", handleScroll);
+}, [loadMoreData]);
+
+// console.log('filters data',filteredHotels)
   // Handle price range changes
   const handlePriceChange = (index: number, value: number) => {
     const newRange: [number, number] = [...filters.priceRange];
@@ -548,6 +573,11 @@ const PriceSlider: React.FC<PriceSliderProps> = ({ min, max, values, onChange })
                 </button>
               </div>
             )}
+            {isLoading &&
+            <div className="flex justify-center py-4">
+      <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
+    </div>
+            }
           </div>
         </div>
       </div>
