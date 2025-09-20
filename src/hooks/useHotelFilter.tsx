@@ -136,9 +136,9 @@ const useHotelFilter = ({ hotelsData, isLoading = false }: UseHotelFilterProps) 
     filtered.sort((a, b) => {
       switch (filters.sortBy) {
         case 'price_low':
-          return (parseFloat(a.actual_price_per_night) || 0) - (parseFloat(b.actual_price_per_night) || 0);
+          return (parseFloat(a.actual_price) || 0) - (parseFloat(b.actual_price) || 0);
         case 'price_high':
-          return (parseFloat(b.actual_price_per_night) || 0) - (parseFloat(a.actual_price_per_night) || 0);
+          return (parseFloat(b.actual_price) || 0) - (parseFloat(a.actual_price) || 0);
         case 'rating':
           return (parseFloat(b.rating) || 0) - (parseFloat(a.rating) || 0);
         case 'name':
