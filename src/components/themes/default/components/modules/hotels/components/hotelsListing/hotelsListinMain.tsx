@@ -10,9 +10,7 @@ const HotelsListingMain = () => {
   return (
     <div className="">
       <HotelsListing
-        // hotelsData={hotelsData}      // <-- list of hotels
-        // isLoading={isSearching}    // <-- pass loading state
-        // title="Search Results"
+       
       />
     </div>
   )

@@ -4,8 +4,7 @@ import { Icon } from "@iconify/react";
 import DatePicker from "@components/core/DatePicker";
 import useDictionary from "@hooks/useDict";
 import useDirection from "@hooks/useDirection";
-import { useParams } from "next/navigation";
-import { useRouter } from "next/navigation";
+import { useParams,useRouter } from "next/navigation";
 import useHotelSearch from "@hooks/useHotelSearchFilters";
 // import useHotelSearch from "@hooks/useHotelSearch"; // Import the hook
 
@@ -34,6 +33,7 @@ export default function HotelSearch() {
     handleSelectLocation,
     handleDestinationKeyDown,
     handleSubmit,
+    loadMoreData,
     updateForm,
   } = useHotelSearch();
 
@@ -57,9 +57,12 @@ export default function HotelSearch() {
 
   const onSubmit = async (e: React.FormEvent) => {
     const result = await handleSubmit(e);
+
+
     if (result?.success) {
       router.push("/hotel_search");
     }
+
   };
 
   const ErrorMessage = ({ error }: { error?: string }) =>
@@ -124,7 +127,7 @@ export default function HotelSearch() {
                   {/* Results */}
                   {!locationLoading && hotelLocations.length > 0 && (
                     <ul role="list" className="divide-y divide-gray-100 dark:divide-gray-700">
-                      {hotelLocations.map((loc, idx) => (
+                      {hotelLocations.map((loc:any, idx:number) => (
                         <li
                           key={loc.id ?? `${loc.city}-${idx}`}
                           onClick={() => handleSelectLocation(loc)}
