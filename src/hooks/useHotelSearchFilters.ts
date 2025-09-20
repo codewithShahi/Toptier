@@ -2,6 +2,10 @@ import { useState, useCallback, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient, QueryClient } from "@tanstack/react-query";
 import { fetchHotelsLocations, hotel_search } from "@src/actions";
 import { z } from "zod";
+import { useAppSelector } from "@lib/redux/store";
+
+import { useRouter } from "next/navigation";
+
 
 
 // Define the hotel search schema
@@ -30,6 +34,7 @@ interface HotelForm {
   nationality: string;
   latitude?: string;
   longitude?: string;
+
 }
 
 interface LocationObj {
@@ -41,6 +46,26 @@ interface LocationObj {
   longitude?: string;
   status?: string;
 }
+interface Module {
+  id: string;
+  name: string;
+  active: string;
+  type: string;
+  status: string;
+  c1: string | null;
+  c2: string | null;
+  c3: string | null;
+  c4: string | null;
+  c5: string | null;
+  c6: string | null;
+  dev_mode: string;
+  payment_mode: string;
+  currency: string;
+  module_color: string;
+  order: string;
+  prn_type: string;
+}
+
 
 function useDebounce(value: string, delay = 400) {
   const [debounced, setDebounced] = useState(value);
@@ -61,6 +86,7 @@ const useHotelSearch = () => {
     adults: 2,
     children: 0,
     nationality: "PK",
+
   });
 const queryClient = useQueryClient();
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -71,6 +97,17 @@ const queryClient = useQueryClient();
   const [activeIndex, setActiveIndex] = useState(-1);
   const [submitting, setSubmitting] = useState(false);
   const [hotelsData, setHotelsData] = useState<any[]>([]);
+    const {modules} = useAppSelector((state) => state.appData?.data);
+    const router = useRouter();
+
+// const modules: Module[] = [/* your data */];
+
+const hotelModuleNames = modules
+  .filter((module: Module) => module.type === "hotels")
+  .map((module: Module) => module.name);
+
+
+
 
   const debouncedDestination = useDebounce(form.destination, 450);
 
@@ -83,7 +120,7 @@ const queryClient = useQueryClient();
     queryKey: ["hotel-locations", debouncedDestination],
     queryFn: () => fetchHotelsLocations(debouncedDestination.trim()),
     enabled: debouncedDestination.trim().length >= 3,
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    staleTime: 1000 * 60 * 30, // 30 minutes
   });
 
   // Update locations when query data changes
@@ -125,20 +162,7 @@ const queryClient = useQueryClient();
 //       setErrors({ destination: error?.message || "Search failed" });
 //     },
 //   });
-const hotelSearchMutation = useMutation({
-  mutationFn: hotel_search,
-  onSuccess: (data) => {
-    queryClient.setQueryData(
-      ["hotel-search"],
-      data?.response || []
-    );
-     setHotelsData(data?.response);
-    setErrors({});
-  },
-});
-// Then use:
-const hotels_Data= useQueryClient().getQueryData<any[]>(['hotel-search'])
-console.log('query dta',hotels_Data)
+
   const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target;
     const newValue = type === "number" ? Number(value) : value;
@@ -189,15 +213,107 @@ console.log('query dta',hotels_Data)
       setShowDestinationDropdown(false);
     }
   }, [showDestinationDropdown, hotelLocations, activeIndex, handleSelectLocation]);
+const hotelSearchMutation = useMutation({
+  mutationFn: hotel_search,
+  onSuccess: (data) => {
+    queryClient.setQueryData(
+      ["hotel-search"],
+      data?.response || []
+    );
+     setHotelsData(data?.response);
+    setErrors({});
+  },
+});
+// Then use:
+const hotels_Data= useQueryClient().getQueryData<any[]>(['hotel-search'])
+console.log('query dta',hotels_Data)
+// const handleSubmit = useCallback(
+//   async (e: React.FormEvent) => {
+//     e.preventDefault();
+//     try {
+//       setSubmitting(true);
+//       hotelSearchSchema.parse(form);
+//   const page=1
+//       // ✅ Save form values in localStorage
+//     //   localStorage.setItem("hotelSearchForm", JSON.stringify(form));
+// // const payload = { ...form, page, modules: hotelModuleNames };
+//       // ✅ Call API for each module (N times)
+//       const results = await Promise.all(
+//         hotelModuleNames.map((mod:any) =>
+//           hotelSearchMutation.mutateAsync({
+//             ...form,
+//             page,
+//             modules: mod, // send one module at a time
+//           })
+//         )
+//       );
+// router.push('/hotel_search')
+// console.log('hook submit result ',results)
+//     //   const result = await hotelSearchMutation.mutateAsync(payload);
+//       return { success: true, data: results };
+//     } catch (err) {
+//       if (err instanceof z.ZodError) {
+//         const msgMap: Record<string, string> = {};
+//         err.errors.forEach((zErr) => {
+//           msgMap[zErr.path[0] as string] = zErr.message;
+//         });
+//         setErrors(msgMap);
+//       }
+//       return { success: false, error: "Search failed" };
+//     } finally {
+//       setSubmitting(false);
+//     }
+//   },
+//   [form, hotelSearchMutation]
+// );
 
-  const handleSubmit = useCallback(async (e: React.FormEvent) => {
+const handleSubmit = useCallback(
+  async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       setSubmitting(true);
       hotelSearchSchema.parse(form);
 
-      const result = await hotelSearchMutation.mutateAsync(form);
-      return { success: true, data: result };
+      const page = 1;
+
+      // Call API for each module (N times, safely)
+      const results = await Promise.all(
+        hotelModuleNames.map((mod: string) =>
+          hotelSearchMutation
+            .mutateAsync({
+              ...form,
+              page,
+              modules: mod,
+            })
+            .catch(() => null) // prevent failure from breaking Promise.all
+        )
+      );
+console.log('all result hook',results)
+      // ✅ Filter out null/empty results
+      const validResults = results.filter(
+        (res) => res && res.response && res.response.length > 0
+      );
+
+      let finalData: any[] = [];
+
+      if (validResults.length === 1) {
+        // Agar ek hi module ka data mila
+        finalData = validResults[0].response;
+      } else if (validResults.length > 1) {
+        // Agar multiple modules ka data mila → sab combine kar do
+        finalData = validResults.flatMap((res) => res.response);
+      }
+
+      // ✅ Cache me set karo
+      queryClient.setQueryData(["hotel-search"], finalData);
+      setHotelsData(finalData);
+
+      console.log("Final merged results 👉", finalData);
+
+      // ✅ Redirect to search results page
+      router.push("/hotel_search");
+
+      return { success: true, data: finalData };
     } catch (err) {
       if (err instanceof z.ZodError) {
         const msgMap: Record<string, string> = {};
@@ -210,7 +326,81 @@ console.log('query dta',hotels_Data)
     } finally {
       setSubmitting(false);
     }
-  }, [form, hotelSearchMutation]);
+  },
+  [form, hotelModuleNames, hotelSearchMutation, queryClient, router]
+);
+
+// load more data on scrolllllllllllllllllllllllllllllll
+
+
+// Inside your hook:
+
+const loadMoreData = useCallback(async (e) => {
+    e.preventDefault();
+        try {
+      setSubmitting(true);
+      hotelSearchSchema.parse(form);
+
+      const savedForm = localStorage.getItem("hotelSearchForm");
+    if (!savedForm) return;
+
+    const parsedForm: HotelForm = JSON.parse(savedForm);
+
+const page=2
+
+      // Call API for each module (N times, safely)
+      const results = await Promise.all(
+        hotelModuleNames.map((mod: string) =>
+          hotelSearchMutation
+            .mutateAsync({
+              ...parsedForm,
+              page,
+              modules: mod,
+            })
+            .catch(() => null) // prevent failure from breaking Promise.all
+        )
+      );
+
+      // ✅ Filter out null/empty results
+      const validResults = results.filter(
+        (res) => res && res.response && res.response.length > 0
+      );
+
+      let finalData: any[] = [];
+
+      if (validResults.length === 1) {
+        // Agar ek hi module ka data mila
+        finalData = validResults[0].response;
+      } else if (validResults.length > 1) {
+        // Agar multiple modules ka data mila → sab combine kar do
+        finalData = validResults.flatMap((res) => res.response);
+      }
+
+      // ✅ Cache me set karo
+      queryClient.setQueryData(["hotel-search"], finalData);
+      setHotelsData(finalData);
+
+      console.log("Final merged results 👉", finalData);
+
+      // ✅ Redirect to search results page
+      router.push("/hotel_search");
+
+      return { success: true, data: finalData };
+    } catch (err) {
+      if (err instanceof z.ZodError) {
+        const msgMap: Record<string, string> = {};
+        err.errors.forEach((zErr) => {
+          msgMap[zErr.path[0] as string] = zErr.message;
+        });
+        setErrors(msgMap);
+      }
+      return { success: false, error: "Search failed" };
+    } finally {
+      setSubmitting(false);
+    }
+
+}, [hotelModuleNames, hotelSearchMutation, queryClient]);
+
 
   const updateForm = useCallback((updates: Partial<HotelForm>) => {
     setForm((prev) => ({ ...prev, ...updates }));
@@ -308,6 +498,7 @@ console.log("hotels data from hook",hotelsData)
     handleSelectLocation,
     handleDestinationKeyDown,
     handleSubmit,
+    loadMoreData,
 
     // Schema for external validation
     hotelSearchSchema,
