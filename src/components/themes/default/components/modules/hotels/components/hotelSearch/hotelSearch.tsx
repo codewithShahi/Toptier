@@ -4,8 +4,7 @@ import { Icon } from "@iconify/react";
 import DatePicker from "@components/core/DatePicker";
 import useDictionary from "@hooks/useDict";
 import useDirection from "@hooks/useDirection";
-import { useParams } from "next/navigation";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import useHotelSearch from "@hooks/useHotelSearchFilters";
 // import useHotelSearch from "@hooks/useHotelSearch"; // Import the hook
 
