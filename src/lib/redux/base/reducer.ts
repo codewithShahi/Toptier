@@ -8,10 +8,11 @@ import {
   setCurrency,
   setCountry,
   setDestination,
-  setSidebarExpanded
+  setHotels,
+  setSidebarExpanded,
 } from "./actions";
 
-// 1. Destination interface defines the structure of each destination object
+// Destination interface
 interface Destination {
   id: number;
   airport: string;
@@ -25,7 +26,28 @@ interface Destination {
   status: string;
 }
 
-// 2. Destination interface is used here to type the destination property in the State interface
+// Hotel interface
+interface HotelData {
+  hotel_id: string;
+  name: string;
+  location: string;
+  actual_price: string;
+  actual_price_per_night: string;
+  img: string;
+  rating: string;
+  stars: string;
+  amenities: string[];
+  favorite: number;
+  address: string;
+  latitude: string;
+  longitude: string;
+  currency: string;
+  supplier_name: string;
+  markup_price: string;
+  markup_price_per_night: string;
+  booking_currency: string;
+}
+
 interface State {
   mode: string;
   direction: string;
@@ -33,8 +55,9 @@ interface State {
   layoutType: LayoutType;
   currency: string;
   country: string;
-  destination: Destination[]; // Uses Destination interface
-  sidebarExpanded?: boolean; // Optional property for sidebar expansion state
+  destination: Destination[];
+  sidebarExpanded?: boolean;
+  hotels: HotelData[];
 }
 
 const initialState: State = {
@@ -44,8 +67,9 @@ const initialState: State = {
   layoutType: "default",
   currency: "",
   country: "",
-  destination: [], // Empty array of Destination objects
+  destination: [],
   sidebarExpanded: true,
+  hotels: [],
 };
 
 export const appReducer = createReducer(initialState, (builder) => {
@@ -68,11 +92,13 @@ export const appReducer = createReducer(initialState, (builder) => {
     .addCase(setCountry, (state, action: PayloadAction<string>) => {
       state.country = action.payload;
     })
-    // 3. Destination interface is used here to type the action.payload
     .addCase(setDestination, (state, action: PayloadAction<Destination[]>) => {
-      state.destination = action.payload; // Payload is an array of Destination objects
+      state.destination = action.payload;
     })
     .addCase(setSidebarExpanded, (state, action: PayloadAction<boolean>) => {
       state.sidebarExpanded = action.payload;
+    })
+    .addCase(setHotels, (state, action: PayloadAction<HotelData[]>) => {
+      state.hotels = action.payload;
     });
 });

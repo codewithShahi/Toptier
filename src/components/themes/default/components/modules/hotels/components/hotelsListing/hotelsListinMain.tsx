@@ -5,12 +5,13 @@ import useHotelSearch from '@hooks/useHotelSearchFilters'
 
 const HotelsListingMain = () => {
   // use your custom hook
-  const { hotelsData, isSearching } = useHotelSearch()
+  const {     allHotelsData,
+ isSearching } = useHotelSearch()
 
   return (
     <div className="">
       <HotelsListing
-       
+
       />
     </div>
   )

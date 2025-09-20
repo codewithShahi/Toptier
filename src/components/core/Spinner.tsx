@@ -1,50 +1,36 @@
 import React from 'react';
-import { Icon } from '@iconify/react';
+
 interface SpinnerProps {
-    className?: string;
-    size?: number;
-    color?: string;
-    enableTheme?: boolean;
+  className?: string;
+  size?: number;
+  color?: string;
 }
 
-const Spinner: React.FC<SpinnerProps> = ({ className = '', size = 20, color = 'currentColor', enableTheme = true }) => {
-    return (
-        <svg
-            className={`animate-spin ${className}`}
-            width={size}
-            height={size}
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            style={{ color }}
-        >
-            <circle
-                className={enableTheme ? 'opacity-25' : ''}
-                cx="12"
-                cy="12"
-                r="10"
-                stroke="currentColor"
-                strokeWidth="4"
-            />
-            <path
-                className={enableTheme ? 'opacity-75' : ''}
-                fill="currentColor"
-                d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
-            />
-        </svg>
-
-    );
+const Spinner: React.FC<SpinnerProps> = ({
+  className = '',
+  size = 24,
+  color = '',
+}) => {
+  return (
+    <svg
+      className={`animate-spin ${className}`}
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      style={{ color }}
+    >
+      <path
+        d="M9 3.51221C5.50442 4.74772 3 8.08143 3 12.0001C3 16.9707 7.02944 21.0001 12 21.0001C16.9706 21.0001 21 16.9707 21 12.0001C21 8.08143 18.4956 4.74772 15 3.51221"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
 };
 
 export { Spinner };
 export default Spinner;
-
-
-{/* <Icon icon="svg-spinners:180-ring-with-bg" fontSize={size} className={className} color={color} /> */}
-
-
-
-
-
-
-

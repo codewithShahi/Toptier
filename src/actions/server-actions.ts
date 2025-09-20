@@ -464,11 +464,11 @@ export const hotel_search = async (payload: HotelSearchPayload) => {
     formData.append("currency","usd")
     formData.append("child_age","0")
     formData.append('module_name',payload.modules)
-     formData.append("pagination", String(payload.page));
+    formData.append("pagination", String(payload.page));
     formData.append("price_from","")
     formData.append('price_to',"")
     formData.append('price_low_to_high',"")
-        formData.append('rating',"")
+    formData.append('rating',"")
 
 
 
