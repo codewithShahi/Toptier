@@ -9,6 +9,7 @@ interface DatePickerProps {
     direction?: "ltr" | "rtl";
     className?: string;
     showCalendarIcon?: boolean;
+    defaultDate:Date | undefined
 }
 
 // Format date in UTC to prevent timezone issues
@@ -33,14 +34,20 @@ const DatePicker: React.FC<DatePickerProps> = ({
     direction = "ltr",
     className = "",
     showCalendarIcon = true,
+    defaultDate=""
 }) => {
     const [open, setOpen] = useState(false);
     const inputRef = useRef<HTMLInputElement>(null);
     const popoverRef = useRef<HTMLDivElement>(null);
     const today = new Date();
-    const defaultDate = new Date(Date.UTC(today.getFullYear(), today.getMonth(), today.getDate()));
-    const [selected, setSelected] = useState<Date | undefined>(defaultDate);
-
+    // const defaultDate = new Date(Date.UTC(today.getFullYear(), today.getMonth(), today.getDate()));
+   const [selected, setSelected] = useState<Date | undefined>(
+  defaultDate
+    ? typeof defaultDate === "string"
+      ? new Date(defaultDate) // convert string to Date
+      : defaultDate
+    : undefined
+);
 
     useEffect(() => {
         function handleClickOutside(event: MouseEvent) {

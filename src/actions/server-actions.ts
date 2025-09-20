@@ -446,26 +446,30 @@ interface HotelSearchPayload {
   adults: number;
   children: number;
   nationality: string;
+  page:number
+  modules:string
 }
 
 export const hotel_search = async (payload: HotelSearchPayload) => {
   try {
     const formData = new FormData();
-    formData.append("city", payload.destination);
+    formData.append("city", String(payload.destination));
     formData.append("checkin", payload.checkin);
     formData.append("checkout", payload.checkout);
     formData.append("rooms", String(payload.rooms));
     formData.append("adults", String(payload.adults));
     formData.append("childs", String(payload.children));
-    formData.append("nationality", "PK");
+    formData.append("nationality", "CN");
     formData.append("language","en")
     formData.append("currency","usd")
     formData.append("child_age","0")
-    formData.append('module_name',"hotels")
-     formData.append("pagination","1")
-    formData.append("price_from","0")
-    formData.append('price_to',"100000")
-    formData.append('price_low_to_high',"1")
+    formData.append('module_name',payload.modules)
+    formData.append("pagination", String(payload.page));
+    formData.append("price_from","")
+    formData.append('price_to',"")
+    formData.append('price_low_to_high',"")
+    formData.append('rating',"")
+
 
 
     console.log('seaarch_payaod',formData)
@@ -478,7 +482,7 @@ export const hotel_search = async (payload: HotelSearchPayload) => {
     });
 
     const data = await response.json().catch(() => null);
-    // console.log('search result ',data)
+    console.log('search result ',data)
     if (!response.ok || data?.status === false) {
       return { error: data?.message || "Something went wrong" };
     }

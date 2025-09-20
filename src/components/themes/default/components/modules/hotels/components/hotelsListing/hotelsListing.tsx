@@ -1,10 +1,13 @@
 "use client"
+
 import { useState, useRef } from "react";
+
 import { Icon } from "@iconify/react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import useHotelFilter from "@hooks/useHotelFilter";
 import useHotelSearch from "@hooks/useHotelSearchFilters";
+import Spinner from "@components/core/Spinner";
 // import useHotelFilter from "./useHotelFilter";
 // Import Swiper styles
 import "swiper/css";
@@ -44,10 +47,10 @@ export default function HotelSearchApp() {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [viewMode, setViewMode] = useState<'grid' | 'list' | 'map'>('grid');
   const [user, setUser] = useState(true);
-  const { hotels_Data: hotelsData, isSearching: isLoading } = useHotelSearch()
-  const [selectedStars, setSelectedStars] = useState<number[]>([]);
+  const [loadingMore,setLoadingMore]=useState(false)
+const [selectedStars, setSelectedStars] = useState<number[]>([]);
   const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
-  const swiperRef = useRef<any>(null);
+const swiperRef = useRef<any>(null);
   // Filter chips data with placeholder SVGs (replace these with your actual SVGs)
   const filterChips: FilterChip[] = [
     {
@@ -137,6 +140,31 @@ export default function HotelSearchApp() {
  
   const [showPrev, setShowPrev] = useState(false);
 const [showNext, setShowNext] = useState(true);
+  const { allHotelsData:hotelsData, isSearching:isLoading ,loadMoreData,submitting,listRef, allHotelsData:loadMoreHotels} = useHotelSearch()
+
+
+  const safeHotelsData = Array.isArray(hotelsData) && hotelsData.length > 0
+  ? hotelsData
+  : Array.isArray(hotelsData)
+    ? hotelsData
+    : [];
+//   console.log('hotelslisting after search',hotelsDa
+ const filterChips: FilterChip[] = [
+    { icon: "", label: "Luxury Hotel", category: "luxury" },
+    { icon: "", label: "Business", category: "business" },
+    { icon: "", label: "Resort", category: "resort" },
+    { icon: "", label: "Budget", category: "budget" },
+    { icon: "", label: "Top Rated", category: "top-rated" },
+    { icon: "", label: "City Center", category: "city-center" },
+    { icon: "", label: "Fine Dining", category: "fine-dining" },
+    { icon: "", label: "Beachfront", category: "beachfront" },
+    { icon: "", label: "Lake View", category: "lake-view" },
+    { icon: "", label: "Near Airport", category: "near-airport" },
+    { icon: "", label: "Beachfront", category: "beachfront" },
+    { icon: "", label: "Lake View", category: "lake-view" },
+    { icon: "", label: "Near Airport", category: "near-airport" },
+  ];
+
   // Use the hotel filter hook
   const {
     filteredHotels,
@@ -152,8 +180,29 @@ const [showNext, setShowNext] = useState(true);
     updateSortBy,
     resetFilters,
     hasActiveFilters
-  } = useHotelFilter({ hotelsData: hotelsData ?? [], isLoading });
-  console.log('filters data', filteredHotels)
+
+  } = useHotelFilter({ hotelsData: safeHotelsData ?? [],  isLoading });
+  // 🚀 Infinite scroll handler
+//   useEffect(() => {
+//   const handleScroll = async () => {
+//     const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
+
+//     if (scrollTop + clientHeight >= scrollHeight - 100) {
+//       const result = await loadMoreData(); // 👈 pass event or null if not needed
+//      console.log('resulte load more',result)
+//       if (result?.success) {
+//         // console.log("Fetched more hotels:", result.data);
+//       } else if (result?.error) {
+//         console.error("Failed to load more:", result.error);
+//       }
+//     }
+//   };
+
+//   window.addEventListener("scroll", handleScroll);
+//   return () => window.removeEventListener("scroll", handleScroll);
+// }, [loadMoreData]);
+
+// console.log('filters data',filteredHo
   // Handle price range changes
   const handlePriceChange = (index: number, value: number) => {
     const newRange: [number, number] = [...filters.priceRange];
@@ -296,34 +345,42 @@ const [showNext, setShowNext] = useState(true);
         : [...prev, category]
     );
   };
-  const LoadingGrid = () => (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-      {Array(6).fill(0).map((_, index) => (
-        <div key={index} className="bg-white p-2 rounded-3xl shadow animate-pulse">
-          <div className="aspect-square bg-gray-300 rounded-2xl mb-3"></div>
-          <div className="p-3 space-y-3">
-            <div className="h-6 bg-gray-300 rounded w-3/4"></div>
-            <div className="h-4 bg-gray-300 rounded w-1/2"></div>
-            <div className="flex gap-1">
-              {Array(5).fill(0).map((_, i) => (
-                <div key={i} className="h-4 w-4 bg-gray-300 rounded"></div>
-              ))}
-            </div>
-            <div className="flex justify-between items-center">
-              <div className="h-8 bg-gray-300 rounded w-24"></div>
-              <div className="h-4 bg-gray-300 rounded w-16"></div>
-            </div>
-            <div className="flex gap-3">
-              <div className="h-10 bg-gray-300 rounded-full flex-1"></div>
-              <div className="h-10 w-10 bg-gray-300 rounded-full"></div>
-            </div>
-          </div>
-        </div>
-      ))}
-    </div>
-  );
+
+
+  // const LoadingGrid = () => (
+  //   // <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+  //   //   {Array(6).fill(0).map((_, index) => (
+  //   //     <div key={index} className="bg-white p-2 rounded-3xl shadow animate-pulse">
+  //   //       <div className="aspect-square bg-gray-300 rounded-2xl mb-3"></div>
+  //   //       <div className="p-3 space-y-3">
+  //   //         <div className="h-6 bg-gray-300 rounded w-3/4"></div>
+  //   //         <div className="h-4 bg-gray-300 rounded w-1/2"></div>
+  //   //         <div className="flex gap-1">
+  //   //           {Array(5).fill(0).map((_, i) => (
+  //   //             <div key={i} className="h-4 w-4 bg-gray-300 rounded"></div>
+  //   //           ))}
+  //   //         </div>
+  //   //         <div className="flex justify-between items-center">
+  //   //           <div className="h-8 bg-gray-300 rounded w-24"></div>
+  //   //           <div className="h-4 bg-gray-300 rounded w-16"></div>
+  //   //         </div>
+  //   //         <div className="flex gap-3">
+  //   //           <div className="h-10 bg-gray-300 rounded-full flex-1"></div>
+  //   //           <div className="h-10 w-10 bg-gray-300 rounded-full"></div>
+  //   //         </div>
+  //   //       </div>
+  //   //     </div>
+  //   //   ))}
+  //   // </div>
+  //   <div className="min-w-full min-h-full flex items-center justify-center">
+  //             <Spinner size={40}  className="mr-1 text-blue-900" />
+
+  //   </div>
+  // );
+
+
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50" ref={listRef}>
       {/* Custom CSS for sliders */}
       <style jsx>{`
         .slider-thumb::-webkit-slider-thumb {
@@ -476,7 +533,10 @@ const [showNext, setShowNext] = useState(true);
         </div>
       </div>
       {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-4 lg:py-8">
+
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-4 lg:py-8"  >
+
+
         <div className="flex flex-col lg:flex-row gap-4 lg:gap-8">
           {/* Desktop Sidebar - Advanced Search */}
           <div className="hidden lg:block w-80 flex-shrink-0">
@@ -528,7 +588,7 @@ const [showNext, setShowNext] = useState(true);
                     backgroundSize: "0.85rem 0.85rem",
                   }}
                 >
-                  <option value="usd">Low to High</option>
+                  <option value="price_low">Low to High</option>
                   <option value="eur">Mid Range</option>
                   <option value="pkr">Very High</option>
                 </select>
@@ -592,9 +652,11 @@ const [showNext, setShowNext] = useState(true);
                   Reset Filters
                 </button>
                 <button
+
                   onClick={resetFilters}
                   disabled={!hasActiveFilters}
                   className="w-full py-3 bg-[#163C8C] border border-[#163C8C] cursor-pointer text-white rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+
                 >
                   Apply
                 </button>
@@ -700,6 +762,7 @@ const [showNext, setShowNext] = useState(true);
                         : 'bg-transparent text-gray-700'
                         }`}
                     >
+
                       <svg width="15" height="16" viewBox="0 0 15 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M14.0452 1.44663C13.8444 1.31318 13.6135 1.23193 13.3733 1.21023C13.1331 1.18853 12.8914 1.22707 12.6699 1.32235L9.712 2.59001L5.77647 0.932938C5.62197 0.866842 5.45568 0.832764 5.28763 0.832764C5.11959 0.832764 4.9533 0.866842 4.7988 0.932938L1.18639 2.45744C0.904789 2.57992 0.665671 2.7829 0.499091 3.04088C0.332511 3.29886 0.245902 3.60032 0.250149 3.90737V13.2284C0.248625 13.4904 0.312174 13.7486 0.435092 13.98C0.55801 14.2114 0.736451 14.4086 0.954403 14.554C1.15524 14.6875 1.38619 14.7687 1.62634 14.7904C1.86649 14.8121 2.10826 14.7736 2.32977 14.6783L5.28763 13.4107L9.22317 15.0677C9.37736 15.1347 9.5439 15.1686 9.712 15.1671C9.88 15.1674 10.0463 15.1336 10.2008 15.0677L13.8132 13.5184C14.0949 13.3959 14.334 13.1929 14.5005 12.9349C14.6671 12.6769 14.7537 12.3755 14.7495 12.0684V2.77228C14.751 2.51029 14.6875 2.25201 14.5645 2.02064C14.4416 1.78926 14.2632 1.59203 14.0452 1.44663ZM5.90903 2.27516L9.0906 3.63396V13.6841L5.90903 12.3253V2.27516ZM1.84093 13.5349C1.80945 13.5531 1.77373 13.5627 1.73737 13.5627C1.70101 13.5627 1.66529 13.5531 1.6338 13.5349C1.58758 13.5026 1.55039 13.459 1.52574 13.4082C1.50109 13.3575 1.4898 13.3013 1.49295 13.2449V3.90737C1.49194 3.84122 1.51126 3.77634 1.5483 3.72152C1.58534 3.66669 1.63832 3.62456 1.70008 3.60082L4.66623 2.31659V12.3253L1.84093 13.5349ZM13.5067 12.0933C13.5097 12.1566 13.4941 12.2195 13.4617 12.274C13.4293 12.3285 13.3815 12.3723 13.3244 12.3998L10.3334 13.6841V3.67539L13.1587 2.46573C13.1902 2.44755 13.2259 2.43798 13.2623 2.43798C13.2986 2.43798 13.3344 2.44755 13.3658 2.46573C13.4121 2.49808 13.4493 2.54169 13.4739 2.59244C13.4985 2.64319 13.5098 2.69938 13.5067 2.75571V12.0933Z" fill="black" fillOpacity="0.7" />
                       </svg>
@@ -709,16 +772,22 @@ const [showNext, setShowNext] = useState(true);
               </div>
             </div>
             {/* Loading State */}
-            {isLoading && <LoadingGrid />}
+
+            {/* {isLoading && <LoadingGrid />} */}
+
             {/* Hotel Grid */}
             {!isLoading && viewMode !== 'map' && (
               <div className={`${viewMode === 'grid'
                 ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 items-start'
                 : 'space-y-4 md:space-y-6'
                 }`}>
-                {filteredHotels.map((hotel: any) => (
-                  <div
-                    key={hotel.hotel_id}
+              {filteredHotels
+  .filter((hotel, index, self) =>
+    index === self.findIndex(h => h.hotel_id === hotel.hotel_id)
+  )
+  .map((hotel: any) => (
+    <div
+      key={hotel.hotel_id}
                     className={`bg-white p-[8px] rounded-[45px] shadow cursor-pointer transition-all duration-300 hover:shadow-lg ${viewMode === 'list' ? 'flex flex-col sm:flex-row max-w-none' : ''
                       }`}
                   >
@@ -758,7 +827,9 @@ const [showNext, setShowNext] = useState(true);
                         <div className={`flex ${viewMode === 'list' ? 'flex-col sm:flex-row sm:justify-between' : 'justify-between'} items-start sm:items-center pl-4 mb-4`}>
                           <div className="flex gap-2 items-center mb-2 sm:mb-0">
                             <p className="text-[24px] sm:text-[28px] lg:text-[30px] font-[900]">
-                              ${parseFloat(hotel.actual_price_per_night).toFixed(0)}
+                              {/* ${hotel.actual_price} */}
+                        {hotel.currency.toUpperCase()}{' '}
+ { parseFloat(hotel.actual_price).toFixed(1)}
                             </p>
                             <p className="text-[14px] sm:text-[16px] lg:text-[17px] font-[400] text-[#5B697E]">
                               /night
@@ -795,12 +866,15 @@ const [showNext, setShowNext] = useState(true);
                       </div>
                     </div>
                   </div>
+
                 ))}
               </div>
             )}
             {/* No Results Message */}
-            {!isLoading && filteredHotels.length === 0 && viewMode !== 'map' && (
-              <div className="text-center py-12">
+
+            {!submitting && filteredHotels.length === 0  && (
+              <div className="text-center py-6 sm:py-8 md:py-15  min-w-full min-h-full flex items-center justify-start flex-col">
+
                 <Icon icon="mdi:hotel-off" className="h-16 w-16 text-gray-400 mx-auto mb-4" />
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">No hotels found</h3>
                 <p className="text-gray-600 mb-4">Try adjusting your filters or search criteria</p>
@@ -812,6 +886,7 @@ const [showNext, setShowNext] = useState(true);
                 </button>
               </div>
             )}
+
 
             {/* ✅ MAP SECTION ADDED HERE */}
             {viewMode === 'map' && (
@@ -826,6 +901,7 @@ const [showNext, setShowNext] = useState(true);
               </div>
             )}
             {/* End of Map Section */}
+
           </div>
         </div>
       </div>

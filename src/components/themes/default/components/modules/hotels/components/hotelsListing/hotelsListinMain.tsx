@@ -5,14 +5,13 @@ import useHotelSearch from '@hooks/useHotelSearchFilters'
 
 const HotelsListingMain = () => {
   // use your custom hook
-  const { hotelsData, isSearching } = useHotelSearch()
+  const {     allHotelsData,
+ isSearching } = useHotelSearch()
 
   return (
     <div className="">
       <HotelsListing
-        // hotelsData={hotelsData}      // <-- list of hotels
-        // isLoading={isSearching}    // <-- pass loading state
-        // title="Search Results"
+
       />
     </div>
   )
