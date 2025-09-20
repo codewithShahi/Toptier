@@ -2,15 +2,14 @@
   "name": "test_project",
   "version": "0.1.0",
   "private": true,
-
   "scripts": {
-  "dev": "next dev --turbopack",
-  "lint": "next lint",
-  "type-check": "tsc --noEmit",
-  "build": "npm run lint && npm run type-check && next build",
-  "start": "next start",
-  "prod": "npm run build && next start"
-},
+    "dev": "next dev --turbopack",
+    "lint": "next lint",
+    "type-check": "tsc --noEmit",
+    "build": "npm run lint && npm run type-check && next build",
+    "start": "next start",
+    "prod": "npm run build && next start"
+  },
   "dependencies": {
     "@hookform/resolvers": "^5.1.1",
     "@reduxjs/toolkit": "^2.8.2",
