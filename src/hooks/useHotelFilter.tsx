@@ -1,5 +1,8 @@
-import { useState, useMemo, useCallback } from "react";
-
+import { useState, useMemo, useCallback, useEffect } from "react";
+import useHotelSearch from "./useHotelSearch";
+import { setHotels } from "@lib/redux/base";
+import { useDispatch } from "react-redux";
+import { QueryClient, useQueryClient } from "@tanstack/react-query";
 interface HotelData {
   hotel_id: string;
   name: string;
@@ -30,6 +33,8 @@ interface FilterState {
 interface UseHotelFilterProps {
   hotelsData: HotelData[];
   isLoading?: boolean;
+  // formData?: any;
+  // setFormData?: (data: any) => void;
 }
 
 const useHotelFilter = ({ hotelsData, isLoading = false }: UseHotelFilterProps) => {
@@ -41,10 +46,12 @@ const useHotelFilter = ({ hotelsData, isLoading = false }: UseHotelFilterProps) 
     selectedAmenities: [],
     sortBy: null as any, // default sort
   });
-
+const {hotelSearchMutation,form,hotelModuleNames,removeDuplicates,setIsSearching,isSearching}=useHotelSearch()
+    const dispatch = useDispatch();
+const queryClient = useQueryClient();
   // Calculate price range from actual data
   const priceRange = useMemo(() => {
-    if (!hotelsData || hotelsData.length === 0) return { min: 0, max: 1000 };
+    if (!hotelsData || hotelsData?.length === 0) return { min: 0, max: 1000 };
 
     const prices = hotelsData.map(hotel => parseFloat(hotel.actual_price_per_night) || 0);
     return {
@@ -79,7 +86,7 @@ const useHotelFilter = ({ hotelsData, isLoading = false }: UseHotelFilterProps) 
 
   // Filter and sort hotels
   const filteredHotels = useMemo(() => {
-    if (!hotelsData || hotelsData.length === 0) return [];
+    if (!hotelsData || hotelsData?.length === 0) return [];
 
      const filtered = hotelsData.filter(hotel => {
       // Price filter
@@ -89,7 +96,7 @@ const useHotelFilter = ({ hotelsData, isLoading = false }: UseHotelFilterProps) 
       }
 
       // Stars filter
-      if (filters.selectedStars.length > 0) {
+      if (filters.selectedStars?.length > 0) {
         const hotelStars = parseInt(hotel.stars) || 0;
         if (!filters.selectedStars.includes(hotelStars)) {
           return false;
@@ -115,7 +122,7 @@ const useHotelFilter = ({ hotelsData, isLoading = false }: UseHotelFilterProps) 
       }
 
       // Amenities filter
-      if (filters.selectedAmenities.length > 0) {
+      if (filters.selectedAmenities?.length > 0) {
         if (!hotel.amenities || !Array.isArray(hotel.amenities)) {
           return false;
         }
@@ -157,6 +164,64 @@ const useHotelFilter = ({ hotelsData, isLoading = false }: UseHotelFilterProps) 
   const updatePriceRange = useCallback((newRange: [number, number]) => {
     setFilters(prev => ({ ...prev, priceRange: newRange }));
   }, []);
+// filter using api
+// useEffect(() => {
+//   const fetchFilteredHotels = async () => {
+//     if (!filters.priceRange || !filters.selectedRating) return;
+
+//     const [minPrice, maxPrice] = filters.priceRange;
+
+//     try {
+//       dispatch(setHotels([])); // ✅ Clear old data
+//       setIsSearching(true);
+
+//       // ✅ Fetch for each module
+//       const results = await Promise.all(
+//         hotelModuleNames.map((mod: string) =>
+//           hotelSearchMutation
+//             .mutateAsync({
+//               ...form,
+//               page: 1, // Always start from page 1 on filter change
+//               modules: mod,
+//               price_from: String(minPrice),
+//               price_to: String(maxPrice),
+//               rating: String(filters.selectedRating),
+//             })
+//             .catch(() => null)
+//         )
+//       );
+
+//       // ✅ Filter valid
+//       const validResults = results.filter(
+//         (res) => res && res.response && res.response?.length > 0
+//       );
+
+//       let finalData: any[] = [];
+//       if (validResults?.length === 1) {
+//         finalData = validResults[0].response;
+//       } else if (validResults?.length > 1) {
+//         finalData = validResults.flatMap((res) => res.response);
+//       }
+
+//       // ✅ DEDUPE before saving!
+//       finalData = removeDuplicates(finalData);
+
+//       // ✅ Update cache + Redux
+//       queryClient.setQueryData(["hotel-search"], finalData);
+//       dispatch(setHotels(finalData));
+
+//       // ✅ Reset page to 1
+//       // setPage(1);
+
+//     } catch (err) {
+//       console.error("Filter fetch failed", err);
+//     } finally {
+//       setIsSearching(false);
+//     }
+//   };
+
+//   fetchFilteredHotels();
+// }, [filters.priceRange, filters.selectedRating]);
 
   const toggleStarFilter = useCallback((stars: number) => {
     setFilters(prev => ({
@@ -201,10 +266,10 @@ const useHotelFilter = ({ hotelsData, isLoading = false }: UseHotelFilterProps) 
 
   const hasActiveFilters = useMemo(() => {
     return (
-      filters.selectedStars.length > 0 ||
+      filters.selectedStars?.length > 0 ||
       filters.selectedRating > 1 ||
       filters.searchQuery.trim() !== '' ||
-      filters.selectedAmenities.length > 0 ||
+      filters.selectedAmenities?.length > 0 ||
       filters.priceRange[0] > priceRange.min ||
       filters.priceRange[1] < priceRange.max
     );
@@ -213,7 +278,7 @@ const useHotelFilter = ({ hotelsData, isLoading = false }: UseHotelFilterProps) 
   return {
     // Filtered data
     filteredHotels,
-    totalResults: filteredHotels.length,
+    totalResults: filteredHotels?.length,
 
     // Filter state
     filters,

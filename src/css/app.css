@@ -269,3 +269,6 @@ body:is(.dark *) {
     @apply outline outline-2 outline-blue-500 rounded-lg;
   }
 }
+
+
+

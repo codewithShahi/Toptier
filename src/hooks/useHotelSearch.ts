@@ -3,9 +3,10 @@ import { useQuery, useMutation, useQueryClient, QueryClient } from "@tanstack/re
 import { fetchHotelsLocations, hotel_search } from "@src/actions";
 import { z } from "zod";
 import { useAppSelector } from "@lib/redux/store";
-import { setHotels } from "@lib/redux/base";
 import { useRouter } from "next/navigation";
+import { setHotels } from "@lib/redux/base";
 import { useDispatch } from "react-redux";
+import { fa } from "zod/v4/locales";
 
 
 
@@ -134,19 +135,19 @@ const hotelModuleNames = modules
   } = useQuery({
     queryKey: ["hotel-locations", debouncedDestination],
     queryFn: () => fetchHotelsLocations(debouncedDestination.trim()),
-    enabled: debouncedDestination.trim().length >= 3,
+    enabled: debouncedDestination.trim()?.length >= 3,
     staleTime: 1000 * 60 * 30, // 30 minutes
   });
 
   // Update locations when query data changes
   useEffect(() => {
-    if (locationData?.status && Array.isArray(locationData.data) && locationData.data.length > 0) {
+    if (locationData?.status && Array.isArray(locationData?.data) && locationData?.data?.length > 0) {
       setHotelLocations(locationData.data);
       setLocationError("");
     } else if (locationData?.error || locationsQueryError) {
       setHotelLocations([]);
       setLocationError("Try different search");
-    } else if (debouncedDestination.trim().length >= 3) {
+    } else if (debouncedDestination.trim()?.length >= 3) {
       setHotelLocations([]);
       setLocationError("No Hotel Destination Found");
     } else {
@@ -190,7 +191,7 @@ const hotelModuleNames = modules
 
   const handleDestinationKeyDown = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
     if (!showDestinationDropdown) return;
-    const maxIndex = hotelLocations.length - 1;
+    const maxIndex = hotelLocations?.length - 1;
     if (e.key === "ArrowDown") {
       e.preventDefault();
       setActiveIndex((i) => (i < maxIndex ? i + 1 : maxIndex));
@@ -210,7 +211,7 @@ const hotelModuleNames = modules
 
 // Add this function inside your useHotelSearch hook (after your state declarations)
 const removeDuplicates = useCallback((hotels: any[]) => {
-  if (!Array.isArray(hotels) || hotels.length === 0) {
+  if (!Array.isArray(hotels) || hotels?.length === 0) {
     return [];
   }
 
@@ -248,6 +249,58 @@ const hotelSearchMutation = useMutation({
     setErrors({});
   },
 });
+// for reloading previous search on page load (pagination)
+
+
+useEffect(() => {
+  setIsSearching(false);
+  // const hasRun = sessionStorage.getItem("hasRunRestore");
+
+  // if (!hasRun) {
+    const savedForm = localStorage.getItem("hotelSearchForm");
+
+    if (savedForm) {
+      const parsedForm: HotelForm = JSON.parse(savedForm);
+    dispatch(setHotels([])); // ✅ clear old data
+      Promise.all(
+        hotelModuleNames.map((mod: string) =>
+          hotelSearchMutation
+            .mutateAsync({
+              ...parsedForm,
+              page: 1,   // ✅ always first page after refresh
+              modules: mod,
+               price_from: "",
+              price_to: "",
+              rating: ""
+            })
+            .catch(() => null)
+        )
+      ).then((results) => {
+        const validResults = results.filter(
+          (res) => res && res.response && res.response?.length > 0
+        );
+
+        let finalData: any[] = [];
+        if (validResults.length === 1) {
+          finalData = validResults[0].response;
+        } else if (validResults.length > 1) {
+          finalData = validResults.flatMap((res) => res.response);
+        }
+
+        finalData = removeDuplicates(finalData);
+
+        queryClient.setQueryData(["hotel-search"], finalData);
+        dispatch(setHotels(finalData));
+        setPage(1);
+      });
+    }
+
+    // ✅ mark it so it won’t run again until next reload
+    sessionStorage.setItem("hasRunRestore", "true");
+  // }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+}, []); // 👈 empty dependency array
+
 
 // Then use:
 const hotels_Data= useQueryClient().getQueryData<any[]>(['hotel-search'])
@@ -272,25 +325,28 @@ const handleSubmit = useCallback(
               ...form,
               page: 1, // Always start from page 1 on new search
               modules: mod,
+               price_from: "",
+              price_to: "",
+              rating: ""
             })
             .catch(() => null)
         )
       );
-
       // ✅ Filter valid
       const validResults = results.filter(
-        (res) => res && res.response && res.response.length > 0
+        (res) => res && res.response && res.response?.length > 0
       );
 
       let finalData: any[] = [];
-      if (validResults.length === 1) {
+      if (validResults?.length === 1) {
         finalData = validResults[0].response;
-      } else if (validResults.length > 1) {
+      } else if (validResults?.length > 1) {
         finalData = validResults.flatMap((res) => res.response);
       }
 
       // ✅ DEDUPE before saving!
       finalData = removeDuplicates(finalData);
+            setIsSearching(false)
 
       // ✅ Update cache + Redux
       queryClient.setQueryData(["hotel-search"], finalData);
@@ -300,7 +356,6 @@ const handleSubmit = useCallback(
       setPage(1);
 
       // ✅ Redirect
-         setIsSearching(false);
       router.push("/hotel_search");
 
       return { success: true, data: finalData };
@@ -328,6 +383,7 @@ const loadMoreData = useCallback(
 
     if (isloadingMore) return;
     setIsLoadingMore(true);
+    setIsSearching(false)
 
     try {
       const savedForm = localStorage.getItem("hotelSearchForm");
@@ -343,23 +399,26 @@ const loadMoreData = useCallback(
               ...parsedForm,
               page: nextPage,
               modules: mod,
+              price_from: "",
+              price_to: "",
+              rating: ""
             })
             .catch(() => null)
         )
       );
 
       const validResults = results.filter(
-        (res) => res && res.response && res.response.length > 0
+        (res) => res && res.response && res.response?.length > 0
       );
 
-      if (validResults.length === 0) {
+      if (validResults?.length === 0) {
         console.log("No more results.");
         setIsLoadingMore(false);
         return { success: false, error: "No more data" };
       }
 
       let newData: any[] = [];
-      if (validResults.length === 1) {
+      if (validResults?.length === 1) {
         newData = validResults[0].response;
       } else {
         newData = validResults.flatMap((res) => res.response);
@@ -374,7 +433,7 @@ const loadMoreData = useCallback(
         return !existingIds.has(hotel.hotel_id);
       });
 
-      if (trulyNewHotels.length === 0) {
+      if (trulyNewHotels?.length === 0) {
         console.log("No new unique hotels found.");
         setIsLoadingMore(false);
         return { success: false, error: "No new data" };
@@ -424,7 +483,7 @@ const loadMoreData = useCallback(
 // loading this more data on scroll (final code )
  useEffect(() => {
     const handleScroll = () => {
-      if (isloadingMore || !allHotelsData.length) return;
+      if (isloadingMore || !allHotelsData?.length) return;
 
       if (listRef.current) {
         const rect = listRef.current.getBoundingClientRect();
@@ -439,7 +498,7 @@ const loadMoreData = useCallback(
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [loadMoreData, isloadingMore, allHotelsData.length]);
+  }, [loadMoreData, isloadingMore, allHotelsData?.length]);
   const updateForm = useCallback((updates: Partial<HotelForm>) => {
     setForm((prev) => ({ ...prev, ...updates }));
 
@@ -496,8 +555,8 @@ const loadMoreData = useCallback(
 // console.log('locationdata',locationData)
   // Computed values
   const totalGuests = form.adults + form.children;
-  const isFormValid = Object.keys(errors).length === 0;
-  const hasLocationResults = hotelLocations.length > 0;
+  const isFormValid = Object.keys(errors)?.length === 0;
+  const hasLocationResults = hotelLocations?.length > 0;
   const isSearching =  hotelSearchMutation.isPending;
 
   return {
@@ -521,12 +580,14 @@ const loadMoreData = useCallback(
     setShowDestinationDropdown,
     activeIndex,
     setActiveIndex,
+    removeDuplicates,
 
     // Guests dropdown
     showGuestsDropdown,
     setShowGuestsDropdown,
 
     // Search state
+    hotelSearchMutation,
    isSearching:hotelSearchMutation.isPending,
     setIsLoadingMore,
     isloadingMore,
@@ -534,6 +595,8 @@ const loadMoreData = useCallback(
     hotels_Data,
     searchError: hotelSearchMutation.error,
     listRef,
+    hotelModuleNames,
+    setIsSearching,
 
 
     // Event handlers
