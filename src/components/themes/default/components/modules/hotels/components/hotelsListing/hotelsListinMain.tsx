@@ -10,11 +10,7 @@ const HotelsListingMain = () => {
 
   return (
     <div className="">
-      {isSearching ? <div className="fixed inset-0 flex flex-col items-center justify-center w-full h-screen bg-white z-[99999999999]">
-          <div className="loader">Loading...</div>
-        </div> : <HotelsListing  />}
-
-
+         <HotelsListing  />
     </div>
   )
 }

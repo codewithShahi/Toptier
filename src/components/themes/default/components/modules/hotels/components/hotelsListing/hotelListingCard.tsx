@@ -1,22 +1,21 @@
 // @components/hotel/HotelCard.tsx
 "use client";
-import { memo, useCallback } from "react";
+import { memo, useCallback, useState } from "react";
 import { Icon } from "@iconify/react";
+import { toast } from "react-toastify";
+import { addToFavourite } from "@src/actions";
+import { useUser } from "@hooks/use-user";
 
 interface HotelCardProps {
   hotel: any;
-  viewMode: 'grid' | 'list' | 'map';
-  user: boolean;
-  onLikeToggle: (hotel: any) => void;
+  viewMode: "grid" | "list" | "map";
 }
 
-const HotelCard = memo(function HotelCard({
-  hotel,
-  viewMode,
-  user,
-  onLikeToggle
-}: HotelCardProps) {
-  // Memoized renderStars function
+const HotelCard = memo(function HotelCard({ hotel, viewMode }: HotelCardProps) {
+  const { user } = useUser();
+  const [isFav, setIsFav] = useState(hotel.favorite === 1);
+
+  // Memoized renderStars
   const renderStars = useCallback((rating: string) => {
     const stars = [];
     const numRating = parseInt(rating) || 0;
@@ -28,26 +27,70 @@ const HotelCard = memo(function HotelCard({
     return stars;
   }, []);
 
+  // Handle toggle favourite (internal only)
+  const toggleLike = async () => {
+    if (!user) {
+      toast.error("User must be logged in to mark as favourite");
+      return;
+    }
+
+    try {
+      const payload = {
+        item_id: String(hotel.hotel_id),
+        module: "hotels",
+        user_id: String(user?.user_id) || "",
+      };
+
+      const res = await addToFavourite(payload);
+
+      if (res?.error) {
+        console.error("Error updating favourite:", res.error);
+        toast.error("Something went wrong ❌");
+        return;
+      }
+
+      // Flip local state
+      setIsFav((prev) => !prev);
+
+      toast.success(res?.message || "Updated favourites ✅");
+    } catch (err) {
+      console.error("toggleLike error:", err);
+      toast.error("Failed to update favourites ❌");
+    }
+  };
+
   return (
     <div
       key={hotel.hotel_id}
-      className={`bg-white p-[8px] rounded-[45px] shadow cursor-pointer transition-all duration-300 hover:shadow-lg ${viewMode === 'list' ? 'flex flex-col sm:flex-row max-w-none' : ''
-        }`}
+      className={`bg-white p-[8px] rounded-[45px] shadow cursor-pointer transition-all duration-300 hover:shadow-lg ${
+        viewMode === "list" ? "flex flex-col sm:flex-row max-w-none" : ""
+      }`}
     >
-      <div className={`relative overflow-hidden rounded-[40px] ${viewMode === 'list'
-        ? 'sm:w-80 sm:h-64 flex-shrink-0 aspect-square sm:aspect-auto'
-        : 'aspect-square'
-        }`}>
+      {/* Hotel Image */}
+      <div
+        className={`relative overflow-hidden rounded-[40px] ${
+          viewMode === "list"
+            ? "sm:w-80 sm:h-64 flex-shrink-0 aspect-square sm:aspect-auto"
+            : "aspect-square"
+        }`}
+      >
         <img
           src={hotel.img}
           alt={hotel.name}
           className="w-full h-full object-cover"
           onError={(e) => {
-            e.currentTarget.src = 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400&h=300&fit=crop';
+            e.currentTarget.src =
+              "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400&h=300&fit=crop";
           }}
         />
       </div>
-      <div className={`p-3 ${viewMode === 'list' ? 'flex-1 flex flex-col justify-between' : ''}`}>
+
+      {/* Hotel Details */}
+      <div
+        className={`p-3 ${
+          viewMode === "list" ? "flex-1 flex flex-col justify-between" : ""
+        }`}
+      >
         <div>
           <h3
             className="text-xl font-extrabold text-gray-900 mb-4 pl-4 sm:text-2xl md:text-xl lg:text-2xl text-ellipsis overflow-hidden whitespace-nowrap"
@@ -58,9 +101,8 @@ const HotelCard = memo(function HotelCard({
           </h3>
           <p className="text-[16px] sm:text-[17px] lg:text-[18px] my-2 font-[400] text-[#5B697E] pl-4 text-ellipsis overflow-hidden whitespace-nowrap">
             {hotel.location}
-            {/* ❌ REMOVE THIS — it forces re-render on every update */}
-            {/* {filteredHotels.length} */}
           </p>
+
           {/* Stars */}
           <div className="flex items-center gap-1 mb-2 pl-4">
             {renderStars(hotel.stars)}
@@ -68,11 +110,19 @@ const HotelCard = memo(function HotelCard({
               ({parseFloat(hotel.rating).toFixed(1)})
             </span>
           </div>
+
           {/* Price */}
-          <div className={`flex ${viewMode === 'list' ? 'flex-col sm:flex-row sm:justify-between' : 'justify-between'} items-start sm:items-center pl-4 mb-4`}>
+          <div
+            className={`flex ${
+              viewMode === "list"
+                ? "flex-col sm:flex-row sm:justify-between"
+                : "justify-between"
+            } items-start sm:items-center pl-4 mb-4`}
+          >
             <div className="flex gap-2 items-center mb-2 sm:mb-0">
               <p className="text-[24px] sm:text-[28px] lg:text-[30px] font-[900]">
-                <span className="text-base">{hotel.currency.toUpperCase()}</span> {hotel.actual_price}
+                <span className="text-base">{hotel.currency.toUpperCase()}</span>{" "}
+                {hotel.actual_price}
               </p>
               <p className="text-[14px] sm:text-[16px] lg:text-[17px] font-[400] text-[#5B697E]">
                 /night
@@ -80,14 +130,20 @@ const HotelCard = memo(function HotelCard({
             </div>
           </div>
         </div>
-        <div className={`flex items-center gap-3 ${viewMode === 'list' ? 'mt-auto' : ''}`}>
+
+        {/* Buttons */}
+        <div
+          className={`flex items-center gap-3 ${
+            viewMode === "list" ? "mt-auto" : ""
+          }`}
+        >
           <button className="flex-1 cursor-pointer bg-[#163D8C] hover:bg-gray-800 text-white font-medium py-2.5 px-3 text-sm sm:text-base md:text-sm lg:text-base rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
             Book Now
           </button>
           <button
-            onClick={() => onLikeToggle(hotel)}
+            onClick={toggleLike}
             className="bg-[#EBEFF4] cursor-pointer hover:bg-gray-200 rounded-full transition-all duration-200 flex items-center justify-center flex-shrink-0 w-12 h-12 sm:w-14 sm:h-14 lg:w-11.5 lg:h-11.5"
-            aria-label={`${hotel.favorite === 1 && user ? "Unlike" : "Like"} ${hotel.name}`}
+            aria-label={`${isFav && user ? "Unlike" : "Like"} ${hotel.name}`}
           >
             <svg
               className="transition-colors duration-200 w-5 h-5 sm:w-6 sm:h-6 md:w-5 md:h-5 lg:w-4.5 lg:h-4.5"
@@ -97,12 +153,12 @@ const HotelCard = memo(function HotelCard({
             >
               <path
                 d="M6.22371 1.44739C3.27589 1.44739 0.885498 3.98725 0.885498 7.11938C0.885498 13.3881 11 20.5526 11 20.5526C11 20.5526 21.1145 13.3881 21.1145 7.11938C21.1145 3.23878 18.7241 1.44739 15.7763 1.44739C13.686 1.44739 11.8766 2.72406 11 4.58288C10.1234 2.72406 8.31404 1.44739 6.22371 1.44739Z"
-                stroke={hotel.favorite === 1 && user ? "#EF4444" : "#6B7280"}
+                stroke={isFav && user ? "#EF4444" : "#6B7280"}
                 strokeOpacity="0.8"
                 strokeWidth="1.5"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                fill={hotel.favorite === 1 && user ? "#EF4444" : "none"}
+                fill={isFav && user ? "#EF4444" : "none"}
               />
             </svg>
           </button>

@@ -141,7 +141,7 @@ const swiperRef = useRef<any>(null);
 
   const [showPrev, setShowPrev] = useState(false);
 const [showNext, setShowNext] = useState(true);
-  const { allHotelsData:hotelsData, isSearching:isLoading ,loadMoreData,isloadingMore,listRef, allHotelsData:loadMoreHotels} = useHotelSearch()
+  const { allHotelsData:hotelsData, isSearching:isLoading ,loadMoreData,isloadingMore,listRef, allHotelsData:loadMoreHotels,isSearching} = useHotelSearch()
 
 
   const safeHotelsData = Array.isArray(hotelsData) && hotelsData?.length > 0
@@ -671,7 +671,7 @@ const [showNext, setShowNext] = useState(true);
               <div className="flex flex-col space-y-3 sm:space-y-0 sm:flex-row sm:items-center justify-between gap-3 lg:gap-4">
                 <div className="flex items-center gap-3 lg:gap-4">
                   <span className="text-gray-500 font-medium text-sm lg:text-base pl-2">
-                    {isLoading ? "Loading..." : `${totalResults} hotels found`}
+                    {isSearching ? "Loading..." : `${totalResults} hotels found`}
                   </span>
                 </div>
                 <div className="flex items-center justify-between sm:justify-end gap-3 lg:gap-2">
@@ -768,12 +768,12 @@ const [showNext, setShowNext] = useState(true);
     }`}>
     {filteredHotels.map((hotel: any,index:number) => (
       <HotelCard
-        key={index} // ✅ Still needed for list reconciliation
-        hotel={hotel}
-        viewMode={viewMode}
-        user={user}
-        onLikeToggle={toggleLike}
-      />
+  key={hotel.hotel_id}
+  hotel={hotel}
+  viewMode={viewMode}
+  // onUpdateFavourite={handleUpdateFavourite}
+/>
+
     ))}
   </div>
 )}
@@ -784,7 +784,6 @@ const [showNext, setShowNext] = useState(true);
     <Spinner size={30}  className="mr-1 text-blue-900" /> <p className="text-base font-medium text-blue-900 ">Loading more</p>
   </div>
   </div>
-
   }
             {filteredHotels?.length === 0  && (
               <div className="text-center py-6 sm:py-8 md:py-15  min-w-full min-h-full flex items-center justify-start flex-col">
@@ -800,7 +799,7 @@ const [showNext, setShowNext] = useState(true);
                 </button>
               </div>
             )}
-
+  
 
             {/* ✅ MAP SECTION ADDED HERE */}
             {viewMode === 'map' && (

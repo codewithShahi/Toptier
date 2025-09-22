@@ -248,6 +248,55 @@ const hotelSearchMutation = useMutation({
     setErrors({});
   },
 });
+// for reloading previous search on page load (pagination)
+
+
+useEffect(() => {
+  setIsSearching(false)
+  // const hasRun = sessionStorage.getItem("hasRunRestore");
+
+  // if (!hasRun) {
+    const savedForm = localStorage.getItem("hotelSearchForm");
+
+    if (savedForm) {
+      const parsedForm: HotelForm = JSON.parse(savedForm);
+
+      Promise.all(
+        hotelModuleNames.map((mod: string) =>
+          hotelSearchMutation
+            .mutateAsync({
+              ...parsedForm,
+              page: 1,   // ✅ always first page after refresh
+              modules: mod,
+            })
+            .catch(() => null)
+        )
+      ).then((results) => {
+        const validResults = results.filter(
+          (res) => res && res.response && res.response?.length > 0
+        );
+
+        let finalData: any[] = [];
+        if (validResults.length === 1) {
+          finalData = validResults[0].response;
+        } else if (validResults.length > 1) {
+          finalData = validResults.flatMap((res) => res.response);
+        }
+
+        finalData = removeDuplicates(finalData);
+
+        queryClient.setQueryData(["hotel-search"], finalData);
+        dispatch(setHotels(finalData));
+        setPage(1);
+      });
+    }
+
+    // ✅ mark it so it won’t run again until next reload
+    sessionStorage.setItem("hasRunRestore", "true");
+  // }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+}, []); // 👈 empty dependency array
+
 
 // Then use:
 const hotels_Data= useQueryClient().getQueryData<any[]>(['hotel-search'])
