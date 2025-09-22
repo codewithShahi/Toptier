@@ -44,7 +44,7 @@ const useHotelFilter = ({ hotelsData, isLoading = false }: UseHotelFilterProps) 
 
   // Calculate price range from actual data
   const priceRange = useMemo(() => {
-    if (!hotelsData || hotelsData.length === 0) return { min: 0, max: 1000 };
+    if (!hotelsData || hotelsData?.length === 0) return { min: 0, max: 1000 };
 
     const prices = hotelsData.map(hotel => parseFloat(hotel.actual_price_per_night) || 0);
     return {
@@ -79,7 +79,7 @@ const useHotelFilter = ({ hotelsData, isLoading = false }: UseHotelFilterProps) 
 
   // Filter and sort hotels
   const filteredHotels = useMemo(() => {
-    if (!hotelsData || hotelsData.length === 0) return [];
+    if (!hotelsData || hotelsData?.length === 0) return [];
 
      const filtered = hotelsData.filter(hotel => {
       // Price filter
@@ -89,7 +89,7 @@ const useHotelFilter = ({ hotelsData, isLoading = false }: UseHotelFilterProps) 
       }
 
       // Stars filter
-      if (filters.selectedStars.length > 0) {
+      if (filters.selectedStars?.length > 0) {
         const hotelStars = parseInt(hotel.stars) || 0;
         if (!filters.selectedStars.includes(hotelStars)) {
           return false;
@@ -115,7 +115,7 @@ const useHotelFilter = ({ hotelsData, isLoading = false }: UseHotelFilterProps) 
       }
 
       // Amenities filter
-      if (filters.selectedAmenities.length > 0) {
+      if (filters.selectedAmenities?.length > 0) {
         if (!hotel.amenities || !Array.isArray(hotel.amenities)) {
           return false;
         }
@@ -201,10 +201,10 @@ const useHotelFilter = ({ hotelsData, isLoading = false }: UseHotelFilterProps) 
 
   const hasActiveFilters = useMemo(() => {
     return (
-      filters.selectedStars.length > 0 ||
+      filters.selectedStars?.length > 0 ||
       filters.selectedRating > 1 ||
       filters.searchQuery.trim() !== '' ||
-      filters.selectedAmenities.length > 0 ||
+      filters.selectedAmenities?.length > 0 ||
       filters.priceRange[0] > priceRange.min ||
       filters.priceRange[1] < priceRange.max
     );
@@ -213,7 +213,7 @@ const useHotelFilter = ({ hotelsData, isLoading = false }: UseHotelFilterProps) 
   return {
     // Filtered data
     filteredHotels,
-    totalResults: filteredHotels.length,
+    totalResults: filteredHotels?.length,
 
     // Filter state
     filters,
