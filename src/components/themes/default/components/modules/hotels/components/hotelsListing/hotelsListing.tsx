@@ -144,7 +144,7 @@ const [showNext, setShowNext] = useState(true);
   const { allHotelsData:hotelsData, isSearching:isLoading ,loadMoreData,isloadingMore,listRef, allHotelsData:loadMoreHotels} = useHotelSearch()
 
 
-  const safeHotelsData = Array.isArray(hotelsData) && hotelsData.length > 0
+  const safeHotelsData = Array.isArray(hotelsData) && hotelsData?.length > 0
   ? hotelsData
   : Array.isArray(hotelsData)
     ? hotelsData
@@ -779,11 +779,14 @@ const [showNext, setShowNext] = useState(true);
 )}
             {/* No Results Message */}
   {isloadingMore &&
-  <div className="w-full py-5 my-5 flex items-center justify-center rounded-full border border-blue-900 bg-white">
-    <Spinner size={40}  className="mr-1 text-blue-900" />
+  <div className="w-full flex items-center justify-center">
+ <div className="w-[50%] py-2 my-5 flex gap-2 items-center justify-center rounded-full border border-blue-900 bg-white ">
+    <Spinner size={30}  className="mr-1 text-blue-900" /> <p className="text-base font-medium text-blue-900 ">Loading more</p>
   </div>
+  </div>
+
   }
-            {filteredHotels.length === 0  && (
+            {filteredHotels?.length === 0  && (
               <div className="text-center py-6 sm:py-8 md:py-15  min-w-full min-h-full flex items-center justify-start flex-col">
 
                 <Icon icon="mdi:hotel-off" className="h-16 w-16 text-gray-400 mx-auto mb-4" />
