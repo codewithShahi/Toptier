@@ -34,12 +34,12 @@ interface UseHotelFilterProps {
 
 const useHotelFilter = ({ hotelsData, isLoading = false }: UseHotelFilterProps) => {
   const [filters, setFilters] = useState<FilterState>({
-    priceRange: [0, 1000],
+    priceRange: [0, 100000],
     selectedStars: [],
     selectedRating: 1,
     searchQuery: '',
     selectedAmenities: [],
-    sortBy: 'price_low'
+    sortBy: null as any, // default sort
   });
 
   // Calculate price range from actual data
@@ -81,7 +81,7 @@ const useHotelFilter = ({ hotelsData, isLoading = false }: UseHotelFilterProps) 
   const filteredHotels = useMemo(() => {
     if (!hotelsData || hotelsData.length === 0) return [];
 
-    let filtered = hotelsData.filter(hotel => {
+     const filtered = hotelsData.filter(hotel => {
       // Price filter
       const hotelPrice = parseFloat(hotel.actual_price_per_night) || 0;
       if (hotelPrice < filters.priceRange[0] || hotelPrice > filters.priceRange[1]) {
@@ -133,20 +133,22 @@ const useHotelFilter = ({ hotelsData, isLoading = false }: UseHotelFilterProps) 
     });
 
     // Sort hotels
-    filtered.sort((a, b) => {
-      switch (filters.sortBy) {
-        case 'price_low':
-          return (parseFloat(a.actual_price) || 0) - (parseFloat(b.actual_price) || 0);
-        case 'price_high':
-          return (parseFloat(b.actual_price) || 0) - (parseFloat(a.actual_price) || 0);
-        case 'rating':
-          return (parseFloat(b.rating) || 0) - (parseFloat(a.rating) || 0);
-        case 'name':
-          return a.name.localeCompare(b.name);
-        default:
-          return 0;
-      }
-    });
+    if (filters.sortBy) {
+  filtered.sort((a, b) => {
+    switch (filters.sortBy) {
+      case 'price_low':
+        return (parseFloat(a.actual_price) || 0) - (parseFloat(b.actual_price) || 0);
+      case 'price_high':
+        return (parseFloat(b.actual_price) || 0) - (parseFloat(a.actual_price) || 0);
+      case 'rating':
+        return (parseFloat(b.rating) || 0) - (parseFloat(a.rating) || 0);
+      case 'name':
+        return a.name.localeCompare(b.name);
+      default:
+        return 0;
+    }
+  });
+}
 
     return filtered;
   }, [hotelsData, filters]);
