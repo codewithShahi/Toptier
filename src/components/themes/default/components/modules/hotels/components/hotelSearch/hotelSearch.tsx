@@ -7,7 +7,7 @@ import useDirection from "@hooks/useDirection";
 
 import { useParams,useRouter } from "next/navigation";
 
-import useHotelSearch from "@hooks/useHotelSearchFilters";
+import useHotelSearch from "@hooks/useHotelSearch";
 // import useHotelSearch from "@hooks/useHotelSearch"; // Import the hook
 
 export default function HotelSearch() {
