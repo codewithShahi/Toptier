@@ -525,7 +525,7 @@ const [showNext, setShowNext] = useState(true);
         <div className="flex flex-col lg:flex-row gap-4 lg:gap-8">
           {/* Desktop Sidebar - Advanced Search */}
           <div className="hidden lg:block w-80 flex-shrink-0">
-            <div className="bg-white rounded-xl border border-[#EBEBEB] p-4 sticky top-24">
+            <div className="bg-white rounded-xl border border-[#EBEBEB] p-4">
               <div className="flex items-center justify-between mb-6 border-b pb-5 border-gray-200">
                 <h2 className="text-lg font-bold text-[#112233]">Advanced Search</h2>
                 {hasActiveFilters && (
