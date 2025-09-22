@@ -8,11 +8,14 @@ import { Navigation } from "swiper/modules";
 import useHotelFilter from "@hooks/useHotelFilter";
 import useHotelSearch from "@hooks/useHotelSearch";
 import Spinner from "@components/core/Spinner";
+import RatingSlider from "./ratingSlider"
 // import useHotelFilter from "./useHotelFilter";
 // Import Swiper styles
 import "swiper/css";
 import "swiper/css/navigation";
 import HotelCard from "./hotelListingCard";
+import { PriceRangeSlider } from "@components/core/priceRangeSlider";
+import HotelMap from "./hotelMap";
 // Define types
 interface FilterChip {
   icon?: string;
@@ -250,29 +253,29 @@ const [showNext, setShowNext] = useState(true);
     value: number;
     onChange: (newValue: number) => void;
   }
-  const RatingSlider: React.FC<RatingSliderProps> = ({ value, onChange }) => {
-    const percentage = ((value - 1) / 4) * 100;
-    return (
-      <div className="space-y-4">
-        <div className="relative h-2 bg-gray-200 rounded-full">
-          <div
-            className="absolute h-2 bg-[#163C8C] rounded-full"
-            style={{ width: `${percentage}%` }}
-          ></div>
-          <input
-            type="range"
-            min={1}
-            max={5}
-            step={0.1}
-            value={value}
-            onChange={(e) => onChange(parseFloat(e.target.value))}
-            className="absolute w-full h-2 bg-transparent appearance-none cursor-pointer slider-thumb"
-          />
-        </div>
-        <div className="text-center text-sm text-gray-600">{value.toFixed(1)}+ Stars</div>
-      </div>
-    );
-  };
+  // const RatingSlider: React.FC<RatingSliderProps> = ({ value, onChange }) => {
+  //   const percentage = ((value - 1) / 4) * 100;
+  //   return (
+  //     <div className="space-y-4">
+  //       <div className="relative h-2 bg-gray-200 rounded-full">
+  //         <div
+  //           className="absolute h-2 bg-[#163C8C] rounded-full"
+  //           style={{ width: `${percentage}%` }}
+  //         ></div>
+  //         <input
+  //           type="range"
+  //           min={1}
+  //           max={5}
+  //           step={0.1}
+  //           value={value}
+  //           onChange={(e) => onChange(parseFloat(e.target.value))}
+  //           className="absolute w-full h-2 bg-transparent appearance-none cursor-pointer slider-thumb"
+  //         />
+  //       </div>
+  //       <div className="text-center text-sm text-gray-600">{value.toFixed(1)}+ Stars</div>
+  //     </div>
+  //   );
+  // };
   // Render star ratings
   const renderStars = (rating: string) => {
     const stars = [];
@@ -524,11 +527,11 @@ const [showNext, setShowNext] = useState(true);
       <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-4 lg:py-8"  >
         <div className="flex flex-col lg:flex-row gap-4 lg:gap-8">
           {/* Desktop Sidebar - Advanced Search */}
-          <div className="hidden lg:block w-80 flex-shrink-0">
+          {viewMode !=="map" && <div className="hidden lg:block w-80 flex-shrink-0">
             <div className="bg-white rounded-xl border border-[#EBEBEB] p-4">
               <div className="flex items-center justify-between mb-6 border-b pb-5 border-gray-200">
                 <h2 className="text-lg font-bold text-[#112233]">Advanced Search</h2>
-                {hasActiveFilters && (
+
                   <button
                     type="button"
                     onClick={resetFilters}
@@ -540,7 +543,7 @@ const [showNext, setShowNext] = useState(true);
                       <path d="M1.76927 1.03851L1.76927 12.9661C1.76927 13.3778 1.43549 13.7116 1.0238 13.7116C0.612107 13.7116 0.27832 13.3778 0.27832 12.9661L0.27832 1.03851C0.27832 0.626824 0.612107 0.293037 1.0238 0.293037C1.43549 0.293037 1.76927 0.626824 1.76927 1.03851Z" fill="#163C8C" />
                     </svg>
                   </button>
-                )}
+
               </div>
               {/* Search Location */}
               <div className="mb-8">
@@ -560,35 +563,27 @@ const [showNext, setShowNext] = useState(true);
               </div>
               {/* Price Range */}
               <div className="mb-8">
-                <label className="block text-base font-semibold text-[#112233] mb-3">
+                <p className="block text-base font-semibold text-[#112233] mb-3">
                   Price Range (per night)
-                </label>
-                <select
-                  className="w-full cursor-pointer pl-4 py-3 mb-3 border border-gray-200 rounded-xl font-medium text-sm text-gray-500 appearance-none"
-                  style={{
-                    backgroundImage:
-                      "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='gray'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E\")",
-                    backgroundRepeat: "no-repeat",
-                    backgroundPosition: "right 1rem center",
-                    backgroundSize: "0.85rem 0.85rem",
-                  }}
-                >
-                  <option value="price_low">Low to High</option>
-                  <option value="eur">Mid Range</option>
-                  <option value="pkr">Very High</option>
-                </select>
-                <PriceSlider
+                </p>
+                {/* <PriceSlider
                   min={priceRange.min}
                   max={priceRange.max}
                   values={filters.priceRange}
                   onChange={handlePriceChange}
-                />
+                /> */}
+                <PriceRangeSlider
+    min={priceRange.min}
+    max={priceRange.max}
+    values={filters.priceRange}   // ← [min, max] tuple
+    onChange={handlePriceChange}  // ← (index, value) => void
+/>
               </div>
               {/* Hotel Stars */}
               <div className="mb-8">
                 <label className="block text-base font-semibold text-[#112233] mb-3">Hotel Stars</label>
                 <div className="space-y-3">
-                  {[5, 4, 3].map((stars) => (
+                  {[5, 4, 3, 2, 1].map((stars) => (
                     <div
                       key={stars}
                       className="flex items-center justify-between cursor-pointer"
@@ -621,11 +616,7 @@ const [showNext, setShowNext] = useState(true);
               </div>
               {/* Guest Rating */}
               <div className="mb-8 border-b border-gray-200 pb-6">
-                <label className="block text-base font-semibold text-[#112233] mb-3">Guests Rating</label>
-                <RatingSlider
-                  value={filters.selectedRating}
-                  onChange={updateRatingFilter}
-                />
+
               </div>
               {/* Buttons */}
               <div className="space-y-3">
@@ -647,7 +638,7 @@ const [showNext, setShowNext] = useState(true);
                 </button>
               </div>
             </div>
-          </div>
+          </div>}
           {/* Main Content Area */}
           <div className="flex-1 min-w-0">
             {/* Mobile Filter Button */}
@@ -670,8 +661,20 @@ const [showNext, setShowNext] = useState(true);
             <div className="bg-white rounded-lg lg:rounded-xl border border-gray-200 p-3 lg:p-3 mb-4 lg:mb-6">
               <div className="flex flex-col space-y-3 sm:space-y-0 sm:flex-row sm:items-center justify-between gap-3 lg:gap-4">
                 <div className="flex items-center gap-3 lg:gap-4">
+                    {viewMode === "map" && <button
+                    type="button"
+                    onClick={() => setMobileFiltersOpen(true)}
+                    className="w-8 h-8 flex cursor-pointer items-center justify-center rounded-full border border-gray-300 hover:bg-gray-50 transition-colors"
+                  >
+                    <svg width="11" height="14" viewBox="0 0 11 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M6.24242 1.0387L6.24242 12.9663C6.24242 13.378 5.90863 13.7118 5.49694 13.7118C5.08525 13.7118 4.75146 13.378 4.75146 12.9663L4.75146 1.0387C4.75146 0.627007 5.08525 0.293221 5.49694 0.293221C5.90863 0.293221 6.24242 0.627007 6.24242 1.0387Z" fill="#163C8C" />
+                      <path d="M10.7143 1.0387V12.9663C10.7143 13.378 10.3806 13.7118 9.96886 13.7118C9.55718 13.7118 9.22339 13.378 9.22339 12.9663V1.0387C9.22339 0.627007 9.55718 0.293037 9.96886 0.293037C10.3806 0.293037 10.7143 0.627007 10.7143 1.0387Z" fill="#163C8C" />
+                      <path d="M1.76927 1.03851L1.76927 12.9661C1.76927 13.3778 1.43549 13.7116 1.0238 13.7116C0.612107 13.7116 0.27832 13.3778 0.27832 12.9661L0.27832 1.03851C0.27832 0.626824 0.612107 0.293037 1.0238 0.293037C1.43549 0.293037 1.76927 0.626824 1.76927 1.03851Z" fill="#163C8C" />
+                    </svg>
+                  </button>}
+
                   <span className="text-gray-500 font-medium text-sm lg:text-base pl-2">
-                    {isSearching ? "Loading..." : `${totalResults} hotels found`}
+                    {`${totalResults} hotels found` || "0"}
                   </span>
                 </div>
                 <div className="flex items-center justify-between sm:justify-end gap-3 lg:gap-2">
@@ -760,7 +763,7 @@ const [showNext, setShowNext] = useState(true);
 
 
 
-            {/* Hotel Grid */}
+            {/*=================>>>>> FOR LIST AND GRID  Hotel Grid */}
          {viewMode !== 'map' && (
   <div className={`${viewMode === 'grid'
     ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 items-start'
@@ -777,15 +780,24 @@ const [showNext, setShowNext] = useState(true);
     ))}
   </div>
 )}
-            {/* No Results Message */}
-  {isloadingMore &&
+         {/* ============>>> LOAD MORE DATA ON SCROLL  */}
+  {/* {isloadingMore  &&
   <div className="w-full flex items-center justify-center">
  <div className="w-[50%] py-2 my-5 flex gap-2 items-center justify-center rounded-full border border-blue-900 bg-white ">
     <Spinner size={30}  className="mr-1 text-blue-900" /> <p className="text-base font-medium text-blue-900 ">Loading more</p>
   </div>
   </div>
-  }
-            {filteredHotels?.length === 0  && (
+  } */}
+  {/* {!isloadingMore && isSearching &&
+  <div className="w-full flex items-center justify-center">
+ <div className="w-full py-2 my-5 h-full flex gap-2 items-center justify-center  border-blue-900">
+    <Spinner size={30}  className="mr-1 text-blue-900" /> <p className="text-base font-medium text-blue-900 ">Searching for Hotels</p>
+  </div>
+  </div>
+  } */}
+
+    {/* ============>>>NO DATA FOUND  */}
+            {!isSearching && !isloadingMore && filteredHotels?.length === 0  && (
               <div className="text-center py-6 sm:py-8 md:py-15  min-w-full min-h-full flex items-center justify-start flex-col">
 
                 <Icon icon="mdi:hotel-off" className="h-16 w-16 text-gray-400 mx-auto mb-4" />
@@ -799,28 +811,47 @@ const [showNext, setShowNext] = useState(true);
                 </button>
               </div>
             )}
-  
 
-            {/* ✅ MAP SECTION ADDED HERE */}
-            {viewMode === 'map' && (
-              <div className="mt-6 p-6 bg-white border border-gray-200 rounded-xl shadow-sm">
-                <h3 className="text-xl font-bold text-gray-800 mb-2">Map Section</h3>
-                <p className="text-gray-600 mb-4">
-                  This is where your interactive map will be displayed.
-                </p>
-                <div className="w-full h-96 bg-gray-100 rounded-lg flex items-center justify-center border-2 border-dashed border-gray-300">
-                  <span className="text-gray-500 text-lg">🗺️ Map Placeholder</span>
-                </div>
-              </div>
-            )}
+
+            {/* ==============>>> MAP SECTION ADDED HERE */}
+           {viewMode === "map" && (
+  <div className="flex gap-6 mt-6 ">
+    {/* Left side cards */}
+    <div className="flex-1  pr-2">
+      <div
+        className={`grid gap-4 md:gap-6 items-start
+          grid-cols-1 md:grid-cols-2`}
+      >
+        {filteredHotels.map((hotel: any, index: number) => (
+          <HotelCard
+            key={hotel.hotel_id}
+            hotel={hotel}
+            viewMode={viewMode}
+          />
+        ))}
+      </div>
+    </div>
+
+    {/* Right side map container */}
+    <div className="hidden md:block w-1/2 h-[800px] bg-gray-100 rounded-lg border-2 border-dashed border-gray-300">
+      <div className="w-full  flex items-center justify-center text-gray-500">
+          <HotelMap
+            hotels={filteredHotels}
+    />
+
+      </div>
+    </div>
+  </div>
+)}
+
             {/* End of Map Section */}
 
           </div>
         </div>
       </div>
       {/* Mobile Filters Overlay */}
-      {mobileFiltersOpen && (
-        <div className="lg:hidden fixed inset-0 z-50 overflow-hidden">
+      {mobileFiltersOpen  && (
+        <div className=" fixed inset-0 z-50 overflow-hidden">
           <div
             className="absolute inset-0 bg-black/50"
             onClick={() => setMobileFiltersOpen(false)}
@@ -861,12 +892,12 @@ const [showNext, setShowNext] = useState(true);
                 <label className="block text-sm font-semibold cursor-pointer text-gray-900 mb-3">
                   Price Range (per night)
                 </label>
-                <PriceSlider
-                  min={priceRange.min}
-                  max={priceRange.max}
-                  values={filters.priceRange}
-                  onChange={handlePriceChange}
-                />
+                 <PriceRangeSlider
+    min={priceRange.min}
+    max={priceRange.max}
+    values={filters.priceRange}   // ← [min, max] tuple
+    onChange={handlePriceChange}  // ← (index, value) => void
+/>
               </div>
               {/* Mobile Hotel Stars */}
               <div>
@@ -899,13 +930,13 @@ const [showNext, setShowNext] = useState(true);
               </div>
               {/* Mobile Rating */}
               <div>
-                <label className="block text-sm font-semibold cursor-pointer text-gray-900 mb-3">
+                {/* <label className="block text-sm font-semibold cursor-pointer text-gray-900 mb-3">
                   Minimum Rating
                 </label>
                 <RatingSlider
                   value={filters.selectedRating}
                   onChange={updateRatingFilter}
-                />
+                /> */}
               </div>
             </div>
             {/* Footer Buttons */}

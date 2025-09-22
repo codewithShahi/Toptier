@@ -3,9 +3,10 @@ import { useQuery, useMutation, useQueryClient, QueryClient } from "@tanstack/re
 import { fetchHotelsLocations, hotel_search } from "@src/actions";
 import { z } from "zod";
 import { useAppSelector } from "@lib/redux/store";
-import { setHotels } from "@lib/redux/base";
 import { useRouter } from "next/navigation";
+import { setHotels } from "@lib/redux/base";
 import { useDispatch } from "react-redux";
+import { fa } from "zod/v4/locales";
 
 
 
@@ -252,7 +253,7 @@ const hotelSearchMutation = useMutation({
 
 
 useEffect(() => {
-  setIsSearching(false)
+  setIsSearching(false);
   // const hasRun = sessionStorage.getItem("hasRunRestore");
 
   // if (!hasRun) {
@@ -260,7 +261,7 @@ useEffect(() => {
 
     if (savedForm) {
       const parsedForm: HotelForm = JSON.parse(savedForm);
-
+    dispatch(setHotels([])); // ✅ clear old data
       Promise.all(
         hotelModuleNames.map((mod: string) =>
           hotelSearchMutation
@@ -268,6 +269,9 @@ useEffect(() => {
               ...parsedForm,
               page: 1,   // ✅ always first page after refresh
               modules: mod,
+               price_from: "",
+              price_to: "",
+              rating: ""
             })
             .catch(() => null)
         )
@@ -321,11 +325,13 @@ const handleSubmit = useCallback(
               ...form,
               page: 1, // Always start from page 1 on new search
               modules: mod,
+               price_from: "",
+              price_to: "",
+              rating: ""
             })
             .catch(() => null)
         )
       );
-
       // ✅ Filter valid
       const validResults = results.filter(
         (res) => res && res.response && res.response?.length > 0
@@ -340,6 +346,7 @@ const handleSubmit = useCallback(
 
       // ✅ DEDUPE before saving!
       finalData = removeDuplicates(finalData);
+            setIsSearching(false)
 
       // ✅ Update cache + Redux
       queryClient.setQueryData(["hotel-search"], finalData);
@@ -349,7 +356,6 @@ const handleSubmit = useCallback(
       setPage(1);
 
       // ✅ Redirect
-         setIsSearching(false);
       router.push("/hotel_search");
 
       return { success: true, data: finalData };
@@ -377,6 +383,7 @@ const loadMoreData = useCallback(
 
     if (isloadingMore) return;
     setIsLoadingMore(true);
+    setIsSearching(false)
 
     try {
       const savedForm = localStorage.getItem("hotelSearchForm");
@@ -392,6 +399,9 @@ const loadMoreData = useCallback(
               ...parsedForm,
               page: nextPage,
               modules: mod,
+              price_from: "",
+              price_to: "",
+              rating: ""
             })
             .catch(() => null)
         )
@@ -570,12 +580,14 @@ const loadMoreData = useCallback(
     setShowDestinationDropdown,
     activeIndex,
     setActiveIndex,
+    removeDuplicates,
 
     // Guests dropdown
     showGuestsDropdown,
     setShowGuestsDropdown,
 
     // Search state
+    hotelSearchMutation,
    isSearching:hotelSearchMutation.isPending,
     setIsLoadingMore,
     isloadingMore,
@@ -583,6 +595,8 @@ const loadMoreData = useCallback(
     hotels_Data,
     searchError: hotelSearchMutation.error,
     listRef,
+    hotelModuleNames,
+    setIsSearching,
 
 
     // Event handlers
