@@ -6,12 +6,13 @@ import { Icon } from "@iconify/react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import useHotelFilter from "@hooks/useHotelFilter";
-import useHotelSearch from "@hooks/useHotelSearchFilters";
+import useHotelSearch from "@hooks/useHotelSearch";
 import Spinner from "@components/core/Spinner";
 // import useHotelFilter from "./useHotelFilter";
 // Import Swiper styles
 import "swiper/css";
 import "swiper/css/navigation";
+import HotelCard from "./hotelListingCard";
 // Define types
 interface FilterChip {
   icon?: string;
@@ -137,10 +138,10 @@ const swiperRef = useRef<any>(null);
   ];
 
 
- 
+
   const [showPrev, setShowPrev] = useState(false);
 const [showNext, setShowNext] = useState(true);
-  const { allHotelsData:hotelsData, isSearching:isLoading ,loadMoreData,submitting,listRef, allHotelsData:loadMoreHotels} = useHotelSearch()
+  const { allHotelsData:hotelsData, isSearching:isLoading ,loadMoreData,isloadingMore,listRef, allHotelsData:loadMoreHotels} = useHotelSearch()
 
 
   const safeHotelsData = Array.isArray(hotelsData) && hotelsData.length > 0
@@ -149,21 +150,7 @@ const [showNext, setShowNext] = useState(true);
     ? hotelsData
     : [];
 //   console.log('hotelslisting after search',hotelsDa
- const filterChips: FilterChip[] = [
-    { icon: "", label: "Luxury Hotel", category: "luxury" },
-    { icon: "", label: "Business", category: "business" },
-    { icon: "", label: "Resort", category: "resort" },
-    { icon: "", label: "Budget", category: "budget" },
-    { icon: "", label: "Top Rated", category: "top-rated" },
-    { icon: "", label: "City Center", category: "city-center" },
-    { icon: "", label: "Fine Dining", category: "fine-dining" },
-    { icon: "", label: "Beachfront", category: "beachfront" },
-    { icon: "", label: "Lake View", category: "lake-view" },
-    { icon: "", label: "Near Airport", category: "near-airport" },
-    { icon: "", label: "Beachfront", category: "beachfront" },
-    { icon: "", label: "Lake View", category: "lake-view" },
-    { icon: "", label: "Near Airport", category: "near-airport" },
-  ];
+
 
   // Use the hotel filter hook
   const {
@@ -482,9 +469,9 @@ const [showNext, setShowNext] = useState(true);
 
             {/* Prev Button */}
             <button
-              className={`swiper-button-prev-custom absolute rotate-180 left-18 cursor-pointer sm:left-22 top-5.5 -translate-y-1/2 z-10 
-    w-7 h-7 sm:w-8 sm:h-8 
-    bg-[#163C8C] rounded-full shadow-lg flex items-center justify-center transition-colors 
+              className={`swiper-button-prev-custom absolute rotate-180 left-18 cursor-pointer sm:left-22 top-5.5 -translate-y-1/2 z-10
+    w-7 h-7 sm:w-8 sm:h-8
+    bg-[#163C8C] rounded-full shadow-lg flex items-center justify-center transition-colors
     ${showPrev ? "flex" : "hidden"}`}
             >
               <svg
@@ -507,9 +494,9 @@ const [showNext, setShowNext] = useState(true);
 
             {/* Next Button */}
             <button
-              className={`swiper-button-next-custom absolute right-2 sm:-right-3 cursor-pointer top-5.5 -translate-y-1/2 z-10 
-    w-7 h-7 sm:w-8 sm:h-8 
-    bg-[#163C8C] rounded-full shadow-lg flex items-center justify-center transition-colors 
+              className={`swiper-button-next-custom absolute right-2 sm:-right-3 cursor-pointer top-5.5 -translate-y-1/2 z-10
+    w-7 h-7 sm:w-8 sm:h-8
+    bg-[#163C8C] rounded-full shadow-lg flex items-center justify-center transition-colors
     ${showNext ? "flex" : "hidden"}`}
             >
               <svg
@@ -535,12 +522,10 @@ const [showNext, setShowNext] = useState(true);
       {/* Main Content */}
 
       <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-4 lg:py-8"  >
-
-
         <div className="flex flex-col lg:flex-row gap-4 lg:gap-8">
           {/* Desktop Sidebar - Advanced Search */}
           <div className="hidden lg:block w-80 flex-shrink-0">
-            <div className="bg-white rounded-xl border border-[#EBEBEB] p-4 sticky top-24">
+            <div className="bg-white rounded-xl border border-[#EBEBEB] p-4">
               <div className="flex items-center justify-between mb-6 border-b pb-5 border-gray-200">
                 <h2 className="text-lg font-bold text-[#112233]">Advanced Search</h2>
                 {hasActiveFilters && (
@@ -732,7 +717,7 @@ const [showNext, setShowNext] = useState(true);
                     {/* List Button */}
                     <button
                       onClick={() => setViewMode('list')}
-                      className={`px-3 py-2 cursor-pointer transition-colors ${viewMode === 'list'
+                      className={`px-3 py-2 cursor-pointer  transition-colors ${viewMode === 'list'
                         ? 'bg-white rounded-md text-[#163C8C]'
                         : 'bg-transparent text-gray-700'
                         }`}
@@ -773,106 +758,32 @@ const [showNext, setShowNext] = useState(true);
             </div>
             {/* Loading State */}
 
-            {/* {isLoading && <LoadingGrid />} */}
+
 
             {/* Hotel Grid */}
-            {!isLoading && viewMode !== 'map' && (
-              <div className={`${viewMode === 'grid'
-                ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 items-start'
-                : 'space-y-4 md:space-y-6'
-                }`}>
-              {filteredHotels
-  .filter((hotel, index, self) =>
-    index === self.findIndex(h => h.hotel_id === hotel.hotel_id)
-  )
-  .map((hotel: any) => (
-    <div
-      key={hotel.hotel_id}
-                    className={`bg-white p-[8px] rounded-[45px] shadow cursor-pointer transition-all duration-300 hover:shadow-lg ${viewMode === 'list' ? 'flex flex-col sm:flex-row max-w-none' : ''
-                      }`}
-                  >
-                    <div className={`relative overflow-hidden rounded-[40px] ${viewMode === 'list'
-                      ? 'sm:w-80 sm:h-64 flex-shrink-0 aspect-square sm:aspect-auto'
-                      : 'aspect-square'
-                      }`}>
-                      <img
-                        src={hotel.img}
-                        alt={hotel.name}
-                        className="w-full h-full object-cover"
-                        onError={(e) => {
-                          e.currentTarget.src = 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400&h=300&fit=crop';
-                        }}
-                      />
-                    </div>
-                    <div className={`p-3 ${viewMode === 'list' ? 'flex-1 flex flex-col justify-between' : ''}`}>
-                      <div>
-                        <h3
-                          className="text-xl font-extrabold text-gray-900 mb-4 pl-4 sm:text-2xl md:text-xl lg:text-2xl text-ellipsis overflow-hidden whitespace-nowrap"
-                          style={{ fontFamily: "Urbanist, sans-serif" }}
-                          title={hotel.name}
-                        >
-                          {hotel.name}
-                        </h3>
-                        <p className="text-[16px] sm:text-[17px] lg:text-[18px] my-2 font-[400] text-[#5B697E] pl-4">
-                          {hotel.location}
-                        </p>
-                        {/* Stars */}
-                        <div className="flex items-center gap-1 mb-2 pl-4">
-                          {renderStars(hotel.stars)}
-                          <span className="text-sm text-gray-500 ml-2">
-                            ({parseFloat(hotel.rating).toFixed(1)})
-                          </span>
-                        </div>
-                        {/* Price */}
-                        <div className={`flex ${viewMode === 'list' ? 'flex-col sm:flex-row sm:justify-between' : 'justify-between'} items-start sm:items-center pl-4 mb-4`}>
-                          <div className="flex gap-2 items-center mb-2 sm:mb-0">
-                            <p className="text-[24px] sm:text-[28px] lg:text-[30px] font-[900]">
-                              {/* ${hotel.actual_price} */}
-                        {hotel.currency.toUpperCase()}{' '}
- { parseFloat(hotel.actual_price).toFixed(1)}
-                            </p>
-                            <p className="text-[14px] sm:text-[16px] lg:text-[17px] font-[400] text-[#5B697E]">
-                              /night
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                      <div className={`flex items-center gap-3 ${viewMode === 'list' ? 'mt-auto' : ''}`}>
-                        <button className="flex-1 cursor-pointer bg-[#163D8C] hover:bg-gray-800 text-white font-medium py-2.5 px-3 text-sm sm:text-base md:text-sm lg:text-base rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
-                          Book Now
-                        </button>
-                        <button
-                          onClick={() => toggleLike(hotel)}
-                          className="bg-[#EBEFF4] cursor-pointer hover:bg-gray-200 rounded-full transition-all duration-200 flex items-center justify-center flex-shrink-0 w-12 h-12 sm:w-14 sm:h-14 lg:w-11.5 lg:h-11.5"
-                          aria-label={`${hotel.favorite === 1 && user ? "Unlike" : "Like"} ${hotel.name}`}
-                        >
-                          <svg
-                            className="transition-colors duration-200 w-5 h-5 sm:w-6 sm:h-6 md:w-5 md:h-5 lg:w-4.5 lg:h-4.5"
-                            viewBox="0 0 22 22"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M6.22371 1.44739C3.27589 1.44739 0.885498 3.98725 0.885498 7.11938C0.885498 13.3881 11 20.5526 11 20.5526C11 20.5526 21.1145 13.3881 21.1145 7.11938C21.1145 3.23878 18.7241 1.44739 15.7763 1.44739C13.686 1.44739 11.8766 2.72406 11 4.58288C10.1234 2.72406 8.31404 1.44739 6.22371 1.44739Z"
-                              stroke={hotel.favorite === 1 && user ? "#EF4444" : "#6B7280"}
-                              strokeOpacity="0.8"
-                              strokeWidth="1.5"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              fill={hotel.favorite === 1 && user ? "#EF4444" : "none"}
-                            />
-                          </svg>
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-
-                ))}
-              </div>
-            )}
+         {viewMode !== 'map' && (
+  <div className={`${viewMode === 'grid'
+    ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 items-start'
+    : 'space-y-4 md:space-y-6'
+    }`}>
+    {filteredHotels.map((hotel: any,index:number) => (
+      <HotelCard
+        key={index} // ✅ Still needed for list reconciliation
+        hotel={hotel}
+        viewMode={viewMode}
+        user={user}
+        onLikeToggle={toggleLike}
+      />
+    ))}
+  </div>
+)}
             {/* No Results Message */}
-
-            {!submitting && filteredHotels.length === 0  && (
+  {isloadingMore &&
+  <div className="w-full py-5 my-5 flex items-center justify-center rounded-full border border-blue-900 bg-white">
+    <Spinner size={40}  className="mr-1 text-blue-900" />
+  </div>
+  }
+            {filteredHotels.length === 0  && (
               <div className="text-center py-6 sm:py-8 md:py-15  min-w-full min-h-full flex items-center justify-start flex-col">
 
                 <Icon icon="mdi:hotel-off" className="h-16 w-16 text-gray-400 mx-auto mb-4" />

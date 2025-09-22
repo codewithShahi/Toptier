@@ -107,14 +107,14 @@ const queryClient = useQueryClient();
   const [hotelLocations, setHotelLocations] = useState<LocationObj[]>([]);
   const [locationError, setLocationError] = useState("");
   const [activeIndex, setActiveIndex] = useState(-1);
-  const [submitting, setSubmitting] = useState(false);
+  const [isloadingMore, setIsLoadingMore] = useState(false);
+  const [isearching, setIsSearching] = useState(false);
   // const [hotelsData, setHotelsData] = useState<any[]>([]);
   const listRef = useRef<HTMLDivElement | null>(null);
 const [page, setPage] = useState(1);
     const {modules} = useAppSelector((state) => state.appData?.data);
     const router = useRouter();
     const allHotelsData=useAppSelector((state=> state.root.hotels))
-    console.log('redux data ================',allHotelsData)
     const dispatch = useDispatch();
 // const modules: Module[] = [/* your data */];
 const hotelModuleNames = modules
@@ -216,17 +216,16 @@ const removeDuplicates = useCallback((hotels: any[]) => {
 
   const seen = new Set();
   return hotels.filter(hotel => {
-    // Handle cases where hotel might be null/undefined
     if (!hotel || !hotel.hotel_id) {
       return false;
     }
 
     if (seen.has(hotel.hotel_id)) {
-      return false; // Skip duplicate
+      return false;
     }
 
     seen.add(hotel.hotel_id);
-    return true; // Keep unique hotel
+    return true;
   });
 }, []);
 const hotelSearchMutation = useMutation({
@@ -234,16 +233,16 @@ const hotelSearchMutation = useMutation({
   onSuccess: (data) => {
     if (!data?.response) return;
 
-    // ✅ Get existing hotels from redux
-    const currentHotels = queryClient.getQueryData<any[]>(["hotel-search"]) || [];
-     console.log('current hotel',currentHotels)
-    // ✅ Merge old + new
+    //  Get existing hotels from redux
+    // const currentHotels = queryClient.getQueryData<any[]>(["hotel-search"]) || [];
+     console.log('current hotel',data.response)
+    //  Merge old + new
     const merged = [...allHotelsData, ...data.response];
 
-    // ✅ Update react-query cache
+    //  Update react-query cache
     queryClient.setQueryData(["hotel-search"], merged);
 
-    // ✅ Update redux store
+    // Update redux store
     dispatch(setHotels(merged));
 
     setErrors({});
@@ -257,31 +256,28 @@ const handleSubmit = useCallback(
   async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      // ✅ Clear Redux hotels when starting a new search
-      dispatch(setHotels([]));
-      setSubmitting(true);
+      dispatch(setHotels([])); // ✅ Clear old data
+      setIsSearching(true);
 
       hotelSearchSchema.parse(form);
 
-      const page = 1;
-
-      // ✅ Save form in localStorage
+      // ✅ Save form for pagination
       localStorage.setItem("hotelSearchForm", JSON.stringify(form));
 
-      // ✅ Call API for each module (parallel)
+      // ✅ Fetch for each module
       const results = await Promise.all(
         hotelModuleNames.map((mod: string) =>
           hotelSearchMutation
             .mutateAsync({
               ...form,
-              page,
+              page: 1, // Always start from page 1 on new search
               modules: mod,
             })
             .catch(() => null)
         )
       );
 
-      // ✅ Filter valid results
+      // ✅ Filter valid
       const validResults = results.filter(
         (res) => res && res.response && res.response.length > 0
       );
@@ -293,13 +289,18 @@ const handleSubmit = useCallback(
         finalData = validResults.flatMap((res) => res.response);
       }
 
-      // ✅ Update React Query cache
+      // ✅ DEDUPE before saving!
+      finalData = removeDuplicates(finalData);
+
+      // ✅ Update cache + Redux
       queryClient.setQueryData(["hotel-search"], finalData);
+      dispatch(setHotels(finalData));
 
-      // ✅ Also update Redux with new results
-      // dispatch(setHotels(finalData));
+      // ✅ Reset page to 1 for future loadMore
+      setPage(1);
 
-      // ✅ Redirect to search results page
+      // ✅ Redirect
+         setIsSearching(false);
       router.push("/hotel_search");
 
       return { success: true, data: finalData };
@@ -310,166 +311,29 @@ const handleSubmit = useCallback(
           msgMap[zErr.path[0] as string] = zErr.message;
         });
         setErrors(msgMap);
+           setIsSearching(false);
       }
       return { success: false, error: "Search failed" };
     } finally {
-      setSubmitting(false);
+      setIsSearching(false);
     }
   },
-  [form, hotelModuleNames, hotelSearchMutation, queryClient, router, dispatch]
+  [form, hotelModuleNames, hotelSearchMutation, queryClient, router, dispatch, removeDuplicates] // ✅ Add removeDuplicates
 );
 
-
-// load more data on scrolllllllllllllllllllllllllllllll
-
-
-// Inside your hook:
-// const loadMoreData = useCallback(async (e?: React.SyntheticEvent) => {
-
-//   e?.preventDefault();
-
-//         try {
-
-//       setSubmitting(true);
-//       // hotelSearchSchema.parse(form);
-//     console.log('form data')
-//       const savedForm = localStorage.getItem("hotelSearchForm");
-//       console.log('form data',savedForm)
-//     if (!savedForm) return;
-
-//     const parsedForm: HotelForm = JSON.parse(savedForm);
-
-//  const page=1
-
-//       // Call API for each module (N times, safely)
-//       const results = await Promise.all(
-//         hotelModuleNames.map((mod: string) =>
-//           hotelSearchMutation
-//             .mutateAsync({
-//               ...parsedForm,
-//               page,
-//               modules: mod,
-//             })
-//             .catch(() => null) // prevent failure from breaking Promise.all
-//         )
-//       );
-// console.log('more data result',results)
-//       // ✅ Filter out null/empty results
-//       const validResults = results.filter(
-//         (res) => res && res.response && res.response.length > 0
-//       );
-
-//       let finalData: any[] = [];
-
-//       if (validResults.length === 1) {
-//         // Agar ek hi module ka data mila
-//         finalData = validResults[0].response;
-//       } else if (validResults.length > 1) {
-//         // Agar multiple modules ka data mila → sab combine kar do
-//         finalData = validResults.flatMap((res) => res.response);
-//       }
-
-//       // ✅ Cache me set karo
-//       queryClient.setQueryData(["hotel-search"], finalData);
-//       setHotelsData(finalData);
-
-//       console.log("Final merged results 👉", finalData);
-
-//       // ✅ Redirect to search results page
-//       router.push("/hotel_search");
-
-//       return { success: true, data: finalData };
-//     } catch (err) {
-//       if (err instanceof z.ZodError) {
-//         const msgMap: Record<string, string> = {};
-//         err.errors.forEach((zErr) => {
-//           msgMap[zErr.path[0] as string] = zErr.message;
-//         });
-//         setErrors(msgMap);
-//       }
-//       return { success: false, error: "Search failed" };
-//     } finally {
-//       setSubmitting(false);
-//     }
-
-// }, [hotelModuleNames, hotelSearchMutation, queryClient]);
-
-// 20 september
-// const loadMoreData = useCallback(async (e?: React.SyntheticEvent) => {
-//   e?.preventDefault();
-
-//   try {
-
-//     setSubmitting(true);
-
-//     const savedForm = localStorage.getItem("hotelSearchForm");
-//     if (!savedForm) return;
-
-//     const parsedForm: HotelForm = JSON.parse(savedForm);
-
-//     // ✅ increment page safely
-//     setPage((prevPage) => {
-//       const nextPage = prevPage + 1;
-
-//       // Call API with nextPage
-//       Promise.all(
-//         hotelModuleNames.map((mod: string) =>
-//           hotelSearchMutation
-//             .mutateAsync({
-//               ...parsedForm,
-//               page: nextPage,
-//               modules: mod,
-//             })
-//             .catch(() => null)
-//         )
-//       ).then((results) => {
-//         const validResults = results.filter(
-//           (res) => res && res.response && res.response.length > 0
-//         );
-
-//         let finalData: any[] = [];
-//         if (validResults.length === 1) {
-//           finalData = [...hotelsData, ...validResults[0].response];
-//         } else if (validResults.length > 1) {
-//           finalData = [...hotelsData, ...validResults.flatMap((res) => res.response)];
-//         }
-
-//         queryClient.setQueryData(["hotel-search"], finalData);
-//         setHotelsData(finalData);
-
-//         console.log("Final merged results 👉", finalData);
-//       });
-
-//       return nextPage;
-//     });
-//   } catch (err) {
-//     if (err instanceof z.ZodError) {
-//       const msgMap: Record<string, string> = {};
-//       err.errors.forEach((zErr) => {
-//         msgMap[zErr.path[0] as string] = zErr.message;
-//       });
-//       setErrors(msgMap);
-//     }
-//     return { success: false, error: "Search failed" };
-//   } finally {
-//     setSubmitting(false);
-//   }
-// }, [hotelModuleNames, hotelSearchMutation, queryClient, hotelsData]);
-// testing
+// QUWEN CODDEEEEEEEEEEEEEEEEEEEEEEEEE
 const loadMoreData = useCallback(
   async (e?: React.SyntheticEvent) => {
     e?.preventDefault();
 
-    if (submitting && allHotelsData.length>0) return; // ✅ lock to prevent duplicate calls
-    setSubmitting(true);
+    if (isloadingMore) return;
+    setIsLoadingMore(true);
 
     try {
       const savedForm = localStorage.getItem("hotelSearchForm");
       if (!savedForm) return;
 
       const parsedForm: HotelForm = JSON.parse(savedForm);
-
-      // ✅ increment page properly
       const nextPage = page + 1;
 
       const results = await Promise.all(
@@ -488,27 +352,48 @@ const loadMoreData = useCallback(
         (res) => res && res.response && res.response.length > 0
       );
 
-      let finalData: any[] = [];
-      if (validResults.length === 1) {
-        finalData = [...allHotelsData, ...validResults[0].response];
-      } else if (validResults.length > 1) {
-        finalData = [
-          ...allHotelsData,
-          ...validResults.flatMap((res) => res.response),
-        ];
-      } else {
-        // ✅ nothing new came back → stop further calls
-        console.log("No more results, stopping pagination.");
+      if (validResults.length === 0) {
+        console.log("No more results.");
+        setIsLoadingMore(false);
         return { success: false, error: "No more data" };
       }
 
-      queryClient.setQueryData(["hotel-search"], finalData);
-      // setHotelsData(finalData);
-      setPage(nextPage); // ✅ update state after success
+      let newData: any[] = [];
+      if (validResults.length === 1) {
+        newData = validResults[0].response;
+      } else {
+        newData = validResults.flatMap((res) => res.response);
+      }
 
+      //  Get IDs of existing hotels
+      const existingIds = new Set(allHotelsData.map(h => h.hotel_id));
 
-      return { success: true, data: finalData };
+      //  Filter ONLY new unique hotels
+      const trulyNewHotels = newData.filter(hotel => {
+        if (!hotel || !hotel.hotel_id) return false;
+        return !existingIds.has(hotel.hotel_id);
+      });
+
+      if (trulyNewHotels.length === 0) {
+        console.log("No new unique hotels found.");
+        setIsLoadingMore(false);
+        return { success: false, error: "No new data" };
+      }
+
+      //  Append only new hotels to Redux (don't replace entire array)
+      const updatedHotels = [...allHotelsData, ...trulyNewHotels];
+      dispatch(setHotels(updatedHotels));
+
+      //  Also update React Query cache
+      queryClient.setQueryData(["hotel-search"], updatedHotels);
+
+      //  Update page number
+      setPage(nextPage);
+
+      setIsLoadingMore(false);
+      return { success: true, data: trulyNewHotels }; // 👈 Only return new ones
     } catch (err) {
+      setIsLoadingMore(false);
       if (err instanceof z.ZodError) {
         const msgMap: Record<string, string> = {};
         err.errors.forEach((zErr) => {
@@ -516,29 +401,45 @@ const loadMoreData = useCallback(
         });
         setErrors(msgMap);
       }
-      return { success: false, error: "Search failed" };
-    } finally {
-      setSubmitting(false);
+      return { success: false, error: "Load more failed" };
     }
   },
-  [page, allHotelsData, hotelModuleNames, hotelSearchMutation, submitting]
+  [page, allHotelsData, hotelModuleNames, hotelSearchMutation, isloadingMore, dispatch, queryClient]
 );
-//use effect for laod more data
-useEffect(() => {
-  const handleScroll = () => {
-    if (submitting) return;
+//use effect for laod more data qwen and correct code dont modify
+// useEffect(() => {
+//   const handleScroll = () => {
+//     if (isloadingMore || !allHotelsData.length) return; // ✅ Don’t load if no data or submitting
 
-    const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
-    console.log(scrollTop, scrollHeight, clientHeight)
-    if (scrollTop + clientHeight >= scrollHeight - 300) {
-      loadMoreData();
-    }
-  };
+//     const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
+//     if (scrollTop + clientHeight >= scrollHeight - 300) {
+//       loadMoreData();
+//     }
+//   };
 
-  window.addEventListener("scroll", handleScroll);
-  return () => window.removeEventListener("scroll", handleScroll);
-}, [loadMoreData, submitting]);
+//   window.addEventListener("scroll", handleScroll);
+//   return () => window.removeEventListener("scroll", handleScroll);
+// }, [loadMoreData, isloadingMore, allHotelsData.length]); // ✅ Add allHotelsData.length
 
+// loading this more data on scroll (final code )
+ useEffect(() => {
+    const handleScroll = () => {
+      if (isloadingMore || !allHotelsData.length) return;
+
+      if (listRef.current) {
+        const rect = listRef.current.getBoundingClientRect();
+        const offset = 0; // fire before 300px
+
+        // rect.bottom = distance from top of viewport to bottom of container
+        if (rect.bottom - offset <= window.innerHeight) {
+          loadMoreData();
+        }
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [loadMoreData, isloadingMore, allHotelsData.length]);
   const updateForm = useCallback((updates: Partial<HotelForm>) => {
     setForm((prev) => ({ ...prev, ...updates }));
 
@@ -572,6 +473,7 @@ useEffect(() => {
     setActiveIndex(-1);
     // setHotelsData([]);
     dispatch(setHotels([]))
+    setPage(1);
   }, []);
 
   const validateForm = useCallback(() => {
@@ -596,7 +498,7 @@ useEffect(() => {
   const totalGuests = form.adults + form.children;
   const isFormValid = Object.keys(errors).length === 0;
   const hasLocationResults = hotelLocations.length > 0;
-  const isSearching = submitting || hotelSearchMutation.isPending;
+  const isSearching =  hotelSearchMutation.isPending;
 
   return {
     // Form state
@@ -625,8 +527,9 @@ useEffect(() => {
     setShowGuestsDropdown,
 
     // Search state
-   isSearching,
-    submitting,
+   isSearching:hotelSearchMutation.isPending,
+    setIsLoadingMore,
+    isloadingMore,
     allHotelsData,
     hotels_Data,
     searchError: hotelSearchMutation.error,

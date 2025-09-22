@@ -1,18 +1,20 @@
 'use client'
 import React from 'react'
 import { HotelsListing } from '@components/themes/default'
-import useHotelSearch from '@hooks/useHotelSearchFilters'
+import useHotelSearch from '@hooks/useHotelSearch'
 
 const HotelsListingMain = () => {
   // use your custom hook
-  const {     allHotelsData,
+  const {   allHotelsData,
  isSearching } = useHotelSearch()
 
   return (
     <div className="">
-      <HotelsListing
+      {isSearching ? <div className="fixed inset-0 flex flex-col items-center justify-center w-full h-screen bg-white z-[99999999999]">
+          <div className="loader">Loading...</div>
+        </div> : <HotelsListing  />}
 
-      />
+
     </div>
   )
 }
