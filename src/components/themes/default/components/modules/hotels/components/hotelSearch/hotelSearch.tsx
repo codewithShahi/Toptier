@@ -38,7 +38,6 @@ export default function HotelSearch() {
     loadMoreData,
     updateForm,
   } = useHotelSearch();
-
   const guestsDropdownRef = useRef<HTMLDivElement>(null);
   const destinationDropdownRef = useRef<HTMLDivElement>(null);
   const destInputRef = useRef<HTMLInputElement | null>(null);

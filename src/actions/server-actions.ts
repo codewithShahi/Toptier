@@ -485,7 +485,7 @@ export const hotel_search = async (payload: HotelSearchPayload) => {
     });
 
     const data = await response.json().catch(() => null);
-    // console.log('search result ',data)
+    console.log('search result ',data)
     if (!response.ok || data?.status === false) {
       return { error: data?.message || "Something went wrong" };
     }

@@ -16,6 +16,8 @@ import "swiper/css/navigation";
 import HotelCard from "./hotelListingCard";
 import { PriceRangeSlider } from "@components/core/priceRangeSlider";
 import HotelMap from "./hotelMap";
+// import { isPending } from "@reduxjs/toolkit";
+
 // Define types
 interface FilterChip {
   icon?: string;
@@ -52,8 +54,8 @@ export default function HotelSearchApp() {
   const [viewMode, setViewMode] = useState<'grid' | 'list' | 'map'>('grid');
   const [user, setUser] = useState(true);
   const [loadingMore,setLoadingMore]=useState(false)
-const [selectedStars, setSelectedStars] = useState<number[]>([]);
   const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
+
 const swiperRef = useRef<any>(null);
   // Filter chips data with placeholder SVGs (replace these with your actual SVGs)
   const filterChips: FilterChip[] = [
@@ -144,9 +146,11 @@ const swiperRef = useRef<any>(null);
 
   const [showPrev, setShowPrev] = useState(false);
 const [showNext, setShowNext] = useState(true);
-  const { allHotelsData:hotelsData, isSearching:isLoading ,loadMoreData,isloadingMore,listRef, allHotelsData:loadMoreHotels,isSearching} = useHotelSearch()
+  const { allHotelsData:hotelsData ,loadMoreData,isloadingMore,listRef, allHotelsData:loadMoreHotels,isSearching,isPending,isInitialLoading} = useHotelSearch()
 
-
+  console.log('is searching ',isSearching)
+console.log('is laoding more',isloadingMore)
+console.log('is pendding',isPending)
   const safeHotelsData = Array.isArray(hotelsData) && hotelsData?.length > 0
   ? hotelsData
   : Array.isArray(hotelsData)
@@ -169,10 +173,14 @@ const [showNext, setShowNext] = useState(true);
     toggleAmenityFilter,
     updateSortBy,
     resetFilters,
-    hasActiveFilters
+    hasActiveFilters,
+    selectedStars,
+setSelectedStars,
+isFilterLoading
 
-  } = useHotelFilter({ hotelsData: safeHotelsData ?? [],  isLoading });
+  } = useHotelFilter({ hotelsData: safeHotelsData ?? [],  isLoading:false });
   // 🚀 Infinite scroll handler
+
 //   useEffect(() => {
 //   const handleScroll = async () => {
 //     const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
@@ -580,40 +588,62 @@ const [showNext, setShowNext] = useState(true);
 />
               </div>
               {/* Hotel Stars */}
-              <div className="mb-8">
-                <label className="block text-base font-semibold text-[#112233] mb-3">Hotel Stars</label>
-                <div className="space-y-3">
-                  {[5, 4, 3, 2, 1].map((stars) => (
-                    <div
-                      key={stars}
-                      className="flex items-center justify-between cursor-pointer"
-                      onClick={() =>
-                        setSelectedStars((prev) =>
-                          prev.includes(stars)
-                            ? prev.filter((s) => s !== stars)
-                            : [...prev, stars]
-                        )
-                      }
-                    >
-                      <div className="flex items-center gap-3">
-                        <div className="flex">
-                          {[...Array(stars)].map((_, i) => (
-                            <Icon
-                              key={i}
-                              icon="mdi:star"
-                              className={`h-5 w-5 ${selectedStars.includes(stars)
-                                ? "text-yellow-400"
-                                : "text-gray-300"
-                                }`}
-                            />
-                          ))}
-                        </div>
-                        <span className="text-sm text-gray-600">({stars} Stars)</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
+<div className="mb-8">
+  <label className="block text-base font-semibold text-[#112233] mb-3">
+    Hotel Stars
+  </label>
+  <div className="space-y-3">
+    {[5, 4, 3, 2, 1].map((stars) => (
+      <div
+        key={stars}
+        className="flex items-center justify-between cursor-pointer"
+      >
+        <div className="flex items-center gap-3">
+          {/* Radio Input */}
+          <input
+            type="radio"
+            name="hotelStars"
+            value={stars}
+            checked={selectedStars === stars}
+            onChange={() => {
+              setSelectedStars(stars);      // ✅ update local state
+              updateRatingFilter(stars);    // ✅ call API filter
+            }}
+            className="cursor-pointer"
+          />
+
+          {/* Stars */}
+          <div className="flex">
+            {[...Array(stars)].map((_, i) => (
+              <Icon
+                key={i}
+                icon="mdi:star"
+                className={`h-5 w-5 ${
+                  selectedStars === stars ? "text-yellow-400" : "text-gray-300"
+                }`}
+              />
+            ))}
+          </div>
+
+          {/* Label */}
+          <span
+            className={`text-sm ${
+              selectedStars === stars
+                ? "text-yellow-600 font-medium"
+                : "text-gray-600"
+            }`}
+          >
+            ({stars} Stars)
+          </span>
+        </div>
+      </div>
+    ))}
+  </div>
+</div>
+
+
+
+
               {/* Guest Rating */}
               <div className="mb-8 border-b border-gray-200 pb-6">
 
@@ -674,7 +704,7 @@ const [showNext, setShowNext] = useState(true);
                   </button>}
 
                   <span className="text-gray-500 font-medium text-sm lg:text-base pl-2">
-                    {`${totalResults} hotels found` || "0"}
+                    {(isInitialLoading || isFilterLoading) ? "Loading..." : `${filteredHotels?.length} hotels found`}
                   </span>
                 </div>
                 <div className="flex items-center justify-between sm:justify-end gap-3 lg:gap-2">
@@ -685,7 +715,7 @@ const [showNext, setShowNext] = useState(true);
                         value={getSortDisplayValue()}
                         onChange={(e) => handleSortChange(e.target.value)}
                         className="appearance-none w-[200px] bg-[#F3F3F5] px-3 lg:px-4 cursor-pointer py-2.5 pr-7 lg:pr-8 rounded-3xl text-xs lg:text-sm text-gray-600 focus:outline-none focus:ring-2 focus:ring-[#DFE2E6] border border-[#DFE2E6]"
-                        disabled={isLoading}
+                        // disabled={isLoading}
                       >
                         <option>Rating</option>
                         <option>Price Low to High</option>
@@ -771,7 +801,7 @@ const [showNext, setShowNext] = useState(true);
     }`}>
     {filteredHotels.map((hotel: any,index:number) => (
       <HotelCard
-  key={hotel.hotel_id}
+ key={`${hotel.hotel_id || "hotel"}-${index}`}
   hotel={hotel}
   viewMode={viewMode}
   // onUpdateFavourite={handleUpdateFavourite}
@@ -780,39 +810,6 @@ const [showNext, setShowNext] = useState(true);
     ))}
   </div>
 )}
-         {/* ============>>> LOAD MORE DATA ON SCROLL  */}
-  {/* {isloadingMore  &&
-  <div className="w-full flex items-center justify-center">
- <div className="w-[50%] py-2 my-5 flex gap-2 items-center justify-center rounded-full border border-blue-900 bg-white ">
-    <Spinner size={30}  className="mr-1 text-blue-900" /> <p className="text-base font-medium text-blue-900 ">Loading more</p>
-  </div>
-  </div>
-  } */}
-  {/* {!isloadingMore && isSearching &&
-  <div className="w-full flex items-center justify-center">
- <div className="w-full py-2 my-5 h-full flex gap-2 items-center justify-center  border-blue-900">
-    <Spinner size={30}  className="mr-1 text-blue-900" /> <p className="text-base font-medium text-blue-900 ">Searching for Hotels</p>
-  </div>
-  </div>
-  } */}
-
-    {/* ============>>>NO DATA FOUND  */}
-            {!isSearching && !isloadingMore && filteredHotels?.length === 0  && (
-              <div className="text-center py-6 sm:py-8 md:py-15  min-w-full min-h-full flex items-center justify-start flex-col">
-
-                <Icon icon="mdi:hotel-off" className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">No hotels found</h3>
-                <p className="text-gray-600 mb-4">Try adjusting your filters or search criteria</p>
-                <button
-                  onClick={resetFilters}
-                  className="bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors"
-                >
-                  Reset All Filters
-                </button>
-              </div>
-            )}
-
-
             {/* ==============>>> MAP SECTION ADDED HERE */}
            {viewMode === "map" && (
   <div className="flex gap-6 mt-6 ">
@@ -820,11 +817,11 @@ const [showNext, setShowNext] = useState(true);
     <div className="flex-1  pr-2">
       <div
         className={`grid gap-4 md:gap-6 items-start
-          grid-cols-1 md:grid-cols-2`}
+          grid-cols-1 lg:grid-cols-2`}
       >
         {filteredHotels.map((hotel: any, index: number) => (
           <HotelCard
-            key={hotel.hotel_id}
+            key={`${hotel.hotel_id || "hotel"}-${index}`}
             hotel={hotel}
             viewMode={viewMode}
           />
@@ -843,6 +840,40 @@ const [showNext, setShowNext] = useState(true);
     </div>
   </div>
 )}
+         {/* ============>>> LOAD MORE DATA ON SCROLL  */}
+  {isloadingMore &&
+  <div className="w-full flex items-center justify-center">
+ <div className="w-[50%] py-2 my-5 flex gap-2 items-center justify-center rounded-full border border-blue-900 bg-white ">
+    <Spinner size={30}  className="mr-1 text-blue-900" /> <p className="text-base font-medium text-blue-900 ">Loading more</p>
+  </div>
+  </div>
+  }
+  { (isInitialLoading || isFilterLoading) && !isloadingMore &&
+  <div className="w-full flex items-center justify-center">
+ <div className="w-full py-2 my-5 h-full flex gap-2 items-center justify-center  border-blue-900">
+    <Spinner size={30}  className="mr-1 text-blue-900" /> <p className="text-base font-medium text-blue-900 ">Searching for Hotels</p>
+  </div>
+  </div>
+  }
+
+    {/* ============>>>NO DATA FOUND  */}
+            {!(isInitialLoading || isFilterLoading) && !isloadingMore && filteredHotels?.length === 0  && (
+              <div className="text-center py-6 sm:py-8 md:py-15  min-w-full min-h-full flex items-center justify-start flex-col">
+
+                <Icon icon="mdi:hotel-off" className="h-16 w-16 text-gray-400 mx-auto mb-4" />
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">No hotels found</h3>
+                <p className="text-gray-600 mb-4">Try adjusting your filters or search criteria</p>
+                <button
+                  onClick={() => resetFilters(event)}
+                  className="bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors"
+                >
+                  Reset All Filters
+                </button>
+              </div>
+            )}
+
+
+
 
             {/* End of Map Section */}
 
@@ -856,9 +887,10 @@ const [showNext, setShowNext] = useState(true);
             className="absolute inset-0 bg-black/50"
             onClick={() => setMobileFiltersOpen(false)}
           ></div>
-          <div className="absolute bottom-0 left-0 right-0 bg-white rounded-t-2xl max-h-[90vh] overflow-y-auto mx-4">
+
+          <div className="absolute bottom-3 m-5  left-0 right-0 bg-white rounded-t-2xl max-h-[90vh] overflow-y-auto mx-4">
             {/* Header */}
-            <div className="sticky top-0 bg-white border-b border-gray-200 px-4 py-4 flex items-center justify-between">
+            <div className="sticky z-20 top-0 bg-white border-b border-gray-200 px-4 py-4 flex items-center justify-between">
               <h2 className="text-lg font-bold text-gray-900">Filters & Search</h2>
               <button
                 onClick={() => setMobileFiltersOpen(false)}
@@ -871,7 +903,7 @@ const [showNext, setShowNext] = useState(true);
             <div className="p-4 space-y-6 max-w-lg mx-auto w-full">
               {/* Mobile Search */}
               <div>
-                <label className="block text-sm font-semibold text-gray-900 mb-3">
+                <label className="z-10 text-sm font-semibold text-gray-900 mb-3">
                   Search Hotels
                 </label>
                 <div className="relative">
@@ -905,7 +937,7 @@ const [showNext, setShowNext] = useState(true);
                   Hotel Stars
                 </label>
                 <div className="space-y-3">
-                  {[5, 4, 3].map((stars) => (
+                  {[5, 4, 3,2,1].map((stars) => (
                     <div
                       key={stars}
                       className="flex items-center justify-between py-2"
@@ -942,7 +974,7 @@ const [showNext, setShowNext] = useState(true);
             {/* Footer Buttons */}
             <div className="sticky bottom-0 bg-white border-t border-gray-200 p-4 space-y-3 max-w-lg mx-auto w-full">
               <button
-                onClick={resetFilters}
+                onClick={(e) => resetFilters(e)}
                 disabled={!hasActiveFilters}
                 className="w-full py-3 bg-gray-100 text-blue-600 cursor-pointer rounded-lg font-medium hover:bg-gray-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
