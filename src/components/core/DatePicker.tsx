@@ -2,15 +2,14 @@ import React, { useState, useRef, useEffect } from "react";
 import { DayPicker } from "react-day-picker";
 import "react-day-picker/dist/style.css";
 import { Icon } from "@iconify/react";
-
 interface DatePickerProps {
     onSelect: (date: Date | undefined) => void;
     disabledDates?: Date[];
     direction?: "ltr" | "rtl";
     className?: string;
     showCalendarIcon?: boolean;
+    defaultDate:Date | undefined
 }
-
 // Format date in UTC to prevent timezone issues
 // const formatDate = (date: Date) => {
 //     return new Intl.DateTimeFormat("en-GB", {
@@ -26,22 +25,26 @@ const formatDate = (date: Date) => {
     const year = date.getUTCFullYear();
     return `${day}-${month}-${year}`;
 };
-
 const DatePicker: React.FC<DatePickerProps> = ({
     onSelect,
     disabledDates = [],
     direction = "ltr",
     className = "",
     showCalendarIcon = true,
+    defaultDate=""
 }) => {
     const [open, setOpen] = useState(false);
     const inputRef = useRef<HTMLInputElement>(null);
     const popoverRef = useRef<HTMLDivElement>(null);
     const today = new Date();
-    const defaultDate = new Date(Date.UTC(today.getFullYear(), today.getMonth(), today.getDate()));
-    const [selected, setSelected] = useState<Date | undefined>(defaultDate);
-
-
+    // const defaultDate = new Date(Date.UTC(today.getFullYear(), today.getMonth(), today.getDate()));
+   const [selected, setSelected] = useState<Date | undefined>(
+  defaultDate
+    ? typeof defaultDate === "string"
+      ? new Date(defaultDate) // convert string to Date
+      : defaultDate
+    : undefined
+);
     useEffect(() => {
         function handleClickOutside(event: MouseEvent) {
             if (
@@ -53,7 +56,6 @@ const DatePicker: React.FC<DatePickerProps> = ({
                 setOpen(false);
             }
         }
-
         if (open) {
             document.addEventListener("mousedown", handleClickOutside);
         }
@@ -95,7 +97,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
                         selected={selected}
                         onSelect={(date) => {
                             if (date) {
-                                // ✅ Normalize date to UTC to avoid local timezone offset
+                                // :white_check_mark: Normalize date to UTC to avoid local timezone offset
                                 const normalized = new Date(
                                     Date.UTC(date.getFullYear(), date.getMonth(), date.getDate())
                                 );
@@ -113,7 +115,6 @@ const DatePicker: React.FC<DatePickerProps> = ({
                         //     day_selected: "bg-primary text-white dark:bg-primary-dark",
                         //     day_disabled: "text-gray-300 dark:text-gray-600 cursor-not-allowed",
                         // }}
-
                         styles={{
                             caption: { direction },
                         }}
@@ -123,5 +124,4 @@ const DatePicker: React.FC<DatePickerProps> = ({
         </div>
     );
 };
-
 export default DatePicker;
