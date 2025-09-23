@@ -146,7 +146,7 @@ const swiperRef = useRef<any>(null);
 
   const [showPrev, setShowPrev] = useState(false);
 const [showNext, setShowNext] = useState(true);
-  const { allHotelsData:hotelsData ,loadMoreData,isloadingMore,listRef, allHotelsData:loadMoreHotels,isSearching,isPending,isInitialLoading} = useHotelSearch()
+  const { allHotelsData:hotelsData ,loadMoreData,isloadingMore,listRef, allHotelsData:loadMoreHotels,isSearching,isPending,isInitialLoading,detailsBookNowHandler} = useHotelSearch()
 
   console.log('is searching ',isSearching)
 console.log('is laoding more',isloadingMore)
@@ -598,21 +598,12 @@ isFilterLoading
       <div
         key={stars}
         className="flex items-center justify-between cursor-pointer"
+        onClick={() => {
+          setSelectedStars(stars);   // ✅ update local state
+          updateRatingFilter(stars); // ✅ call API filter
+        }}
       >
         <div className="flex items-center gap-3">
-          {/* Radio Input */}
-          <input
-            type="radio"
-            name="hotelStars"
-            value={stars}
-            checked={selectedStars === stars}
-            onChange={() => {
-              setSelectedStars(stars);      // ✅ update local state
-              updateRatingFilter(stars);    // ✅ call API filter
-            }}
-            className="cursor-pointer"
-          />
-
           {/* Stars */}
           <div className="flex">
             {[...Array(stars)].map((_, i) => (
@@ -641,6 +632,7 @@ isFilterLoading
     ))}
   </div>
 </div>
+
 
 
 
@@ -805,6 +797,8 @@ isFilterLoading
  key={`${hotel.hotel_id || "hotel"}-${index}`}
   hotel={hotel}
   viewMode={viewMode}
+   onBookNow={(hotel :any) => detailsBookNowHandler(hotel)} // ✅ pass hotel + form
+
   // onUpdateFavourite={handleUpdateFavourite}
 />
 
@@ -933,34 +927,49 @@ isFilterLoading
 />
               </div>
               {/* Mobile Hotel Stars */}
-              <div>
-                <label className="block text-sm font-semibold text-gray-900 mb-3">
-                  Hotel Stars
-                </label>
-                <div className="space-y-3">
-                  {[5, 4, 3,2,1].map((stars) => (
-                    <div
-                      key={stars}
-                      className="flex items-center justify-between py-2"
-                    >
-                      <div className="flex items-center gap-3">
-                        <div className="flex">
-                          {[...Array(stars)].map((_, i) => (
-                            <Icon
-                              key={i}
-                              icon="mdi:star"
-                              className="h-4 w-4 cursor-pointer text-yellow-400"
-                            />
-                          ))}
-                        </div>
-                        <span className="text-sm text-gray-600 cursor-pointer">
-                          ({stars} Stars)
-                        </span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
+             <div className="mb-8">
+  <label className="block text-base font-semibold text-[#112233] mb-3">
+    Hotel Stars
+  </label>
+  <div className="space-y-3">
+    {[5, 4, 3, 2, 1].map((stars) => (
+      <div
+        key={stars}
+        className="flex items-center justify-between cursor-pointer"
+        onClick={() => {
+          setSelectedStars(stars);   // ✅ update local state
+          updateRatingFilter(stars); // ✅ call API filter
+        }}
+      >
+        <div className="flex items-center gap-3">
+          {/* Stars */}
+          <div className="flex">
+            {[...Array(stars)].map((_, i) => (
+              <Icon
+                key={i}
+                icon="mdi:star"
+                className={`h-5 w-5 ${
+                  selectedStars === stars ? "text-yellow-400" : "text-gray-300"
+                }`}
+              />
+            ))}
+          </div>
+
+          {/* Label */}
+          <span
+            className={`text-sm ${
+              selectedStars === stars
+                ? "text-yellow-600 font-medium"
+                : "text-gray-600"
+            }`}
+          >
+            ({stars} Stars)
+          </span>
+        </div>
+      </div>
+    ))}
+  </div>
+</div>
               {/* Mobile Rating */}
               <div>
                 {/* <label className="block text-sm font-semibold cursor-pointer text-gray-900 mb-3">

@@ -8,8 +8,12 @@ import { useUser } from "@hooks/use-user";
 interface HotelCardProps {
   hotel: any;
   viewMode: "grid" | "list" | "map";
+   onBookNow?: (hotel: any) => void;
 }
-const HotelCard = memo(function HotelCard({ hotel, viewMode }: HotelCardProps) {
+
+
+const HotelCard = memo(function HotelCard({ hotel, viewMode, onBookNow }: HotelCardProps) {
+
   const { user } = useUser();
   const [isFav, setIsFav] = useState(hotel.favorite === 1);
   // Memoized renderStars
@@ -121,7 +125,9 @@ const HotelCard = memo(function HotelCard({ hotel, viewMode }: HotelCardProps) {
           className={`flex items-center gap-3 ${viewMode === "list" ? "mt-auto" : ""
             }`}
         >
-          <button className="flex-1 cursor-pointer bg-[#163D8C] hover:bg-gray-800 text-white font-medium py-2.5 px-3 text-sm sm:text-base md:text-sm lg:text-base rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+          <button className="flex-1 cursor-pointer bg-[#163D8C] hover:bg-gray-800 text-white font-medium py-2.5 px-3 text-sm sm:text-base md:text-sm lg:text-base rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            onClick={() => onBookNow && onBookNow(hotel)} // ✅ call onBookNow with hotel
+          >
             Book Now
           </button>
           <button
