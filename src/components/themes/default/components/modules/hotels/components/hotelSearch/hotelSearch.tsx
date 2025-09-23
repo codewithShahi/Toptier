@@ -99,8 +99,7 @@ const checkout = formatDate(
   new Date(Date.UTC(tomorrow.getFullYear(), tomorrow.getMonth(), tomorrow.getDate()))
 );
 
-console.log("checkin:", checkin);   // e.g. "2025-09-20"
-console.log("checkout:", checkout); // e.g. "2025-09-21"
+
   return (
     <div className="md:w-full mx-auto p-4 rounded-xl">
       <form onSubmit={onSubmit}>
