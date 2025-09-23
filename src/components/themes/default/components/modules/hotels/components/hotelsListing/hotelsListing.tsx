@@ -865,7 +865,7 @@ export default function HotelSearchApp() {
                 </div>
 
                 {/* Right side map container */}
-                <div className="hidden md:block w-1/2 h-[800px] bg-gray-100 rounded-lg border-2 border-dashed border-gray-300">
+                <div className="hidden md:block w-1/2 h-[800px] bg-gray-100 rounded-3xl shadow-md border-gray-300">
                   <div className="w-full  flex items-center justify-center text-gray-500">
                     <HotelMap
                       hotels={filteredHotels}
