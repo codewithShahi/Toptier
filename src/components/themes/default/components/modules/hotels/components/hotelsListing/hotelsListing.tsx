@@ -145,8 +145,11 @@ export default function HotelSearchApp() {
 
 
   const [showPrev, setShowPrev] = useState(false);
-  const [showNext, setShowNext] = useState(true);
-  const { allHotelsData: hotelsData, loadMoreData, isloadingMore, listRef, allHotelsData: loadMoreHotels, isSearching, isPending, isInitialLoading } = useHotelSearch()
+ allHotelsData: hotelsData, loadMoreData, isloadingMore, listRef, allHotelsData: loadMoreHotels, isSearching, isPending, isInitialLoading } = useHotelSearch()
+
+const [showNext, setShowNext] = useState(true);
+  const { allHotelsData:hotelsData ,loadMoreData,isloadingMore,listRef, allHotelsData:loadMoreHotels,isSearching,isPending,isInitialLoading,detailsBookNowHandler} = useHotelSearch()
+
 
   console.log('is searching ', isSearching)
   console.log('is laoding more', isloadingMore)
@@ -605,42 +608,35 @@ export default function HotelSearchApp() {
                   onChange={handlePriceChange}  // ← (index, value) => void
                 />
               </div>
-              {/* Hotel Stars */}
-              <div className="mb-8">
-                <label className="block text-base font-semibold text-[#112233] mb-3">
-                  Hotel Stars
-                </label>
-                <div className="space-y-3">
-                  {[5, 4, 3, 2, 1].map((stars) => (
-                    <div
-                      key={stars}
-                      className="flex items-center justify-between cursor-pointer"
-                    >
-                      <div className="flex items-center gap-3">
-                        {/* Radio Input */}
-                        <input
-                          type="radio"
-                          name="hotelStars"
-                          value={stars}
-                          checked={selectedStars === stars}
-                          onChange={() => {
-                            setSelectedStars(stars);      // ✅ update local state
-                            updateRatingFilter(stars);    // ✅ call API filter
-                          }}
-                          className="cursor-pointer"
-                        />
 
-                        {/* Stars */}
-                        <div className="flex">
-                          {[...Array(stars)].map((_, i) => (
-                            <Icon
-                              key={i}
-                              icon="mdi:star"
-                              className={`h-5 w-5 ${selectedStars === stars ? "text-yellow-400" : "text-gray-300"
-                                }`}
-                            />
-                          ))}
-                        </div>
+<div className="mb-8">
+  <label className="block text-base font-semibold text-[#112233] mb-3">
+    Hotel Stars
+  </label>
+  <div className="space-y-3">
+    {[5, 4, 3, 2, 1].map((stars) => (
+      <div
+        key={stars}
+        className="flex items-center justify-between cursor-pointer"
+        onClick={() => {
+          setSelectedStars(stars);   // ✅ update local state
+          updateRatingFilter(stars); // ✅ call API filter
+        }}
+      >
+        <div className="flex items-center gap-3">
+          {/* Stars */}
+          <div className="flex">
+            {[...Array(stars)].map((_, i) => (
+              <Icon
+                key={i}
+                icon="mdi:star"
+                className={`h-5 w-5 ${
+                  selectedStars === stars ? "text-yellow-400" : "text-gray-300"
+                }`}
+              />
+            ))}
+          </div>
+
 
                         {/* Label */}
                         <span
@@ -656,6 +652,7 @@ export default function HotelSearchApp() {
                   ))}
                 </div>
               </div>
+
 
 
 
@@ -829,22 +826,25 @@ export default function HotelSearchApp() {
 
 
             {/*=================>>>>> FOR LIST AND GRID  Hotel Grid */}
-            {viewMode !== 'map' && (
-              <div className={`${viewMode === 'grid'
-                ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 items-start'
-                : 'space-y-4 md:space-y-6'
-                }`}>
-                {filteredHotels.map((hotel: any, index: number) => (
-                  <HotelCard
-                    key={`${hotel.hotel_id || "hotel"}-${index}`}
-                    hotel={hotel}
-                    viewMode={viewMode}
-                  // onUpdateFavourite={handleUpdateFavourite}
-                  />
 
-                ))}
-              </div>
-            )}
+         {viewMode !== 'map' && (
+  <div className={`${viewMode === 'grid'
+    ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 items-start'
+    : 'space-y-4 md:space-y-6'
+    }`}>
+    {filteredHotels.map((hotel: any,index:number) => (
+      <HotelCard
+ key={`${hotel.hotel_id || "hotel"}-${index}`}
+  hotel={hotel}
+  viewMode={viewMode}
+   onBookNow={(hotel :any) => detailsBookNowHandler(hotel)} // ✅ pass hotel + form
+
+  // onUpdateFavourite={handleUpdateFavourite}
+/>
+
+    ))}
+  </div>
+)}
             {/* ==============>>> MAP SECTION ADDED HERE */}
             {viewMode === "map" && (
               <div className="flex gap-6 mt-6 ">
@@ -967,34 +967,51 @@ export default function HotelSearchApp() {
                 />
               </div>
               {/* Mobile Hotel Stars */}
-              <div>
-                <label className="block text-sm font-semibold text-gray-900 mb-3">
-                  Hotel Stars
-                </label>
-                <div className="space-y-3">
-                  {[5, 4, 3, 2, 1].map((stars) => (
-                    <div
-                      key={stars}
-                      className="flex items-center justify-between py-2"
-                    >
-                      <div className="flex items-center gap-3">
-                        <div className="flex">
-                          {[...Array(stars)].map((_, i) => (
-                            <Icon
-                              key={i}
-                              icon="mdi:star"
-                              className="h-4 w-4 cursor-pointer text-yellow-400"
-                            />
-                          ))}
-                        </div>
-                        <span className="text-sm text-gray-600 cursor-pointer">
-                          ({stars} Stars)
-                        </span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
+
+             <div className="mb-8">
+  <label className="block text-base font-semibold text-[#112233] mb-3">
+    Hotel Stars
+  </label>
+  <div className="space-y-3">
+    {[5, 4, 3, 2, 1].map((stars) => (
+      <div
+        key={stars}
+        className="flex items-center justify-between cursor-pointer"
+        onClick={() => {
+          setSelectedStars(stars);   // ✅ update local state
+          updateRatingFilter(stars); // ✅ call API filter
+        }}
+      >
+        <div className="flex items-center gap-3">
+          {/* Stars */}
+          <div className="flex">
+            {[...Array(stars)].map((_, i) => (
+              <Icon
+                key={i}
+                icon="mdi:star"
+                className={`h-5 w-5 ${
+                  selectedStars === stars ? "text-yellow-400" : "text-gray-300"
+                }`}
+              />
+            ))}
+          </div>
+
+          {/* Label */}
+          <span
+            className={`text-sm ${
+              selectedStars === stars
+                ? "text-yellow-600 font-medium"
+                : "text-gray-600"
+            }`}
+          >
+            ({stars} Stars)
+          </span>
+        </div>
+      </div>
+    ))}
+  </div>
+</div>
+
               {/* Mobile Rating */}
               <div>
                 {/* <label className="block text-sm font-semibold cursor-pointer text-gray-900 mb-3">
