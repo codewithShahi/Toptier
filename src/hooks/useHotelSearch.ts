@@ -268,6 +268,7 @@ const callAllModulesAPI = useCallback(
         if (p?.result?.response?.length) {
           results.push(...p.result.response);
 
+
           // ✅ Emit partial data so UI can render incrementally
           // e.g. setHotels((prev) => [...prev, ...p.result.response]);
         }

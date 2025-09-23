@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 
 import { Icon } from "@iconify/react";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -53,10 +53,10 @@ export default function HotelSearchApp() {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [viewMode, setViewMode] = useState<'grid' | 'list' | 'map'>('grid');
   const [user, setUser] = useState(true);
-  const [loadingMore,setLoadingMore]=useState(false)
+  const [loadingMore, setLoadingMore] = useState(false)
   const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
 
-const swiperRef = useRef<any>(null);
+  const swiperRef = useRef<any>(null);
   // Filter chips data with placeholder SVGs (replace these with your actual SVGs)
   const filterChips: FilterChip[] = [
     {
@@ -145,18 +145,21 @@ const swiperRef = useRef<any>(null);
 
 
   const [showPrev, setShowPrev] = useState(false);
+ allHotelsData: hotelsData, loadMoreData, isloadingMore, listRef, allHotelsData: loadMoreHotels, isSearching, isPending, isInitialLoading } = useHotelSearch()
+
 const [showNext, setShowNext] = useState(true);
   const { allHotelsData:hotelsData ,loadMoreData,isloadingMore,listRef, allHotelsData:loadMoreHotels,isSearching,isPending,isInitialLoading,detailsBookNowHandler} = useHotelSearch()
 
-  console.log('is searching ',isSearching)
-console.log('is laoding more',isloadingMore)
-console.log('is pendding',isPending)
+
+  console.log('is searching ', isSearching)
+  console.log('is laoding more', isloadingMore)
+  console.log('is pendding', isPending)
   const safeHotelsData = Array.isArray(hotelsData) && hotelsData?.length > 0
-  ? hotelsData
-  : Array.isArray(hotelsData)
     ? hotelsData
-    : [];
-//   console.log('hotelslisting after search',hotelsDa
+    : Array.isArray(hotelsData)
+      ? hotelsData
+      : [];
+  //   console.log('hotelslisting after search',hotelsDa
 
 
   // Use the hotel filter hook
@@ -175,32 +178,32 @@ console.log('is pendding',isPending)
     resetFilters,
     hasActiveFilters,
     selectedStars,
-setSelectedStars,
-isFilterLoading
+    setSelectedStars,
+    isFilterLoading
 
-  } = useHotelFilter({ hotelsData: safeHotelsData ?? [],  isLoading:false });
+  } = useHotelFilter({ hotelsData: safeHotelsData ?? [], isLoading: false });
   // 🚀 Infinite scroll handler
 
-//   useEffect(() => {
-//   const handleScroll = async () => {
-//     const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
+  //   useEffect(() => {
+  //   const handleScroll = async () => {
+  //     const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
 
-//     if (scrollTop + clientHeight >= scrollHeight - 100) {
-//       const result = await loadMoreData(); // 👈 pass event or null if not needed
-//      console.log('resulte load more',result)
-//       if (result?.success) {
-//         // console.log("Fetched more hotels:", result.data);
-//       } else if (result?.error) {
-//         console.error("Failed to load more:", result.error);
-//       }
-//     }
-//   };
+  //     if (scrollTop + clientHeight >= scrollHeight - 100) {
+  //       const result = await loadMoreData(); // 👈 pass event or null if not needed
+  //      console.log('resulte load more',result)
+  //       if (result?.success) {
+  //         // console.log("Fetched more hotels:", result.data);
+  //       } else if (result?.error) {
+  //         console.error("Failed to load more:", result.error);
+  //       }
+  //     }
+  //   };
 
-//   window.addEventListener("scroll", handleScroll);
-//   return () => window.removeEventListener("scroll", handleScroll);
-// }, [loadMoreData]);
+  //   window.addEventListener("scroll", handleScroll);
+  //   return () => window.removeEventListener("scroll", handleScroll);
+  // }, [loadMoreData]);
 
-// console.log('filters data',filteredHo
+  // console.log('filters data',filteredHo
   // Handle price range changes
   const handlePriceChange = (index: number, value: number) => {
     const newRange: [number, number] = [...filters.priceRange];
@@ -344,6 +347,23 @@ isFilterLoading
     );
   };
 
+
+  const [open, setOpen] = useState(false);
+  const [selected, setSelected] = useState("Rating");
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // ✅ close on outside click
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const options = ["Rating", "Price Low to High", "Price High to Low", "Name"];
 
   // const LoadingGrid = () => (
   //   // <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
@@ -536,22 +556,22 @@ isFilterLoading
       <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-4 lg:py-8"  >
         <div className="flex flex-col lg:flex-row gap-4 lg:gap-8">
           {/* Desktop Sidebar - Advanced Search */}
-          {viewMode !=="map" && <div className="hidden lg:block w-80 flex-shrink-0">
+          {viewMode !== "map" && <div className="hidden lg:block w-80 flex-shrink-0">
             <div className="bg-white rounded-xl border border-[#EBEBEB] p-4">
               <div className="flex items-center justify-between mb-6 border-b pb-5 border-gray-200">
                 <h2 className="text-lg font-bold text-[#112233]">Advanced Search</h2>
 
-                  <button
-                    type="button"
-                    onClick={resetFilters}
-                    className="w-8 h-8 flex cursor-pointer items-center justify-center rounded-full border border-gray-300 hover:bg-gray-50 transition-colors"
-                  >
-                    <svg width="11" height="14" viewBox="0 0 11 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M6.24242 1.0387L6.24242 12.9663C6.24242 13.378 5.90863 13.7118 5.49694 13.7118C5.08525 13.7118 4.75146 13.378 4.75146 12.9663L4.75146 1.0387C4.75146 0.627007 5.08525 0.293221 5.49694 0.293221C5.90863 0.293221 6.24242 0.627007 6.24242 1.0387Z" fill="#163C8C" />
-                      <path d="M10.7143 1.0387V12.9663C10.7143 13.378 10.3806 13.7118 9.96886 13.7118C9.55718 13.7118 9.22339 13.378 9.22339 12.9663V1.0387C9.22339 0.627007 9.55718 0.293037 9.96886 0.293037C10.3806 0.293037 10.7143 0.627007 10.7143 1.0387Z" fill="#163C8C" />
-                      <path d="M1.76927 1.03851L1.76927 12.9661C1.76927 13.3778 1.43549 13.7116 1.0238 13.7116C0.612107 13.7116 0.27832 13.3778 0.27832 12.9661L0.27832 1.03851C0.27832 0.626824 0.612107 0.293037 1.0238 0.293037C1.43549 0.293037 1.76927 0.626824 1.76927 1.03851Z" fill="#163C8C" />
-                    </svg>
-                  </button>
+                <button
+                  type="button"
+                  onClick={resetFilters}
+                  className="w-8 h-8 flex cursor-pointer items-center justify-center rounded-full border border-gray-300 hover:bg-gray-50 transition-colors"
+                >
+                  <svg width="11" height="14" viewBox="0 0 11 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M6.24242 1.0387L6.24242 12.9663C6.24242 13.378 5.90863 13.7118 5.49694 13.7118C5.08525 13.7118 4.75146 13.378 4.75146 12.9663L4.75146 1.0387C4.75146 0.627007 5.08525 0.293221 5.49694 0.293221C5.90863 0.293221 6.24242 0.627007 6.24242 1.0387Z" fill="#163C8C" />
+                    <path d="M10.7143 1.0387V12.9663C10.7143 13.378 10.3806 13.7118 9.96886 13.7118C9.55718 13.7118 9.22339 13.378 9.22339 12.9663V1.0387C9.22339 0.627007 9.55718 0.293037 9.96886 0.293037C10.3806 0.293037 10.7143 0.627007 10.7143 1.0387Z" fill="#163C8C" />
+                    <path d="M1.76927 1.03851L1.76927 12.9661C1.76927 13.3778 1.43549 13.7116 1.0238 13.7116C0.612107 13.7116 0.27832 13.3778 0.27832 12.9661L0.27832 1.03851C0.27832 0.626824 0.612107 0.293037 1.0238 0.293037C1.43549 0.293037 1.76927 0.626824 1.76927 1.03851Z" fill="#163C8C" />
+                  </svg>
+                </button>
 
               </div>
               {/* Search Location */}
@@ -582,13 +602,13 @@ isFilterLoading
                   onChange={handlePriceChange}
                 /> */}
                 <PriceRangeSlider
-    min={priceRange.min}
-    max={priceRange.max}
-    values={filters.priceRange}   // ← [min, max] tuple
-    onChange={handlePriceChange}  // ← (index, value) => void
-/>
+                  min={priceRange.min}
+                  max={priceRange.max}
+                  values={filters.priceRange}   // ← [min, max] tuple
+                  onChange={handlePriceChange}  // ← (index, value) => void
+                />
               </div>
-              {/* Hotel Stars */}
+
 <div className="mb-8">
   <label className="block text-base font-semibold text-[#112233] mb-3">
     Hotel Stars
@@ -617,21 +637,21 @@ isFilterLoading
             ))}
           </div>
 
-          {/* Label */}
-          <span
-            className={`text-sm ${
-              selectedStars === stars
-                ? "text-yellow-600 font-medium"
-                : "text-gray-600"
-            }`}
-          >
-            ({stars} Stars)
-          </span>
-        </div>
-      </div>
-    ))}
-  </div>
-</div>
+
+                        {/* Label */}
+                        <span
+                          className={`text-sm ${selectedStars === stars
+                              ? "text-yellow-600 font-medium"
+                              : "text-gray-600"
+                            }`}
+                        >
+                          ({stars} Stars)
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
 
 
 
@@ -684,7 +704,7 @@ isFilterLoading
             <div className="bg-white rounded-lg lg:rounded-xl border border-gray-200 p-3 lg:p-3 mb-4 lg:mb-6">
               <div className="flex flex-col space-y-3 sm:space-y-0 sm:flex-row sm:items-center justify-between gap-3 lg:gap-4">
                 <div className="flex items-center gap-3 lg:gap-4">
-                    {viewMode === "map" && <button
+                  {viewMode === "map" && <button
                     type="button"
                     onClick={() => setMobileFiltersOpen(true)}
                     className="w-8 h-8 flex cursor-pointer items-center justify-center rounded-full border border-gray-300 hover:bg-gray-50 transition-colors"
@@ -703,19 +723,38 @@ isFilterLoading
                 <div className="flex items-center justify-between sm:justify-end gap-3 lg:gap-2">
                   <div className="flex items-center gap-2">
                     <span className="text-gray-600 font-medium text-sm lg:text-base">Sort :</span>
-                    <div className="relative">
-                      <select
-                        value={getSortDisplayValue()}
-                        onChange={(e) => handleSortChange(e.target.value)}
-                        className="appearance-none w-[200px] bg-[#F3F3F5] px-3 lg:px-4 cursor-pointer py-2.5 pr-7 lg:pr-8 rounded-3xl text-xs lg:text-sm text-gray-600 focus:outline-none focus:ring-2 focus:ring-[#DFE2E6] border border-[#DFE2E6]"
-                        // disabled={isLoading}
+                    <div className="relative" ref={dropdownRef}>
+                      {/* Button */}
+                      <button
+                        onClick={() => setOpen(!open)}
+                        className="flex items-center justify-between w-[200px] cursor-pointer bg-[#F3F3F5] px-4 py-2.5 rounded-3xl border border-[#DFE2E6] text-xs lg:text-sm text-gray-600 focus:outline-none focus:ring-2 focus:ring-[#DFE2E6]"
                       >
-                        <option>Rating</option>
-                        <option>Price Low to High</option>
-                        <option>Price High to Low</option>
-                        <option>Name</option>
-                      </select>
-                      <Icon icon="mdi:chevron-down" className="absolute right-3 top-1/2 transform -translate-y-1/2 h-3 w-3 lg:h-4 lg:w-4 text-gray-500 pointer-events-none" />
+                        <span>{selected}</span>
+                        <Icon
+                          icon="mdi:chevron-down"
+                          className={`h-4 w-4 text-gray-500 transition-transform ${open ? "rotate-180" : ""
+                            }`}
+                        />
+                      </button>
+
+                      {/* Dropdown */}
+                      {open && (
+                        <div className="absolute mt-2 w-[200px] bg-white border border-gray-200 rounded-lg shadow-lg z-10">
+                          {options.map((opt) => (
+                            <button
+                              key={opt}
+                              onClick={() => {
+                                setSelected(opt);
+                                setOpen(false);
+                              }}
+                              className={`w-full cursor-pointer text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 ${selected === opt ? "bg-gray-50 font-medium" : ""
+                                }`}
+                            >
+                              {opt}
+                            </button>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   </div>
                   <div className="hidden sm:flex space-x-1 px-2 py-1 bg-[#F3F3F5] rounded-lg overflow-hidden">
@@ -787,6 +826,7 @@ isFilterLoading
 
 
             {/*=================>>>>> FOR LIST AND GRID  Hotel Grid */}
+
          {viewMode !== 'map' && (
   <div className={`${viewMode === 'grid'
     ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 items-start'
@@ -806,53 +846,53 @@ isFilterLoading
   </div>
 )}
             {/* ==============>>> MAP SECTION ADDED HERE */}
-           {viewMode === "map" && (
-  <div className="flex gap-6 mt-6 ">
-    {/* Left side cards */}
-    <div className="flex-1  pr-2">
-      <div
-        className={`grid gap-4 md:gap-6 items-start
+            {viewMode === "map" && (
+              <div className="flex gap-6 mt-6 ">
+                {/* Left side cards */}
+                <div className="flex-1  pr-2">
+                  <div
+                    className={`grid gap-4 md:gap-6 items-start
           grid-cols-1 lg:grid-cols-2`}
-      >
-        {filteredHotels.map((hotel: any, index: number) => (
-          <HotelCard
-            key={`${hotel.hotel_id || "hotel"}-${index}`}
-            hotel={hotel}
-            viewMode={viewMode}
-          />
-        ))}
-      </div>
-    </div>
+                  >
+                    {filteredHotels.map((hotel: any, index: number) => (
+                      <HotelCard
+                        key={`${hotel.hotel_id || "hotel"}-${index}`}
+                        hotel={hotel}
+                        viewMode={viewMode}
+                      />
+                    ))}
+                  </div>
+                </div>
 
-    {/* Right side map container */}
-    <div className="hidden md:block w-1/2 h-[800px] bg-gray-100 rounded-lg border-2 border-dashed border-gray-300">
-      <div className="w-full  flex items-center justify-center text-gray-500">
-          <HotelMap
-            hotels={filteredHotels}
-    />
+                {/* Right side map container */}
+                <div className="hidden md:block w-1/2 h-[800px] bg-gray-100 rounded-3xl shadow-md border-gray-300">
+                  <div className="w-full  flex items-center justify-center text-gray-500">
+                    <HotelMap
+                      hotels={filteredHotels}
+                    />
 
-      </div>
-    </div>
-  </div>
-)}
-         {/* ============>>> LOAD MORE DATA ON SCROLL  */}
-  {isloadingMore &&
-  <div className="w-full flex items-center justify-center">
- <div className="w-[50%] py-2 my-5 flex gap-2 items-center justify-center rounded-full border border-blue-900 bg-white ">
-    <Spinner size={30}  className="mr-1 text-blue-900" /> <p className="text-base font-medium text-blue-900 ">Loading more</p>
-  </div>
-  </div>
-  }
-  { (isInitialLoading || isFilterLoading) && !isloadingMore &&
-  <div className="w-full flex items-center justify-center">
- <div className="w-full py-2 my-5 h-full flex gap-2 items-center justify-center  border-blue-900">
-    <Spinner size={30}  className="mr-1 text-blue-900" /> <p className="text-base font-medium text-blue-900 ">Searching for Hotels</p>
-  </div>
-  </div>
-  }
+                  </div>
+                </div>
+              </div>
+            )}
+            {/* ============>>> LOAD MORE DATA ON SCROLL  */}
+            {isloadingMore &&
+              <div className="w-full flex items-center justify-center">
+                <div className="w-[50%] py-2 my-5 flex gap-2 items-center justify-center rounded-full border border-blue-900 bg-white ">
+                  <Spinner size={30} className="mr-1 text-blue-900" /> <p className="text-base font-medium text-blue-900 ">Loading more</p>
+                </div>
+              </div>
+            }
+            {(isInitialLoading || isFilterLoading) && !isloadingMore &&
+              <div className="w-full flex items-center justify-center">
+                <div className="w-full py-2 my-5 h-full flex gap-2 items-center justify-center  border-blue-900">
+                  <Spinner size={30} className="mr-1 text-blue-900" /> <p className="text-base font-medium text-blue-900 ">Searching for Hotels</p>
+                </div>
+              </div>
+            }
 
-    {/* ============>>>NO DATA FOUND  */}
-            {!(isInitialLoading || isFilterLoading) && !isloadingMore && filteredHotels?.length === 0  && (
+            {/* ============>>>NO DATA FOUND  */}
+            {!(isInitialLoading || isFilterLoading) && !isloadingMore && filteredHotels?.length === 0 && (
               <div className="text-center py-6 sm:py-8 md:py-15  min-w-full min-h-full flex items-center justify-start flex-col">
 
                 <Icon icon="mdi:hotel-off" className="h-16 w-16 text-gray-400 mx-auto mb-4" />
@@ -876,7 +916,7 @@ isFilterLoading
         </div>
       </div>
       {/* Mobile Filters Overlay */}
-      {mobileFiltersOpen  && (
+      {mobileFiltersOpen && (
         <div className=" fixed inset-0 z-50 overflow-hidden">
           <div
             className="absolute inset-0 bg-black/50"
@@ -919,14 +959,15 @@ isFilterLoading
                 <label className="block text-sm font-semibold cursor-pointer text-gray-900 mb-3">
                   Price Range (per night)
                 </label>
-                 <PriceRangeSlider
-    min={priceRange.min}
-    max={priceRange.max}
-    values={filters.priceRange}   // ← [min, max] tuple
-    onChange={handlePriceChange}  // ← (index, value) => void
-/>
+                <PriceRangeSlider
+                  min={priceRange.min}
+                  max={priceRange.max}
+                  values={filters.priceRange}   // ← [min, max] tuple
+                  onChange={handlePriceChange}  // ← (index, value) => void
+                />
               </div>
               {/* Mobile Hotel Stars */}
+
              <div className="mb-8">
   <label className="block text-base font-semibold text-[#112233] mb-3">
     Hotel Stars
@@ -970,6 +1011,7 @@ isFilterLoading
     ))}
   </div>
 </div>
+
               {/* Mobile Rating */}
               <div>
                 {/* <label className="block text-sm font-semibold cursor-pointer text-gray-900 mb-3">

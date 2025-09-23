@@ -22,37 +22,37 @@ const FeaturedHotels: React.FC = () => {
   const [hotels, setHotels] = useState<Hotel[]>([]);
   const { featured_hotels } = useAppSelector((state) => state.appData?.data);
   const { user } = useUser();
-// Amenity keyword → Iconify icon name
-const amenityIcons: Record<string, string> = {
-  pool: "mdi:pool",
-  swimming: "mdi:pool",
-  fitness: "mdi:dumbbell",
-  gym: "mdi:dumbbell",
-  spa: "mdi:spa",
-  restaurant: "mdi:silverware-fork-knife",
-  bar: "mdi:glass-cocktail",
-  wifi: "mdi:wifi",
-  shuttle: "mdi:bus",
-  airport: "mdi:airplane",
-  non: "mdi:smoke-detector-off", // Non-smoking rooms
-  smoke: "mdi:smoke-detector-off",
-  coffee: "mdi:coffee",
-  tea: "mdi:coffee",
-  beach: "mdi:beach",
-  breakfast: "mdi:food-croissant",
-  room: "mdi:bed",
-  hair: "mdi:hair-dryer",
-  luxury: "mdi:crown",
-};
-const getAmenityIcon = (amenity: string): string => {
-  const lower = amenity.toLowerCase();
-  for (const key in amenityIcons) {
-    if (lower.includes(key)) {
-      return amenityIcons[key];
+  // Amenity keyword → Iconify icon name
+  const amenityIcons: Record<string, string> = {
+    pool: "mdi:pool",
+    swimming: "mdi:pool",
+    fitness: "mdi:dumbbell",
+    gym: "mdi:dumbbell",
+    spa: "mdi:spa",
+    restaurant: "mdi:silverware-fork-knife",
+    bar: "mdi:glass-cocktail",
+    wifi: "mdi:wifi",
+    shuttle: "mdi:bus",
+    airport: "mdi:airplane",
+    non: "mdi:smoke-detector-off", // Non-smoking rooms
+    smoke: "mdi:smoke-detector-off",
+    coffee: "mdi:coffee",
+    tea: "mdi:coffee",
+    beach: "mdi:beach",
+    breakfast: "mdi:food-croissant",
+    room: "mdi:bed",
+    hair: "mdi:hair-dryer",
+    luxury: "mdi:crown",
+  };
+  const getAmenityIcon = (amenity: string): string => {
+    const lower = amenity.toLowerCase();
+    for (const key in amenityIcons) {
+      if (lower.includes(key)) {
+        return amenityIcons[key];
+      }
     }
-  }
-  return "mdi:check-circle-outline"; // fallback icon
-};
+    return "mdi:check-circle-outline"; // fallback icon
+  };
 
   // simulate userId (replace with real auth value)
   const userId = "123";
@@ -135,18 +135,18 @@ const getAmenityIcon = (amenity: string): string => {
     }
   };
   const bgColors = [
-  "bg-red-100",
-  "bg-yellow-100",
-  "bg-green-100",
-  "bg-blue-100",
-  "bg-pink-100",
-  "bg-purple-100",
-  "bg-teal-100",
-  "bg-orange-100",
-];
-const getRandomBg = (idx: number) => {
-  return bgColors[idx % bgColors.length]; // rotates through colors
-};
+    "bg-red-100",
+    "bg-yellow-100",
+    "bg-green-100",
+    "bg-blue-100",
+    "bg-pink-100",
+    "bg-purple-100",
+    "bg-teal-100",
+    "bg-orange-100",
+  ];
+  const getRandomBg = (idx: number) => {
+    return bgColors[idx % bgColors.length]; // rotates through colors
+  };
 
   return (
     <div className="w-full max-w-[1200px] mx-auto appHorizantalSpacing py-6">
@@ -182,21 +182,24 @@ const getRandomBg = (idx: number) => {
             </div>
             <div className="p-3">
               <h3
-                className="text-xl font-extrabold text-gray-900 mb-4 pl-4
-                               sm:text-2xl md:text-xl lg:text-2xl text-ellipsis overflow-hidden whitespace-nowrap"
+                title={hotel.name}  
+                className="text-xl font-extrabold text-gray-900 mb-2 pl-2
+             sm:text-2xl md:text-xl lg:text-2xl 
+             text-ellipsis overflow-hidden whitespace-nowrap"
                 style={{ fontFamily: "Urbanist, sans-serif" }}
               >
                 {hotel.name}
               </h3>
-              <p className="text-[16px] sm:text-[17px] lg:text-[18px] my-2 font-[400] text-[#5B697E] pl-4">
+
+              <p className="text-[16px] sm:text-[17px] lg:text-[18px] my-2 font-[400] text-[#5B697E] pl-2">
                 {hotel.city}, {hotel.country}
               </p>
               {/* Stars - now above pricing */}
-              <div className="flex items-center gap-1 mb-2 pl-4">
+              <div className="flex items-center gap-1 mb-1 pl-1">
                 {renderStars(Number(hotel.stars))}
               </div>
               {/* Price & Rooms */}
-              <div className="flex justify-between items-center pl-4">
+              <div className="flex justify-between items-center pl-2">
                 <div className="flex gap-2 items-center">
                   <p className="text-[24px] sm:text-[28px] lg:text-[30px] font-[900]">
                     ${hotel.price}
@@ -224,33 +227,33 @@ const getRandomBg = (idx: number) => {
               >
                 <div className="py-[16px]">
                   <div className="border-t border-[#E1E1E1] pt-[20px] mt-[24px] space-y-2">
-{hotel.amenities && hotel.amenities.length > 0 ? (
-  <div className="grid  grid-cols-2 gap-x-2 gap-y-4">
-    {hotel.amenities.slice(0, 4).map((amenity, idx) => (
-      <div key={idx} className="flex gap-3 items-center">
-        <div
-          className={`min-w-10 min-h-10  flex items-center justify-center rounded-lg ${getRandomBg(
-            idx
-          )}`}
-        >
-          <Icon
-            icon={getAmenityIcon(amenity)}
-            className="text-gray-700"
-            width={20}
-            height={20}
-          />
-        </div>
-        <p className="text-base font-[500] text-gray-700">
-          {amenity}
-        </p>
-      </div>
-    ))}
-  </div>
-) : (
-  <div className="flex flex-col items-center justify-center py-3.5">
-    <p className="text-gray-500 text-sm sm:text-base">No amenities found</p>
-  </div>
-)}
+                    {hotel.amenities && hotel.amenities.length > 0 ? (
+                      <div className="grid  grid-cols-2 gap-x-2 gap-y-4">
+                        {hotel.amenities.slice(0, 4).map((amenity, idx) => (
+                          <div key={idx} className="flex gap-3 items-center">
+                            <div
+                              className={`min-w-10 min-h-10  flex items-center justify-center rounded-lg ${getRandomBg(
+                                idx
+                              )}`}
+                            >
+                              <Icon
+                                icon={getAmenityIcon(amenity)}
+                                className="text-gray-700"
+                                width={20}
+                                height={20}
+                              />
+                            </div>
+                            <p className="text-base font-[500] text-gray-700">
+                              {amenity}
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="flex flex-col items-center justify-center py-3.5">
+                        <p className="text-gray-500 text-sm sm:text-base">No amenities found</p>
+                      </div>
+                    )}
 
 
 
