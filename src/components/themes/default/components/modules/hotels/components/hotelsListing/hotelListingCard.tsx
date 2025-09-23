@@ -79,20 +79,21 @@ const HotelCard = memo(function HotelCard({ hotel, viewMode }: HotelCardProps) {
       >
         <div>
           <h3
-            className={`text-xl font-extrabold text-gray-900 mb-4 pl-4 sm:text-2xl md:text-xl lg:text-2xl 
+            title={hotel.name}  // 👈 yeh line add karo
+            className={`text-xl font-extrabold text-gray-900 mb-0 pl-1 sm:text-2xl md:text-xl lg:text-2xl 
     overflow-hidden text-ellipsis whitespace-nowrap 
     ${viewMode === "list" ? "w-full" : "block"}`}
             style={{ fontFamily: "Urbanist, sans-serif" }}
-            
           >
             {hotel.name}
           </h3>
 
-          <p className="text-[16px] sm:text-[17px] lg:text-[18px] my-2 font-[400] text-[#5B697E] pl-4 text-ellipsis overflow-hidden whitespace-nowrap">
+
+          <p className="text-[16px] sm:text-[17px] lg:text-[18px] my-2 font-[400] text-[#5B697E] pl-1 text-ellipsis overflow-hidden whitespace-nowrap">
             {hotel.location}
           </p>
           {/* Stars */}
-          <div className="flex items-center gap-1 mb-2 pl-4">
+          <div className="flex items-center gap-1 mb-1 pl-1">
             {renderStars(hotel.stars)}
             <span className="text-sm text-gray-500 ml-2">
               ({parseFloat(hotel.rating).toFixed(1)})
@@ -103,7 +104,7 @@ const HotelCard = memo(function HotelCard({ hotel, viewMode }: HotelCardProps) {
             className={`flex ${viewMode === "list"
               ? "flex-col sm:flex-row sm:justify-between"
               : "justify-between"
-              } items-start sm:items-center pl-4 mb-4`}
+              } items-start sm:items-center pl-2 mb-4`}
           >
             <div className="flex gap-2 items-center mb-2 sm:mb-0">
               <p className="text-[24px] sm:text-[28px] lg:text-[30px] font-[900]">

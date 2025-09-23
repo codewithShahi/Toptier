@@ -272,13 +272,13 @@ const useHotelSearch = () => {
       );
 
 
-      let combinedData: any[] = [];
+      const combinedData: any[] = [];
       validResults.forEach((res) => {
         if (res?.response?.length) {
           combinedData.push(...res.response);
         }
       });
-
+//  console.log(`API calls completed. Fetched ${combinedData.length} total hotels from ${validResults.length} modules.`);
       // Remove duplicates ONCE at the end
       const finalData = removeDuplicates(combinedData);
 
