@@ -1,16 +1,13 @@
 import { useState, useCallback, useEffect, useRef } from "react";
-import { useQuery, useMutation, useQueryClient, QueryClient } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { fetchHotelsLocations, hotel_search } from "@src/actions";
 import { z } from "zod";
 import { useAppSelector } from "@lib/redux/store";
 import { useRouter } from "next/navigation";
 import { setHotels } from "@lib/redux/base";
 import { useDispatch } from "react-redux";
-import { fa } from "zod/v4/locales";
 
-
-
-// Define the hotel search schema
+// Schema and interfaces remain the same...
 const hotelSearchSchema = z
   .object({
     destination: z.string().min(2, "Destination must be at least 2 characters"),
@@ -36,7 +33,6 @@ interface HotelForm {
   nationality: string;
   latitude?: string;
   longitude?: string;
-
 }
 
 interface LocationObj {
@@ -48,6 +44,7 @@ interface LocationObj {
   longitude?: string;
   status?: string;
 }
+
 interface Module {
   id: string;
   name: string;
@@ -68,7 +65,6 @@ interface Module {
   prn_type: string;
 }
 
-
 function useDebounce(value: string, delay = 400) {
   const [debounced, setDebounced] = useState(value);
   useEffect(() => {
@@ -78,20 +74,17 @@ function useDebounce(value: string, delay = 400) {
   return debounced;
 }
 
-
 const useHotelSearch = () => {
   const formatDate = (date: Date) => {
-  return date.toISOString().split("T")[0];
-};
+    return date.toISOString().split("T")[0];
+  };
 
-// Today (checkin)
-const today = new Date();
-const checkin = formatDate(today);
+  const today = new Date();
+  const checkin = formatDate(today);
+  const tomorrow = new Date();
+  tomorrow.setDate(today.getDate() + 1);
+  const checkout = formatDate(tomorrow);
 
-// Tomorrow (checkout example)
-const tomorrow = new Date();
-tomorrow.setDate(today.getDate() + 1);
-const checkout = formatDate(tomorrow);
   const [form, setForm] = useState<HotelForm>({
     destination: "",
     checkin: checkin,
@@ -101,7 +94,8 @@ const checkout = formatDate(tomorrow);
     children: 0,
     nationality: "PK",
   });
-const queryClient = useQueryClient();
+
+  const queryClient = useQueryClient();
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [showGuestsDropdown, setShowGuestsDropdown] = useState(false);
   const [showDestinationDropdown, setShowDestinationDropdown] = useState(false);
@@ -109,25 +103,30 @@ const queryClient = useQueryClient();
   const [locationError, setLocationError] = useState("");
   const [activeIndex, setActiveIndex] = useState(-1);
   const [isloadingMore, setIsLoadingMore] = useState(false);
-  const [isearching, setIsSearching] = useState(false);
-  // const [hotelsData, setHotelsData] = useState<any[]>([]);
+  // FIX 1: Add separate loading states
+  const [isSearching, setIsSearching] = useState(false);
+  const [isInitialLoading, setIsInitialLoading] = useState(false);
+
   const listRef = useRef<HTMLDivElement | null>(null);
-const [page, setPage] = useState(1);
-    const {modules} = useAppSelector((state) => state.appData?.data);
-    const router = useRouter();
-    const allHotelsData=useAppSelector((state=> state.root.hotels))
-    const dispatch = useDispatch();
-// const modules: Module[] = [/* your data */];
-const hotelModuleNames = modules
-  .filter((module: Module) => module.type === "hotels")
-  .map((module: Module) => module.name);
+  const [page, setPage] = useState(1);
 
+  // Add ref to prevent multiple simultaneous calls
+  const isProcessingRef = useRef(false);
+  // Add ref to track if initial load has run
+  const hasInitialLoadRun = useRef(false);
 
+  const { modules } = useAppSelector((state) => state.appData?.data);
+  const router = useRouter();
+  const allHotelsData = useAppSelector((state) => state.root.hotels);
+  const dispatch = useDispatch();
 
+  const hotelModuleNames = modules
+    ?.filter((module: Module) => module.type === "hotels")
+    .map((module: Module) => module.name) || [];
 
   const debouncedDestination = useDebounce(form.destination, 450);
 
-  // Fetch locations when debounced destination changes and length >= 3
+  // Location search query
   const {
     data: locationData,
     isLoading: locationLoading,
@@ -136,10 +135,9 @@ const hotelModuleNames = modules
     queryKey: ["hotel-locations", debouncedDestination],
     queryFn: () => fetchHotelsLocations(debouncedDestination.trim()),
     enabled: debouncedDestination.trim()?.length >= 3,
-    staleTime: 1000 * 60 * 30, // 30 minutes
+    staleTime: 1000 * 60 * 30,
   });
 
-  // Update locations when query data changes
   useEffect(() => {
     if (locationData?.status && Array.isArray(locationData?.data) && locationData?.data?.length > 0) {
       setHotelLocations(locationData.data);
@@ -156,7 +154,7 @@ const hotelModuleNames = modules
     }
   }, [locationData, locationsQueryError, debouncedDestination]);
 
-
+  // Event handlers
   const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target;
     const newValue = type === "number" ? Number(value) : value;
@@ -207,290 +205,255 @@ const hotelModuleNames = modules
       setShowDestinationDropdown(false);
     }
   }, [showDestinationDropdown, hotelLocations, activeIndex, handleSelectLocation]);
-  // utils: merge + dedupe hotels
 
-// Add this function inside your useHotelSearch hook (after your state declarations)
-const removeDuplicates = useCallback((hotels: any[]) => {
-  if (!Array.isArray(hotels) || hotels?.length === 0) {
-    return [];
-  }
-
-  const seen = new Set();
-  return hotels.filter(hotel => {
-    if (!hotel || !hotel.hotel_id) {
-      return false;
+  // Fixed deduplication function
+  const removeDuplicates = useCallback((hotels: any[]) => {
+    if (!Array.isArray(hotels) || hotels?.length === 0) {
+      return [];
     }
 
-    if (seen.has(hotel.hotel_id)) {
-      return false;
-    }
-
-    seen.add(hotel.hotel_id);
-    return true;
-  });
-}, []);
-const hotelSearchMutation = useMutation({
-  mutationFn: hotel_search,
-  onSuccess: (data) => {
-    if (!data?.response) return;
-
-    //  Get existing hotels from redux
-    // const currentHotels = queryClient.getQueryData<any[]>(["hotel-search"]) || [];
-     console.log('current hotel',data.response)
-    //  Merge old + new
-    const merged = [...allHotelsData, ...data.response];
-
-    //  Update react-query cache
-    queryClient.setQueryData(["hotel-search"], merged);
-
-    // Update redux store
-    dispatch(setHotels(merged));
-
-    setErrors({});
-  },
-});
-// for reloading previous search on page load (pagination)
-
-
-useEffect(() => {
-  setIsSearching(false);
-  // const hasRun = sessionStorage.getItem("hasRunRestore");
-
-  // if (!hasRun) {
-    const savedForm = localStorage.getItem("hotelSearchForm");
-
-    if (savedForm) {
-      const parsedForm: HotelForm = JSON.parse(savedForm);
-    dispatch(setHotels([])); // ✅ clear old data
-      Promise.all(
-        hotelModuleNames.map((mod: string) =>
-          hotelSearchMutation
-            .mutateAsync({
-              ...parsedForm,
-              page: 1,   // ✅ always first page after refresh
-              modules: mod,
-               price_from: "",
-              price_to: "",
-              rating: ""
-            })
-            .catch(() => null)
-        )
-      ).then((results) => {
-        const validResults = results.filter(
-          (res) => res && res.response && res.response?.length > 0
-        );
-
-        let finalData: any[] = [];
-        if (validResults.length === 1) {
-          finalData = validResults[0].response;
-        } else if (validResults.length > 1) {
-          finalData = validResults.flatMap((res) => res.response);
-        }
-
-        finalData = removeDuplicates(finalData);
-
-        queryClient.setQueryData(["hotel-search"], finalData);
-        dispatch(setHotels(finalData));
-        setPage(1);
-      });
-    }
-
-    // ✅ mark it so it won’t run again until next reload
-    sessionStorage.setItem("hasRunRestore", "true");
-  // }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-}, []); // 👈 empty dependency array
-
-
-// Then use:
-const hotels_Data= useQueryClient().getQueryData<any[]>(['hotel-search'])
-// console.log('hook state',hotelsData)
-const handleSubmit = useCallback(
-  async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      dispatch(setHotels([])); // ✅ Clear old data
-      setIsSearching(true);
-
-      hotelSearchSchema.parse(form);
-
-      // ✅ Save form for pagination
-      localStorage.setItem("hotelSearchForm", JSON.stringify(form));
-
-      // ✅ Fetch for each module
-      const results = await Promise.all(
-        hotelModuleNames.map((mod: string) =>
-          hotelSearchMutation
-            .mutateAsync({
-              ...form,
-              page: 1, // Always start from page 1 on new search
-              modules: mod,
-               price_from: "",
-              price_to: "",
-              rating: ""
-            })
-            .catch(() => null)
-        )
-      );
-      // ✅ Filter valid
-      const validResults = results.filter(
-        (res) => res && res.response && res.response?.length > 0
-      );
-
-      let finalData: any[] = [];
-      if (validResults?.length === 1) {
-        finalData = validResults[0].response;
-      } else if (validResults?.length > 1) {
-        finalData = validResults.flatMap((res) => res.response);
+    const seen = new Set();
+    return hotels.filter(hotel => {
+      if (!hotel || !hotel.hotel_id) {
+        return false;
       }
 
-      // ✅ DEDUPE before saving!
-      finalData = removeDuplicates(finalData);
-            setIsSearching(false)
+      if (seen.has(hotel.hotel_id)) {
+        return false;
+      }
 
-      // ✅ Update cache + Redux
-      queryClient.setQueryData(["hotel-search"], finalData);
-      dispatch(setHotels(finalData));
+      seen.add(hotel.hotel_id);
+      return true;
+    });
+  }, []);
 
-      // ✅ Reset page to 1 for future loadMore
-      setPage(1);
+  // Fixed mutation - NO onSuccess to prevent data mixing
+  const hotelSearchMutation = useMutation({
+    mutationFn: hotel_search,
+    // Remove onSuccess to prevent data mixing
+  });
 
-      // ✅ Redirect
-      router.push("/hotel_search");
+  // Fixed batch API call function
+  const callAllModulesAPI = useCallback(async (searchParams: any, pageNumber: number = 1) => {
+    if (isProcessingRef.current) {
+      // console.log('API call already in progress, skipping...');
+      return { success: false, error: "Already processing" };
+    }
+
+    if (!hotelModuleNames || hotelModuleNames.length === 0) {
+      // console.log('No hotel modules available');
+      return { success: false, error: "No modules available" };
+    }
+
+    try {
+      isProcessingRef.current = true;
+      // console.log(`Starting API calls for ${hotelModuleNames.length} modules, page ${pageNumber}`);
+
+      const results = await Promise.all(
+        hotelModuleNames.map(async (mod: string) => {
+          try {
+            const result = await hotel_search({
+              ...searchParams,
+              page: pageNumber,
+              modules: mod,
+            });
+            return result;
+          } catch (error) {
+            console.error(`Module ${mod} failed:`, error);
+            return null;
+          }
+        })
+      );
+
+
+      // Process results
+      const validResults = results.filter(
+        (res) => res && res.response && Array.isArray(res.response) && res.response.length > 0
+      );
+
+
+      let combinedData: any[] = [];
+      validResults.forEach((res) => {
+        if (res?.response?.length) {
+          combinedData.push(...res.response);
+        }
+      });
+
+      // Remove duplicates ONCE at the end
+      const finalData = removeDuplicates(combinedData);
+
 
       return { success: true, data: finalData };
-    } catch (err) {
-      if (err instanceof z.ZodError) {
-        const msgMap: Record<string, string> = {};
-        err.errors.forEach((zErr) => {
-          msgMap[zErr.path[0] as string] = zErr.message;
-        });
-        setErrors(msgMap);
-           setIsSearching(false);
-      }
-      return { success: false, error: "Search failed" };
+    } catch (error) {
+      console.error('Batch API call failed:', error);
+      return { success: false, error: (error as Error).message };
     } finally {
-      setIsSearching(false);
+      isProcessingRef.current = false;
     }
-  },
-  [form, hotelModuleNames, hotelSearchMutation, queryClient, router, dispatch, removeDuplicates] // ✅ Add removeDuplicates
-);
+  }, [hotelModuleNames, removeDuplicates]);
 
-// QUWEN CODDEEEEEEEEEEEEEEEEEEEEEEEEE
-const loadMoreData = useCallback(
-  async (e?: React.SyntheticEvent) => {
-    e?.preventDefault();
+  // FIX 2: Fixed initial load effect with proper loading state
+  useEffect(() => {
+    if (hasInitialLoadRun.current) return;
 
-    if (isloadingMore) return;
-    setIsLoadingMore(true);
-    setIsSearching(false)
+    const savedForm = localStorage.getItem("hotelSearchForm");
+    if (!savedForm) return;
 
-    try {
-      const savedForm = localStorage.getItem("hotelSearchForm");
-      if (!savedForm) return;
+    hasInitialLoadRun.current = true;
+    setIsInitialLoading(true); // Set initial loading state
 
-      const parsedForm: HotelForm = JSON.parse(savedForm);
-      const nextPage = page + 1;
+    const parsedForm: HotelForm = JSON.parse(savedForm);
 
-      const results = await Promise.all(
-        hotelModuleNames.map((mod: string) =>
-          hotelSearchMutation
-            .mutateAsync({
-              ...parsedForm,
-              page: nextPage,
-              modules: mod,
-              price_from: "",
-              price_to: "",
-              rating: ""
-            })
-            .catch(() => null)
-        )
-      );
+    // Clear existing data first
+    dispatch(setHotels([]));
+    queryClient.setQueryData(["hotel-search"], []);
 
-      const validResults = results.filter(
-        (res) => res && res.response && res.response?.length > 0
-      );
+    callAllModulesAPI({
+      ...parsedForm,
+      price_from: "",
+      price_to: "",
+      rating: ""
+    }, 1).then((result) => {
+      if (result.success && result.data) {
+        // Update both cache and Redux with final data
+        queryClient.setQueryData(["hotel-search"], result.data);
+        dispatch(setHotels(result.data));
+        setPage(1);
+      }
+    }).finally(() => {
+      setIsInitialLoading(false); // Clear initial loading state
+    });
+  }, [callAllModulesAPI, dispatch, queryClient]);
+  // FIX 3: Fixed handle submit with proper error handling
+  const handleSubmit = useCallback(
+    async (e: React.FormEvent) => {
+      e.preventDefault();
 
-      if (validResults?.length === 0) {
-        console.log("No more results.");
+      // FIX 4: Check if already processing before validation
+      if (isProcessingRef.current || isSearching) {
+        console.log('Search already in progress');
+        return { success: false, error: "Search already in progress" };
+      }
+
+      // FIX 5: Validate form first, then set loading state
+      try {
+        hotelSearchSchema.parse(form);
+        setErrors({}); // Clear any previous errors
+      } catch (err) {
+        if (err instanceof z.ZodError) {
+          const msgMap: Record<string, string> = {};
+          err.errors.forEach((zErr) => {
+            msgMap[zErr.path[0] as string] = zErr.message;
+          });
+          setErrors(msgMap);
+        }
+        return { success: false, error: "Form validation failed" };
+      }
+
+      // Set loading state AFTER validation passes
+      setIsSearching(true);
+
+      try {
+        // Clear existing data
+        dispatch(setHotels([]));
+        queryClient.setQueryData(["hotel-search"], []);
+
+        // Save form for pagination
+        localStorage.setItem("hotelSearchForm", JSON.stringify(form));
+        console.log('Starting new search:', form);
+
+        const result = await callAllModulesAPI({
+          ...form,
+          price_from: "",
+          price_to: "",
+          rating: ""
+        }, 1);
+
+        if (result.success && result.data) {
+          // Update both cache and Redux with final data
+          queryClient.setQueryData(["hotel-search"], result.data);
+          dispatch(setHotels(result.data));
+          setPage(1);
+          console.log('Search completed:', result.data.length, 'hotels');
+
+          router.push("/hotel_search");
+          return { success: true, data: result.data };
+        } else {
+          throw new Error(result.error || "Search failed");
+        }
+      } catch (err) {
+        console.error('Search error:', err);
+        return { success: false, error: "Search failed" };
+      } finally {
+        setIsSearching(false); // Always clear loading state
+      }
+    },
+    [form, callAllModulesAPI, queryClient, router, dispatch, isSearching]
+  );
+
+  // Fixed load more data
+  const loadMoreData = useCallback(
+    async (e?: React.SyntheticEvent) => {
+      e?.preventDefault();
+
+      if (isloadingMore || isProcessingRef.current) return;
+
+      setIsLoadingMore(true);
+
+      try {
+        const savedForm = localStorage.getItem("hotelSearchForm");
+        if (!savedForm) return;
+
+        const parsedForm: HotelForm = JSON.parse(savedForm);
+        const nextPage = page + 1;
+
+
+        const result = await callAllModulesAPI({
+          ...parsedForm,
+          price_from: "",
+          price_to: "",
+          rating: ""
+        }, nextPage);
+
+        if (result.success && result.data && result.data.length > 0) {
+          // Get existing IDs
+          const existingIds = new Set(allHotelsData.map(h => h.hotel_id));
+
+          // Filter only truly new hotels
+          const newHotels = result.data.filter(hotel => {
+            return hotel && hotel.hotel_id && !existingIds.has(hotel.hotel_id);
+          });
+
+          if (newHotels.length > 0) {
+            const updatedHotels = [...allHotelsData, ...newHotels];
+            dispatch(setHotels(updatedHotels));
+            queryClient.setQueryData(["hotel-search"], updatedHotels);
+            setPage(nextPage);
+            return { success: true, data: newHotels };
+          } else {
+            return { success: false, error: "No new data" };
+          }
+        } else {
+          return { success: false, error: "No more data" };
+        }
+      } catch (err) {
+        console.error('Load more error:', err);
+        return { success: false, error: "Load more failed" };
+      } finally {
         setIsLoadingMore(false);
-        return { success: false, error: "No more data" };
       }
+    },
+    [page, allHotelsData, callAllModulesAPI, dispatch, queryClient, isloadingMore]
+  );
 
-      let newData: any[] = [];
-      if (validResults?.length === 1) {
-        newData = validResults[0].response;
-      } else {
-        newData = validResults.flatMap((res) => res.response);
-      }
-
-      //  Get IDs of existing hotels
-      const existingIds = new Set(allHotelsData.map(h => h.hotel_id));
-
-      //  Filter ONLY new unique hotels
-      const trulyNewHotels = newData.filter(hotel => {
-        if (!hotel || !hotel.hotel_id) return false;
-        return !existingIds.has(hotel.hotel_id);
-      });
-
-      if (trulyNewHotels?.length === 0) {
-        console.log("No new unique hotels found.");
-        setIsLoadingMore(false);
-        return { success: false, error: "No new data" };
-      }
-
-      //  Append only new hotels to Redux (don't replace entire array)
-      const updatedHotels = [...allHotelsData, ...trulyNewHotels];
-      dispatch(setHotels(updatedHotels));
-
-      //  Also update React Query cache
-      queryClient.setQueryData(["hotel-search"], updatedHotels);
-
-      //  Update page number
-      setPage(nextPage);
-
-      setIsLoadingMore(false);
-      return { success: true, data: trulyNewHotels }; // 👈 Only return new ones
-    } catch (err) {
-      setIsLoadingMore(false);
-      if (err instanceof z.ZodError) {
-        const msgMap: Record<string, string> = {};
-        err.errors.forEach((zErr) => {
-          msgMap[zErr.path[0] as string] = zErr.message;
-        });
-        setErrors(msgMap);
-      }
-      return { success: false, error: "Load more failed" };
-    }
-  },
-  [page, allHotelsData, hotelModuleNames, hotelSearchMutation, isloadingMore, dispatch, queryClient]
-);
-//use effect for laod more data qwen and correct code dont modify
-// useEffect(() => {
-//   const handleScroll = () => {
-//     if (isloadingMore || !allHotelsData.length) return; // ✅ Don’t load if no data or submitting
-
-//     const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
-//     if (scrollTop + clientHeight >= scrollHeight - 300) {
-//       loadMoreData();
-//     }
-//   };
-
-//   window.addEventListener("scroll", handleScroll);
-//   return () => window.removeEventListener("scroll", handleScroll);
-// }, [loadMoreData, isloadingMore, allHotelsData.length]); // ✅ Add allHotelsData.length
-
-// loading this more data on scroll (final code )
- useEffect(() => {
+  // Scroll effect for load more
+  useEffect(() => {
     const handleScroll = () => {
-      if (isloadingMore || !allHotelsData?.length) return;
+      if (isloadingMore || !allHotelsData?.length || isProcessingRef.current) return;
 
       if (listRef.current) {
         const rect = listRef.current.getBoundingClientRect();
-        const offset = 0; // fire before 300px
-
-        // rect.bottom = distance from top of viewport to bottom of container
-        if (rect.bottom - offset <= window.innerHeight) {
+        if (rect.bottom <= window.innerHeight) {
           loadMoreData();
         }
       }
@@ -499,10 +462,11 @@ const loadMoreData = useCallback(
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, [loadMoreData, isloadingMore, allHotelsData?.length]);
+
+  // Other utility functions
   const updateForm = useCallback((updates: Partial<HotelForm>) => {
     setForm((prev) => ({ ...prev, ...updates }));
 
-    // Clear related errors
     const updatedFields = Object.keys(updates);
     setErrors((prev) => {
       const newErrors = { ...prev };
@@ -523,17 +487,22 @@ const loadMoreData = useCallback(
       rooms: 1,
       adults: 2,
       children: 0,
-      nationality: "CN",
+      nationality: "PK",
     });
     setErrors({});
     setShowDestinationDropdown(false);
     setShowGuestsDropdown(false);
     setHotelLocations([]);
     setActiveIndex(-1);
-    // setHotelsData([]);
-    dispatch(setHotels([]))
+    dispatch(setHotels([]));
+    queryClient.setQueryData(["hotel-search"], []);
     setPage(1);
-  }, []);
+    hasInitialLoadRun.current = false;
+    // Reset loading states
+    setIsSearching(false);
+    setIsInitialLoading(false);
+    setIsLoadingMore(false);
+  }, [dispatch, queryClient]);
 
   const validateForm = useCallback(() => {
     try {
@@ -551,13 +520,12 @@ const loadMoreData = useCallback(
       return false;
     }
   }, [form]);
-// console.log("hotels data from hook",hotelsData)
-// console.log('locationdata',locationData)
-  // Computed values
+
+  const hotels_Data = useQueryClient().getQueryData<any[]>(['hotel-search']);
   const totalGuests = form.adults + form.children;
   const isFormValid = Object.keys(errors)?.length === 0;
   const hasLocationResults = hotelLocations?.length > 0;
-  const isSearching =  hotelSearchMutation.isPending;
+  const isPending = hotelSearchMutation.isPending;
 
   return {
     // Form state
@@ -586,18 +554,21 @@ const loadMoreData = useCallback(
     showGuestsDropdown,
     setShowGuestsDropdown,
 
-    // Search state
+    // Search state - FIX 6: Return proper loading states
     hotelSearchMutation,
-   isSearching:hotelSearchMutation.isPending,
+    isSearching, // For submit button loading
+    isInitialLoading, // For page reload loading
+    setIsInitialLoading,
+    isPending,
     setIsLoadingMore,
-    isloadingMore,
+    isloadingMore, // For load more button
     allHotelsData,
     hotels_Data,
     searchError: hotelSearchMutation.error,
     listRef,
     hotelModuleNames,
     setIsSearching,
-
+    callAllModulesAPI, // Export for use in filters
 
     // Event handlers
     handleChange,
