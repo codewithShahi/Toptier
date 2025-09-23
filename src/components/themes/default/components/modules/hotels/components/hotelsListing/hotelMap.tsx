@@ -113,7 +113,7 @@ export default function HotelMap({ hotels }: HotelMapProps) {
 
   // ============= RENDER MAP =============
   return (
-    <div className="rounded-xl w-full h-full overflow-hidden border border-gray-200">
+    <div className="rounded-3xl w-full h-full overflow-hidden ">
       <GoogleMap
         mapContainerStyle={containerStyle}
         center={fallbackCenter}

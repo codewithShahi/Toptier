@@ -423,9 +423,10 @@ const [showNext, setShowNext] = useState(true);
           opacity: 0.5;
         }
       `}</style>
-      <div className="bg-white border-b border-gray-100">
+      {/* Quick Filter with Swiper */}
+      {/* <div className="bg-white border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-3 lg:py-4">
-          {/* Quick Filter with Swiper */}
+          
           <div className="relative flex gap-2">
             <div className="flex items-center gap-2 mb-3 lg:mb-4 w-24 mt-2.5">
               <span className="text-gray-600 font-medium text-sm lg:text-base">Quick Filter :</span>
@@ -440,8 +441,8 @@ const [showNext, setShowNext] = useState(true);
                 prevEl: ".swiper-button-prev-custom",
               }}
               onSlideChange={(swiper) => {
-                setShowPrev(!swiper.isBeginning); // prev hide at start
-                setShowNext(!swiper.isEnd);       // next hide at end
+                setShowPrev(!swiper.isBeginning);
+                setShowNext(!swiper.isEnd);       
               }}
               breakpoints={{
                 640: { spaceBetween: 12 },
@@ -470,7 +471,7 @@ const [showNext, setShowNext] = useState(true);
               ))}
             </Swiper>
 
-            {/* Prev Button */}
+            
             <button
               className={`swiper-button-prev-custom absolute rotate-180 left-18 cursor-pointer sm:left-22 top-5.5 -translate-y-1/2 z-10
     w-7 h-7 sm:w-8 sm:h-8
@@ -495,7 +496,7 @@ const [showNext, setShowNext] = useState(true);
               </svg>
             </button>
 
-            {/* Next Button */}
+           
             <button
               className={`swiper-button-next-custom absolute right-2 sm:-right-3 cursor-pointer top-5.5 -translate-y-1/2 z-10
     w-7 h-7 sm:w-8 sm:h-8
@@ -521,7 +522,7 @@ const [showNext, setShowNext] = useState(true);
             </button>
           </div>
         </div>
-      </div>
+      </div> */}
       {/* Main Content */}
 
       <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-4 lg:py-8"  >
