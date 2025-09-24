@@ -1,9 +1,10 @@
+"use client";
 import { useState, useCallback, useEffect, useRef, useMemo } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { fetchHotelsLocations, hotel_search } from "@src/actions";
 import { z } from "zod";
 import { useAppSelector } from "@lib/redux/store";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { setHotels } from "@lib/redux/base";
 import { useDispatch } from "react-redux";
 
@@ -94,7 +95,8 @@ const useHotelSearch = () => {
     children: 0,
     nationality: "PK",
   });
-
+const hotelSearch_path = usePathname();
+console.log("hotelSearch_path", hotelSearch_path);
   const queryClient = useQueryClient();
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [showGuestsDropdown, setShowGuestsDropdown] = useState(false);
@@ -276,7 +278,7 @@ const callAllModulesAPI = useCallback(
 
       return { success: true, data: results };
     } catch (err) {
-      // console.error("Batch API call failed:", err);
+      console.error("Batch API call failed:", err);
       return { success: false, error: (err as Error).message };
     } finally {
       isProcessingRef.current = false;
@@ -291,8 +293,9 @@ const callAllModulesAPI = useCallback(
     if (hasInitialLoadRun.current) return;
 
     const savedForm = localStorage.getItem("hotelSearchForm");
-    if (!savedForm) return;
-
+    if (!savedForm ) return;
+    if (!hotelSearch_path?.includes("/hotel_search")) return;
+console.log("Initial load with saved form");
     hasInitialLoadRun.current = true;
     setIsInitialLoading(true); // Set initial loading state
     const parsedForm: HotelForm = JSON.parse(savedForm);
@@ -318,69 +321,70 @@ const callAllModulesAPI = useCallback(
     });
   }, [callAllModulesAPI, dispatch, queryClient]);
   // FIX 3: Fixed handle submit with proper error handling
-  const handleSubmit = useCallback(
-    async (e: React.FormEvent) => {
-      e.preventDefault();
+ const handleSubmit = useCallback(
+  async (e: React.FormEvent) => {
+    e.preventDefault();
 
-      // FIX 4: Check if already processing before validation
-      if (isProcessingRef.current || isSearching) {
-        // console.log('Search already in progress');
-        return { success: false, error: "Search already in progress" };
+    if (isProcessingRef.current || isSearching) {
+      console.log('Search already in progress');
+      return { success: false, error: "Search already in progress" };
+    }
+
+    // Validate first
+    try {
+      hotelSearchSchema.parse(form);
+      setErrors({});
+    } catch (err) {
+      if (err instanceof z.ZodError) {
+        const msgMap: Record<string, string> = {};
+        err.errors.forEach((zErr) => {
+          msgMap[zErr.path[0] as string] = zErr.message;
+        });
+        setErrors(msgMap);
       }
+      return { success: false, error: "Form validation failed" };
+    }
 
-      // FIX 5: Validate form first, then set loading state
-      try {
-        hotelSearchSchema.parse(form);
-        setErrors({}); // Clear any previous errors
-      } catch (err) {
-        if (err instanceof z.ZodError) {
-          const msgMap: Record<string, string> = {};
-          err.errors.forEach((zErr) => {
-            msgMap[zErr.path[0] as string] = zErr.message;
-          });
-          setErrors(msgMap);
-        }
-        return { success: false, error: "Form validation failed" };
+    // ✅ Start loading AFTER validation
+    setIsSearching(true);
+
+    try {
+      // Clear existing data
+      dispatch(setHotels([]));
+      queryClient.setQueryData(["hotel-search"], []);
+      localStorage.setItem("hotelSearchForm", JSON.stringify(form));
+      console.log('Starting new search:', form);
+
+
+      const result = await callAllModulesAPI({
+        ...form,
+        price_from: "",
+        price_to: "",
+        rating: ""
+      }, 1);
+
+      if (result.success && result.data) {
+        dispatch(setHotels(result.data));
+        setPage(1);
+        console.log('Search completed:', result.data.length, 'hotels');
+
+        // ✅ NOW navigate AFTER data is ready
+        router.push("/hotel_search");
+
+        return { success: true, data: result.data };
+      } else {
+        throw new Error(result.error || "Search failed");
       }
-
-      // Set loading state AFTER validation passes
-      setIsSearching(true);
-
-      try {
-        // Clear existing data
-        dispatch(setHotels([]));
-        queryClient.setQueryData(["hotel-search"], []);
-
-        // Save form for pagination
-        localStorage.setItem("hotelSearchForm", JSON.stringify(form));
-        // console.log('Starting new search:', form);
-         setIsSearching(false); // Always clear loading state
-          router.push("/hotel_search");
-        const result = await callAllModulesAPI({
-          ...form,
-          price_from: "",
-          price_to: "",
-          rating: ""
-        }, 1);
-
-        if (result.success && result.data) {
-          // Update both cache and Redux with final data
-          // queryClient.setQueryData(["hotel-search"], result.data);
-          dispatch(setHotels(result.data));
-          setPage(1);
-          // console.log('Search completed:', result.data.length, 'hotels');
-
-          return { success: true, data: result.data };
-        } else {
-          throw new Error(result.error || "Search failed");
-        }
-      } catch (err) {
-        // console.error('Search error:', err);
-        return { success: false, error: "Search failed" };
-      }
-    },
-    [form, callAllModulesAPI, queryClient, router, dispatch, isSearching]
-  );
+    } catch (err) {
+      console.error('Search error:', err);
+      return { success: false, error: "Search failed" };
+    } finally {
+      // ✅ ALWAYS turn off loading at the end
+      setIsSearching(false);
+    }
+  },
+  [form, callAllModulesAPI, queryClient, router, dispatch, isSearching]
+);
 
   // Fixed load more data
   const loadMoreData = useCallback(
@@ -430,7 +434,7 @@ const callAllModulesAPI = useCallback(
           return { success: false, error: "No more data" };
         }
       } catch (err) {
-        // console.error('Load more error:', err);
+        console.error('Load more error:', err);
         return { success: false, error: "Load more failed" };
       } finally {
         setIsLoadingMore(false);
@@ -471,7 +475,7 @@ const detailsBookNowHandler = async (hotel: any) => {
   // 👉 navigate
   router.push(url);
 
-  // console.log("Book Now clicked for hotel ID:", hotel.hotel_id);
+  console.log("Book Now clicked for hotel ID:", hotel.hotel_id);
 };
 
   // Other utility functions
