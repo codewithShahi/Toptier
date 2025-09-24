@@ -23,7 +23,7 @@ const ChevronLeft = () => (
 // ];
 
 const SwiperImageSlider = (images:any) => {
-    console.log("images in slider", images.images);
+    // console.log("images in slider", images.images);
    const imagesArr=images.images || [];
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
@@ -41,6 +41,7 @@ const SwiperImageSlider = (images:any) => {
 
   const slideWidth = getSlideWidth();
 
+  console.log("slideWidth", slideWidth);
   const goToNext = () => {
     if (isAnimating) return;
     setIsAnimating(true);

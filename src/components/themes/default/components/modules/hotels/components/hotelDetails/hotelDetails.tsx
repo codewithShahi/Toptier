@@ -53,7 +53,7 @@ const HotelsDetails = () => {
   return (
     <div>
      <HotelDetailsSearch/>
-     <SwiperImageSlider images={img}/>
+     {/* <SwiperImageSlider images={img}/> */}
     </div>
   );
 };
