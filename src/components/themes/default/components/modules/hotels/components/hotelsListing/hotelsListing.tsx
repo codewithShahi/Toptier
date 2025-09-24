@@ -225,6 +225,14 @@ export default function HotelSearchApp() {
     values: [number, number]; // tuple for two values
     onChange: (index: 0 | 1, value: number) => void;
   }
+
+  // 👇 Add state to track highlighted hotel
+  const [highlightedHotel, setHighlightedHotel] = useState<HotelData | null>(null);
+
+  const handleHighlightHotel = (hotel: HotelData) => {
+    setHighlightedHotel(hotel);
+  };
+  
   const PriceSlider: React.FC<PriceSliderProps> = ({ min, max, values, onChange }) => {
     const getPercentage = (value: number) => ((value - min) / (max - min)) * 100;
     return (
@@ -367,36 +375,7 @@ export default function HotelSearchApp() {
 
   const options = ["Rating", "Price Low to High", "Price High to Low", "Name"];
 
-  // const LoadingGrid = () => (
-  //   // <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-  //   //   {Array(6).fill(0).map((_, index) => (
-  //   //     <div key={index} className="bg-white p-2 rounded-3xl shadow animate-pulse">
-  //   //       <div className="aspect-square bg-gray-300 rounded-2xl mb-3"></div>
-  //   //       <div className="p-3 space-y-3">
-  //   //         <div className="h-6 bg-gray-300 rounded w-3/4"></div>
-  //   //         <div className="h-4 bg-gray-300 rounded w-1/2"></div>
-  //   //         <div className="flex gap-1">
-  //   //           {Array(5).fill(0).map((_, i) => (
-  //   //             <div key={i} className="h-4 w-4 bg-gray-300 rounded"></div>
-  //   //           ))}
-  //   //         </div>
-  //   //         <div className="flex justify-between items-center">
-  //   //           <div className="h-8 bg-gray-300 rounded w-24"></div>
-  //   //           <div className="h-4 bg-gray-300 rounded w-16"></div>
-  //   //         </div>
-  //   //         <div className="flex gap-3">
-  //   //           <div className="h-10 bg-gray-300 rounded-full flex-1"></div>
-  //   //           <div className="h-10 w-10 bg-gray-300 rounded-full"></div>
-  //   //         </div>
-  //   //       </div>
-  //   //     </div>
-  //   //   ))}
-  //   // </div>
-  //   <div className="min-w-full min-h-full flex items-center justify-center">
-  //             <Spinner size={40}  className="mr-1 text-blue-900" />
-
-  //   </div>
-  // );
+  
 
 
   return (
@@ -453,106 +432,7 @@ export default function HotelSearchApp() {
           opacity: 0.5;
         }
       `}</style>
-      {/* Quick Filter with Swiper */}
-      {/* <div className="bg-white border-b border-gray-100">
-        <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-3 lg:py-4">
-
-          <div className="relative flex gap-2">
-            <div className="flex items-center gap-2 mb-3 lg:mb-4 w-24 mt-2.5">
-              <span className="text-gray-600 font-medium text-sm lg:text-base">Quick Filter :</span>
-            </div>
-            <Swiper
-              ref={swiperRef}
-              modules={[Navigation]}
-              spaceBetween={8}
-              slidesPerView="auto"
-              navigation={{
-                nextEl: ".swiper-button-next-custom",
-                prevEl: ".swiper-button-prev-custom",
-              }}
-              onSlideChange={(swiper) => {
-                setShowPrev(!swiper.isBeginning);
-                setShowNext(!swiper.isEnd);
-              }}
-              breakpoints={{
-                640: { spaceBetween: 12 },
-                1024: { spaceBetween: 16 },
-              }}
-              className="quick-filter-swiper !w-5/5"
-            >
-              {filterChips.map((chip, index) => (
-                <SwiperSlide key={index} className="!w-auto">
-                  <button
-                    onClick={() => chip.category && toggleFilterChip(chip.category)}
-                    className={`flex items-center gap-1.5 lg:gap-2 px-3 lg:px-5 py-3 rounded-lg cursor-pointer lg:rounded-xl text-xs lg:text-sm font-medium transition-colors whitespace-nowrap ${selectedFilters.includes(chip.category || "")
-                        ? "bg-blue-600 text-white"
-                        : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                      }`}
-                  >
-                    {chip.icon && (
-                      <span
-                        className="text-sm lg:text-base flex items-center justify-center w-5 h-5"
-                        dangerouslySetInnerHTML={{ __html: chip.icon }}
-                      />
-                    )}
-                    {chip.label}
-                  </button>
-                </SwiperSlide>
-              ))}
-            </Swiper>
-
-
-            <button
-              className={`swiper-button-prev-custom absolute rotate-180 left-18 cursor-pointer sm:left-22 top-5.5 -translate-y-1/2 z-10
-    w-7 h-7 sm:w-8 sm:h-8
-    bg-[#163C8C] rounded-full shadow-lg flex items-center justify-center transition-colors
-    ${showPrev ? "flex" : "hidden"}`}
-            >
-              <svg
-                width="6"
-                height="10"
-                className="sm:w-[7px] sm:h-[12px]"
-                viewBox="0 0 7 12"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M0.725098 1.32501L5.4001 6.00001L0.725098 10.675"
-                  stroke="white"
-                  strokeWidth="1.2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </button>
-
-
-            <button
-              className={`swiper-button-next-custom absolute right-2 sm:-right-3 cursor-pointer top-5.5 -translate-y-1/2 z-10
-    w-7 h-7 sm:w-8 sm:h-8
-    bg-[#163C8C] rounded-full shadow-lg flex items-center justify-center transition-colors
-    ${showNext ? "flex" : "hidden"}`}
-            >
-              <svg
-                width="6"
-                height="10"
-                className="sm:w-[7px] sm:h-[12px]"
-                viewBox="0 0 7 12"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M0.725098 1.32501L5.4001 6.00001L0.725098 10.675"
-                  stroke="white"
-                  strokeWidth="1.2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </button>
-          </div>
-        </div>
-      </div> */}
+      
       {/* Main Content */}
 
       <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-4 lg:py-8"  >
@@ -563,7 +443,7 @@ export default function HotelSearchApp() {
               <div className="flex items-center justify-between mb-6 border-b pb-5 border-gray-200">
                 <h2 className="text-lg font-bold text-[#112233]">Advanced Search</h2>
 
-                <button
+                {/* <button
                   type="button"
                   onClick={resetFilters}
                   className="w-8 h-8 flex cursor-pointer items-center justify-center rounded-full border border-gray-300 hover:bg-gray-50 transition-colors"
@@ -573,7 +453,7 @@ export default function HotelSearchApp() {
                     <path d="M10.7143 1.0387V12.9663C10.7143 13.378 10.3806 13.7118 9.96886 13.7118C9.55718 13.7118 9.22339 13.378 9.22339 12.9663V1.0387C9.22339 0.627007 9.55718 0.293037 9.96886 0.293037C10.3806 0.293037 10.7143 0.627007 10.7143 1.0387Z" fill="#163C8C" />
                     <path d="M1.76927 1.03851L1.76927 12.9661C1.76927 13.3778 1.43549 13.7116 1.0238 13.7116C0.612107 13.7116 0.27832 13.3778 0.27832 12.9661L0.27832 1.03851C0.27832 0.626824 0.612107 0.293037 1.0238 0.293037C1.43549 0.293037 1.76927 0.626824 1.76927 1.03851Z" fill="#163C8C" />
                   </svg>
-                </button>
+                </button> */}
 
               </div>
               {/* Search Location */}

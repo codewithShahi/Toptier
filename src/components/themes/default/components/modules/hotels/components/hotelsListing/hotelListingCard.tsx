@@ -8,7 +8,7 @@ import { useUser } from "@hooks/use-user";
 interface HotelCardProps {
   hotel: any;
   viewMode: "grid" | "list" | "map";
-   onBookNow?: (hotel: any) => void;
+  onBookNow?: (hotel: any) => void;
 }
 
 
@@ -16,6 +16,7 @@ const HotelCard = memo(function HotelCard({ hotel, viewMode, onBookNow }: HotelC
 
   const { user } = useUser();
   const [isFav, setIsFav] = useState(hotel.favorite === 1);
+  
   // Memoized renderStars
   const renderStars = useCallback((rating: string) => {
     const stars = [];
@@ -75,6 +76,14 @@ const HotelCard = memo(function HotelCard({ hotel, viewMode, onBookNow }: HotelC
               "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400&h=300&fit=crop";
           }}
         />
+        { viewMode === "map" && <div className="bg-white rounded-full w-9 h-9 sm:w-10 sm:h-10 lg:w-9 lg:h-9 flex items-center justify-center absolute top-3 right-3 shadow">
+          <svg width="15" height="17" viewBox="0 0 15 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M8.03366 16.1192C7.89335 16.2197 7.72496 16.2738 7.55222 16.2738C7.37947 16.2738 7.21108 16.2197 7.07077 16.1192C2.91918 13.1661 -1.4869 7.09186 2.96732 2.7026C4.19014 1.50221 5.83693 0.829815 7.55222 0.830567C9.27166 0.830567 10.9215 1.50405 12.1371 2.70175C16.5913 7.091 12.1853 13.1644 8.03366 16.1192Z" stroke="#5B697E" stroke-opacity="0.9" stroke-width="1.28692" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="M7.55245 8.55221C8.00848 8.55221 8.44582 8.37142 8.76828 8.04963C9.09074 7.72784 9.2719 7.2914 9.2719 6.83631C9.2719 6.38123 9.09074 5.94479 8.76828 5.623C8.44582 5.3012 8.00848 5.12042 7.55245 5.12042C7.09643 5.12042 6.65908 5.3012 6.33662 5.623C6.01416 5.94479 5.83301 6.38123 5.83301 6.83631C5.83301 7.2914 6.01416 7.72784 6.33662 8.04963C6.65908 8.37142 7.09643 8.55221 7.55245 8.55221Z" stroke="#5B697E" stroke-opacity="0.9" stroke-width="1.28692" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+
+        </div>}
+
       </div>
       {/* Hotel Details */}
       <div
@@ -83,13 +92,14 @@ const HotelCard = memo(function HotelCard({ hotel, viewMode, onBookNow }: HotelC
       >
         <div>
           <h3
-            title={hotel.name}  // 👈 yeh line add karo
+            title={hotel.name}  
             className={`text-xl font-extrabold text-gray-900 mb-0 pl-1 sm:text-2xl md:text-xl lg:text-2xl 
     overflow-hidden text-ellipsis whitespace-nowrap 
     ${viewMode === "list" ? "w-full" : "block"}`}
             style={{ fontFamily: "Urbanist, sans-serif" }}
           >
             {hotel.name}
+
           </h3>
 
 
