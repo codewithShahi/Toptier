@@ -106,8 +106,8 @@ const checkout = formatDate(
         <div className="bg-white dark:bg-gray-800 dark:text-gray-50 w-full rounded-3xl shadow-lg p-6 space-y-6">
           {/* Destination */}
           <div className="relative" ref={destinationDropdownRef}>
-            <label className="block text-sm text-start font-medium text-gray-700 dark:text-gray-300 mb-2">
-              {"where to? "}
+            <label className="block text-sm text-start font-medium text-gray-500 dark:text-gray-300 mb-2">
+              {/* {"where to? "}  */} Where to?
             </label>
             <div className="relative">
               <div className={`absolute ${direction === "ltr" ? "left-3" : "right-2"} top-1/2 transform -translate-y-1/2 text-gray-400`}>
@@ -127,8 +127,8 @@ const checkout = formatDate(
                   if (form.destination.trim().length >= 3) setShowDestinationDropdown(true);
                 }}
                 onKeyDown={handleDestinationKeyDown}
-                placeholder={"Search Destination..."}
-                className={`w-full ${direction === "ltr" ? "pl-9" : "pr-9"}  pr-4 py-3 text-sm dark:text-gray-200 placeholder-gray-500 focus:outline-none hover:bg-gray-100 hover:border-gray-300 border border-gray-200 rounded-xl text-gray-900 dark:bg-gray-800 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-500 transition-all duration-200`}
+                placeholder={"Search destinations..."}
+                className={`w-full ${direction === "ltr" ? "pl-9" : "pr-9"}  pr-4 py-3 text-sm font-medium dark:text-gray-200 placeholder-gray-700 focus:outline-none hover:bg-gray-100 hover:border-gray-300 border border-gray-200 rounded-xl text-gray-900 dark:bg-gray-800 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-500 transition-all duration-200`}
               />
 
               {/* Dropdown */}
@@ -185,8 +185,8 @@ const checkout = formatDate(
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {/* Check-in */}
             <div className="relative">
-              <label className="block text-sm text-start font-medium text-gray-700 dark:text-gray-300 mb-2">
-                {isLoading ? "Loading..." : dict?.hotel_search?.checkin?.title}
+              <label className="block text-sm text-start font-medium text-gray-500 dark:text-gray-300 mb-2">
+                {/* {isLoading ? "Loading..." : dict?.hotel_search?.checkin?.title} */}Check - in 
               </label>
               <DatePicker
                 direction={direction}
@@ -204,8 +204,8 @@ const checkout = formatDate(
 
             {/* Check-out */}
             <div className="relative">
-              <label className="block text-sm font-medium text-start text-gray-700 dark:text-gray-300 mb-2">
-                {isLoading ? "Loading..." : dict?.hotel_search?.checkout?.title}
+              <label className="block text-sm font-medium text-start text-gray-500 dark:text-gray-300 mb-2">
+                {/* {isLoading ? "Loading..." : dict?.hotel_search?.checkout?.title} */} Check - out
               </label>
               <DatePicker
                 direction={direction}
@@ -222,8 +222,8 @@ const checkout = formatDate(
 
             {/* Guests */}
             <div className="relative" ref={guestsDropdownRef}>
-              <label className="block text-sm text-start font-medium text-gray-700 mb-2 dark:text-gray-300">
-                {isLoading ? "Loading..." : dict?.hotel_search?.guest_button?.title}
+              <label className="block text-sm text-start font-medium text-gray-500 mb-2 dark:text-gray-300">
+                {/* {isLoading ? "Loading..." : dict?.hotel_search?.guest_button?.title} */} Guests
               </label>
               <button
                 type="button"
@@ -237,7 +237,7 @@ const checkout = formatDate(
                   </svg>
                 </div>
                 <span className="font-medium text-[14px]">
-                  {totalGuests} {isLoading ? "Loading..." : dict?.hotel_search?.guest_button?.guest_title}, {form.rooms} {isLoading ? "Loading..." : dict?.hotel_search?.guest_button?.room_title}
+                  {totalGuests}  {totalGuests === 1 ? "Guest" : "Guests"} {form.rooms > 0 ? `, ${form.rooms} ${form.rooms === 1 ? "Room" : "Rooms"}` : ""}
                 </span>
                 <Icon icon="mdi:chevron-down" width={20} height={20} className={`text-gray-600 transition-transform duration-200 ${showGuestsDropdown ? "rotate-180" : ""}`} />
               </button>
@@ -345,8 +345,8 @@ const checkout = formatDate(
                     <svg width="17" height="18" viewBox="0 0 17 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path d="M12.7761 13.5548L15.635 16.4137M14.7318 8.524C14.7318 10.3703 13.9984 12.141 12.6929 13.4465C11.3873 14.7521 9.61664 15.4855 7.77033 15.4855C5.92403 15.4855 4.15335 14.7521 2.84781 13.4465C1.54228 12.141 0.808838 10.3703 0.808838 8.524C0.808838 6.67769 1.54228 4.90701 2.84781 3.60148C4.15335 2.29594 5.92403 1.5625 7.77033 1.5625C9.61664 1.5625 11.3873 2.29594 12.6929 3.60148C13.9984 4.90701 14.7318 6.67769 14.7318 8.524Z" stroke="white" strokeWidth="1.3923" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
-                    <span className="hidden md:block text-white dark:text-gray-50">
-                      {isLoading ? "Loading..." : dict?.hotel_search?.search_btnText}
+                    <span className="hidden md:block text-white dark:text-gray-50 font-normal">
+                      {/* {isLoading ? "Loading..." : dict?.hotel_search?.search_btnText} */} Search Homes
                     </span>
                   </>
                 )}
