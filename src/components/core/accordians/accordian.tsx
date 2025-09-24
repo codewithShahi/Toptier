@@ -41,7 +41,7 @@ export const AccordionInfoCard = ({
   descriptionClassName = 'text-sm text-gray-600 mt-1',
   leftIconClassName = 'text-gray-600',
   rightIconClassName = 'text-gray-500  transition-transform',
-  contentClassName = 'mt-3 pt-3 border-t border-gray-100 text-sm text-gray-700',
+  contentClassName = 'mt-3 pt-3 border-t border-gray-100 text-sm text-gray-700 w-full ',
 
   iconSize = 20,
   iconColor = '#6B7280',

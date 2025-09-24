@@ -37,6 +37,7 @@ export default function HotelSearch() {
     handleSubmit,
     loadMoreData,
     updateForm,
+    setIsSearching,
   } = useHotelSearch();
   const guestsDropdownRef = useRef<HTMLDivElement>(null);
   const destinationDropdownRef = useRef<HTMLDivElement>(null);
@@ -57,6 +58,8 @@ export default function HotelSearch() {
   }, [setShowDestinationDropdown, setShowGuestsDropdown]);
 
   const onSubmit = async (e: React.FormEvent) => {
+            setIsSearching(true);
+
     const result = await handleSubmit(e);
 
 
@@ -186,7 +189,7 @@ const checkout = formatDate(
             {/* Check-in */}
             <div className="relative">
               <label className="block text-sm text-start font-medium text-gray-500 dark:text-gray-300 mb-2">
-                {/* {isLoading ? "Loading..." : dict?.hotel_search?.checkin?.title} */}Check - in 
+                {/* {isLoading ? "Loading..." : dict?.hotel_search?.checkin?.title} */}Check - in
               </label>
               <DatePicker
                 direction={direction}
@@ -332,7 +335,7 @@ const checkout = formatDate(
               <div className="mt-3 md:mt-7" />
               <button
                 type="submit"
-                disabled={isSearching}
+                // disabled={isSearching}
                 className="w-full bg-blue-900 py-2 px-6 cursor-pointer font-medium flex items-center hover:bg-gray-800 border border-gray-200 rounded-xl text-white dark:border-gray-600 dark:hover:bg-gray-700 justify-center gap-2 focus:outline-none transition-all duration-200"
               >
                 {isSearching ? (
