@@ -30,7 +30,7 @@ const TestimonialSection = () => {
   const { testimonials } = useAppSelector((state) => state.appData.data);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
-
+console.log("testimonials",testimonials);
   const goToNext = () => {
     if (isAnimating) return;
     setIsAnimating(true);
