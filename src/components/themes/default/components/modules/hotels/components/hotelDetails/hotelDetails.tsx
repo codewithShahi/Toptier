@@ -7,6 +7,8 @@ import HotelDetailsSearch from "./hotelDetailsSearch";
 import SwiperImageSlider from "./imageSlider";
 import { Icon } from "@iconify/react";
 import { RoomCard } from "./roomCard";
+import BrandStories from "./brandStories";
+import { AccordionInfoCard } from "@components/core/accordians/accordian";
 // import { hotel_details } from "@src/actions/hotelDetails";
 
 interface HotelDetailsPayload {
@@ -47,6 +49,7 @@ const [isModalOpen, setIsModalOpen] = React.useState(false);
     enabled: slugArr.length > 0,
     staleTime: Infinity,
   });
+  const stripHtml = (html: string) => html.replace(/<[^>]*>/g, "");
   const { img } = hotelDetails || {};
     const amenityIcons: Record<string, string> = {
     pool: "mdi:pool",
@@ -109,10 +112,17 @@ const [isModalOpen, setIsModalOpen] = React.useState(false);
                     </div>
                 </div>
                 {/* <p className="text-[16px] leading-9 font-[500] text-[#555B6A] lg:pr-22">A peaceful boutique escape in Midtown Manhattan, just steps from Grand Central. Enjoy elegant rooms with city views, a full-service spa, and easy access to NYC's top attractions — perfect for both relaxation and exploration.</p> */}
-                <div
+                {/* <div
       className="prose max-w-none" // optional: for nice typography if you use Tailwind
       dangerouslySetInnerHTML={{ __html: hotelDetails?.desc }}
-    />
+    /> */}
+    <div
+  className="text-gray-700  text-base md:text-lg leading-10 mb-4 md:mb-0
+  md:line-clamp-4 md:w-[80%]"
+  dangerouslySetInnerHTML={{ __html: hotelDetails?.desc }}
+/>
+
+
                 <div className="flex md:gap-3 gap-1 mt-2">
                     <div className="flex gap-1 py-1 bg-[#DBFCE7] rounded-[7.45px] md:px-3 px-1 items-center">
 
@@ -212,47 +222,106 @@ const [isModalOpen, setIsModalOpen] = React.useState(false);
       {/* //============= room card  */}
        <section className="choose-your-room py-4 max-w-[1200px] mx-auto appHorizantalSpacing">
         <h1 className="text-2xl font-[700] my-4">Choose your room</h1>
-      {hotelDetails?.rooms && hotelDetails.rooms.length > 0 && (
+{hotelDetails?.rooms && hotelDetails.rooms.length > 0 && (
   <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
-    {
-      hotelDetails.rooms.map((room: any, index: number) => (
-    <RoomCard
-      key={room.id}
-      room={room}
-      getAmenityIcon={getAmenityIcon} // 👈 pass the function
-    />
-  ))
-    }
+    {hotelDetails.rooms.map((room: any) =>
+      room.options?.map((opt: any, index: number) => (
+        <RoomCard
+          key={opt.id || `${room.id}-${index}`}
+          room={room}
+          options={opt} // 👈 pass option too
+          getAmenityIcon={getAmenityIcon}
+        />
+      ))
+    )}
   </div>
-
 )}
+
+
  </section>
       {/* ============>>> way to travel section  */}
-      <section className="way-to-travel my-10 max-w-[1200px] mx-auto appHorizantalSpacing">
-        <h1 className="font-[700] text-2xl my-6">The Toptier Way to Travel</h1>
-        <div className="grid grid-cols-12 gap-5">
-          <div className="lg:col-span-3 md:col-span-6 col-span-12 flex flex-col gap-3">
-            <img className="h-32 rounded-sm" src="/images/auth_bg.jpg" alt="" />
-            <p className="font-[500] text-lg text-[#0F172B] truncate">Stay in a Historic Skyline Studio</p>
-          </div>
-          <div className="lg:col-span-3 md:col-span-6 col-span-12 flex flex-col gap-3">
-            <img className="h-32 rounded-sm" src="/images/auth_bg.jpg" alt="" />
-            <p className="font-[500] text-lg text-[#0F172B] truncate">Sunset Moments on the Rooftop</p>
-          </div>
-          <div className="lg:col-span-3 md:col-span-6 col-span-12 flex flex-col gap-3">
-            <img className="h-32 rounded-sm" src="/images/auth_bg.jpg" alt="" />
-            <p className="font-[500] text-lg text-[#0F172B] truncate">Welcome Glass of Sparkling Wine</p>
-          </div>
-          <div className="lg:col-span-3 md:col-span-6 col-span-12 flex flex-col gap-3">
-            <img className="h-32 rounded-sm" src="/images/auth_bg.jpg" alt="" />
-            <p className="font-[500] text-lg text-[#0F172B] truncate">Gourmet Breakfast with a View</p>
-          </div>
-          <div className="lg:col-span-3 md:col-span-6 col-span-12 flex flex-col gap-3">
-            <img className="h-32 rounded-sm" src="/images/auth_bg.jpg" alt="" />
-            <p className="font-[500] text-lg text-[#0F172B] truncate">Wellness & Rejuvenation at the Spa</p>
-          </div>
+    <section className="way-to-travel my-10 max-w-[1200px] mx-auto appHorizantalSpacing">
+  <h1 className="font-[700] text-2xl my-6">The Toptier Way to Travel</h1>
+
+  {hotelDetails?.brand_stories?.length > 0 && (
+    <div className="grid grid-cols-12 gap-5">
+      {hotelDetails.brand_stories.map((story: any, index: number) => (
+        <div
+          key={index}
+          className="lg:col-span-3 md:col-span-6 col-span-12 flex flex-col gap-3"
+        >
+          <img
+            className="h-32 rounded-sm object-cover"
+            src={story.picture || "/images/auth_bg.jpg"}
+            alt=""
+          />
+          <p className="font-[500] text-lg text-[#0F172B] line-clamp-3">
+            <span
+              dangerouslySetInnerHTML={{ __html: story.desc_text || "" }}
+            />
+          </p>
         </div>
-      </section>
+      ))}
+    </div>
+  )}
+</section>
+        {/* ============>>> accordian section  */}
+ {hotelDetails?.faqs && hotelDetails.faqs.length > 0 && (
+  <section className="py-4 max-w-[1200px] mx-auto appHorizantalSpacing mb-10">
+    <h1 className="text-2xl font-[700] my-4 mb-5">Need-to-Know Details</h1>
+
+    <div className="space-y-4">
+      {hotelDetails.faqs
+        .filter((faq: any) => faq.category === "hotel_faqs") // ✅ Only hotel FAQs
+        .map((faq: any) => (
+          <AccordionInfoCard
+            key={faq.id}
+            title={faq.question}
+            // Optional: show first sentence as description
+            description={""} // or extract preview if needed
+            leftIcon="mdi:help-circle-outline"
+            showDescription={false} // since answer is in expandable content
+          >
+            {/* Safely render HTML from answer */}
+            <div
+              className="text-sm text-gray-700"
+              dangerouslySetInnerHTML={{
+                __html: faq.answer || "No details available."
+              }}
+            />
+          </AccordionInfoCard>
+        ))}
+    </div>
+  </section>
+)}
+ {hotelDetails?.faqs && hotelDetails.faqs.length > 0 && (
+  <section className="py-4 max-w-[1200px] mx-auto appHorizantalSpacing mb-10">
+    <h1 className="text-2xl font-[700] my-4 mb-5">More about the property</h1>
+
+    <div className="space-y-4">
+      {hotelDetails.faqs
+        .filter((faq: any) => faq.category === "faqs") // ✅ Only hotel FAQs
+        .map((faq: any) => (
+          <AccordionInfoCard
+            key={faq.id}
+            title={faq.question}
+            // Optional: show first sentence as description
+            description={""} // or extract preview if needed
+            leftIcon="mdi:help-circle-outline"
+            showDescription={false} // since answer is in expandable content
+          >
+            {/* Safely render HTML from answer */}
+            <div
+              className="text-sm text-gray-700"
+              dangerouslySetInnerHTML={{
+                __html: faq.answer || "No details available."
+              }}
+            />
+          </AccordionInfoCard>
+        ))}
+    </div>
+  </section>
+)}
 
 {/* >>> MODAL (OUTSIDE THE GRID, AT BOTTOM OF SECTION) */}
 {isModalOpen && (
