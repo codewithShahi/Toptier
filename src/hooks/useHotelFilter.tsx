@@ -147,7 +147,7 @@ useEffect(() => {
       case 'rating':
         return (parseFloat(b.rating) || 0) - (parseFloat(a.rating) || 0);
       case 'name':
-        return a.name.localeCompare(b.name);
+        return a.name.localeCompare(b.name || "");
       default:
         return 0;
     }
