@@ -159,10 +159,10 @@ export default function HotelMap({ hotels }: HotelMapProps) {
     <div className="relative w-full h-full rounded-4xl overflow-hidden">
       {/* MINI MAP PREVIEW */}
       <div
-        className="absolute top-54 right-2 z-[1000] cursor-pointer"
+        className="absolute top-54 right-2 z-10 cursor-pointer"
         onClick={() => setShowModal(true)}
       >
-        <div className="w-23 h-18 rounded-lg shadow-lg border border-gray-300 relative">
+        <div className="w-23 h-18 rounded-2xl shadow-lg border border-gray-300 relative">
           <MapContainer
             center={fallbackCenter}
             zoom={2}
@@ -226,35 +226,37 @@ export default function HotelMap({ hotels }: HotelMapProps) {
         </div>
       )}
       {/* MAIN MAP */}
-      <MapContainer
-        style={containerStyle}
-        center={fallbackCenter}
-        zoom={7}
-        scrollWheelZoom={true}
-        zoomControl={false}
-        attributionControl={false}
-      >
-        <TileLayer
-          url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a>'
-        />
-        <FitBounds hotels={validHotels} />
-        {validHotels.map((hotel) => (
-          <Marker
-            key={hotel.hotel_id}
-            position={[Number(hotel.latitude), Number(hotel.longitude)]}
-            icon={priceIcon(hotel.actual_price)}
-          >
-            <Tooltip direction="top" offset={L.point(0, -10)} opacity={1}>
-              <div className="text-[12px] max-w-[220px] px-2 py-1 leading-[1.4] text-center rounded-2xl">
-                <b>{hotel.name || "Hotel"}</b> <br />
-                ${hotel.actual_price}
-              </div>
-            </Tooltip>
-          </Marker>
-        ))}
-        <CustomControls />
-      </MapContainer>
+      <div className="relative z-0">
+        <MapContainer
+          style={containerStyle}
+          center={fallbackCenter}
+          zoom={7}
+          scrollWheelZoom={true}
+          zoomControl={false}
+          attributionControl={false}
+        >
+          <TileLayer
+            url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a>'
+          />
+          <FitBounds hotels={validHotels} />
+          {validHotels.map((hotel) => (
+            <Marker
+              key={hotel.hotel_id}
+              position={[Number(hotel.latitude), Number(hotel.longitude)]}
+              icon={priceIcon(hotel.actual_price)}
+            >
+              <Tooltip direction="top" offset={L.point(0, -10)} opacity={1}>
+                <div className="text-[12px] max-w-[220px] px-2 py-1 leading-[1.4] text-center rounded-2xl">
+                  <b>{hotel.name || "Hotel"}</b> <br />
+                  ${hotel.actual_price}
+                </div>
+              </Tooltip>
+            </Marker>
+          ))}
+          <CustomControls />
+        </MapContainer>
+      </div>
     </div>
   );
 }

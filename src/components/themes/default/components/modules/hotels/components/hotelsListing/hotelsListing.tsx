@@ -144,10 +144,13 @@ export default function HotelSearchApp() {
 
 
 
+
   const [showPrev, setShowPrev] = useState(false);
 
-const [showNext, setShowNext] = useState(true);
-  const { allHotelsData:hotelsData ,loadMoreData,isloadingMore,listRef, allHotelsData:loadMoreHotels,isSearching,isPending,isInitialLoading,detailsBookNowHandler} = useHotelSearch()
+
+
+  const [showNext, setShowNext] = useState(true);
+  const { allHotelsData: hotelsData, loadMoreData, isloadingMore, listRef, allHotelsData: loadMoreHotels, isSearching, isPending, isInitialLoading, detailsBookNowHandler } = useHotelSearch()
 
 
   console.log('is searching ', isSearching)
@@ -608,40 +611,39 @@ const [showNext, setShowNext] = useState(true);
                 />
               </div>
 
-<div className="mb-8">
-  <label className="block text-base font-semibold text-[#112233] mb-3">
-    Hotel Stars
-  </label>
-  <div className="space-y-3">
-    {[5, 4, 3, 2, 1].map((stars) => (
-      <div
-        key={stars}
-        className="flex items-center justify-between cursor-pointer"
-        onClick={() => {
-          setSelectedStars(stars);   // ✅ update local state
-          updateRatingFilter(stars); // ✅ call API filter
-        }}
-      >
-        <div className="flex items-center gap-3">
-          {/* Stars */}
-          <div className="flex">
-            {[...Array(stars)].map((_, i) => (
-              <Icon
-                key={i}
-                icon="mdi:star"
-                className={`h-5 w-5 ${
-                  selectedStars === stars ? "text-yellow-400" : "text-gray-300"
-                }`}
-              />
-            ))}
-          </div>
+              <div className="mb-8">
+                <label className="block text-base font-semibold text-[#112233] mb-3">
+                  Hotel Stars
+                </label>
+                <div className="space-y-3">
+                  {[5, 4, 3, 2, 1].map((stars) => (
+                    <div
+                      key={stars}
+                      className="flex items-center justify-between cursor-pointer"
+                      onClick={() => {
+                        setSelectedStars(stars);   // ✅ update local state
+                        updateRatingFilter(stars); // ✅ call API filter
+                      }}
+                    >
+                      <div className="flex items-center gap-3">
+                        {/* Stars */}
+                        <div className="flex">
+                          {[...Array(stars)].map((_, i) => (
+                            <Icon
+                              key={i}
+                              icon="mdi:star"
+                              className={`h-5 w-5 ${selectedStars === stars ? "text-yellow-400" : "text-gray-300"
+                                }`}
+                            />
+                          ))}
+                        </div>
 
 
                         {/* Label */}
                         <span
                           className={`text-sm ${selectedStars === stars
-                              ? "text-yellow-600 font-medium"
-                              : "text-gray-600"
+                            ? "text-yellow-600 font-medium"
+                            : "text-gray-600"
                             }`}
                         >
                           ({stars} Stars)
@@ -701,44 +703,45 @@ const [showNext, setShowNext] = useState(true);
             </div>
             {/* Sort and Results Header */}
             <div className="bg-white rounded-lg lg:rounded-xl border border-gray-200 p-3 lg:p-3 mb-4 lg:mb-6">
-              <div className="flex flex-col space-y-3 sm:space-y-0 sm:flex-row sm:items-center justify-between gap-3 lg:gap-4">
+              <div className="flex flex-col space-y-4 lg:space-y-0 lg:flex-row lg:items-center justify-between gap-3 lg:gap-4">
+                {/* Left Side: Results Count & Map Filter Button */}
                 <div className="flex items-center gap-3 lg:gap-4">
-                  {viewMode === "map" && <button
-                    type="button"
-                    onClick={() => setMobileFiltersOpen(true)}
-                    className="w-8 h-8 flex cursor-pointer items-center justify-center rounded-full border border-gray-300 hover:bg-gray-50 transition-colors"
-                  >
-                    <svg width="11" height="14" viewBox="0 0 11 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M6.24242 1.0387L6.24242 12.9663C6.24242 13.378 5.90863 13.7118 5.49694 13.7118C5.08525 13.7118 4.75146 13.378 4.75146 12.9663L4.75146 1.0387C4.75146 0.627007 5.08525 0.293221 5.49694 0.293221C5.90863 0.293221 6.24242 0.627007 6.24242 1.0387Z" fill="#163C8C" />
-                      <path d="M10.7143 1.0387V12.9663C10.7143 13.378 10.3806 13.7118 9.96886 13.7118C9.55718 13.7118 9.22339 13.378 9.22339 12.9663V1.0387C9.22339 0.627007 9.55718 0.293037 9.96886 0.293037C10.3806 0.293037 10.7143 0.627007 10.7143 1.0387Z" fill="#163C8C" />
-                      <path d="M1.76927 1.03851L1.76927 12.9661C1.76927 13.3778 1.43549 13.7116 1.0238 13.7116C0.612107 13.7116 0.27832 13.3778 0.27832 12.9661L0.27832 1.03851C0.27832 0.626824 0.612107 0.293037 1.0238 0.293037C1.43549 0.293037 1.76927 0.626824 1.76927 1.03851Z" fill="#163C8C" />
-                    </svg>
-                  </button>}
-
+                  {viewMode === "map" && (
+                    <button
+                      type="button"
+                      onClick={() => setMobileFiltersOpen(true)}
+                      className="w-8 h-8 flex cursor-pointer items-center justify-center rounded-full border border-gray-300 hover:bg-gray-50 transition-colors"
+                    >
+                      <svg width="11" height="14" viewBox="0 0 11 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M6.24242 1.0387L6.24242 12.9663C6.24242 13.378 5.90863 13.7118 5.49694 13.7118C5.08525 13.7118 4.75146 13.378 4.75146 12.9663L4.75146 1.0387C4.75146 0.627007 5.08525 0.293221 5.49694 0.293221C5.90863 0.293221 6.24242 0.627007 6.24242 1.0387Z" fill="#163C8C" />
+                        <path d="M10.7143 1.0387V12.9663C10.7143 13.378 10.3806 13.7118 9.96886 13.7118C9.55718 13.7118 9.22339 13.378 9.22339 12.9663V1.0387C9.22339 0.627007 9.55718 0.293037 9.96886 0.293037C10.3806 0.293037 10.7143 0.627007 10.7143 1.0387Z" fill="#163C8C" />
+                        <path d="M1.76927 1.03851L1.76927 12.9661C1.76927 13.3778 1.43549 13.7116 1.0238 13.7116C0.612107 13.7116 0.27832 13.3778 0.27832 12.9661L0.27832 1.03851C0.27832 0.626824 0.612107 0.293037 1.0238 0.293037C1.43549 0.293037 1.76927 0.626824 1.76927 1.03851Z" fill="#163C8C" />
+                      </svg>
+                    </button>
+                  )}
                   <span className="text-gray-500 font-medium text-sm lg:text-base pl-2">
                     {(isInitialLoading || isFilterLoading) ? "Loading..." : `${filteredHotels?.length} hotels found`}
                   </span>
                 </div>
-                <div className="flex items-center justify-between sm:justify-end gap-3 lg:gap-2">
-                  <div className="flex items-center gap-2">
-                    <span className="text-gray-600 font-medium text-sm lg:text-base">Sort :</span>
-                    <div className="relative" ref={dropdownRef}>
-                      {/* Button */}
+
+                {/* Right Side: Sort Dropdown & View Mode Buttons */}
+                <div className="flex flex-col lg:flex-row lg:items-center gap-3 lg:gap-2 w-full lg:w-auto">
+                  {/* Sort Dropdown */}
+                  <div className="flex items-center gap-2 w-full lg:w-auto">
+                    <span className="text-gray-600 font-medium text-sm lg:text-base whitespace-nowrap">Sort :</span>
+                    <div className="relative flex-1 lg:flex-none" ref={dropdownRef}>
                       <button
                         onClick={() => setOpen(!open)}
-                        className="flex items-center justify-between w-[200px] cursor-pointer bg-[#F3F3F5] px-4 py-2.5 rounded-3xl border border-[#DFE2E6] text-xs lg:text-sm text-gray-600 focus:outline-none focus:ring-2 focus:ring-[#DFE2E6]"
+                        className="flex items-center justify-between w-full lg:w-[200px] cursor-pointer bg-[#F3F3F5] px-4 py-2.5 rounded-3xl border border-[#DFE2E6] text-xs lg:text-sm text-gray-600 focus:outline-none focus:ring-2 focus:ring-[#DFE2E6]"
                       >
                         <span>{selected}</span>
                         <Icon
                           icon="mdi:chevron-down"
-                          className={`h-4 w-4 text-gray-500 transition-transform ${open ? "rotate-180" : ""
-                            }`}
+                          className={`h-4 w-4 text-gray-500 transition-transform ${open ? "rotate-180" : ""}`}
                         />
                       </button>
-
-                      {/* Dropdown */}
                       {open && (
-                        <div className="absolute mt-2 w-[200px] bg-white border border-gray-200 rounded-lg shadow-lg z-10">
+                        <div className="absolute mt-2 w-full lg:w-[200px] bg-white border border-gray-200 rounded-lg shadow-lg z-10">
                           {options.map((opt) => (
                             <button
                               key={opt}
@@ -746,8 +749,7 @@ const [showNext, setShowNext] = useState(true);
                                 setSelected(opt);
                                 setOpen(false);
                               }}
-                              className={`w-full cursor-pointer text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 ${selected === opt ? "bg-gray-50 font-medium" : ""
-                                }`}
+                              className={`w-full cursor-pointer text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 ${selected === opt ? "bg-gray-50 font-medium" : ""}`}
                             >
                               {opt}
                             </button>
@@ -756,11 +758,12 @@ const [showNext, setShowNext] = useState(true);
                       )}
                     </div>
                   </div>
-                  <div className="hidden sm:flex space-x-1 px-2 py-1 bg-[#F3F3F5] rounded-lg overflow-hidden">
-                    {/* Grid Button */}
+
+                  {/* ✅ View Mode Buttons - Now visible on all devices and stacked on mobile */}
+                  <div className="flex space-x-1 px-2 py-1 bg-[#F3F3F5] rounded-lg overflow-hidden w-full lg:w-auto">
                     <button
                       onClick={() => setViewMode('grid')}
-                      className={`px-3 py-1.5 cursor-pointer transition-colors ${viewMode === 'grid'
+                      className={`flex-1 lg:flex-none px-3 py-1.5 cursor-pointer transition-colors ${viewMode === 'grid'
                         ? 'bg-white rounded-md text-[#163C8C]'
                         : 'bg-transparent text-gray-700'
                         }`}
@@ -778,10 +781,9 @@ const [showNext, setShowNext] = useState(true);
                         />
                       </svg>
                     </button>
-                    {/* List Button */}
                     <button
                       onClick={() => setViewMode('list')}
-                      className={`px-3 py-2 cursor-pointer transition-colors ${viewMode === 'list'
+                      className={`flex-1 lg:flex-none px-3 py-2 cursor-pointer transition-colors ${viewMode === 'list'
                         ? 'bg-white rounded-md text-[#163C8C]'
                         : 'bg-transparent text-gray-700'
                         }`}
@@ -803,15 +805,13 @@ const [showNext, setShowNext] = useState(true);
                         />
                       </svg>
                     </button>
-                    {/* Map Button */}
                     <button
                       onClick={() => setViewMode('map')}
-                      className={`px-3 py-2 cursor-pointer transition-colors ${viewMode === 'map'
+                      className={`flex-1 lg:flex-none px-3 py-2 cursor-pointer transition-colors ${viewMode === 'map'
                         ? 'bg-white rounded-md text-[#163C8C]'
                         : 'bg-transparent text-gray-700'
                         }`}
                     >
-
                       <svg width="15" height="16" viewBox="0 0 15 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M14.0452 1.44663C13.8444 1.31318 13.6135 1.23193 13.3733 1.21023C13.1331 1.18853 12.8914 1.22707 12.6699 1.32235L9.712 2.59001L5.77647 0.932938C5.62197 0.866842 5.45568 0.832764 5.28763 0.832764C5.11959 0.832764 4.9533 0.866842 4.7988 0.932938L1.18639 2.45744C0.904789 2.57992 0.665671 2.7829 0.499091 3.04088C0.332511 3.29886 0.245902 3.60032 0.250149 3.90737V13.2284C0.248625 13.4904 0.312174 13.7486 0.435092 13.98C0.55801 14.2114 0.736451 14.4086 0.954403 14.554C1.15524 14.6875 1.38619 14.7687 1.62634 14.7904C1.86649 14.8121 2.10826 14.7736 2.32977 14.6783L5.28763 13.4107L9.22317 15.0677C9.37736 15.1347 9.5439 15.1686 9.712 15.1671C9.88 15.1674 10.0463 15.1336 10.2008 15.0677L13.8132 13.5184C14.0949 13.3959 14.334 13.1929 14.5005 12.9349C14.6671 12.6769 14.7537 12.3755 14.7495 12.0684V2.77228C14.751 2.51029 14.6875 2.25201 14.5645 2.02064C14.4416 1.78926 14.2632 1.59203 14.0452 1.44663ZM5.90903 2.27516L9.0906 3.63396V13.6841L5.90903 12.3253V2.27516ZM1.84093 13.5349C1.80945 13.5531 1.77373 13.5627 1.73737 13.5627C1.70101 13.5627 1.66529 13.5531 1.6338 13.5349C1.58758 13.5026 1.55039 13.459 1.52574 13.4082C1.50109 13.3575 1.4898 13.3013 1.49295 13.2449V3.90737C1.49194 3.84122 1.51126 3.77634 1.5483 3.72152C1.58534 3.66669 1.63832 3.62456 1.70008 3.60082L4.66623 2.31659V12.3253L1.84093 13.5349ZM13.5067 12.0933C13.5097 12.1566 13.4941 12.2195 13.4617 12.274C13.4293 12.3285 13.3815 12.3723 13.3244 12.3998L10.3334 13.6841V3.67539L13.1587 2.46573C13.1902 2.44755 13.2259 2.43798 13.2623 2.43798C13.2986 2.43798 13.3344 2.44755 13.3658 2.46573C13.4121 2.49808 13.4493 2.54169 13.4739 2.59244C13.4985 2.64319 13.5098 2.69938 13.5067 2.75571V12.0933Z" fill="black" fillOpacity="0.7" />
                       </svg>
@@ -826,53 +826,65 @@ const [showNext, setShowNext] = useState(true);
 
             {/*=================>>>>> FOR LIST AND GRID  Hotel Grid */}
 
-         {viewMode !== 'map' && (
-  <div className={`${viewMode === 'grid'
-    ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 items-start'
-    : 'space-y-4 md:space-y-6'
-    }`}>
-    {filteredHotels.map((hotel: any,index:number) => (
-      <HotelCard
- key={`${hotel.hotel_id || "hotel"}-${index}`}
-  hotel={hotel}
-  viewMode={viewMode}
-   onBookNow={(hotel :any) => detailsBookNowHandler(hotel)} // ✅ pass hotel + form
+            {viewMode !== 'map' && (
+              <div className={`${viewMode === 'grid'
+                ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 items-start'
+                : 'space-y-4 md:space-y-6'
+                }`}>
+                {filteredHotels.map((hotel: any, index: number) => (
+                  <HotelCard
+                    key={`${hotel.hotel_id || "hotel"}-${index}`}
+                    hotel={hotel}
+                    viewMode={viewMode}
+                    onBookNow={(hotel: any) => detailsBookNowHandler(hotel)} // ✅ pass hotel + form
 
-  // onUpdateFavourite={handleUpdateFavourite}
-/>
+                  // onUpdateFavourite={handleUpdateFavourite}
+                  />
 
-    ))}
-  </div>
-)}
-            {/* ==============>>> MAP SECTION ADDED HERE */}
-            {viewMode === "map" && (
-              <div className="flex gap-6 mt-6 ">
-                {/* Left side cards */}
-                <div className="flex-1  pr-2">
-                  <div
-                    className={`grid gap-4 md:gap-6 items-start
-          grid-cols-1 lg:grid-cols-2`}
-                  >
-                    {filteredHotels.map((hotel: any, index: number) => (
-                      <HotelCard
-                        key={`${hotel.hotel_id || "hotel"}-${index}`}
-                        hotel={hotel}
-                        viewMode={viewMode}
-                      />
-                    ))}
-                  </div>
-                </div>
-
-                {/* Right side map container */}
-                <div className="hidden md:block w-1/2 h-[800px] bg-gray-100 rounded-3xl shadow-md border-gray-300">
-                  <div className="w-full  flex items-center justify-center text-gray-500">
-                    <HotelMap
-                      hotels={filteredHotels}
-                    />
-
-                  </div>
-                </div>
+                ))}
               </div>
+            )}
+            {/* ==============>>> MAP SECTION (Responsive: Stacked on mobile, side-by-side on desktop) */}
+            {viewMode === "map" && (
+              <>
+                {/* Mobile/Tablet: Map on top, cards below */}
+                <div className="lg:hidden flex flex-col gap-6 mt-6">
+                  <div className="w-full h-[500px] bg-gray-100 rounded-3xl shadow-md border border-gray-300 overflow-hidden">
+                    <HotelMap hotels={filteredHotels} />
+                  </div>
+                  <div className="w-full">
+                    <div className="grid gap-4 md:gap-6 grid-cols-1">
+                      {filteredHotels.map((hotel: any, index: number) => (
+                        <HotelCard
+                          key={`${hotel.hotel_id || "hotel"}-${index}`}
+                          hotel={hotel}
+                          viewMode={viewMode}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Desktop (lg+): Side-by-side (unchanged) */}
+                <div className="hidden lg:flex gap-6 mt-6">
+                  <div className="flex-1 pr-2">
+                    <div className="grid gap-4 md:gap-6 grid-cols-1 lg:grid-cols-2">
+                      {filteredHotels.map((hotel: any, index: number) => (
+                        <HotelCard
+                          key={`${hotel.hotel_id || "hotel"}-${index}`}
+                          hotel={hotel}
+                          viewMode={viewMode}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                  <div className="w-1/2 h-[800px] bg-gray-100 rounded-3xl shadow-md border border-gray-300">
+                    <div className="w-full h-full">
+                      <HotelMap hotels={filteredHotels} />
+                    </div>
+                  </div>
+                </div>
+              </>
             )}
             {/* ============>>> LOAD MORE DATA ON SCROLL  */}
             {isloadingMore &&
@@ -922,7 +934,7 @@ const [showNext, setShowNext] = useState(true);
             onClick={() => setMobileFiltersOpen(false)}
           ></div>
 
-          <div className="absolute bottom-3 m-5  left-0 right-0 bg-white rounded-t-2xl max-h-[90vh] overflow-y-auto mx-4">
+          <div className="absolute bottom-3 left-8 right-8 bg-white rounded-2xl max-h-[90vh] overflow-y-auto mx-4">
             {/* Header */}
             <div className="sticky z-20 top-0 bg-white border-b border-gray-200 px-4 py-4 flex items-center justify-between">
               <h2 className="text-lg font-bold text-gray-900">Filters & Search</h2>
@@ -930,7 +942,7 @@ const [showNext, setShowNext] = useState(true);
                 onClick={() => setMobileFiltersOpen(false)}
                 className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
               >
-                <Icon icon="mdi:close" className="h-5 w-5" />
+                <Icon icon="mdi:close" className="h-5 w-5 cursor-pointer" />
               </button>
             </div>
             {/* Content */}
@@ -967,49 +979,47 @@ const [showNext, setShowNext] = useState(true);
               </div>
               {/* Mobile Hotel Stars */}
 
-             <div className="mb-8">
-  <label className="block text-base font-semibold text-[#112233] mb-3">
-    Hotel Stars
-  </label>
-  <div className="space-y-3">
-    {[5, 4, 3, 2, 1].map((stars) => (
-      <div
-        key={stars}
-        className="flex items-center justify-between cursor-pointer"
-        onClick={() => {
-          setSelectedStars(stars);   // ✅ update local state
-          updateRatingFilter(stars); // ✅ call API filter
-        }}
-      >
-        <div className="flex items-center gap-3">
-          {/* Stars */}
-          <div className="flex">
-            {[...Array(stars)].map((_, i) => (
-              <Icon
-                key={i}
-                icon="mdi:star"
-                className={`h-5 w-5 ${
-                  selectedStars === stars ? "text-yellow-400" : "text-gray-300"
-                }`}
-              />
-            ))}
-          </div>
+              <div className="mb-8">
+                <label className="block text-base font-semibold text-[#112233] mb-3">
+                  Hotel Stars
+                </label>
+                <div className="space-y-3">
+                  {[5, 4, 3, 2, 1].map((stars) => (
+                    <div
+                      key={stars}
+                      className="flex items-center justify-between cursor-pointer"
+                      onClick={() => {
+                        setSelectedStars(stars);   // ✅ update local state
+                        updateRatingFilter(stars); // ✅ call API filter
+                      }}
+                    >
+                      <div className="flex items-center gap-3">
+                        {/* Stars */}
+                        <div className="flex">
+                          {[...Array(stars)].map((_, i) => (
+                            <Icon
+                              key={i}
+                              icon="mdi:star"
+                              className={`h-5 w-5 ${selectedStars === stars ? "text-yellow-400" : "text-gray-300"
+                                }`}
+                            />
+                          ))}
+                        </div>
 
-          {/* Label */}
-          <span
-            className={`text-sm ${
-              selectedStars === stars
-                ? "text-yellow-600 font-medium"
-                : "text-gray-600"
-            }`}
-          >
-            ({stars} Stars)
-          </span>
-        </div>
-      </div>
-    ))}
-  </div>
-</div>
+                        {/* Label */}
+                        <span
+                          className={`text-sm ${selectedStars === stars
+                            ? "text-yellow-600 font-medium"
+                            : "text-gray-600"
+                            }`}
+                        >
+                          ({stars} Stars)
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
 
               {/* Mobile Rating */}
               <div>
