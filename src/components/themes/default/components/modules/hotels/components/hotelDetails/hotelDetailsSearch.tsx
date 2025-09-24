@@ -9,14 +9,14 @@ import { Icon } from "@iconify/react";
 // Mock dictionary for i18n (replace with your actual dict)
 const dict = {
   hotel_search: {
-    checkin: { title: "Check-in" },
-    checkout: { title: "Check-out" },
+    checkin: { title: "Check - in" },
+    checkout: { title: "Check - out" },
     guest_button: {
       title: "Guests",
       guest_title: "Guests",
       room_title: "Room(s)"
     },
-    search_btnText: "Search"
+    search_btnText: "Search Homes"
   }
 };
 
@@ -56,13 +56,13 @@ export default function HotelDetailsSearch() {
 
           {/* Check-in */}
           <div className="relative">
-            <label className="block text-sm text-start font-medium text-gray-700 dark:text-gray-300 mb-2">
+            <label className="block text-sm text-start font-medium text-gray-500 dark:text-gray-300 mb-2">
               {isLoading ? "Loading..." : dict?.hotel_search?.checkin?.title}
             </label>
             <DatePicker
               direction={direction}
               showCalendarIcon
-              className="w-full font-medium pl-1 text-sm placeholder-gray-400 hover:bg-gray-100 hover:border-gray-300 border border-gray-200 rounded-xl text-gray-900 dark:bg-gray-800 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-500 bg-white transition-all duration-200 focus:outline-none"
+              className="w-full font-medium pl-2 text-sm placeholder-gray-400 hover:bg-gray-100 hover:border-gray-300 border border-gray-200 rounded-xl text-gray-900 dark:bg-gray-800 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-500 bg-white transition-all duration-200 focus:outline-none"
               defaultDate={new Date(form.checkin)}
               onSelect={(date) => {
                 const newCheckin = date ? date.toISOString().slice(0, 10) : "";
@@ -74,14 +74,14 @@ export default function HotelDetailsSearch() {
 
           {/* Check-out */}
           <div className="relative">
-            <label className="block text-sm font-medium text-start text-gray-700 dark:text-gray-300 mb-2">
+            <label className="block text-sm font-medium text-start text-gray-500 dark:text-gray-300 mb-2">
               {isLoading ? "Loading..." : dict?.hotel_search?.checkout?.title}
             </label>
             <DatePicker
               direction={direction}
               showCalendarIcon
               defaultDate={new Date(form.checkout)}
-              className="w-full font-medium pl-1 text-sm placeholder-gray-400 hover:bg-gray-100 hover:border-gray-300 border border-gray-200 rounded-xl text-gray-900 dark:bg-gray-800 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-500 bg-white transition-all duration-200 focus:outline-none"
+              className="w-full font-medium pl-2 text-sm placeholder-gray-400 hover:bg-gray-100 hover:border-gray-300 border border-gray-200 rounded-xl text-gray-900 dark:bg-gray-800 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-500 bg-white transition-all duration-200 focus:outline-none"
               onSelect={(date) => {
                 const newCheckout = date ? date.toISOString().slice(0, 10) : "";
                 updateForm({ checkout: newCheckout });
@@ -92,15 +92,15 @@ export default function HotelDetailsSearch() {
 
           {/* Guests */}
           <div className="relative" ref={guestsDropdownRef}>
-            <label className="block text-sm text-start font-medium text-gray-700 mb-2 dark:text-gray-300">
+            <label className="block text-sm text-start font-medium text-gray-500 mb-2 dark:text-gray-300">
               {isLoading ? "Loading..." : dict?.hotel_search?.guest_button?.title}
             </label>
             <button
               type="button"
               onClick={toggleGuestsDropdown}
-              className={`w-full flex items-center justify-between ${direction === "ltr" ? "pl-10 pr-4" : "pr-12 pl-4"} py-2.5 text-xs hover:bg-gray-100 hover:border-gray-300 border border-gray-200 rounded-xl text-gray-900 dark:bg-gray-800 dark:border-gray-600 cursor-pointer dark:hover:bg-gray-700 dark:hover:border-gray-500 transition-all duration-200`}
+              className={`w-full flex items-center justify-between ${direction === "ltr" ? "pl-11 pr-4" : "pr-12 pl-4"} py-2.5 text-xs hover:bg-gray-100 hover:border-gray-300 border border-gray-200 rounded-xl text-gray-900 dark:bg-gray-800 dark:border-gray-600 cursor-pointer dark:hover:bg-gray-700 dark:hover:border-gray-500 transition-all duration-200`}
             >
-              <div className={`absolute ${direction === "ltr" ? "left-3" : "right-4"} bottom-1 transform -translate-y-1/2 text-gray-400`}>
+              <div className={`absolute ${direction === "ltr" ? "left-4" : "right-4"} bottom-1 transform -translate-y-1/2 text-gray-400`}>
                 <svg width="19" height="19" viewBox="0 0 14 17" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M7.01698 6.91855C8.65463 6.91855 9.98221 5.59097 9.98221 3.95332C9.98221 2.31568 8.65463 0.988098 7.01698 0.988098C5.37933 0.988098 4.05176 2.31568 4.05176 3.95332C4.05176 5.59097 5.37933 6.91855 7.01698 6.91855Z" stroke="#8C96A5" strokeWidth="1.11196" />
                   <path d="M12.9476 12.4783C12.9476 14.3205 12.9476 15.8142 7.01712 15.8142C1.08667 15.8142 1.08667 14.3205 1.08667 12.4783C1.08667 10.6362 3.74203 9.14246 7.01712 9.14246C10.2922 9.14246 12.9476 10.6362 12.9476 12.4783Z" stroke="#8C96A5" strokeWidth="1.11196" />
@@ -198,15 +198,15 @@ export default function HotelDetailsSearch() {
           </div>
 
           {/* Nationality Dropdown */}
-          <div className="relative">
-            <label className="block text-sm text-start font-medium text-gray-700 dark:text-gray-300 mb-2">
+          <div className="relative ">
+            <label className="block text-sm text-start font-medium text-gray-500 dark:text-gray-300 mb-2">
               Nationality
             </label>
             <select
               name="nationality"
               value={form.nationality}
               onChange={handleChange}
-              className="w-full font-medium pl-3 pr-8 py-2.5 text-sm placeholder-gray-400 hover:bg-gray-100 hover:border-gray-300 border border-gray-200 rounded-xl text-gray-900 dark:bg-gray-800 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-500 bg-white transition-all duration-200 focus:outline-none appearance-none"
+              className="w-full font-medium  cursor-pointer  pl-3 pr-8 py-2.5 text-sm placeholder-gray-400 hover:bg-gray-100 hover:border-gray-300 border border-gray-200 rounded-xl text-gray-900 dark:bg-gray-800 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-500 bg-white transition-all duration-200 focus:outline-none appearance-none"
             >
               {[
                 { code: "US", name: "United States" },

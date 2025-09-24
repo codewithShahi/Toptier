@@ -14,7 +14,7 @@ export const RoomCard = ({ room, getAmenityIcon, options }: RoomCardProps) => {
   const price = option.markup_price || room.markup_price || room.actual_price;
   const currency = room.currency || "USD";
   const imageUrl = room.img || "/images/auth_bg.jpg";
-console.log("room data", room);
+// console.log("room data", room);
   return (
 
        <div className="w-full rounded-4xl bg-[#FFFFFF] hover:scale-100 hover:shadow-sm p-2 transition-all duration-200 border border-gray-100 flex flex-col h-[590px]">

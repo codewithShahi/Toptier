@@ -4,7 +4,7 @@ import { fetchCountries } from "@src/actions";
 import { useAppDispatch, useAppSelector } from "@lib/redux/store";
 import { setCountry } from "@lib/redux/base";
 import { useEffect, useState } from "react";
-import { count } from "console";
+// import { count } from "console";
 
 const useCountries = () => {
   const [countries, setCountries] = useState<any>([]);

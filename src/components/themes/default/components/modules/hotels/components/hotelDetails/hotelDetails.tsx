@@ -82,7 +82,7 @@ const [isModalOpen, setIsModalOpen] = React.useState(false);
     return "mdi:check-circle-outline"; // fallback icon
   };
 // console.log("hotel details payload", payload);
-  console.log("hotel details data", hotelDetails);
+  // console.log("hotel details data", hotelDetails);
 //   if (isLoading) return <p>Loading...</p>;
   return (
     <div>
@@ -304,10 +304,14 @@ const [isModalOpen, setIsModalOpen] = React.useState(false);
         .map((faq: any) => (
           <AccordionInfoCard
             key={faq.id}
-            title={faq.question}
+            title={faq.question} 
+            showLeftIcon={false}
             // Optional: show first sentence as description
             description={""} // or extract preview if needed
-            leftIcon="mdi:help-circle-outline"
+            leftIcon="material-symbols-light:check-circle-outline-rounded"
+            rightIcon="material-symbols-light:arrow-circle-down-rounded"
+            iconColor="black"
+            iconSize={30}
             showDescription={false} // since answer is in expandable content
           >
             {/* Safely render HTML from answer */}

@@ -51,7 +51,7 @@ const FeaturedDestinations: React.FC = () => {
       const res = await addToFavourite(payload);
 
       if (res?.error) {
-        console.error("Error updating favourite:", res.error);
+        // console.error("Error updating favourite:", res.error);
         // rollback if API fails
         setDestinations((prev) =>
           prev.map((d) =>
@@ -65,7 +65,7 @@ const FeaturedDestinations: React.FC = () => {
 
       toast.success(res?.message || "Updated favourites ✅");
     } catch (err) {
-      console.error("toggleLike error:", err);
+      // console.error("toggleLike error:", err);
     }
   };
 
@@ -135,9 +135,9 @@ const FeaturedDestinations: React.FC = () => {
 
                     <div className="flex items-center gap-3 px-2 mb-3">
                       <button
-                        onClick={() =>
-                          console.log(`Exploring ${tour.location}, ${tour.country}`)
-                        }
+                        // onClick={() =>
+                        //   console.log(`Exploring ${tour.location}, ${tour.country}`)
+                        // }
                         className="flex-1 ml-3 bg-[#163C8C] cursor-pointer hover:bg-gray-800 text-white font-medium
                                  py-3 px-3 text-sm sm:text-base md:text-sm lg:text-base
                                  rounded-full transition-colors duration-200

@@ -205,7 +205,7 @@ useEffect(() => {
 
 
     } catch (err) {
-      console.error("Filter fetch failed", err);
+      // console.error("Filter fetch failed", err);
       setIsFilterLoading(false);
     } finally {
       setIsFilterLoading(false);
@@ -330,7 +330,7 @@ const updateRatingFilter = useCallback(
       queryClient.setQueryData(["hotel-search"], finalData);
       dispatch(setHotels(finalData));
     } catch (err) {
-      console.error("Rating filter fetch failed", err);
+      // console.error("Rating filter fetch failed", err);
     } finally {
       setIsFilterLoading(false);
     }
@@ -383,7 +383,7 @@ const resetFilters = useCallback(async (e?: any) => {
       // Get saved form data for reset
       const savedForm = localStorage.getItem("hotelSearchForm");
       if (!savedForm) {
-        console.error('No saved form data found');
+        // console.error('No saved form data found');
         return;
       }
 
@@ -402,11 +402,11 @@ const resetFilters = useCallback(async (e?: any) => {
         queryClient.setQueryData(["hotel-search"], result.data);
         dispatch(setHotels(result.data));
       } else {
-        console.error('Reset failed:', result.error);
+        // console.error('Reset failed:', result.error);
       }
 
     } catch (error) {
-      console.error('Reset filters error:', error);
+      // console.error('Reset filters error:', error);
     } finally {
       setIsFilterLoading(false);
     }
