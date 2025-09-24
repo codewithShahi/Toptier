@@ -276,7 +276,7 @@ const callAllModulesAPI = useCallback(
 
       return { success: true, data: results };
     } catch (err) {
-      console.error("Batch API call failed:", err);
+      // console.error("Batch API call failed:", err);
       return { success: false, error: (err as Error).message };
     } finally {
       isProcessingRef.current = false;
@@ -324,7 +324,7 @@ const callAllModulesAPI = useCallback(
 
       // FIX 4: Check if already processing before validation
       if (isProcessingRef.current || isSearching) {
-        console.log('Search already in progress');
+        // console.log('Search already in progress');
         return { success: false, error: "Search already in progress" };
       }
 
@@ -353,7 +353,7 @@ const callAllModulesAPI = useCallback(
 
         // Save form for pagination
         localStorage.setItem("hotelSearchForm", JSON.stringify(form));
-        console.log('Starting new search:', form);
+        // console.log('Starting new search:', form);
          setIsSearching(false); // Always clear loading state
           router.push("/hotel_search");
         const result = await callAllModulesAPI({
@@ -368,14 +368,14 @@ const callAllModulesAPI = useCallback(
           // queryClient.setQueryData(["hotel-search"], result.data);
           dispatch(setHotels(result.data));
           setPage(1);
-          console.log('Search completed:', result.data.length, 'hotels');
+          // console.log('Search completed:', result.data.length, 'hotels');
 
           return { success: true, data: result.data };
         } else {
           throw new Error(result.error || "Search failed");
         }
       } catch (err) {
-        console.error('Search error:', err);
+        // console.error('Search error:', err);
         return { success: false, error: "Search failed" };
       }
     },
@@ -430,7 +430,7 @@ const callAllModulesAPI = useCallback(
           return { success: false, error: "No more data" };
         }
       } catch (err) {
-        console.error('Load more error:', err);
+        // console.error('Load more error:', err);
         return { success: false, error: "Load more failed" };
       } finally {
         setIsLoadingMore(false);
@@ -471,7 +471,7 @@ const detailsBookNowHandler = async (hotel: any) => {
   // 👉 navigate
   router.push(url);
 
-  console.log("Book Now clicked for hotel ID:", hotel.hotel_id);
+  // console.log("Book Now clicked for hotel ID:", hotel.hotel_id);
 };
 
   // Other utility functions

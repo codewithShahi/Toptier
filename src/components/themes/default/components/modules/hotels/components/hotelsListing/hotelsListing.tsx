@@ -153,9 +153,9 @@ export default function HotelSearchApp() {
   const { allHotelsData: hotelsData, loadMoreData, isloadingMore, listRef, allHotelsData: loadMoreHotels, isSearching, isPending, isInitialLoading, detailsBookNowHandler } = useHotelSearch()
 
 
-  console.log('is searching ', isSearching)
-  console.log('is laoding more', isloadingMore)
-  console.log('is pendding', isPending)
+  // console.log('is searching ', isSearching)
+  // console.log('is laoding more', isloadingMore)
+  // console.log('is pendding', isPending)
   const safeHotelsData = Array.isArray(hotelsData) && hotelsData?.length > 0
     ? hotelsData
     : Array.isArray(hotelsData)
@@ -309,10 +309,7 @@ export default function HotelSearchApp() {
     return stars;
   };
 
-  // Toggle like function
-  const toggleLike = (hotel: HotelData) => {
-    console.log('Toggle like for:', hotel.name);
-  };
+  
   // Handle sort change
   const handleSortChange = (sortValue: string) => {
     let sortBy: 'price_low' | 'price_high' | 'rating' | 'name';

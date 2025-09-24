@@ -119,7 +119,7 @@ const FeaturedHotels: React.FC = () => {
 
       const res = await addToFavourite(payload);
       if (res?.error) {
-        console.error("Error updating favourite:", res.error);
+        // console.error("Error updating favourite:", res.error);
         return;
       }
       // update local state
@@ -131,7 +131,7 @@ const FeaturedHotels: React.FC = () => {
       toast.success(res?.message || "Updated favourites ✅");
 
     } catch (err) {
-      console.error("toggleLike error:", err);
+      // console.error("toggleLike error:", err);
     }
   };
   const bgColors = [

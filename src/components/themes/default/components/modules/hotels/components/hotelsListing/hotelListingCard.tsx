@@ -42,7 +42,7 @@ const HotelCard = memo(function HotelCard({ hotel, viewMode, onBookNow }: HotelC
       };
       const res = await addToFavourite(payload);
       if (res?.error) {
-        console.error("Error updating favourite:", res.error);
+        // console.error("Error updating favourite:", res.error);
         toast.error("Something went wrong :x:");
         return;
       }
@@ -50,7 +50,7 @@ const HotelCard = memo(function HotelCard({ hotel, viewMode, onBookNow }: HotelC
       setIsFav((prev) => !prev);
       toast.success(res?.message || "Updated favourites :white_tick:");
     } catch (err) {
-      console.error("toggleLike error:", err);
+      // console.error("toggleLike error:", err);
       toast.error("Failed to update favourites :x:");
     }
   };

@@ -156,7 +156,7 @@ export const useHotelDetails = ({
       await new Promise(resolve => setTimeout(resolve, 1500));
 
       // In real app: call your search API here
-      console.log('Search submitted with:', form);
+      // console.log('Search submitted with:', form);
 
       // Save to localStorage for persistence
       localStorage.setItem('hotelSearchForm', JSON.stringify(form));
@@ -170,7 +170,7 @@ export const useHotelDetails = ({
       return { success: true, data: form };
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'An unknown error occurred';
-      console.error('Search error:', errorMessage);
+      // console.error('Search error:', errorMessage);
 
       setErrors({ submit: 'Search failed. Please try again.' });
       onSearchError?.(errorMessage);
