@@ -10,7 +10,7 @@ const HotelsListingMain = () => {
 
   return (
     <div className="">
-         <HotelsDetails  />
+         <HotelsDetails/>
     </div>
   )
 }
