@@ -3,5 +3,8 @@ export * from "./hotelSearch"
 export * from "./hotelBookingCard"
 export * from "./hotelFavouriteCard"
 export * from "./hotelsListing"
+
 export * from "./hotelDetails"
+
 export * from "./bookingDetails"
+
