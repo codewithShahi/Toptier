@@ -140,8 +140,7 @@ const FeaturedDestinations: React.FC = () => {
                         // }
                         className="flex-1 ml-3 bg-[#163C8C] cursor-pointer hover:bg-gray-800 text-white font-medium
                                  py-3 px-3 text-sm sm:text-base md:text-sm lg:text-base
-                                 rounded-full transition-colors duration-200
-                                 focus:outline-none focus:ring-2 focus:ring-gray-800 focus:ring-offset-2"
+                                 rounded-full transition-colors duration-200"
                         style={{ fontFamily: "Inter, sans-serif" }}
                       >
                         Explore Now

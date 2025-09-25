@@ -12,6 +12,7 @@ import { AccordionInfoCard } from "@components/core/accordians/accordian";
 import { useAppSelector } from "@lib/redux/store";
 import { HotelListingCard } from "../hotelsListing";
 import { Skeleton } from "@components/core/skeleton";
+import  HotelSuggestionSlider  from "./hotelSuggestionSlider";
 
 interface HotelDetailsPayload {
   hotel_id: string;
@@ -366,18 +367,7 @@ const HotelsDetails = () => {
 
       {/* Suggested Hotels */}
       {featured_hotels !== undefined && featured_hotels.length > 0 ? (
-        <section className="py-4 max-w-[1200px] mx-auto appHorizantalSpacing mb-10">
-          <h1 className="text-2xl font-[700] my-4 mb-5">You might also like</h1>
-          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {featured_hotels.map((hotel: any, index: number) => (
-              <HotelListingCard
-                key={`${hotel.hotel_id || "hotel"}-${index}`}
-                hotel={hotel}
-                viewMode="map"
-              />
-            ))}
-          </div>
-        </section>
+        <HotelSuggestionSlider hotels={featured_hotels} />
       ) : featured_hotels !== undefined ? (
         <section className="py-4 max-w-[1200px] mx-auto appHorizantalSpacing mb-10">
           <h1 className="text-2xl font-[700] my-4 mb-5">You might also like</h1>
