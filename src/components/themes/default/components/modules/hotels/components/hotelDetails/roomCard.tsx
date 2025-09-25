@@ -6,9 +6,10 @@ interface RoomCardProps {
   room: any;
     options?: any;
   getAmenityIcon: (amenity: string) => string;
+   onReserve: (room: any, option: any) => void; // 👈 new prop
 }
 
-export const RoomCard = ({ room, getAmenityIcon, options }: RoomCardProps) => {
+export const RoomCard = ({ room, getAmenityIcon, options, onReserve }: RoomCardProps) => {
   // Safely get first option (assuming you want to show price from first option)
   const option = options || {};
   const price = option.markup_price || room.markup_price || room.actual_price;
@@ -115,7 +116,9 @@ export const RoomCard = ({ room, getAmenityIcon, options }: RoomCardProps) => {
       </div>
 
       <div className="flex gap-2">
-        <button className="bg-[#163C8C] text-white cursor-pointer font-[600] text-sm w-full rounded-full py-2">
+        <button className="bg-[#163C8C] text-white cursor-pointer font-[600] text-sm w-full rounded-full py-2"
+        onClick={() => onReserve(room, option)} // ✅ call onReserve with room and option
+        >
           Reserve
         </button>
         <button className="bg-[#EBEFF4] cursor-pointer rounded-full p-4">

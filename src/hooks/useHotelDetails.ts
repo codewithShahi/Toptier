@@ -12,6 +12,7 @@ export interface HotelForm {
   adults: number;
   children: number;
   nationality: string;
+  currency: string; // Add this line
 }
 
 // Validation schema
@@ -33,20 +34,25 @@ interface UseHotelDetailsOptions {
   initialCheckin?: string;
   initialCheckout?: string;
   initialNationality?: string;
+  initialCurrency?: string;
   onSearchSuccess?: (formData: HotelForm) => void;
   onSearchError?: (error: string) => void;
+  // ✅ NEW: for refetching on same page
+  onSearchRefetch?: (formData: HotelForm) => void;
 }
 
 export const useHotelDetails = ({
   initialCheckin,
   initialCheckout,
   initialNationality = "PK",
+  initialCurrency = "USD",
   onSearchSuccess,
   onSearchError,
+  onSearchRefetch,
+
 }: UseHotelDetailsOptions = {}) => {
   const router = useRouter();
 
-  // Format today and tomorrow for default dates
   const formatDate = (date: Date) => {
     return date.toISOString().split("T")[0];
   };
@@ -57,7 +63,6 @@ export const useHotelDetails = ({
   tomorrow.setDate(today.getDate() + 1);
   const defaultCheckout = initialCheckout || formatDate(tomorrow);
 
-  // State
   const [form, setForm] = useState<HotelForm>({
     checkin: defaultCheckin,
     checkout: defaultCheckout,
@@ -65,32 +70,22 @@ export const useHotelDetails = ({
     adults: 2,
     children: 0,
     nationality: initialNationality,
+    currency: initialCurrency || "USD",
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [showGuestsDropdown, setShowGuestsDropdown] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
-
-  // Refs
   const guestsDropdownRef = useRef<HTMLDivElement | null>(null);
-
-  // Computed values
   const totalGuests = form.adults + form.children;
   const isFormValid = Object.keys(errors).length === 0;
 
-  // Handlers
   const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target;
     const newValue = type === "number" ? Number(value) : value;
-
-    setForm((prev) => ({
-      ...prev,
-      [name]: newValue,
-    }));
-
-    // Clear error if field is being edited
+    setForm(prev => ({ ...prev, [name]: newValue }));
     if (errors[name]) {
-      setErrors((prev) => {
+      setErrors(prev => {
         const newErrors = { ...prev };
         delete newErrors[name];
         return newErrors;
@@ -99,16 +94,12 @@ export const useHotelDetails = ({
   }, [errors]);
 
   const updateForm = useCallback((updates: Partial<HotelForm>) => {
-    setForm((prev) => ({ ...prev, ...updates }));
-
-    // Clear errors for updated fields
+    setForm(prev => ({ ...prev, ...updates }));
     const updatedFields = Object.keys(updates);
-    setErrors((prev) => {
+    setErrors(prev => {
       const newErrors = { ...prev };
-      updatedFields.forEach((field) => {
-        if (newErrors[field]) {
-          delete newErrors[field];
-        }
+      updatedFields.forEach(field => {
+        if (newErrors[field]) delete newErrors[field];
       });
       return newErrors;
     });
@@ -122,7 +113,7 @@ export const useHotelDetails = ({
     } catch (error) {
       if (error instanceof z.ZodError) {
         const errorMap: Record<string, string> = {};
-        error.errors.forEach((err) => {
+        error.errors.forEach(err => {
           errorMap[err.path[0] as string] = err.message;
         });
         setErrors(errorMap);
@@ -141,69 +132,47 @@ export const useHotelDetails = ({
 
   const onSubmit = useCallback(async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
-
-    // Validate
     const isValid = validateForm();
-    if (!isValid) {
-      return { success: false, errors };
-    }
+    if (!isValid) return { success: false, errors };
 
-    // Set loading
     setIsSearching(true);
-
     try {
-      // Simulate API call delay (replace with your actual API call)
-      await new Promise(resolve => setTimeout(resolve, 1500));
-
-      // In real app: call your search API here
-      // console.log('Search submitted with:', form);
-
-      // Save to localStorage for persistence
       localStorage.setItem('hotelSearchForm', JSON.stringify(form));
 
-      // Callback if provided
+      // ✅ NEW: Use refetch mode if provided
+      if (onSearchRefetch) {
+        onSearchRefetch(form);
+        return { success: true, data: form };
+      }
+
+      // Fallback to normal search flow
       onSearchSuccess?.(form);
-
-      // Redirect to search results
       router.push('/hotel_search');
-
       return { success: true, data: form };
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'An unknown error occurred';
-      // console.error('Search error:', errorMessage);
-
       setErrors({ submit: 'Search failed. Please try again.' });
       onSearchError?.(errorMessage);
-
       return { success: false, error: errorMessage };
     } finally {
       setIsSearching(false);
     }
-  }, [form, validateForm, router, errors, onSearchSuccess, onSearchError]);
+  }, [form, validateForm, router, errors, onSearchSuccess, onSearchError, onSearchRefetch]);
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (
-        guestsDropdownRef.current &&
-        !guestsDropdownRef.current.contains(event.target as Node)
-      ) {
+      if (guestsDropdownRef.current && !guestsDropdownRef.current.contains(event.target as Node)) {
         closeGuestsDropdown();
       }
     };
-
     document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [closeGuestsDropdown]);
 
-  // Reset form function
   const resetForm = useCallback(() => {
     const today = new Date();
     const tomorrow = new Date();
     tomorrow.setDate(today.getDate() + 1);
-
     setForm({
       checkin: formatDate(today),
       checkout: formatDate(tomorrow),
@@ -211,32 +180,24 @@ export const useHotelDetails = ({
       adults: 2,
       children: 0,
       nationality: initialNationality,
+      currency: initialCurrency || "USD",
     });
     setErrors({});
     closeGuestsDropdown();
   }, [initialNationality, closeGuestsDropdown, formatDate]);
 
-  // Update form externally
   const setExternalForm = useCallback((newForm: Partial<HotelForm>) => {
-    setForm(prev => ({
-      ...prev,
-      ...newForm
-    }));
+    setForm(prev => ({ ...prev, ...newForm }));
   }, []);
 
   return {
-    // State
     form,
     errors,
     showGuestsDropdown,
     isSearching,
     totalGuests,
     isFormValid,
-
-    // Refs
     guestsDropdownRef,
-
-    // Handlers
     handleChange,
     updateForm,
     toggleGuestsDropdown,
@@ -245,8 +206,6 @@ export const useHotelDetails = ({
     resetForm,
     setExternalForm,
     validateForm,
-
-    // Utilities
     formatDate,
   };
 };

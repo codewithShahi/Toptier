@@ -58,12 +58,13 @@ export default function HotelSearch() {
   }, [setShowDestinationDropdown, setShowGuestsDropdown]);
 
   const onSubmit = async (e: React.FormEvent) => {
-            setIsSearching(true);
+
 
     const result = await handleSubmit(e);
 
 
     if (result?.success) {
+      setIsSearching(false);
       router.push("/hotel_search");
     }
 
@@ -195,7 +196,7 @@ const checkout = formatDate(
                 direction={direction}
                 showCalendarIcon
                 className="w-full font-medium pl-1 text-sm placeholder-gray-400 hover:bg-gray-100 hover:border-gray-300 border border-gray-200 rounded-xl text-gray-900 dark:bg-gray-800 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-500 bg-white transition-all duration-200 focus:outline-none"
- defaultDate={new Date(checkin)}
+                defaultDate={new Date(checkin)}
                 onSelect={(date) => {
                   const newCheckin = date ? date.toISOString().slice(0, 10) : "";
                   updateForm({ checkin: newCheckin });

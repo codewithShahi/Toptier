@@ -5,6 +5,7 @@ import { Icon } from "@iconify/react";
 import { toast } from "react-toastify";
 import { addToFavourite } from "@src/actions";
 import { useUser } from "@hooks/use-user";
+import { getCurrencySymbol } from "@src/utils/getCurrencySymbals";
 interface HotelCardProps {
   hotel: any;
   viewMode: "grid" | "list" | "map";
@@ -16,7 +17,7 @@ const HotelCard = memo(function HotelCard({ hotel, viewMode, onBookNow }: HotelC
 
   const { user } = useUser();
   const [isFav, setIsFav] = useState(hotel.favorite === 1);
-  
+
   // Memoized renderStars
   const renderStars = useCallback((rating: string) => {
     const stars = [];
@@ -92,9 +93,9 @@ const HotelCard = memo(function HotelCard({ hotel, viewMode, onBookNow }: HotelC
       >
         <div>
           <h3
-            title={hotel.name}  
-            className={`text-xl font-extrabold text-gray-900 mb-0 pl-1 sm:text-2xl md:text-xl lg:text-2xl 
-    overflow-hidden text-ellipsis whitespace-nowrap 
+            title={hotel.name}
+            className={`text-xl font-extrabold text-gray-900 mb-0 pl-1 sm:text-2xl md:text-xl lg:text-2xl
+    overflow-hidden text-ellipsis whitespace-nowrap
     ${viewMode === "list" ? "w-full" : "block"}`}
             style={{ fontFamily: "Urbanist, sans-serif" }}
           >
@@ -110,7 +111,7 @@ const HotelCard = memo(function HotelCard({ hotel, viewMode, onBookNow }: HotelC
           <div className="flex items-center gap-1 mb-1 pl-1">
             {renderStars(hotel.stars)}
             <span className="text-sm text-gray-500 ml-2">
-              ({parseFloat(hotel.rating).toFixed(1)})
+              ({parseFloat(hotel.rating).toFixed(1) })
             </span>
           </div>
           {/* Price */}
@@ -122,8 +123,8 @@ const HotelCard = memo(function HotelCard({ hotel, viewMode, onBookNow }: HotelC
           >
             <div className="flex gap-2 items-center mb-2 sm:mb-0">
               <p className="text-[24px] sm:text-[28px] lg:text-[30px] font-[900]">
-                <span className="text-base">{hotel.currency.toUpperCase()}</span>{" "}
-                {hotel.actual_price}
+                <span className="text-base">{getCurrencySymbol(hotel.currency)}</span>{" "}
+                {hotel.actual_price || hotel.price}
               </p>
               <p className="text-[14px] sm:text-[16px] lg:text-[17px] font-[400] text-[#5B697E]">
                 /night

@@ -103,7 +103,6 @@ export const fetchCountries = async () => {
       body: formData,
       headers: await getHeaders("application/json"), // do NOT set Content-Type manually
     });
-
     const data = await response.json().catch(() => null);
     if (!response.ok || data?.status === false) {
       return { error: data?.message || "Something went wrong" };
@@ -475,7 +474,7 @@ export const hotel_search = async (payload: HotelSearchPayload) => {
 
 
 
-    console.log('seaarch_payaod',formData)
+    // console.log('seaarch_payaod',formData)
     const response = await fetch(`${baseUrl}/hotel_search`, {
       method: "POST",
       body: formData,
@@ -485,7 +484,7 @@ export const hotel_search = async (payload: HotelSearchPayload) => {
     });
 
     const data = await response.json().catch(() => null);
-    console.log('search result ',data)
+    // console.log('search result ',data)
     if (!response.ok || data?.status === false) {
       return { error: data?.message || "Something went wrong" };
     }
@@ -527,7 +526,7 @@ export const hotel_details = async (payload: HotelDetailsPayload) => {
     formData.append("currency", payload.currency || "usd");
     formData.append("supplier_name", payload.supplier_name || "stuba");
 
-    console.log("hotel_details_payload", Object.fromEntries(formData));
+    // console.log("hotel_details_payload", Object.fromEntries(formData));
 
     const response = await fetch(`${baseUrl}/hotel_details`, {
       method: "POST",
