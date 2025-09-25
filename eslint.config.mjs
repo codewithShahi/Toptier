@@ -64,6 +64,7 @@ export default [
       "import/no-unresolved": "error",
       "import/no-named-as-default-member": "off",
       "import/no-named-as-default": "off",
+  
 
       // React
       "react/react-in-jsx-scope": "off",
