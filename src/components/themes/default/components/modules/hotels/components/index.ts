@@ -6,3 +6,5 @@ export * from "./hotelsListing"
 
 export * from "./hotelDetails"
 
+export * from "./bookingDetails"
+
