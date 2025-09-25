@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { hotel_details } from "@src/actions/server-actions";
@@ -12,7 +12,9 @@ import { AccordionInfoCard } from "@components/core/accordians/accordian";
 import { useAppSelector } from "@lib/redux/store";
 import { HotelListingCard } from "../hotelsListing";
 import { Skeleton } from "@components/core/skeleton";
+
 import  HotelSuggestionSlider  from "./hotelSuggestionSlider";
+
 
 interface HotelDetailsPayload {
   hotel_id: string;
@@ -30,29 +32,96 @@ interface HotelDetailsPayload {
 
 const HotelsDetails = () => {
   const params = useParams();
+  const router = useRouter();
   const slugArr = (params?.slug as string[]) || [];
-  const payload: HotelDetailsPayload = {
-    hotel_id: slugArr[0],
-    checkin: slugArr[2],
-    checkout: slugArr[3],
-    rooms: Number(slugArr[4]),
-    adults: Number(slugArr[5]),
-    childs: Number(slugArr[6]),
-    child_age: "",
-    nationality: slugArr[7],
-    language: "en",
-    currency: "USD",
-    supplier_name: slugArr[8],
-  };
 
-  const [isModalOpen, setIsModalOpen] = React.useState(false);
-  const { data: hotelDetails, isLoading } = useQuery({
-    queryKey: ["hotel-details", payload],
-    queryFn: () => hotel_details(payload),
-    enabled: slugArr.length > 0,
-    staleTime: Infinity,
+  // Extract from URL
+  const hotel_id = slugArr[0] || "";
+  const supplier_name = slugArr[8] || "";
+
+  // Get initial values from URL or fallback
+  const initialCheckin = slugArr[2] || "";
+  const initialCheckout = slugArr[3] || "";
+  const initialRooms = Number(slugArr[4]) || 1;
+  const initialAdults = Number(slugArr[5]) || 2;
+  const initialChildren = Number(slugArr[6]) || 0;
+  const initialNationality = slugArr[7] || "US";
+
+  // State for query params (used by useQuery)
+  const [searchParams, setSearchParams] = useState({
+    checkin: initialCheckin,
+    checkout: initialCheckout,
+    rooms: initialRooms,
+    adults: initialAdults,
+    children: initialChildren,
+    nationality: initialNationality,
   });
 
+// ✅ Helper to update URL
+  const updateUrl = useCallback((params: typeof searchParams, hotelName: string) => {
+    const slugName = hotelName.toLowerCase().replace(/\s+/g, "-");
+  const newUrl = `/hotel/${hotel_id}/${slugName}/${params.checkin}/${params.checkout}/${params.rooms}/${params.adults}/${params.children}/${params.nationality}/${supplier_name}`;
+
+    router.replace(newUrl);
+  }, [hotel_id, supplier_name, router]);
+  // ✅ Use your hook with refetch mode
+  const {
+    form,
+    errors,
+    showGuestsDropdown,
+    isSearching,
+    totalGuests,
+    guestsDropdownRef,
+    handleChange,
+    updateForm,
+    toggleGuestsDropdown,
+    onSubmit: handleSearchSubmit,
+  } =useHotelDetails({
+    initialCheckin,
+    initialCheckout,
+    initialNationality,
+    onSearchRefetch: (newForm) => {
+      const newParams = {
+        checkin: newForm.checkin,
+        checkout: newForm.checkout,
+        rooms: newForm.rooms,
+        adults: newForm.adults,
+        children: newForm.children,
+        nationality: newForm.nationality,
+      };
+      // ✅ 1. Update local state to trigger refetch
+      setSearchParams(newParams);
+
+      // ✅ 2. Update URL (only if hotel name is available)
+      if (hotelDetails?.name) {
+        updateUrl(newParams, hotelDetails.name);
+      }
+      // If hotelDetails isn't loaded yet, URL will update via useEffect below
+    },
+  });
+  // ✅ Fetch hotel details based on searchParams
+  const { data: hotelDetails, isLoading } = useQuery({
+    queryKey: ["hotel-details", { hotel_id, ...searchParams, supplier_name }],
+    queryFn: () =>
+      hotel_details({
+        hotel_id,
+        checkin: searchParams.checkin,
+        checkout: searchParams.checkout,
+        rooms: searchParams.rooms,
+        adults: searchParams.adults,
+        childs: searchParams.children, // API uses "childs"
+        child_age: "",
+        nationality: searchParams.nationality,
+        language: "en",
+        currency: "USD",
+        supplier_name,
+      }),
+    enabled: !!hotel_id,
+    staleTime: 0, // Always fetch fresh data
+  });
+ console.log("new form ", form);
+  const [isModalOpen, setIsModalOpen] = React.useState(false);
+// console.log("hotelDetails", form);
   const { img } = hotelDetails || {};
 
   const amenityIcons: Record<string, string> = {
@@ -111,7 +180,18 @@ const HotelsDetails = () => {
 
   return (
     <div>
-      <HotelDetailsSearch />
+      <HotelDetailsSearch
+        form={form}
+        errors={errors}
+        showGuestsDropdown={showGuestsDropdown}
+        isSearching={isSearching}
+        totalGuests={totalGuests}
+        guestsDropdownRef={guestsDropdownRef}
+        handleChange={handleChange}
+        updateForm={updateForm}
+        toggleGuestsDropdown={toggleGuestsDropdown}
+        onSubmit={handleSearchSubmit}
+      />
 
       {/* Image Slider */}
       {isLoading ? (
@@ -280,6 +360,14 @@ const HotelsDetails = () => {
                   room={room}
                   options={opt}
                   getAmenityIcon={getAmenityIcon}
+                   onReserve={(room, option) => {
+        // ✅ This runs in parent when Reserve is clicked
+
+
+        // Example: Navigate to booking page
+        router.push(`/hotel/booking`);
+      }}
+
                 />
               ))
             )}
