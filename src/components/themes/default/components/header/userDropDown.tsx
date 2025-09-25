@@ -50,7 +50,7 @@ export default function ProfileDropdown() {
 
       {/* Dropdown */}
       {open && (
-        <div className="absolute right-0 h-58 w-57 md:w-75 mt-2 rounded-md border border-gray-200 bg-white shadow-lg">
+        <div className="absolute right-0 h-45 w-57 md:w-75 mt-2 rounded-md border border-gray-200 bg-white shadow-lg">
           <ul className="py-2 px-2 space-y-2">
             {/* My Profile */}
             <li>
@@ -86,7 +86,7 @@ export default function ProfileDropdown() {
 
             {/* Settings */}
             <li>
-              <Link
+              {/* <Link
                 href="/settings"
                 className="flex items-center gap-4 px-4 py-3  text-gray-500 hover:bg-gray-100 rounded-lg transition"
               >
@@ -96,7 +96,7 @@ export default function ProfileDropdown() {
 </svg>
 
                 <span className="text-[15px] font-base font-medium">Settings</span>
-              </Link>
+              </Link> */}
             </li>
 
             {/* Logout */}

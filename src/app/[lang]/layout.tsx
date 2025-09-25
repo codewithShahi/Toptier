@@ -17,7 +17,7 @@ export const generateMetadata = async (): Promise<Metadata> => {
     }
   }
 
-  const { agency_name, meta_title, domain, meta_description, logo, favicon_img } = meta_data
+  const {  home_title, domain, meta_description, logo, favicon_img } = meta_data
   // console.log('adfff', data, favicon)
 
   return {
@@ -35,12 +35,12 @@ export const generateMetadata = async (): Promise<Metadata> => {
       apple: logo,
     },
     keywords: 'some keyword',
-    title: meta_title,
+    title: home_title,
     authors: [],
     robots: '',
-    applicationName: agency_name,
-    creator: agency_name,
-    publisher: agency_name,
+    applicationName: home_title,
+    creator: home_title,
+    publisher: home_title,
     generator: 'Next.js',
     referrer: 'origin-when-cross-origin',
     description: meta_description,

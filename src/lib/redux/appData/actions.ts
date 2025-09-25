@@ -17,7 +17,7 @@ export const setAppData = createAsyncThunk(
       const { data } = response;
       return data;
     } catch (err: any) {
-      console.error("❌ Failed fetching App Data:", err);
+      // console.error("❌ Failed fetching App Data:", err);
       return rejectWithValue(err.message || "Unknown error");
     }
   }

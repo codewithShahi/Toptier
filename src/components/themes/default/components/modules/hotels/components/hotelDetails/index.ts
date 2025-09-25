@@ -1,1 +1,3 @@
-export { default as HotelDetails} from './hotelDetails';
+
+export { default as HotelDetailsMain } from './hotelDetailsMain'
+

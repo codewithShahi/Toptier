@@ -7,7 +7,7 @@ import useDirection from "@hooks/useDirection";
 
 import { useParams,useRouter } from "next/navigation";
 
-import useHotelSearch from "@hooks/useHotelSearchFilters";
+import useHotelSearch from "@hooks/useHotelSearch";
 // import useHotelSearch from "@hooks/useHotelSearch"; // Import the hook
 
 export default function HotelSearch() {
@@ -37,8 +37,8 @@ export default function HotelSearch() {
     handleSubmit,
     loadMoreData,
     updateForm,
+    setIsSearching,
   } = useHotelSearch();
-
   const guestsDropdownRef = useRef<HTMLDivElement>(null);
   const destinationDropdownRef = useRef<HTMLDivElement>(null);
   const destInputRef = useRef<HTMLInputElement | null>(null);
@@ -58,6 +58,8 @@ export default function HotelSearch() {
   }, [setShowDestinationDropdown, setShowGuestsDropdown]);
 
   const onSubmit = async (e: React.FormEvent) => {
+            setIsSearching(true);
+
     const result = await handleSubmit(e);
 
 
@@ -83,6 +85,23 @@ export default function HotelSearch() {
     { code: "UK", name: "United Kingdom" },
     { code: "CA", name: "Canada" },
   ];
+const today = new Date();
+
+// format helper → yyyy-mm-dd
+const formatDate = (d: Date) => d.toISOString().split("T")[0];
+
+// default checkin = today
+const checkin = formatDate(
+  new Date(Date.UTC(today.getFullYear(), today.getMonth(), today.getDate()))
+);
+
+// default checkout = tomorrow
+const tomorrow = new Date(today);
+tomorrow.setDate(today.getDate() + 1);
+const checkout = formatDate(
+  new Date(Date.UTC(tomorrow.getFullYear(), tomorrow.getMonth(), tomorrow.getDate()))
+);
+
 
   return (
     <div className="md:w-full mx-auto p-4 rounded-xl">
@@ -90,11 +109,11 @@ export default function HotelSearch() {
         <div className="bg-white dark:bg-gray-800 dark:text-gray-50 w-full rounded-3xl shadow-lg p-6 space-y-6">
           {/* Destination */}
           <div className="relative" ref={destinationDropdownRef}>
-            <label className="block text-sm text-start font-medium text-gray-700 dark:text-gray-300 mb-2">
-              {"where to? "}
+            <label className="block text-sm text-start font-medium text-gray-500 dark:text-gray-300 mb-2">
+              {/* {"where to? "}  */} Where to?
             </label>
             <div className="relative">
-              <div className={`absolute ${direction === "ltr" ? "left-2" : "right-2"} top-1/2 transform -translate-y-1/2 text-gray-400`}>
+              <div className={`absolute ${direction === "ltr" ? "left-3" : "right-2"} top-1/2 transform -translate-y-1/2 text-gray-400`}>
                 <svg width="16" height="18" viewBox="0 0 16 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M8.19514 17.1038C8.04735 17.2098 7.86998 17.2667 7.68803 17.2667C7.50607 17.2667 7.3287 17.2098 7.18091 17.1038C2.80793 13.9933 -1.83309 7.59516 2.85865 2.97186C4.14667 1.70746 5.88127 0.999208 7.68803 1C9.49916 1 11.2369 1.7094 12.5174 2.97096C17.2091 7.59426 12.5681 13.9915 8.19514 17.1038Z" stroke="#5B697E" strokeOpacity="0.7" strokeWidth="1.35554" strokeLinecap="round" strokeLinejoin="round" />
                   <path d="M7.68772 9.13333C8.16806 9.13333 8.62873 8.94291 8.96838 8.60396C9.30803 8.26501 9.49885 7.80529 9.49885 7.32594C9.49885 6.84659 9.30803 6.38688 8.96838 6.04793C8.62873 5.70898 8.16806 5.51855 7.68772 5.51855C7.20738 5.51855 6.74671 5.70898 6.40706 6.04793C6.0674 6.38688 5.87659 6.84659 5.87659 7.32594C5.87659 7.80529 6.0674 8.26501 6.40706 8.60396C6.74671 8.94291 7.20738 9.13333 7.68772 9.13333Z" stroke="#5B697E" strokeOpacity="0.7" strokeWidth="1.35554" strokeLinecap="round" strokeLinejoin="round" />
@@ -111,8 +130,8 @@ export default function HotelSearch() {
                   if (form.destination.trim().length >= 3) setShowDestinationDropdown(true);
                 }}
                 onKeyDown={handleDestinationKeyDown}
-                placeholder={"Search Destination..."}
-                className={`w-full ${direction === "ltr" ? "pl-9" : "pr-9"}  pr-4 py-3 text-sm dark:text-gray-200 placeholder-gray-500 focus:outline-none hover:bg-gray-100 hover:border-gray-300 border border-gray-200 rounded-xl text-gray-900 dark:bg-gray-800 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-500 transition-all duration-200`}
+                placeholder={"Search destinations..."}
+                className={`w-full ${direction === "ltr" ? "pl-9" : "pr-9"}  pr-4 py-3 text-sm font-medium dark:text-gray-200 placeholder-gray-700 focus:outline-none hover:bg-gray-100 hover:border-gray-300 border border-gray-200 rounded-xl text-gray-900 dark:bg-gray-800 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-500 transition-all duration-200`}
               />
 
               {/* Dropdown */}
@@ -169,16 +188,18 @@ export default function HotelSearch() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {/* Check-in */}
             <div className="relative">
-              <label className="block text-sm text-start font-medium text-gray-700 dark:text-gray-300 mb-2">
-                {isLoading ? "Loading..." : dict?.hotel_search?.checkin?.title}
+              <label className="block text-sm text-start font-medium text-gray-500 dark:text-gray-300 mb-2">
+                {/* {isLoading ? "Loading..." : dict?.hotel_search?.checkin?.title} */}Check - in
               </label>
               <DatePicker
                 direction={direction}
                 showCalendarIcon
                 className="w-full font-medium pl-1 text-sm placeholder-gray-400 hover:bg-gray-100 hover:border-gray-300 border border-gray-200 rounded-xl text-gray-900 dark:bg-gray-800 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-500 bg-white transition-all duration-200 focus:outline-none"
+ defaultDate={new Date(checkin)}
                 onSelect={(date) => {
                   const newCheckin = date ? date.toISOString().slice(0, 10) : "";
                   updateForm({ checkin: newCheckin });
+
                 }}
               />
               <ErrorMessage error={errors.checkin} />
@@ -186,12 +207,13 @@ export default function HotelSearch() {
 
             {/* Check-out */}
             <div className="relative">
-              <label className="block text-sm font-medium text-start text-gray-700 dark:text-gray-300 mb-2">
-                {isLoading ? "Loading..." : dict?.hotel_search?.checkout?.title}
+              <label className="block text-sm font-medium text-start text-gray-500 dark:text-gray-300 mb-2">
+                {/* {isLoading ? "Loading..." : dict?.hotel_search?.checkout?.title} */} Check - out
               </label>
               <DatePicker
                 direction={direction}
                 showCalendarIcon
+               defaultDate={new Date(checkout)}
                 className="w-full font-medium pl-1 text-sm placeholder-gray-400 hover:bg-gray-100 hover:border-gray-300 border border-gray-200 rounded-xl text-gray-900 dark:bg-gray-800 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-500 bg-white transition-all duration-200 focus:outline-none"
                 onSelect={(date) => {
                   const newCheckout = date ? date.toISOString().slice(0, 10) : "";
@@ -203,8 +225,8 @@ export default function HotelSearch() {
 
             {/* Guests */}
             <div className="relative" ref={guestsDropdownRef}>
-              <label className="block text-sm text-start font-medium text-gray-700 mb-2 dark:text-gray-300">
-                {isLoading ? "Loading..." : dict?.hotel_search?.guest_button?.title}
+              <label className="block text-sm text-start font-medium text-gray-500 mb-2 dark:text-gray-300">
+                {/* {isLoading ? "Loading..." : dict?.hotel_search?.guest_button?.title} */} Guests
               </label>
               <button
                 type="button"
@@ -218,7 +240,7 @@ export default function HotelSearch() {
                   </svg>
                 </div>
                 <span className="font-medium text-[14px]">
-                  {totalGuests} {isLoading ? "Loading..." : dict?.hotel_search?.guest_button?.guest_title}, {form.rooms} {isLoading ? "Loading..." : dict?.hotel_search?.guest_button?.room_title}
+                  {totalGuests}  {totalGuests === 1 ? "Guest" : "Guests"} {form.rooms > 0 ? `, ${form.rooms} ${form.rooms === 1 ? "Room" : "Rooms"}` : ""}
                 </span>
                 <Icon icon="mdi:chevron-down" width={20} height={20} className={`text-gray-600 transition-transform duration-200 ${showGuestsDropdown ? "rotate-180" : ""}`} />
               </button>
@@ -313,7 +335,7 @@ export default function HotelSearch() {
               <div className="mt-3 md:mt-7" />
               <button
                 type="submit"
-                disabled={isSearching}
+                // disabled={isSearching}
                 className="w-full bg-blue-900 py-2 px-6 cursor-pointer font-medium flex items-center hover:bg-gray-800 border border-gray-200 rounded-xl text-white dark:border-gray-600 dark:hover:bg-gray-700 justify-center gap-2 focus:outline-none transition-all duration-200"
               >
                 {isSearching ? (
@@ -326,8 +348,8 @@ export default function HotelSearch() {
                     <svg width="17" height="18" viewBox="0 0 17 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path d="M12.7761 13.5548L15.635 16.4137M14.7318 8.524C14.7318 10.3703 13.9984 12.141 12.6929 13.4465C11.3873 14.7521 9.61664 15.4855 7.77033 15.4855C5.92403 15.4855 4.15335 14.7521 2.84781 13.4465C1.54228 12.141 0.808838 10.3703 0.808838 8.524C0.808838 6.67769 1.54228 4.90701 2.84781 3.60148C4.15335 2.29594 5.92403 1.5625 7.77033 1.5625C9.61664 1.5625 11.3873 2.29594 12.6929 3.60148C13.9984 4.90701 14.7318 6.67769 14.7318 8.524Z" stroke="white" strokeWidth="1.3923" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
-                    <span className="hidden md:block text-white dark:text-gray-50">
-                      {isLoading ? "Loading..." : dict?.hotel_search?.search_btnText}
+                    <span className="hidden md:block text-white dark:text-gray-50 font-normal">
+                      {/* {isLoading ? "Loading..." : dict?.hotel_search?.search_btnText} */} Search Homes
                     </span>
                   </>
                 )}

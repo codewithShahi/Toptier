@@ -448,6 +448,9 @@ interface HotelSearchPayload {
   nationality: string;
   page:number
   modules:string
+   price_from: string,
+    price_to: string,
+    rating: string
 }
 
 export const hotel_search = async (payload: HotelSearchPayload) => {
@@ -464,11 +467,11 @@ export const hotel_search = async (payload: HotelSearchPayload) => {
     formData.append("currency","usd")
     formData.append("child_age","0")
     formData.append('module_name',payload.modules)
-     formData.append("pagination", String(payload.page));
-    formData.append("price_from","")
-    formData.append('price_to',"")
-    formData.append('price_low_to_high',"")
-        formData.append('rating',"")
+    formData.append("pagination", String(payload.page));
+    formData.append("price_from",payload.price_from || "")
+    formData.append('price_to',payload.price_to || "")
+    formData.append('price_low_to_high', "")
+    formData.append('rating',payload.rating || "")
 
 
 
@@ -492,5 +495,60 @@ export const hotel_search = async (payload: HotelSearchPayload) => {
     return { error: (error as Error).message || "An error occurred" };
   }
 };
+//====================== HOTEL DETAILS ===================
+interface HotelDetailsPayload {
+  hotel_id: string;
+  checkin: string;
+  checkout: string;
+  rooms: number;
+  adults: number;
+  childs: number;
+  child_age: string;
+  nationality: string;
+  language: string;
+  currency: string;
+  supplier_name: string;
+}
+
+export const hotel_details = async (payload: HotelDetailsPayload) => {
+  try {
+    const formData = new FormData();
+
+    // ✅ match exactly with API keys
+    formData.append("hotel_id", String(payload.hotel_id));
+    formData.append("checkin", payload.checkin);
+    formData.append("checkout", payload.checkout);
+    formData.append("rooms", String(payload.rooms));
+    formData.append("adults", String(payload.adults));
+    formData.append("childs", String(payload.childs));
+    formData.append("child_age", payload.child_age || "0");
+    formData.append("nationality", payload.nationality || "PK");
+    formData.append("language", payload.language || "en");
+    formData.append("currency", payload.currency || "usd");
+    formData.append("supplier_name", payload.supplier_name || "stuba");
+
+    console.log("hotel_details_payload", Object.fromEntries(formData));
+
+    const response = await fetch(`${baseUrl}/hotel_details`, {
+      method: "POST",
+      body: formData,
+      headers: {
+        Accept: "application/json, text/plain, */*",
+      },
+    });
+
+    const data = await response.json().catch(() => null);
+    console.log("hotel_details_result", data);
+
+    if (!response.ok || data?.status === false) {
+      return { error: data?.message || "Something went wrong" };
+    }
+
+    return data;
+  } catch (error) {
+    return { error: (error as Error).message || "An error occurred" };
+  }
+};
+
 
 

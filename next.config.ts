@@ -1,7 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+    // distDir: "build",
   async rewrites() {
+
     return [
       {
         source: "/robots.txt",
@@ -12,6 +14,7 @@ const nextConfig: NextConfig = {
  experimental: {
     optimizeCss: false
   },
+
    eslint: {
     ignoreDuringBuilds: true,
   },

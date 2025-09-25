@@ -112,7 +112,7 @@ const Button = (props: ButtonProps) => {
         return active
             ? 'bg-gray-100 border border-gray-300 dark:bg-gray-500 dark:border-gray-500 text-gray-600 dark:text-gray-100'
             : 'bg-white border border-gray-300 dark:bg-gray-700 dark:border-gray-700 text-gray-600 dark:text-gray-100 hover:border-primary dark:hover:border-gray-600 hover:text-primary dark:hover:text-white dark:hover:bg-transparent'
-           
+
 
     }
 
@@ -126,7 +126,7 @@ const Button = (props: ButtonProps) => {
         customColorClass?.({
             active,
             unclickable,
-            
+
         }),
     )
 
@@ -145,7 +145,7 @@ const Button = (props: ButtonProps) => {
             {...rest}
             onClick={handleClick}
         >
-            {loading && <Spinner size={14} enableTheme={false} className="mr-1" />}
+            {loading && <Spinner size={14}  className="mr-1" />}
             {icon && iconAlignment === 'start' && (
                 <span className="text-lg me-1">{icon}</span>
             )}
