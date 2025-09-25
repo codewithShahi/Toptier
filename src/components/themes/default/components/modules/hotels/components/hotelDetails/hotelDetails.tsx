@@ -14,6 +14,8 @@ import { HotelListingCard } from "../hotelsListing";
 import { Skeleton } from "@components/core/skeleton";
 
 import  HotelSuggestionSlider  from "./hotelSuggestionSlider";
+import { useHotelDetails } from "@hooks/useHotelDetails";
+import { useRouter } from "next/router";
 
 
 interface HotelDetailsPayload {
