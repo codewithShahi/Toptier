@@ -2,6 +2,7 @@
 import React from 'react'
 import useHotelSearch from '@hooks/useHotelSearch'
 import  HotelsDetails  from './hotelDetails'
+// import BookingPage from './bookingpage'
 
 const HotelsListingMain = () => {
   // use your custom hook
@@ -10,7 +11,9 @@ const HotelsListingMain = () => {
 
   return (
     <div className="">
+
          <HotelsDetails/>
+
     </div>
   )
 }
