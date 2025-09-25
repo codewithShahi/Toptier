@@ -288,7 +288,9 @@ export default function HotelMap({ hotels }: HotelMapProps) {
               <Tooltip direction="top" offset={L.point(0, -10)} opacity={1}>
                 <div className="text-[12px] max-w-[350px] px-2 py-1 leading-[1.4] text-center rounded-2xl">
                   <b>{hotel.name || "Hotel"}</b> <br />
+
                   location: {hotel.location}
+
                 </div>
               </Tooltip>
             </Marker>

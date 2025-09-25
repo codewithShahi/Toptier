@@ -13,7 +13,7 @@ import RatingSlider from "./ratingSlider"
 // Import Swiper styles
 import "swiper/css";
 import "swiper/css/navigation";
-import HotelCard from "./hotelListingCard";
+import HotelsListingCard from "./hotelListingCard";
 import { PriceRangeSlider } from "@components/core/priceRangeSlider";
 import HotelMap from "./hotelMap";
 // import { isPending } from "@reduxjs/toolkit";
@@ -232,7 +232,7 @@ export default function HotelSearchApp() {
   const handleHighlightHotel = (hotel: HotelData) => {
     setHighlightedHotel(hotel);
   };
-  
+
   const PriceSlider: React.FC<PriceSliderProps> = ({ min, max, values, onChange }) => {
     const getPercentage = (value: number) => ((value - min) / (max - min)) * 100;
     return (
@@ -309,7 +309,7 @@ export default function HotelSearchApp() {
     return stars;
   };
 
-  
+
   // Handle sort change
   const handleSortChange = (sortValue: string) => {
     let sortBy: 'price_low' | 'price_high' | 'rating' | 'name';
@@ -372,7 +372,7 @@ export default function HotelSearchApp() {
 
   const options = ["Rating", "Price Low to High", "Price High to Low", "Name"];
 
-  
+
 
 
   return (
@@ -429,7 +429,7 @@ export default function HotelSearchApp() {
           opacity: 0.5;
         }
       `}</style>
-      
+
       {/* Main Content */}
 
       <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-4 lg:py-8"  >
@@ -709,7 +709,7 @@ export default function HotelSearchApp() {
                 : 'space-y-4 md:space-y-6'
                 }`}>
                 {filteredHotels.map((hotel: any, index: number) => (
-                  <HotelCard
+                  <HotelsListingCard
                     key={`${hotel.hotel_id || "hotel"}-${index}`}
                     hotel={hotel}
                     viewMode={viewMode}
@@ -732,7 +732,7 @@ export default function HotelSearchApp() {
                   <div className="w-full">
                     <div className="grid gap-4 md:gap-6 grid-cols-1">
                       {filteredHotels.map((hotel: any, index: number) => (
-                        <HotelCard
+                        <HotelsListingCard
                           key={`${hotel.hotel_id || "hotel"}-${index}`}
                           hotel={hotel}
                           viewMode={viewMode}
@@ -747,7 +747,7 @@ export default function HotelSearchApp() {
                   <div className="flex-1 pr-2">
                     <div className="grid gap-4 md:gap-6 grid-cols-1 lg:grid-cols-2">
                       {filteredHotels.map((hotel: any, index: number) => (
-                        <HotelCard
+                        <HotelsListingCard
                           key={`${hotel.hotel_id || "hotel"}-${index}`}
                           hotel={hotel}
                           viewMode={viewMode}

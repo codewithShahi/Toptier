@@ -11,8 +11,9 @@ const HotelsListingMain = () => {
 
   return (
     <div className="">
-         <HotelsDetails  />
-         {/* <BookingPage/> */}
+
+         <HotelsDetails/>
+
     </div>
   )
 }
