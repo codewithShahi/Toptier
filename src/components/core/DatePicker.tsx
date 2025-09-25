@@ -2,7 +2,6 @@ import React, { useState, useRef, useEffect } from "react";
 import { DayPicker } from "react-day-picker";
 import "react-day-picker/dist/style.css";
 import { Icon } from "@iconify/react";
-
 interface DatePickerProps {
     onSelect: (date: Date | undefined) => void;
     disabledDates?: Date[];
@@ -11,7 +10,6 @@ interface DatePickerProps {
     showCalendarIcon?: boolean;
     defaultDate:Date | undefined
 }
-
 // Format date in UTC to prevent timezone issues
 // const formatDate = (date: Date) => {
 //     return new Intl.DateTimeFormat("en-GB", {
@@ -27,7 +25,6 @@ const formatDate = (date: Date) => {
     const year = date.getUTCFullYear();
     return `${day}-${month}-${year}`;
 };
-
 const DatePicker: React.FC<DatePickerProps> = ({
     onSelect,
     disabledDates = [],
@@ -48,7 +45,6 @@ const DatePicker: React.FC<DatePickerProps> = ({
       : defaultDate
     : undefined
 );
-
     useEffect(() => {
         function handleClickOutside(event: MouseEvent) {
             if (
@@ -60,7 +56,6 @@ const DatePicker: React.FC<DatePickerProps> = ({
                 setOpen(false);
             }
         }
-
         if (open) {
             document.addEventListener("mousedown", handleClickOutside);
         }
@@ -102,7 +97,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
                         selected={selected}
                         onSelect={(date) => {
                             if (date) {
-                                // ✅ Normalize date to UTC to avoid local timezone offset
+                                // :white_check_mark: Normalize date to UTC to avoid local timezone offset
                                 const normalized = new Date(
                                     Date.UTC(date.getFullYear(), date.getMonth(), date.getDate())
                                 );
@@ -120,7 +115,6 @@ const DatePicker: React.FC<DatePickerProps> = ({
                         //     day_selected: "bg-primary text-white dark:bg-primary-dark",
                         //     day_disabled: "text-gray-300 dark:text-gray-600 cursor-not-allowed",
                         // }}
-
                         styles={{
                             caption: { direction },
                         }}
@@ -130,5 +124,4 @@ const DatePicker: React.FC<DatePickerProps> = ({
         </div>
     );
 };
-
 export default DatePicker;
