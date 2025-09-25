@@ -20,6 +20,37 @@ const HotelDetails = () => {
     new Date(Date.UTC(tomorrow.getFullYear(), tomorrow.getMonth(), tomorrow.getDate()))
   );
 
+   const [openIndex, setOpenIndex] = useState<number | null>(null);
+
+  const toggleAccordion = (index: number) => {
+    setOpenIndex(openIndex === index ? null : index);
+  };
+   const items = [
+    {
+      title: "Check-in / Check-out",
+      content: "Check-in from 3:00 PM | Check-out by 11:00 AM",
+    },
+    {
+      title: "Cancellation Policy",
+      content: "Free cancellation up to 24 hours before check-in.",
+    },
+    {
+      title: "Breakfast",
+      content: "Complimentary breakfast is included with your stay.",
+    },
+    {
+      title: "Wi-Fi",
+      content: "Free high-speed Wi-Fi is available throughout the hotel.",
+    },
+    {
+      title: "Parking",
+      content: "Private parking is available at no extra charge.",
+    },
+    {
+      title: "Pet Policy",
+      content: "Pets are not allowed in the property.",
+    },
+  ];
   // ✅ Form state
   const [form, setForm] = useState({
     destination: "",
@@ -1150,6 +1181,105 @@ const HotelDetails = () => {
           </div>
         </div>
       </section>
+
+      <section className="way-to-travel my-16">
+        <h1 className="font-[700] text-2xl my-6">The Toptier Way to Travel</h1>
+        <div className="grid grid-cols-12 gap-5">
+          <div className="lg:col-span-3 md:col-span-6 col-span-12 flex flex-col gap-3">
+            <img className="h-32 rounded-sm" src="/images/auth_bg.jpg" alt="" />
+            <p className="font-[500] text-lg text-[#0F172B] truncate">Stay in a Historic Skyline Studio</p>
+          </div>
+          <div className="lg:col-span-3 md:col-span-6 col-span-12 flex flex-col gap-3">
+            <img className="h-32 rounded-sm" src="/images/auth_bg.jpg" alt="" />
+            <p className="font-[500] text-lg text-[#0F172B] truncate">Sunset Moments on the Rooftop</p>
+          </div>
+          <div className="lg:col-span-3 md:col-span-6 col-span-12 flex flex-col gap-3">
+            <img className="h-32 rounded-sm" src="/images/auth_bg.jpg" alt="" />
+            <p className="font-[500] text-lg text-[#0F172B] truncate">Welcome Glass of Sparkling Wine</p>
+          </div>
+          <div className="lg:col-span-3 md:col-span-6 col-span-12 flex flex-col gap-3">
+            <img className="h-32 rounded-sm" src="/images/auth_bg.jpg" alt="" />
+            <p className="font-[500] text-lg text-[#0F172B] truncate">Gourmet Breakfast with a View</p>
+          </div>
+          <div className="lg:col-span-3 md:col-span-6 col-span-12 flex flex-col gap-3">
+            <img className="h-32 rounded-sm" src="/images/auth_bg.jpg" alt="" />
+            <p className="font-[500] text-lg text-[#0F172B] truncate">Wellness & Rejuvenation at the Spa</p>
+          </div>
+        </div>
+      </section>
+
+        <section className="details">
+      <div className="flex flex-col gap-4">
+        {items.map((item, index) => (
+          <div
+            key={index}
+            className="bg-white border border-[#EFEFE9] rounded-lg px-5 py-4"
+          >
+            {/* Header */}
+            <div
+              className="flex justify-between items-center cursor-pointer"
+              onClick={() => toggleAccordion(index)}
+            >
+              <div className="flex items-center gap-5">
+                {/* Icon left */}
+                <div>
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 22 22"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M11 5.25635V11.0897H15.1667"
+                      stroke="black"
+                      strokeWidth="1.92"
+                    />
+                    <path
+                      d="M1.8335 11.09C1.8335 13.5212 2.79927 15.8527 4.51835 17.5718C6.23743 19.2909 8.56901 20.2567 11.0002 20.2567C13.4313 20.2567 15.7629 19.2909 17.482 17.5718C19.2011 15.8527 20.1668 13.5212 20.1668 11.09C20.1668 8.65885 19.2011 6.32728 17.482 4.60819C15.7629 2.88911 13.4313 1.92334 11.0002 1.92334C8.56901 1.92334 6.23743 2.88911 4.51835 4.60819C2.79927 6.32728 1.8335 8.65885 1.8335 11.09Z"
+                      stroke="black"
+                      strokeWidth="1.92"
+                    />
+                  </svg>
+                </div>
+                {/* Title */}
+                <div className="flex flex-col">
+                  <h1 className="text-sm font-[600]">Check-in / Check-out</h1>
+                  <p className="">Check-in from 3:00 PM | Check-out by 11:00 AM</p>
+                </div>
+              </div>
+              {/* Arrow */}
+              <div
+                className={`transition-transform duration-300 ${
+                  openIndex === index ? "rotate-90" : ""
+                }`}
+              >
+                <svg
+                  width="9"
+                  height="13"
+                  viewBox="0 0 10 16"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M1.33594 1.08984L8.33594 8.08984L1.33594 15.0898"
+                    stroke="black"
+                    strokeWidth="1.33333"
+                  />
+                </svg>
+              </div>
+            </div>
+
+            {/* Content */}
+            {openIndex === index && (
+              <div className="mt-3">
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ad adipisci dolores omnis libero repellendus mollitia nesciunt facilis deleniti perferendis similique. Aspernatur amet quis iure odit corrupti dicta eius itaque ducimus!</p>
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+    </section>
 
     </div>
     </div>
