@@ -12,9 +12,7 @@ const HotelsListingMain = () => {
 
   return (
     <div className="">
-
          <HotelsDetails/>
-
     </div>
   )
 }

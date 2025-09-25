@@ -118,7 +118,7 @@ const HotelsDetails = () => {
     enabled: !!hotel_id,
     staleTime: 0, // Always fetch fresh data
   });
- console.log("new form ", form);
+//  console.log("new form ", form);
   const [isModalOpen, setIsModalOpen] = React.useState(false);
 // console.log("hotelDetails", form);
   const { img } = hotelDetails || {};
