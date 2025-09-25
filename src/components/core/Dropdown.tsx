@@ -1,4 +1,3 @@
-'use client'
 import React, { useState, useRef, useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import Button from '@components/core/button';
@@ -8,28 +7,29 @@ interface DropdownProps {
     children: React.ReactNode | ((props: { onClose: () => void }) => React.ReactNode);
     dropDirection?: 'up' | 'down';
     className?: string;
+    buttonClassName?: string;
 }
 
 const Dropdown: React.FC<DropdownProps> = ({
     label,
     children,
     dropDirection = 'down',
-    className = ''
+    className = '',
+    buttonClassName = '',
 }) => {
     const [open, setOpen] = useState(false);
     const ref = useRef<HTMLDivElement>(null);
-    const closeTimeout = useRef<NodeJS.Timeout | null>(null);
+
+    // Handle clicks outside to close dropdown
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             if (ref.current && !ref.current.contains(event.target as Node)) {
-                closeDropdown();
+                setOpen(false);
             }
         };
 
         if (open) {
             document.addEventListener('mousedown', handleClickOutside);
-        } else {
-            document.removeEventListener('mousedown', handleClickOutside);
         }
 
         return () => {
@@ -37,28 +37,12 @@ const Dropdown: React.FC<DropdownProps> = ({
         };
     }, [open]);
 
-    const openDropdown = () => {
-        if (closeTimeout.current) clearTimeout(closeTimeout.current);
-        setOpen(true);
+    const toggleDropdown = () => {
+        setOpen(prev => !prev);
     };
 
     const closeDropdown = () => {
         setOpen(false);
-    };
-
-    const handleMouseEnter = () => {
-        if (closeTimeout.current) clearTimeout(closeTimeout.current);
-        openDropdown();
-    };
-
-    const handleMouseLeave = () => {
-        closeTimeout.current = setTimeout(() => {
-            closeDropdown();
-        }, 150);
-    };
-
-    const handleClick = () => {
-        setOpen((prev) => !prev);
     };
 
     // Render children with onClose if it's a function
@@ -68,18 +52,27 @@ const Dropdown: React.FC<DropdownProps> = ({
         }
 
         return React.Children.map(children, (child, index) => {
-        if (
-  React.isValidElement(child) &&
-  typeof child.props === 'object' && // 👈 ADD THIS CHECK
-  child.props !== null &&          // 👈 AND THIS (since typeof null === 'object')
-  'onClose' in child.props
-) {
-  return React.cloneElement(child as React.ReactElement<any>, {
-    onClose: closeDropdown,
-    key: index,
-  });
-}
-            return <motion.div key={index} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2, delay: index * 0.05 }}>{child}</motion.div>;
+            if (
+                React.isValidElement(child) &&
+                typeof child.props === 'object' &&
+                child.props !== null &&
+                'onClose' in child.props
+            ) {
+                return React.cloneElement(child as React.ReactElement<any>, {
+                    onClose: closeDropdown,
+                    key: index,
+                });
+            }
+            return (
+                <motion.div
+                    key={index}
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.2, delay: index * 0.05 }}
+                >
+                    {child}
+                </motion.div>
+            );
         });
     };
 
@@ -87,23 +80,22 @@ const Dropdown: React.FC<DropdownProps> = ({
         <div
             className={`relative inline-block text-left w-full ${className}`}
             ref={ref}
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
         >
             <Button
                 type="button"
                 shape='circle'
                 variant='plain'
-                className={`
-                    inline-flex items-center justify-between w-full cursor-pointer
-                    border-0 hover:border-0 hover:outline-0
-                    text-sm px-3.5 font-medium text-[#1E2939]
-                    dark:text-gray-400
-                    hover:bg-gray-50 dark:hover:bg-gray-600
-                    transition-all duration-200 ease-out
-                    ${open ? 'bg-gray-50 dark:bg-gray-600 ' : ''}
-                `}
-                onClick={handleClick}
+ className={
+  buttonClassName ||
+  `inline-flex items-center justify-between w-full cursor-pointer
+   border-0 hover:border-0 hover:outline-0
+   text-sm px-3.5 font-medium text-[#1E2939]
+   dark:text-gray-400
+   hover:bg-gray-50 dark:hover:bg-gray-600
+   transition-all duration-200 ease-out
+   ${open ? "bg-gray-50 dark:bg-gray-600" : ""}`
+}
+                onClick={toggleDropdown}
             >
                 <span>{label}</span>
                 <svg
@@ -137,20 +129,17 @@ const Dropdown: React.FC<DropdownProps> = ({
                         transition={{ duration: 0.2, ease: "easeOut" }}
                         className={`
                             absolute w-full md:min-w-50 border
-                             border-gray-200 dark:border-gray-600
+                            border-gray-200 dark:border-gray-600
                             rounded-xl shadow-2xl
                             bg-white dark:bg-gray-800
                             backdrop-blur-sm
-
                             z-50
                             overflow-hidden
                             ${dropDirection === 'up' ? 'bottom-full mb-1 left-0' : 'right-0 mt-1'}
                         `}
                     >
                         <div className="py-2 relative">
-                            {/* Subtle inner glow — pure Tailwind */}
                             <div className="absolute inset-0 bg-gradient-to-b from-blue-50/20 to-transparent dark:from-blue-900/10 rounded-xl pointer-events-none" />
-
                             <div className="relative z-10">
                                 {renderChildren()}
                             </div>

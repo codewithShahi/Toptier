@@ -103,7 +103,6 @@ export const fetchCountries = async () => {
       body: formData,
       headers: await getHeaders("application/json"), // do NOT set Content-Type manually
     });
-
     const data = await response.json().catch(() => null);
     if (!response.ok || data?.status === false) {
       return { error: data?.message || "Something went wrong" };
