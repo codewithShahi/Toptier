@@ -3,12 +3,12 @@
 import { useState, useRef, useEffect } from "react";
 
 import { Icon } from "@iconify/react";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation } from "swiper/modules";
+// import { Swiper, SwiperSlide } from "swiper/react";
+// import { Navigation } from "swiper/modules";
 import useHotelFilter from "@hooks/useHotelFilter";
 import useHotelSearch from "@hooks/useHotelSearch";
 import Spinner from "@components/core/Spinner";
-import RatingSlider from "./ratingSlider"
+// import RatingSlider from "./ratingSlider"
 // import useHotelFilter from "./useHotelFilter";
 // Import Swiper styles
 import "swiper/css";
@@ -19,42 +19,42 @@ import HotelMap from "./hotelMap";
 // import { isPending } from "@reduxjs/toolkit";
 
 // Define types
-interface FilterChip {
-  icon?: string;
-  label: string;
-  category?: string;
-}
+// interface FilterChip {
+//   icon?: string;
+//   label: string;
+//   category?: string;
+// }
 // Types for your actual hotel data
-interface HotelData {
-  hotel_id: string;
-  name: string;
-  location: string;
-  actual_price: string;
-  actual_price_per_night: string;
-  img: string;
-  rating: string;
-  stars: string;
-  amenities: string[];
-  favorite: number;
-  address: string;
-  latitude: string;
-  longitude: string;
-  currency: string;
-  supplier_name: string;
-  markup_price: string;
-  markup_price_per_night: string;
-  booking_currency: string;
-}
-interface HotelSearchAppProps {
-  hotelsData: HotelData[];
-  isLoading?: boolean;
-}
+// interface HotelData {
+//   hotel_id: string;
+//   name: string;
+//   location: string;
+//   actual_price: string;
+//   actual_price_per_night: string;
+//   img: string;
+//   rating: string;
+//   stars: string;
+//   amenities: string[];
+//   favorite: number;
+//   address: string;
+//   latitude: string;
+//   longitude: string;
+//   currency: string;
+//   supplier_name: string;
+//   markup_price: string;
+//   markup_price_per_night: string;
+//   booking_currency: string;
+// }
+// interface HotelSearchAppProps {
+//   hotelsData: HotelData[];
+//   isLoading?: boolean;
+// }
 export default function HotelSearchApp() {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [viewMode, setViewMode] = useState<'grid' | 'list' | 'map'>('grid');
-  const [user, setUser] = useState(true);
-  const [loadingMore, setLoadingMore] = useState(false)
-  const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
+  // const [user, setUser] = useState(true);
+  // const [loadingMore, setLoadingMore] = useState(false)
+  // const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
 const [currentLocation, setCurrentLocation] = useState<{ lat: number; lon: number }>({
   lat: 0,
   lon: 0,
@@ -65,103 +65,103 @@ const onShowMaphandler=(hotel:any)=>{
     lat:hotel?.latitude,
     lon:hotel?.longitude
   })
-console.log('map icons is clicked for current loaction ', hotel)
+// console.log('map icons is clicked for current loaction ', hotel)
 }
-  const swiperRef = useRef<any>(null);
+  // const swiperRef = useRef<any>(null);
   // Filter chips data with placeholder SVGs (replace these with your actual SVGs)
-  const filterChips: FilterChip[] = [
-    {
-      icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M12 2L3.09 8.26L12 22L20.91 8.26L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>`,
-      label: "Luxury Hotel",
-      category: "luxury"
-    },
-    {
-      icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect x="2" y="3" width="20" height="14" rx="2" ry="2" stroke="currentColor" stroke-width="2" fill="none"/>
-        <line x1="8" y1="21" x2="16" y2="21" stroke="currentColor" stroke-width="2"/>
-        <line x1="12" y1="17" x2="12" y2="21" stroke="currentColor" stroke-width="2"/>
-      </svg>`,
-      label: "Business",
-      category: "business"
-    },
-    {
-      icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M3 21L12 2L21 21H3Z" stroke="currentColor" stroke-width="2" fill="none"/>
-        <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2" fill="none"/>
-      </svg>`,
-      label: "Resort",
-      category: "resort"
-    },
-    {
-      icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2" fill="none"/>
-        <path d="M12 1V3" stroke="currentColor" stroke-width="2"/>
-        <path d="M12 21V23" stroke="currentColor" stroke-width="2"/>
-        <path d="M4.22 4.22L5.64 5.64" stroke="currentColor" stroke-width="2"/>
-      </svg>`,
-      label: "Budget",
-      category: "budget"
-    },
-    {
-      icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" stroke="currentColor" stroke-width="2" fill="currentColor"/>
-      </svg>`,
-      label: "Top Rated",
-      category: "top-rated"
-    },
-    {
-      icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="12" cy="10" r="3" stroke="currentColor" stroke-width="2" fill="none"/>
-        <path d="M12 21.7C17.3 17 20 13 20 10A8 8 0 1 0 4 10C4 13 6.7 17 12 21.7Z" stroke="currentColor" stroke-width="2" fill="none"/>
-      </svg>`,
-      label: "City Center",
-      category: "city-center"
-    },
-    {
-      icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M6 13.87A4 4 0 0 1 7.41 6A5.11 5.11 0 0 1 12 4A5.11 5.11 0 0 1 16.59 6A4 4 0 0 1 18 13.87V21H6Z" stroke="currentColor" stroke-width="2" fill="none"/>
-        <circle cx="12" cy="10" r="2" stroke="currentColor" stroke-width="2" fill="none"/>
-      </svg>`,
-      label: "Fine Dining",
-      category: "fine-dining"
-    },
-    {
-      icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M2 12C2 17.52 6.48 22 12 22S22 17.52 22 12C22 6.48 17.52 2 12 2" stroke="currentColor" stroke-width="2" fill="none"/>
-        <path d="M2 12C2 8.69 4.69 6 8 6S14 8.69 14 12" stroke="currentColor" stroke-width="2" fill="none"/>
-      </svg>`,
-      label: "Beachfront",
-      category: "beachfront"
-    },
-    {
-      icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M20 16V8A8 8 0 0 0 4 8V16C4 18.21 5.79 20 8 20H16C18.21 20 20 18.21 20 16Z" stroke="currentColor" stroke-width="2" fill="none"/>
-        <path d="M4 8C4 5.79 5.79 4 8 4H16C18.21 4 20 5.79 20 8" stroke="currentColor" stroke-width="2" fill="none"/>
-      </svg>`,
-      label: "Lake View",
-      category: "lake-view"
-    },
-    {
-      icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M21 16V8A2 2 0 0 0 19 6H5A2 2 0 0 0 3 8V16A2 2 0 0 0 5 18H19A2 2 0 0 0 21 16Z" stroke="currentColor" stroke-width="2" fill="none"/>
-        <polyline points="7,8 12,13 17,8" stroke="currentColor" stroke-width="2" fill="none"/>
-      </svg>`,
-      label: "Near Airport",
-      category: "near-airport"
-    }
-  ];
+  // const filterChips: FilterChip[] = [
+  //   {
+  //     icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  //       <path d="M12 2L3.09 8.26L12 22L20.91 8.26L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  //     </svg>`,
+  //     label: "Luxury Hotel",
+  //     category: "luxury"
+  //   },
+  //   {
+  //     icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  //       <rect x="2" y="3" width="20" height="14" rx="2" ry="2" stroke="currentColor" stroke-width="2" fill="none"/>
+  //       <line x1="8" y1="21" x2="16" y2="21" stroke="currentColor" stroke-width="2"/>
+  //       <line x1="12" y1="17" x2="12" y2="21" stroke="currentColor" stroke-width="2"/>
+  //     </svg>`,
+  //     label: "Business",
+  //     category: "business"
+  //   },
+  //   {
+  //     icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  //       <path d="M3 21L12 2L21 21H3Z" stroke="currentColor" stroke-width="2" fill="none"/>
+  //       <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2" fill="none"/>
+  //     </svg>`,
+  //     label: "Resort",
+  //     category: "resort"
+  //   },
+  //   {
+  //     icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  //       <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2" fill="none"/>
+  //       <path d="M12 1V3" stroke="currentColor" stroke-width="2"/>
+  //       <path d="M12 21V23" stroke="currentColor" stroke-width="2"/>
+  //       <path d="M4.22 4.22L5.64 5.64" stroke="currentColor" stroke-width="2"/>
+  //     </svg>`,
+  //     label: "Budget",
+  //     category: "budget"
+  //   },
+  //   {
+  //     icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  //       <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" stroke="currentColor" stroke-width="2" fill="currentColor"/>
+  //     </svg>`,
+  //     label: "Top Rated",
+  //     category: "top-rated"
+  //   },
+  //   {
+  //     icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  //       <circle cx="12" cy="10" r="3" stroke="currentColor" stroke-width="2" fill="none"/>
+  //       <path d="M12 21.7C17.3 17 20 13 20 10A8 8 0 1 0 4 10C4 13 6.7 17 12 21.7Z" stroke="currentColor" stroke-width="2" fill="none"/>
+  //     </svg>`,
+  //     label: "City Center",
+  //     category: "city-center"
+  //   },
+  //   {
+  //     icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  //       <path d="M6 13.87A4 4 0 0 1 7.41 6A5.11 5.11 0 0 1 12 4A5.11 5.11 0 0 1 16.59 6A4 4 0 0 1 18 13.87V21H6Z" stroke="currentColor" stroke-width="2" fill="none"/>
+  //       <circle cx="12" cy="10" r="2" stroke="currentColor" stroke-width="2" fill="none"/>
+  //     </svg>`,
+  //     label: "Fine Dining",
+  //     category: "fine-dining"
+  //   },
+  //   {
+  //     icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  //       <path d="M2 12C2 17.52 6.48 22 12 22S22 17.52 22 12C22 6.48 17.52 2 12 2" stroke="currentColor" stroke-width="2" fill="none"/>
+  //       <path d="M2 12C2 8.69 4.69 6 8 6S14 8.69 14 12" stroke="currentColor" stroke-width="2" fill="none"/>
+  //     </svg>`,
+  //     label: "Beachfront",
+  //     category: "beachfront"
+  //   },
+  //   {
+  //     icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  //       <path d="M20 16V8A8 8 0 0 0 4 8V16C4 18.21 5.79 20 8 20H16C18.21 20 20 18.21 20 16Z" stroke="currentColor" stroke-width="2" fill="none"/>
+  //       <path d="M4 8C4 5.79 5.79 4 8 4H16C18.21 4 20 5.79 20 8" stroke="currentColor" stroke-width="2" fill="none"/>
+  //     </svg>`,
+  //     label: "Lake View",
+  //     category: "lake-view"
+  //   },
+  //   {
+  //     icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  //       <path d="M21 16V8A2 2 0 0 0 19 6H5A2 2 0 0 0 3 8V16A2 2 0 0 0 5 18H19A2 2 0 0 0 21 16Z" stroke="currentColor" stroke-width="2" fill="none"/>
+  //       <polyline points="7,8 12,13 17,8" stroke="currentColor" stroke-width="2" fill="none"/>
+  //     </svg>`,
+  //     label: "Near Airport",
+  //     category: "near-airport"
+  //   }
+  // ];
 
 
 
 
-  const [showPrev, setShowPrev] = useState(false);
+  // const [showPrev, setShowPrev] = useState(false);
 
 
 
-  const [showNext, setShowNext] = useState(true);
-  const { allHotelsData: hotelsData, loadMoreData, isloadingMore, listRef, allHotelsData: loadMoreHotels, isSearching, isPending, isInitialLoading, detailsBookNowHandler } = useHotelSearch()
+  // const [showNext, setShowNext] = useState(true);
+  const { allHotelsData: hotelsData,  isloadingMore, listRef, allHotelsData: isInitialLoading, detailsBookNowHandler } = useHotelSearch()
 
 
   // console.log('is searching ', isSearching)
@@ -181,13 +181,13 @@ console.log('map icons is clicked for current loaction ', hotel)
     totalResults,
     filters,
     priceRange,
-    availableAmenities,
+    // availableAmenities,
     updatePriceRange,
-    toggleStarFilter,
+    // toggleStarFilter,
     updateRatingFilter,
     updateSearchQuery,
-    toggleAmenityFilter,
-    updateSortBy,
+    // toggleAmenityFilter,
+    // updateSortBy,
     resetFilters,
     hasActiveFilters,
     selectedStars,
@@ -230,61 +230,61 @@ console.log('map icons is clicked for current loaction ', hotel)
     updatePriceRange(newRange);
   };
   // Custom slider component
-  interface PriceSliderProps {
-    min: number;
-    max: number;
-    values: [number, number]; // tuple for two values
-    onChange: (index: 0 | 1, value: number) => void;
-  }
+  // interface PriceSliderProps {
+  //   min: number;
+  //   max: number;
+  //   values: [number, number]; // tuple for two values
+  //   onChange: (index: 0 | 1, value: number) => void;
+  // }
 
   // 👇 Add state to track highlighted hotel
-  const [highlightedHotel, setHighlightedHotel] = useState<HotelData | null>(null);
+  // const [highlightedHotel, setHighlightedHotel] = useState<HotelData | null>(null);
 
-  const handleHighlightHotel = (hotel: HotelData) => {
-    setHighlightedHotel(hotel);
-  };
+  // const handleHighlightHotel = (hotel: HotelData) => {
+  //   setHighlightedHotel(hotel);
+  // };
 
-  const PriceSlider: React.FC<PriceSliderProps> = ({ min, max, values, onChange }) => {
-    const getPercentage = (value: number) => ((value - min) / (max - min)) * 100;
-    return (
-      <div className="relative">
-        <div className="flex justify-between text-sm font-semibold text-gray-600 mb-4">
-          <span>${values[0]}</span>
-          <span>${values[1]}</span>
-        </div>
-        <div className="relative h-2 bg-gray-200 rounded-full">
-          <div
-            className="absolute h-2 bg-[#163C8C] rounded-full"
-            style={{
-              left: `${getPercentage(values[0])}%`,
-              right: `${100 - getPercentage(values[1])}%`
-            }}
-          ></div>
-          <input
-            type="range"
-            min={min}
-            max={max}
-            value={values[0]}
-            onChange={(e) => onChange(0, parseInt(e.target.value))}
-            className="absolute w-full h-2 bg-transparent appearance-none cursor-pointer slider-thumb"
-          />
-          <input
-            type="range"
-            min={min}
-            max={max}
-            value={values[1]}
-            onChange={(e) => onChange(1, parseInt(e.target.value))}
-            className="absolute w-full h-2 bg-transparent appearance-none cursor-pointer slider-thumb"
-          />
-        </div>
-      </div>
-    );
-  };
+  // const PriceSlider: React.FC<PriceSliderProps> = ({ min, max, values, onChange }) => {
+  //   const getPercentage = (value: number) => ((value - min) / (max - min)) * 100;
+  //   return (
+  //     <div className="relative">
+  //       <div className="flex justify-between text-sm font-semibold text-gray-600 mb-4">
+  //         <span>${values[0]}</span>
+  //         <span>${values[1]}</span>
+  //       </div>
+  //       <div className="relative h-2 bg-gray-200 rounded-full">
+  //         <div
+  //           className="absolute h-2 bg-[#163C8C] rounded-full"
+  //           style={{
+  //             left: `${getPercentage(values[0])}%`,
+  //             right: `${100 - getPercentage(values[1])}%`
+  //           }}
+  //         ></div>
+  //         <input
+  //           type="range"
+  //           min={min}
+  //           max={max}
+  //           value={values[0]}
+  //           onChange={(e) => onChange(0, parseInt(e.target.value))}
+  //           className="absolute w-full h-2 bg-transparent appearance-none cursor-pointer slider-thumb"
+  //         />
+  //         <input
+  //           type="range"
+  //           min={min}
+  //           max={max}
+  //           value={values[1]}
+  //           onChange={(e) => onChange(1, parseInt(e.target.value))}
+  //           className="absolute w-full h-2 bg-transparent appearance-none cursor-pointer slider-thumb"
+  //         />
+  //       </div>
+  //     </div>
+  //   );
+  // };
   // Guest rating slider
-  interface RatingSliderProps {
-    value: number;
-    onChange: (newValue: number) => void;
-  }
+  // interface RatingSliderProps {
+  //   value: number;
+  //   onChange: (newValue: number) => void;
+  // }
   // const RatingSlider: React.FC<RatingSliderProps> = ({ value, onChange }) => {
   //   const percentage = ((value - 1) / 4) * 100;
   //   return (
@@ -309,61 +309,61 @@ console.log('map icons is clicked for current loaction ', hotel)
   //   );
   // };
   // Render star ratings
-  const renderStars = (rating: string) => {
-    const stars = [];
-    const numRating = parseInt(rating) || 0;
-    for (let i = 0; i < numRating; i++) {
-      stars.push(
-        <Icon key={i} icon="mdi:star" className="h-4 w-4 text-yellow-400" />
-      );
-    }
-    return stars;
-  };
+  // const renderStars = (rating: string) => {
+  //   const stars = [];
+  //   const numRating = parseInt(rating) || 0;
+  //   for (let i = 0; i < numRating; i++) {
+  //     stars.push(
+  //       <Icon key={i} icon="mdi:star" className="h-4 w-4 text-yellow-400" />
+  //     );
+  //   }
+  //   return stars;
+  // };
 
 
   // Handle sort change
-  const handleSortChange = (sortValue: string) => {
-    let sortBy: 'price_low' | 'price_high' | 'rating' | 'name';
-    switch (sortValue) {
-      case 'Price Low to High':
-        sortBy = 'price_low';
-        break;
-      case 'Price High to Low':
-        sortBy = 'price_high';
-        break;
-      case 'Rating':
-        sortBy = 'rating';
-        break;
-      case 'Name':
-        sortBy = 'name';
-        break;
-      default:
-        sortBy = 'price_low';
-    }
-    updateSortBy(sortBy);
-  };
+  // const handleSortChange = (sortValue: string) => {
+  //   let sortBy: 'price_low' | 'price_high' | 'rating' | 'name';
+  //   switch (sortValue) {
+  //     case 'Price Low to High':
+  //       sortBy = 'price_low';
+  //       break;
+  //     case 'Price High to Low':
+  //       sortBy = 'price_high';
+  //       break;
+  //     case 'Rating':
+  //       sortBy = 'rating';
+  //       break;
+  //     case 'Name':
+  //       sortBy = 'name';
+  //       break;
+  //     default:
+  //       sortBy = 'price_low';
+  //   }
+  //   updateSortBy(sortBy);
+  // };
   // Get sort display value
-  const getSortDisplayValue = () => {
-    switch (filters.sortBy) {
-      case 'price_low':
-        return 'Price Low to High';
-      case 'price_high':
-        return 'Price High to Low';
-      case 'rating':
-        return 'Rating';
-      case 'name':
-        return 'Name';
-      default:
-        return 'Price Low to High';
-    }
-  };
-  const toggleFilterChip = (category: string) => {
-    setSelectedFilters(prev =>
-      prev.includes(category)
-        ? prev.filter(f => f !== category)
-        : [...prev, category]
-    );
-  };
+  // const getSortDisplayValue = () => {
+  //   switch (filters.sortBy) {
+  //     case 'price_low':
+  //       return 'Price Low to High';
+  //     case 'price_high':
+  //       return 'Price High to Low';
+  //     case 'rating':
+  //       return 'Rating';
+  //     case 'name':
+  //       return 'Name';
+  //     default:
+  //       return 'Price Low to High';
+  //   }
+  // };
+  // const toggleFilterChip = (category: string) => {
+  //   setSelectedFilters(prev =>
+  //     prev.includes(category)
+  //       ? prev.filter(f => f !== category)
+  //       : [...prev, category]
+  //   );
+  // };
 
 
   const [open, setOpen] = useState(false);

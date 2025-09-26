@@ -1,4 +1,5 @@
 import { Icon } from "@iconify/react";
+
 export const icons = {
   dashboard:<Icon icon="mdi:view-dashboard-outline" className="w-6 h-6"/>,
   bookings: <Icon icon="ic:outline-calendar-month" width="24" height="24" />,

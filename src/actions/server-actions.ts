@@ -5,7 +5,7 @@ import { decodeBearerToken } from "@src/utils/decodeToken";
 import { headers } from "next/headers";
 
 
-console.log("base",baseUrl);
+// console.log("base",baseUrl);
 
 // ============== GET DYNAMIC DOMAIN ===============
 export async function getDomain(): Promise<string> {
@@ -474,7 +474,7 @@ export const hotel_search = async (payload: HotelSearchPayload) => {
 
 
 
-    console.log('seaarch_payaod',formData)
+    // console.log('seaarch_payaod',formData)
     const response = await fetch(`${baseUrl}/hotel_search`, {
       method: "POST",
       body: formData,

@@ -5,7 +5,7 @@ import { LAYOUT_PRO } from '@src/constants/theme.constant'
 
 type ClassicProps = CommonProps
 
-const Classic = ({ children, ...rest }: ClassicProps) => {
+const Classic = ({ children,  }: ClassicProps) => {
     return (
         <LayoutBase
             type={LAYOUT_PRO}
