@@ -461,7 +461,7 @@ export const hotel_search = async (payload: HotelSearchPayload) => {
     formData.append("rooms", String(payload.rooms));
     formData.append("adults", String(payload.adults));
     formData.append("childs", String(payload.children));
-    formData.append("nationality", "CN");
+    formData.append("nationality", payload.nationality);
     formData.append("language","en")
     formData.append("currency","usd")
     formData.append("child_age","0")
@@ -484,7 +484,7 @@ export const hotel_search = async (payload: HotelSearchPayload) => {
     });
 
     const data = await response.json().catch(() => null);
-    console.log('search result ',data)
+    // console.log('search result ',data)
     if (!response.ok || data?.status === false) {
       return { error: data?.message || "Something went wrong" };
     }
@@ -537,7 +537,7 @@ export const hotel_details = async (payload: HotelDetailsPayload) => {
     });
 
     const data = await response.json().catch(() => null);
-    console.log("hotel_details_result", data);
+    // console.log("hotel_details_result", data);
 
     if (!response.ok || data?.status === false) {
       return { error: data?.message || "Something went wrong" };

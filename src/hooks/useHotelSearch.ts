@@ -330,13 +330,10 @@ const callAllModulesAPI = useCallback(
  const handleSubmit = useCallback(
   async (e: React.FormEvent) => {
     e.preventDefault();
-
     // if ( errors) {
-
     //   console.log('Search already in progress');
     //   return { success: false, error: "Search already in progress" };
     // }
-
     // Validate first
     try {
 
@@ -362,9 +359,8 @@ const callAllModulesAPI = useCallback(
       dispatch(setHotels([]));
       queryClient.setQueryData(["hotel-search"], []);
       localStorage.setItem("hotelSearchForm", JSON.stringify(form));
-      // console.log('Starting new search:', form);
 
-
+    console.log('nationality ', form )
       const result = await callAllModulesAPI({
         ...form,
         price_from: "",
@@ -474,12 +470,18 @@ const detailsBookNowHandler = async (hotel: any) => {
 
   // 👉 store full hotel object in localStorage
   localStorage.setItem("currentHotel", JSON.stringify(hotel));
-
+  const selectedNationality=localStorage.getItem('hotelSearchForm')
   // 👉 generate slug
   const slugName = hotel.name.toLowerCase().replace(/\s+/g, "-");
+  let nationality;
+if (selectedNationality) {
+  const parsedData = JSON.parse(selectedNationality); // now it's an object
 
+   nationality = parsedData.nationality; // safely access nationality
+  // console.log("Nationality:", nationality);
+}
   // 👉 construct URL
-  const url = `/hotel/${hotel.hotel_id}/${slugName}/${form.checkin}/${form.checkout}/${form.rooms}/${form.adults}/${form.children}/${form.nationality}/${hotel.supplier_name}`;
+  const url = `/hotel/${hotel.hotel_id}/${slugName}/${form.checkin}/${form.checkout}/${form.rooms}/${form.adults}/${form.children}/${nationality}/${hotel.supplier_name}`;
 
   // 👉 navigate
   router.push(url);
