@@ -28,15 +28,19 @@ interface HotelMapProps {
     location: string;
     name?: string;
     city?: string;
+    address:string;
   }[];
+  currentLocation: {
+    lat: number;
+    lon: number;
+  } | null;
 }
 
-// ✅ Enhanced Pin + Price Icon
+// Regular price icon (red pin)
 const priceIcon = (price: number | string) =>
   L.divIcon({
     html: `
       <div style="display: flex; flex-direction: column; align-items: center; position: relative;">
-        <!-- White Price Bubble (Top) -->
         <div style="
           background: white;
           border: 1px solid gray;
@@ -52,8 +56,6 @@ const priceIcon = (price: number | string) =>
         ">
           $${price}
         </div>
-        
-        <!-- Red Pin SVG (Bottom) -->
         <svg width="28" height="24" viewBox="0 0 28 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path
             d="M14 0C10.134 0 7 3.13401 7 7C7 12.25 14 24 14 24C14 24 21 12.25 21 7C21 3.13401 17.866 0 14 0Z"
@@ -63,11 +65,58 @@ const priceIcon = (price: number | string) =>
       </div>
     `,
     className: "",
-    iconSize: [28, 40],     // total height: bubble + pin
-    iconAnchor: [14, 24],   // anchor at bottom of red pin (tip points to location)
+    iconSize: [28, 40],
+    iconAnchor: [14, 24],
   });
 
-// Helper component to auto fit bounds
+// Highlighted icon (blue for current location)
+const highlightedIcon = (price: number | string) =>
+  L.divIcon({
+    html: `
+      <div style="display: flex; flex-direction: column; align-items: center; position: relative;">
+        <div style="
+          background: #ADD8E6;
+          border: 1px solid #1E90FF;
+          color: black;
+          font-size: 12px;
+          font-weight: 700;
+          padding: 5px 10px;
+          border-radius: 16px;
+          box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+          text-align: center;
+          min-width: 48px;
+          z-index: 1;
+        ">
+          $${price}
+        </div>
+        <svg width="28" height="24" viewBox="0 0 28 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path
+            d="M14 0C10.134 0 7 3.13401 7 7C7 12.25 14 24 14 24C14 24 21 12.25 21 7C21 3.13401 17.866 0 14 0Z"
+            fill="#1E90FF"
+          />
+        </svg>
+      </div>
+    `,
+    className: "",
+    iconSize: [28, 40],
+    iconAnchor: [14, 24],
+  });
+
+// Helper to check if hotel matches current location (with tolerance)
+const isSameLocation = (
+  hotelLat: number,
+  hotelLng: number,
+  current: { lat: number; lon: number } | null,
+  tolerance = 0.0001 // ~10 meters
+): boolean => {
+  if (!current) return false;
+  return (
+    Math.abs(hotelLat - current.lat) < tolerance &&
+    Math.abs(hotelLng - current.lon) < tolerance
+  );
+};
+
+// Auto-fit bounds
 function FitBounds({ hotels }: { hotels: any[] }) {
   const map = useMap();
   useEffect(() => {
@@ -88,67 +137,31 @@ function CustomControls() {
   const locateUser = () => map.locate({ setView: true, maxZoom: 14 });
   return (
     <div className="absolute top-14 right-4 flex flex-col gap-3 z-[1000]">
-      {/* Zoom In */}
       <button
         onClick={zoomIn}
         className="w-10 h-10 flex cursor-pointer items-center justify-center rounded-full bg-white shadow-md hover:bg-gray-100"
+        aria-label="Zoom in"
       >
-        <svg
-          width="24"
-          height="24"
-          viewBox="0 0 32 32"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M7.15381 16H25.0546"
-            stroke="black"
-            strokeWidth="1.27863"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-          <path
-            d="M16.1045 7.04962V24.9504"
-            stroke="black"
-            strokeWidth="1.27863"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
+        <svg width="24" height="24" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M7.15381 16H25.0546" stroke="black" strokeWidth="1.27863" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M16.1045 7.04962V24.9504" stroke="black" strokeWidth="1.27863" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
       </button>
-      {/* Zoom Out */}
       <button
         onClick={zoomOut}
         className="w-10 h-10 flex cursor-pointer items-center justify-center rounded-full bg-white shadow-md hover:bg-gray-100"
+        aria-label="Zoom out"
       >
-        <svg
-          width="24"
-          height="24"
-          viewBox="0 0 32 32"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M7.15381 16H25.0546"
-            stroke="black"
-            strokeWidth="1.27863"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
+        <svg width="24" height="24" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M7.15381 16H25.0546" stroke="black" strokeWidth="1.27863" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
       </button>
-      {/* Locate */}
       <button
         onClick={locateUser}
         className="w-10 h-10 flex cursor-pointer items-center justify-center rounded-full bg-white shadow-md hover:bg-gray-100"
+        aria-label="Locate me"
       >
-        <svg
-          width="24"
-          height="24"
-          viewBox="0 0 32 32"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
+        <svg width="24" height="24" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path
             d="M17.2795 25.7153C17.3137 25.8005 17.3731 25.8732 17.4498 25.9237C17.5265 25.9741 17.6168 25.9999 17.7085 25.9976C17.8003 25.9952 17.8892 25.9648 17.9632 25.9105C18.0372 25.8562 18.0928 25.7806 18.1226 25.6937L23.9712 8.5979C24 8.51818 24.0054 8.4319 23.987 8.34916C23.9686 8.26643 23.9269 8.19066 23.867 8.13072C23.807 8.07078 23.7313 8.02915 23.6485 8.0107C23.5658 7.99225 23.4795 7.99774 23.3998 8.02654L6.30395 13.8751C6.21712 13.9049 6.14147 13.9605 6.08717 14.0345C6.03286 14.1085 6.0025 14.1974 6.00015 14.2892C5.9978 14.3809 6.02357 14.4712 6.07402 14.5479C6.12446 14.6246 6.19716 14.684 6.28236 14.7182L13.4176 17.5795C13.6432 17.6698 13.8481 17.8049 14.0201 17.9765C14.192 18.1482 14.3275 18.3529 14.4182 18.5783L17.2795 25.7153Z"
             stroke="black"
@@ -162,11 +175,10 @@ function CustomControls() {
   );
 }
 
-export default function HotelMap({ hotels }: HotelMapProps) {
+export default function HotelMap({ hotels, currentLocation }: HotelMapProps) {
   const [validHotels, setValidHotels] = useState<typeof hotels>([]);
   const [showModal, setShowModal] = useState(false);
 
-  // Validate coordinates
   useEffect(() => {
     const filtered = hotels.filter((hotel) => {
       const lat = Number(hotel.latitude);
@@ -193,19 +205,15 @@ export default function HotelMap({ hotels }: HotelMapProps) {
   }
 
   return (
-    <div className="relative w-full h-full rounded-4xl overflow-hidden">
-      {/* MINI MAP PREVIEW - Fullscreen toggle */}
+    <div className="relative w-full h-[800px] rounded-4xl overflow-hidden">
+      {/* Fullscreen toggle - MOVED to top-4 to avoid overlap */}
       <div
-        className="absolute top-53 right-4 z-10 cursor-pointer"
+        className="absolute top-4 right-4 z-[1001] cursor-pointer"
         onClick={() => setShowModal(true)}
+        aria-label="Open fullscreen map"
       >
-        <div className="w-10 h-10 flex cursor-pointer items-center justify-center rounded-full bg-white shadow-md hover:bg-gray-100">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="26"
-            height="26"
-            viewBox="0 0 24 24"
-          >
+        <div className="w-10 h-10 flex items-center justify-center rounded-full bg-white shadow-md hover:bg-gray-100">
+          <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24">
             <path
               fill="currentColor"
               d="M12 21.308L8.442 17.75l.714-.713L11.5 19.38V14.5h1v4.875l2.339-2.344l.719.719zm-5.75-5.75L2.692 12l3.552-3.552l.714.714L4.619 11.5H9.5v1H4.625l2.344 2.339zm11.5 0l-.713-.714L19.38 12.5H14.5v-1h4.875l-2.344-2.339l.719-.719L21.308 12zM11.5 9.5V4.62L9.156 6.963l-.714-.714L12 2.692l3.558 3.558l-.714.714L12.5 4.618V9.5z"
@@ -214,13 +222,14 @@ export default function HotelMap({ hotels }: HotelMapProps) {
         </div>
       </div>
 
-      {/* FULLSCREEN MAP MODAL */}
+      {/* FULLSCREEN MODAL */}
       {showModal && (
         <div className="fixed inset-0 z-[2000] bg-black bg-opacity-50 flex items-center justify-center">
           <div className="relative w-full h-full p-4">
             <button
-              className="absolute top-7 right-8.5 z-[3000] text-white bg-gray-600 rounded-full p-1.5 cursor-pointer"
+              className="absolute top-7 right-8.5 z-[3000] text-white bg-gray-600 rounded-full p-1.5"
               onClick={() => setShowModal(false)}
+              aria-label="Close fullscreen map"
             >
               <Icon icon="mdi:close" className="w-6 h-6" />
             </button>
@@ -237,27 +246,30 @@ export default function HotelMap({ hotels }: HotelMapProps) {
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a>'
               />
               <FitBounds hotels={validHotels} />
-              {validHotels.map((hotel) => (
-                <Marker
-                  key={hotel.hotel_id}
-                  position={[
-                    Number(hotel.latitude),
-                    Number(hotel.longitude),
-                  ]}
-                  icon={priceIcon(hotel.actual_price)}
-                >
-                  <Tooltip
-                    direction="top"
-                    offset={L.point(0, -10)}
-                    opacity={1}
+              {validHotels.map((hotel) => {
+                const lat = Number(hotel.latitude);
+                const lng = Number(hotel.longitude);
+                const isCurrent = isSameLocation(lat, lng, currentLocation);
+
+                return (
+                  <Marker
+                    key={hotel.hotel_id}
+                    position={[lat, lng]}
+                    icon={isCurrent ? highlightedIcon(hotel.actual_price) : priceIcon(hotel.actual_price)}
                   >
-                    <div className="text-[12px] max-w-[350px] px-2 py-1 leading-[1.4] text-center rounded-2xl">
-                      <b>{hotel.name || "Hotel"}</b> <br />
-                      location: {hotel.location}
-                    </div>
-                  </Tooltip>
-                </Marker>
-              ))}
+                    <Tooltip direction="top" offset={L.point(0, -10)} opacity={1}>
+                      <div
+                        className={`text-[12px] w-50 h-auto overflow-hidden text-wrap  px-2 py-1 leading-[1.4]   ${
+                          isCurrent ? "bg-blue-100 border border-blue-900" : "bg-white border border-gray-300"
+                        }`}
+                      >
+                        <b>{hotel.name || "Hotel"}</b> <br />
+                       <span className="truncate">Address: {hotel?.address ?? ""}</span>
+                      </div>
+                    </Tooltip>
+                  </Marker>
+                );
+              })}
               <CustomControls />
             </MapContainer>
           </div>
@@ -279,22 +291,30 @@ export default function HotelMap({ hotels }: HotelMapProps) {
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a>'
           />
           <FitBounds hotels={validHotels} />
-          {validHotels.map((hotel) => (
-            <Marker
-              key={hotel.hotel_id}
-              position={[Number(hotel.latitude), Number(hotel.longitude)]}
-              icon={priceIcon(hotel.actual_price)}
-            >
-              <Tooltip direction="top" offset={L.point(0, -10)} opacity={1}>
-                <div className="text-[12px] max-w-[350px] px-2 py-1 leading-[1.4] text-center rounded-2xl">
-                  <b>{hotel.name || "Hotel"}</b> <br />
+          {validHotels.map((hotel) => {
+            const lat = Number(hotel.latitude);
+            const lng = Number(hotel.longitude);
+            const isCurrent = isSameLocation(lat, lng, currentLocation);
 
-                  location: {hotel.location}
-
-                </div>
-              </Tooltip>
-            </Marker>
-          ))}
+            return (
+              <Marker
+                key={hotel.hotel_id}
+                position={[lat, lng]}
+                icon={isCurrent ? highlightedIcon(hotel.actual_price) : priceIcon(hotel.actual_price)}
+              >
+                <Tooltip direction="top" offset={L.point(0, -10)} opacity={1}>
+                  <div
+                    className={`text-[12px] w-50 px-2 py-1 leading-[1.4] text-center overflow-hidden text-wrap  ${
+                      isCurrent ? "bg-blue-100 border border-blue-900" : "bg-white border border-gray-300"
+                    }`}
+                  >
+                    <b>{hotel.name || "Hotel"}</b> <br />
+                    Address: {hotel.address}
+                  </div>
+                </Tooltip>
+              </Marker>
+            );
+          })}
           <CustomControls />
         </MapContainer>
       </div>

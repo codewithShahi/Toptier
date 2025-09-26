@@ -9,7 +9,7 @@ export const generateMetadata = async (): Promise<Metadata> => {
   const data = await fetchAppData()
   const appData=data.app
   // console.log('appp DAta',data.data.app)
-  const meta_data = data.data.app
+  const meta_data = data?.data?.app
   if (!meta_data) {
     return {
       title: '404',

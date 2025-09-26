@@ -1,6 +1,6 @@
 "use client";
 import React, { useCallback, useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams,useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { hotel_details } from "@src/actions/server-actions";
 import HotelDetailsSearch from "./hotelDetailsSearch";
@@ -15,7 +15,7 @@ import { Skeleton } from "@components/core/skeleton";
 
 import  HotelSuggestionSlider  from "./hotelSuggestionSlider";
 import { useHotelDetails } from "@hooks/useHotelDetails";
-import { useRouter } from "next/router";
+
 
 
 interface HotelDetailsPayload {
