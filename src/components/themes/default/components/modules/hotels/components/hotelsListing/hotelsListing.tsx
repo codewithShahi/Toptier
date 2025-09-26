@@ -195,29 +195,9 @@ console.log('map icons is clicked for current loaction ', hotel)
     isFilterLoading
 
   } = useHotelFilter({ hotelsData: safeHotelsData ?? [], isLoading: false });
-  // 🚀 Infinite scroll handler
 
-  //   useEffect(() => {
-  //   const handleScroll = async () => {
-  //     const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
 
-  //     if (scrollTop + clientHeight >= scrollHeight - 100) {
-  //       const result = await loadMoreData(); // 👈 pass event or null if not needed
-  //      console.log('resulte load more',result)
-  //       if (result?.success) {
-  //         // console.log("Fetched more hotels:", result.data);
-  //       } else if (result?.error) {
-  //         console.error("Failed to load more:", result.error);
-  //       }
-  //     }
-  //   };
 
-  //   window.addEventListener("scroll", handleScroll);
-  //   return () => window.removeEventListener("scroll", handleScroll);
-  // }, [loadMoreData]);
-
-  // console.log('filters data',filteredHo
-  // Handle price range changes
   const handlePriceChange = (index: number, value: number) => {
     const newRange: [number, number] = [...filters.priceRange];
     newRange[index] = value;
@@ -443,7 +423,7 @@ console.log('map icons is clicked for current loaction ', hotel)
 
       {/* Main Content */}
 
-      <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-4 lg:py-8"  >
+      <div className="max-w-[1200px] mx-auto appHorizantalSpacing py-4 lg:py-8"  >
         <div className="flex flex-col lg:flex-row gap-4 lg:gap-8">
           {/* Desktop Sidebar - Advanced Search */}
           {viewMode !== "map" && <div className="hidden lg:block w-80 flex-shrink-0">

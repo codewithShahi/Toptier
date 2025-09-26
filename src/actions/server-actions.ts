@@ -474,7 +474,7 @@ export const hotel_search = async (payload: HotelSearchPayload) => {
 
 
 
-    console.log('seaarch_payaod',formData)
+    // console.log('seaarch_payaod',formData)
     const response = await fetch(`${baseUrl}/hotel_search`, {
       method: "POST",
       body: formData,
