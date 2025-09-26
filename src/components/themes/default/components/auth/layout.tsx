@@ -1,5 +1,5 @@
 import * as React from "react";
-import Image from "next/image";
+// import Image from "next/image";
 
 export interface LayoutProps {
   children: React.ReactNode;
@@ -7,7 +7,7 @@ export interface LayoutProps {
   dict?: any;
 }
 
-export function Layout({ children, dict }: LayoutProps): React.JSX.Element {
+export function Layout({ children }: LayoutProps): React.JSX.Element {
   return (
    <div className="min-h-screen w-full bg-amber-200 flex flex-col md:flex-row">
 

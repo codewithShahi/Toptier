@@ -7,7 +7,7 @@ import { useForm, Controller } from 'react-hook-form';
 import Select from '@components/core/select'
 import { zodResolver } from '@hookform/resolvers/zod';
 import Checkbox from "@components/core/checkbox";
-import { useState, FormEvent, useCallback } from "react";
+import { useState, useCallback } from "react";
 import { useRouter,useParams } from "next/navigation";
 import useDictionary from "@hooks/useDict";
 import { useMutation } from "@tanstack/react-query";
@@ -17,11 +17,11 @@ import Alert from "@components/core/alert";
 import { toast } from "react-toastify";
 
 import Link from "next/link";
-import { useAppSelector } from "@lib/redux/store";
-import { mode as selectMode } from "@lib/redux/base/selectors";
+// import { useAppSelector } from "@lib/redux/store";
+// import { mode as selectMode } from "@lib/redux/base/selectors";
 import useDarkMode from "@hooks/useDarkMode";
 import useCountries from "@hooks/useCountries"
-import type { StylesConfig, ControlProps, OptionProps, MenuProps, SingleValueProps, PlaceholderProps, CSSObjectWithLabel } from 'react-select';
+import type { StylesConfig, ControlProps, OptionProps,  SingleValueProps,  CSSObjectWithLabel } from 'react-select';
 
 
 
@@ -68,7 +68,7 @@ export default function SignUpForm() {
     formState: { errors },
     //--------- adding default values , and connecting from-hook with zode librery
   } = useForm<Values>({ defaultValues, resolver: zodResolver(schema) });
-  const [direction] = useDirection();
+  // const [direction] = useDirection(); 
   const { lang } = useParams();
   const { data: dict, isLoading } = useDictionary(lang as any);
 
@@ -110,7 +110,7 @@ export default function SignUpForm() {
       password: values.password,
     });
 
-  }, [router,setError, mutate,]);
+  }, [ ]);
 
   // Helper to get input style with hover
   const [isDarkMode] = useDarkMode();
@@ -173,8 +173,8 @@ export default function SignUpForm() {
       cursor: 'pointer',
     }),
   };
-  const mode = useAppSelector(selectMode);
-  const { countries, selectedCountry, isLoading: isCountriesLoading } = useCountries();
+  // const mode = useAppSelector(selectMode);
+  const { countries,  isLoading: isCountriesLoading } = useCountries();
 
 
   const countryOptions = (countries || []).map((country: any) => ({

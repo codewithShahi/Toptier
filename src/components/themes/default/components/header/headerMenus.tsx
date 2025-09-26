@@ -2,17 +2,17 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { Icon } from "@iconify/react";
-import Button from "@components/core/button";
+// import Button from "@components/core/button";
 import HeaderLogo from "@components/themes/layout/components/common/headerLogo";
 import { useUser } from "@hooks/use-user";
-import Alert from "@components/core/alert";
-import { signOut } from "@src/actions";
-import { Router } from "next/router";
+// import Alert from "@components/core/alert";
+// import { signOut } from "@src/actions";
+// import { Router } from "next/router";
 import ProfileDropdown from "./userDropDown"
 
 const HeaderMenus = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const { user, error, isLoading: userLoading, checkSession } = useUser();
+  const { user } = useUser();
   // const router=Router()
   return (
     <header className="w-full  max-w-[1200px] mx-auto overflow-visible">

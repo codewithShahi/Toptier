@@ -65,7 +65,7 @@ const FeaturedDestinations: React.FC = () => {
 
       toast.success(res?.message || "Updated favourites ✅");
     } catch (err) {
-      // console.error("toggleLike error:", err);
+      console.error("toggleLike error:", err);
     }
   };
 
