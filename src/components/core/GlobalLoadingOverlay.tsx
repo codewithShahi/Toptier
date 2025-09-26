@@ -1,7 +1,7 @@
 'use client';
 import { useLoading } from '@src/context/LoadingContext';
-import { motion } from 'framer-motion';
-import Image from 'next/image';
+// import { motion } from 'framer-motion';
+// import Image from 'next/image';
 
 export default function GlobalLoadingOverlay({ ...props }) {
     const { isLoading } = props

@@ -1,6 +1,6 @@
 "use server";
 import { createSession, getSession, logout } from "@lib/session";
-import { baseUrl, token, siteUrl,api_key } from "./actions";
+import { baseUrl, api_key } from "./actions";
 import { decodeBearerToken } from "@src/utils/decodeToken";
 import { headers } from "next/headers";
 

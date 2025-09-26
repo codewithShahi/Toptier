@@ -46,7 +46,7 @@ export default function Login({ ...props }): React.JSX.Element {
   // Helper to get input style with hover and dark mode
 
 
-  const [isPending, setIsPending] = useState<boolean>(false);
+  // const [isPending, setIsPending] = useState<boolean>(false);
   const { checkSession } = useUser();
   //--------- on submit function
   const onSubmit = useCallback(
@@ -63,7 +63,7 @@ export default function Login({ ...props }): React.JSX.Element {
       toast.success(dict?.login_form?.success_message || "Login successful!");
       router.refresh();
     },
-    [router, setError]
+    [router,setError]
   );
 
 

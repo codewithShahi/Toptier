@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import Link from 'next/link'
 import { Icon } from '@iconify/react'
 import { useAppSelector } from '@lib/redux/store'
-import Alert from '@src/components/core/alert'
+// import Alert from '@src/components/core/alert'
 import LanguageDropdown from './languageDropdown'
 import CurrencyDropdown from './currenciesDropDown'
 import { subscribe_to_newsLatter } from '@src/actions'
@@ -17,10 +17,10 @@ const Footer = () => {
     social_linkedin,
     social_twitter,
     social_youtube,
-    business_name,
+    // business_name,
     home_title,
   } = app.app
-const {languages,currencies }=useAppSelector((state) => state.appData?.data)
+// const {languages,currencies }=useAppSelector((state) => state.appData?.data)
   // states
   const [email, setEmail] = useState('')
   const [loading, setLoading] = useState(false)

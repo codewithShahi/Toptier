@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { DayPicker } from "react-day-picker";
 import "react-day-picker/dist/style.css";
-import { Icon } from "@iconify/react";
+// import { Icon } from "@iconify/react";
 interface DatePickerProps {
     onSelect: (date: Date | undefined) => void;
     disabledDates?: Date[];
@@ -36,7 +36,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
     const [open, setOpen] = useState(false);
     const inputRef = useRef<HTMLInputElement>(null);
     const popoverRef = useRef<HTMLDivElement>(null);
-    const today = new Date();
+    // const today = new Date();
     // const defaultDate = new Date(Date.UTC(today.getFullYear(), today.getMonth(), today.getDate()));
    const [selected, setSelected] = useState<Date | undefined>(
   defaultDate

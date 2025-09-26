@@ -20,8 +20,8 @@ export async function GET(request: Request) {
     return NextResponse.json(dict);
   } catch (err) {
     return NextResponse.json(
-      { error: "Failed to load dictionary" },
-      { status: 500 }
+      { error: err },
+      { status: 500 } 
     );
   }
 }
