@@ -360,7 +360,7 @@ const callAllModulesAPI = useCallback(
       queryClient.setQueryData(["hotel-search"], []);
       localStorage.setItem("hotelSearchForm", JSON.stringify(form));
 
-    console.log('nationality ', form )
+    // console.log('nationality ', form )
       const result = await callAllModulesAPI({
         ...form,
         price_from: "",
@@ -381,7 +381,7 @@ const callAllModulesAPI = useCallback(
         throw new Error(result.error || "Search failed");
       }
     } catch (err) {
-      // console.error('Search error:', err);
+      console.error('Search error:', err);
       return { success: false, error: "Search failed" };
     } finally {
       // ✅ ALWAYS turn off loading at the end
@@ -439,7 +439,7 @@ const callAllModulesAPI = useCallback(
           return { success: false, error: "No more data" };
         }
       } catch (err) {
-        // console.error('Load more error:', err);
+        console.error('Load more error:', err);
         return { success: false, error: "Load more failed" };
       } finally {
         setIsLoadingMore(false);
@@ -530,7 +530,7 @@ if (selectedNationality) {
     setIsSearching(false);
     setIsInitialLoading(false);
     setIsLoadingMore(false);
-  }, [dispatch, queryClient]);
+  }, []);
 
   const validateForm = useCallback(() => {
     try {

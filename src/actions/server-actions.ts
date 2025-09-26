@@ -5,7 +5,7 @@ import { decodeBearerToken } from "@src/utils/decodeToken";
 import { headers } from "next/headers";
 
 
-console.log("base",baseUrl);
+// console.log("base",baseUrl);
 
 // ============== GET DYNAMIC DOMAIN ===============
 export async function getDomain(): Promise<string> {

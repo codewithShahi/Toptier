@@ -205,7 +205,7 @@ useEffect(() => {
 
 
     } catch (err) {
-      // console.error("Filter fetch failed", err);
+      console.error("Filter fetch failed", err);
       setIsFilterLoading(false);
     } finally {
       setIsFilterLoading(false);
@@ -330,18 +330,18 @@ const updateRatingFilter = useCallback(
       queryClient.setQueryData(["hotel-search"], finalData);
       dispatch(setHotels(finalData));
     } catch (err) {
-      // console.error("Rating filter fetch failed", err);
+      console.error("Rating filter fetch failed", err);
     } finally {
       setIsFilterLoading(false);
     }
   },
-  [
-    hotelModuleNames,
-    queryClient,
-    dispatch,
-    removeDuplicates,
-    filters.priceRange, // ✅ keep dependency for range
-  ]
+    [
+      hotelModuleNames,
+      queryClient,
+      dispatch,
+      removeDuplicates,
+      filters.priceRange, 
+    ]
 );
 
 
@@ -406,7 +406,7 @@ const resetFilters = useCallback(async (e?: any) => {
       }
 
     } catch (error) {
-      // console.error('Reset filters error:', error);
+      console.error('Reset filters error:', error);
     } finally {
       setIsFilterLoading(false);
     }

@@ -12,7 +12,7 @@ type SidePanelProps = CommonProps & {
 }
 
 const SidePanel = (props: SidePanelProps) => {
-    const { className, open, setOpen, isLoading, dict, ...rest } = props
+    const {  open, setOpen, isLoading, dict, } = props
 
 
     const direction = useAppSelector((state) => state.root.direction)

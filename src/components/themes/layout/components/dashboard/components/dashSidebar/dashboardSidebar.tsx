@@ -4,7 +4,7 @@ import { useRouter, usePathname } from "next/navigation";
 import { motion, AnimatePresence, LayoutGroup } from "framer-motion";
 import { Icon } from "@iconify/react";
 import { signOut } from "@src/actions";
-import { useUser } from "@hooks/use-user";
+// import { useUser } from "@hooks/use-user";
 import useDirection from "@hooks/useDirection";
 
 interface MenuItem {
@@ -27,7 +27,7 @@ const DashboardSidebar: React.FC<SidebarProps> = ({
 }) => {
   const pathname = usePathname();
   const router = useRouter();
-  const { user, error, isLoading: userLoading, checkSession } = useUser();
+  // const {  isLoading: checkSession } = useUser();
     const [direction] = useDirection();
 
   // detect active item
@@ -93,7 +93,7 @@ const DashboardSidebar: React.FC<SidebarProps> = ({
     if (item.id === "logout") {
       // 🔹 call your logout function
       await signOut();
-      await checkSession?.();
+      // await checkSession?.();
       router.push("/login"); // redirect to login page
       return;
     }

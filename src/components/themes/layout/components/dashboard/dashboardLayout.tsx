@@ -3,24 +3,24 @@ import type { CommonProps } from '@src/@types/common';
 import { Main } from '../app';
 // import { navIcons } from './nav-icons';
 // import { navItems } from './sidebarRoutes';
-import { usePathname } from 'next/navigation';
-import { useAppSelector } from '@lib/redux/store';
-import useDictionary from "@hooks/useDict";
-import useLocale from "@hooks/useLocale";
-import useDirection from "@hooks/useDirection"
-import {DashboardSidebar} from "./components"
+// import { usePathname } from 'next/navigation';
+// import { useAppSelector } from '@lib/redux/store';
+// import useDictionary from "@hooks/useDict";
+// import useLocale from "@hooks/useLocale";
+// import useDirection from "@hooks/useDirection"
+// import {DashboardSidebar} from "./components"
 
 type DashboardLayoutProps = CommonProps;
-import TransitionLayout from '@src/utils/pageTransition'
+// import TransitionLayout from '@src/utils/pageTransition'
 
-const DashboardLayout = ({ children, ...rest }: DashboardLayoutProps) => {
-      const expanded = useAppSelector((state) => state?.root.sidebarExpanded);
+const DashboardLayout = ({ children, }: DashboardLayoutProps) => {
+    //   const expanded = useAppSelector((state) => state?.root.sidebarExpanded);
     //   console.log('app', app);
-      const { locale } = useLocale();
-        const { data: dict, isLoading } = useDictionary(locale as any);
-        const [direction] = useDirection();
+    //   const { locale } = useLocale();
+        // const { data: dict, isLoading } = useDictionary(locale as any);
+        // const [direction] = useDirection();
 
-    const pathname = usePathname();
+    // const pathname = usePathname();
     // const data = navItems?.map((item: any) => ({
     //     title: item.title,
     //     menus: item.menus.map((menu: any) => {
