@@ -1,7 +1,7 @@
 'use client'
 import Logo from '@components/core/logo'
 import { useAppSelector } from '@lib/redux/store'
-import Link from 'next/link'
+// import Link from 'next/link'
 import type { Mode } from '@src/@types/theme'
 import classNames from 'classnames'
 

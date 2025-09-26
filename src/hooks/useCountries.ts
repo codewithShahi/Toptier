@@ -1,16 +1,16 @@
 "use client";
 import { useQuery } from "@tanstack/react-query";
 import { fetchCountries } from "@src/actions";
-import { useAppDispatch, useAppSelector } from "@lib/redux/store";
-import { setCountry } from "@lib/redux/base";
-import { useEffect, useState } from "react";
+// import { useAppSelector } from "@lib/redux/store";
+// import { setCountry } from "@lib/redux/base";
+// import {  useState } from "react";
 // import { count } from "console";
 
 const useCountries = () => {
   // const [countries, setCountries] = useState<any>([]);
-  const [selectedCountry, setSelectedCountry] = useState<any>(null);
-  const defaultCountry =
-    useAppSelector((state) => state?.appData?.data?.app?.country_name) || "";
+  // const [selectedCountry, setSelectedCountry] = useState<any>(null);
+  // const defaultCountry =
+  //   useAppSelector((state) => state?.appData?.data?.app?.country_name) || "";
   const { data:countries, isLoading } = useQuery({
     queryKey: ["countries"],
     queryFn: fetchCountries,
@@ -52,7 +52,7 @@ const useCountries = () => {
 //       dispatch(setCountry(country));
 //     }
 //   }, [country, dispatch]);
-  return { countries, isLoading, selectedCountry };
+  return { countries, isLoading};
 };
 
 export default useCountries;

@@ -1,4 +1,4 @@
-import { useUser } from "@hooks/use-user";
+// import { useUser } from "@hooks/use-user";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { fetchAppData } from "@src/actions";
 
