@@ -55,7 +55,18 @@ export default function HotelSearchApp() {
   const [user, setUser] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false)
   const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
-
+const [currentLocation, setCurrentLocation] = useState<{ lat: number; lon: number }>({
+  lat: 0,
+  lon: 0,
+});
+const onShowMaphandler=(hotel:any)=>{
+  if(!hotel) return
+  setCurrentLocation({
+    lat:hotel?.latitude,
+    lon:hotel?.longitude
+  })
+console.log('map icons is clicked for current loaction ', hotel)
+}
   const swiperRef = useRef<any>(null);
   // Filter chips data with placeholder SVGs (replace these with your actual SVGs)
   const filterChips: FilterChip[] = [
@@ -462,7 +473,7 @@ export default function HotelSearchApp() {
                   </svg>
                   <input
                     type="text"
-                    placeholder="Where do you want to stay?"
+                    placeholder="search by hotel names"
                     value={filters.searchQuery}
                     onChange={(e) => updateSearchQuery(e.target.value)}
                     className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl font-medium text-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-600 focus:border-transparent"
@@ -597,7 +608,10 @@ export default function HotelSearchApp() {
                     </button>
                   )}
                   <span className="text-gray-500 font-medium text-sm lg:text-base pl-2">
-                    {(isInitialLoading || isFilterLoading) ? "Loading..." : `${filteredHotels?.length} hotels found`}
+                    {/* {(isInitialLoading || isFilterLoading) ? "Loading..." :
+                    `${filteredHotels?.length} hotels found`} */}
+
+                    {filteredHotels?.length} hotels found
                   </span>
                 </div>
 
@@ -710,10 +724,10 @@ export default function HotelSearchApp() {
                 }`}>
                 {filteredHotels.map((hotel: any, index: number) => (
                   <HotelsListingCard
-                    key={`${hotel.hotel_id || "hotel"}-${index}`}
+                    key={`${hotel.hotel_id}-${index}`}
                     hotel={hotel}
                     viewMode={viewMode}
-                    onBookNow={(hotel: any) => detailsBookNowHandler(hotel)} // ✅ pass hotel + form
+                    onBookNow={(hotel: any) => detailsBookNowHandler(hotel)} // pass hotel + form
 
                   // onUpdateFavourite={handleUpdateFavourite}
                   />
@@ -722,47 +736,30 @@ export default function HotelSearchApp() {
               </div>
             )}
             {/* ==============>>> MAP SECTION (Responsive: Stacked on mobile, side-by-side on desktop) */}
-            {viewMode === "map" && (
-              <>
-                {/* Mobile/Tablet: Map on top, cards below */}
-                <div className="lg:hidden flex flex-col gap-6 mt-6">
-                  <div className="w-full h-[500px] bg-gray-100 rounded-3xl shadow-md border border-gray-300 overflow-hidden">
-                    <HotelMap hotels={filteredHotels} />
-                  </div>
-                  <div className="w-full">
-                    <div className="grid gap-4 md:gap-6 grid-cols-1">
-                      {filteredHotels.map((hotel: any, index: number) => (
-                        <HotelsListingCard
-                          key={`${hotel.hotel_id || "hotel"}-${index}`}
-                          hotel={hotel}
-                          viewMode={viewMode}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                </div>
+           {viewMode === "map" && (
+  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+    {/* Map Section */}
+    <div className="order-1 lg:order-2 w-full h-[400px] lg:h-[800px] bg-gray-100 rounded-3xl shadow-md border border-gray-300 overflow-hidden">
+      <HotelMap hotels={filteredHotels} currentLocation={currentLocation} />
+    </div>
 
-                {/* Desktop (lg+): Side-by-side (unchanged) */}
-                <div className="hidden lg:flex gap-6 mt-6">
-                  <div className="flex-1 pr-2">
-                    <div className="grid gap-4 md:gap-6 grid-cols-1 lg:grid-cols-2">
-                      {filteredHotels.map((hotel: any, index: number) => (
-                        <HotelsListingCard
-                          key={`${hotel.hotel_id || "hotel"}-${index}`}
-                          hotel={hotel}
-                          viewMode={viewMode}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                  <div className="w-1/2 h-[800px] bg-gray-100 rounded-3xl shadow-md border border-gray-300">
-                    <div className="w-full h-full">
-                      <HotelMap hotels={filteredHotels} />
-                    </div>
-                  </div>
-                </div>
-              </>
-            )}
+    {/* Cards Section */}
+    <div className="order-2 lg:order-1">
+      <div className="grid gap-4 md:gap-6 grid-cols-1 md:grid-cols-2">
+        {filteredHotels.map((hotel: any, index: number) => (
+          <HotelsListingCard
+            key={`${hotel.hotel_id}-${index}`}
+            hotel={hotel}
+            viewMode={viewMode}
+            onBookNow={(hotel: any) => detailsBookNowHandler(hotel)}
+            onMapShow={(hotel:any) =>onShowMaphandler(hotel)}
+          />
+        ))}
+      </div>
+    </div>
+  </div>
+)}
+
             {/* ============>>> LOAD MORE DATA ON SCROLL  */}
             {isloadingMore &&
               <div className="w-full flex items-center justify-center">

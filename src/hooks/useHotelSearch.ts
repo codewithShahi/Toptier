@@ -470,7 +470,7 @@ const callAllModulesAPI = useCallback(
   }, [loadMoreData, isloadingMore, allHotelsData?.length]);
 // DETAISL BOOK NOW HANDLER
 const detailsBookNowHandler = async (hotel: any) => {
-  if (!hotel?.hotel_id || !hotel?.name || !hotel?.supplier_name) return;
+  // if (!hotel?.hotel_id || !hotel?.name || !hotel?.supplier_name) return;
 
   // 👉 store full hotel object in localStorage
   localStorage.setItem("currentHotel", JSON.stringify(hotel));

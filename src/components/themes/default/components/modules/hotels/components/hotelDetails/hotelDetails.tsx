@@ -1,6 +1,8 @@
 "use client";
 import React, { useCallback, useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+
+import { useParams,useRouter } from "next/navigation";
+
 import { useQuery } from "@tanstack/react-query";
 import { hotel_details } from "@src/actions/server-actions";
 import HotelDetailsSearch from "./hotelDetailsSearch";
@@ -13,8 +15,10 @@ import { useAppSelector } from "@lib/redux/store";
 import { HotelListingCard } from "../hotelsListing";
 import { Skeleton } from "@components/core/skeleton";
 
-import HotelSuggestionSlider from "./hotelSuggestionSlider";
+
+import  HotelSuggestionSlider  from "./hotelSuggestionSlider";
 import { useHotelDetails } from "@hooks/useHotelDetails";
+
 
 
 interface HotelDetailsPayload {
