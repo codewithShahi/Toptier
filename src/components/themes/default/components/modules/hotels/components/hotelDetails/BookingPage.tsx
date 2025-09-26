@@ -562,7 +562,7 @@ export default function BookingDetails() {
         </div>{" "}
       </div>
       {/* Right Side Summary */}
-      <div className="w-full md:w-95 border border-[#CACACA] shadow rounded-lg p-5 h-fit">
+      <div className="w-full md:w-95 border border-[#CACACA] shadow rounded-xl p-5 h-fit">
         <div className="flex gap-3 mb-4">
           <img
             src="images/img-7.jpg"
@@ -628,7 +628,7 @@ export default function BookingDetails() {
           <span className="text-lg font-bold text-[#0F172B]">$250.10</span>
         </div>
 
-        <button className="cursor-pointer w-full bg-[#163C8C] text-xl text-white py-3 font-semibold rounded-xl mt-4">
+        <button className="cursor-pointer w-full bg-[#163C8C] text-xl text-white py-3 font-medium rounded-xl mt-4">
           Confirm & Book
         </button>
       </div>
