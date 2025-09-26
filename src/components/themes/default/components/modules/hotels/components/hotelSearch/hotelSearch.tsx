@@ -58,16 +58,27 @@ export default function HotelSearch() {
   }, [setShowDestinationDropdown, setShowGuestsDropdown]);
 
   const onSubmit = async (e: React.FormEvent) => {
-            setIsSearching(true);
 
+
+
+      setIsSearching(false);
     const result = await handleSubmit(e);
-
-
+    router.push("/hotel_search");
+   setIsSearching(false);
     if (result?.success) {
-      router.push("/hotel_search");
+
     }
 
   };
+// const onSubmit = async (e: React.FormEvent) => {
+//   e.preventDefault();
+//  const result = await handleSubmit(e);
+//   const url = `/hotel/${form.destination}/${form.checkin}/${form.checkout}/${form.rooms}/${form.adults}/${form.children}/PK`;
+//   router.push(url);
+// };
+
+
+
 
   const ErrorMessage = ({ error }: { error?: string }) =>
     error ? (
@@ -129,57 +140,68 @@ const checkout = formatDate(
                 onFocus={() => {
                   if (form.destination.trim().length >= 3) setShowDestinationDropdown(true);
                 }}
+                autoComplete="off"
                 onKeyDown={handleDestinationKeyDown}
-                placeholder={"Search destinations..."}
+                placeholder={"search city or hotel..."}
                 className={`w-full ${direction === "ltr" ? "pl-9" : "pr-9"}  pr-4 py-3 text-sm font-medium dark:text-gray-200 placeholder-gray-700 focus:outline-none hover:bg-gray-100 hover:border-gray-300 border border-gray-200 rounded-xl text-gray-900 dark:bg-gray-800 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-500 transition-all duration-200`}
               />
 
               {/* Dropdown */}
-              {showDestinationDropdown && form.destination.trim().length >= 3 && (
-                <div className="absolute z-50 w-full bg-white border dark:bg-gray-800 dark:text-gray-100 border-gray-200 dark:border-gray-600 rounded-xl shadow-lg mt-1 max-h-60 overflow-y-auto">
-                  {/* Loading */}
-                  {locationLoading && (
-                    <div className=" bg-white flex items-center justify-center min-h-24 gap-2 p-3 text-sm text-gray-500">
-                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-400"></div>
-                      <span>Hotel Destination Loading...</span>
-                    </div>
-                  )}
+        {showDestinationDropdown && form.destination.trim().length >= 3 && (
+  <div className="absolute z-50 w-full bg-white border dark:bg-gray-800 dark:text-gray-100 border-gray-200 dark:border-gray-600 rounded-xl shadow-lg mt-1 max-h-60 overflow-y-auto">
 
-                  {/* Results */}
-                  {!locationLoading && hotelLocations.length > 0 && (
-                    <ul role="list" className="divide-y divide-gray-100 dark:divide-gray-700">
-                      {hotelLocations.map((loc:any, idx:number) => (
-                        <li
-                          key={loc.id ?? `${loc.city}-${idx}`}
-                          onClick={() => handleSelectLocation(loc)}
-                          onMouseEnter={() => setActiveIndex(idx)}
-                          className={`px-4 py-3 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition flex justify-between items-center ${activeIndex === idx ? "bg-gray-100 dark:bg-gray-700" : ""}`}
-                        >
-                          <div>
-                            <div className="font-bold text-sm text-start  text-gray-900 dark:text-gray-50">{loc.city}</div>
-                            <div className="text-xs text-start text-gray-500 dark:text-gray-300">{loc.country}</div>
-                          </div>
-                          <div className="text-xs text-gray-400">{loc.country_code}</div>
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-
-                  {/* No results / error */}
-                  {!locationLoading && locationError && (
-                    <div className="flex bg-white items-center justify-center gap-2 p-4 min-h-25 text-sm text-gray-500">
-                      <Icon icon="mdi:map-marker-off-outline" width={18} height={18} />
-                      <span>{locationError}</span>
-                    </div>
-                  )}
-                  {!locationLoading && hotelLocations.length === 0 && (
-                    <div className="flex bg-white items-center justify-center gap-2 p-4 min-h-25 text-sm text-gray-500">
-                      <Icon icon="mdi:map-marker-off-outline" width={18} height={18} />
-                      <span>No Hotel Destination Found</span>
-                    </div>
-                  )}
+    {/* Loading */}
+    {locationLoading ? (
+      <div className="bg-white flex items-center justify-center min-h-24 gap-2 p-3 text-sm text-gray-500">
+        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-400"></div>
+        <span>Searching...</span>
+      </div>
+    ) : (
+      <>
+        {/* Error */}
+        {locationError ? (
+          <div className="flex bg-white items-center justify-center gap-2 p-4 min-h-25 text-sm text-gray-500">
+            <Icon icon="mdi:map-marker-off-outline" width={18} height={18} />
+            <span>{locationError}</span>
+          </div>
+        ) : hotelLocations.length > 0 ? (
+          /* Results */
+          <ul role="list" className="divide-y divide-gray-100 dark:divide-gray-700">
+            {hotelLocations.map((loc: any, idx: number) => (
+              <li
+                key={loc.id ?? `${loc.city}-${idx}`}
+                onClick={() => handleSelectLocation(loc)}
+                onMouseEnter={() => setActiveIndex(idx)}
+                className={`px-4 py-3 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition flex justify-between items-center ${
+                  activeIndex === idx ? "bg-gray-100 dark:bg-gray-700" : ""
+                }`}
+              >
+                <div>
+                  <div className="font-bold text-sm text-start text-gray-900 dark:text-gray-50">
+                    {loc.city}
+                  </div>
+                  <div className="text-xs text-start text-gray-500 dark:text-gray-300">
+                    {loc.country}
+                  </div>
                 </div>
-              )}
+                <div className="text-xs text-gray-400">{loc.country_code}</div>
+              </li>
+            ))}
+          </ul>
+        ) :     null
+        //  (
+        //   /* No results */
+        //   // <div className="flex bg-white items-center justify-center gap-2 p-4 min-h-25 text-sm text-gray-500">
+        //   //   {/* <Icon icon="mdi:map-marker-off-outline" width={18} height={18} />
+        //   //   <span>No Hotel Destination Found</span> */}
+        //   // </div>
+        // )
+        }
+      </>
+    )}
+  </div>
+)}
+
             </div>
             <ErrorMessage error={errors.destination} />
           </div>
@@ -195,7 +217,7 @@ const checkout = formatDate(
                 direction={direction}
                 showCalendarIcon
                 className="w-full font-medium pl-1 text-sm placeholder-gray-400 hover:bg-gray-100 hover:border-gray-300 border border-gray-200 rounded-xl text-gray-900 dark:bg-gray-800 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-500 bg-white transition-all duration-200 focus:outline-none"
- defaultDate={new Date(checkin)}
+                defaultDate={new Date(checkin)}
                 onSelect={(date) => {
                   const newCheckin = date ? date.toISOString().slice(0, 10) : "";
                   updateForm({ checkin: newCheckin });
@@ -248,6 +270,31 @@ const checkout = formatDate(
               {showGuestsDropdown && (
                 <div className="absolute z-20 w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg mt-1 md:min-w-[350px] max-h-80 overflow-y-auto">
                   <div className="p-4 space-y-4">
+                      {/* Rooms */}
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-medium text-blue-900 dark:text-blue-300">
+                        Rooms
+                      </span>
+                      <div className="flex items-center gap-3">
+                        <button
+                          type="button"
+                          onClick={() => updateForm({ rooms: Math.max(1, form.rooms - 1) })}
+                          className="w-8 h-8 flex items-center cursor-pointer justify-center rounded-full border dark:border-gray-600 text-blue-900 dark:text-blue-300 bg-white dark:bg-gray-800 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors"
+                        >
+                          -
+                        </button>
+                        <span className="text-blue-900 dark:text-blue-300 min-w-[1.25rem] text-center font-medium">
+                          {form.rooms}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => updateForm({ rooms: form.rooms + 1 })}
+                          className="w-8 h-8 flex items-center cursor-pointer justify-center rounded-full border dark:border-gray-600 text-blue-900 dark:text-blue-300 bg-white dark:bg-gray-800 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors"
+                        >
+                          +
+                        </button>
+                      </div>
+                    </div>
                     {/* Adults */}
                     <div className="flex items-center justify-between">
                       <span className="text-sm font-medium text-blue-900 dark:text-blue-300">
@@ -300,31 +347,7 @@ const checkout = formatDate(
                       </div>
                     </div>
 
-                    {/* Rooms */}
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm font-medium text-blue-900 dark:text-blue-300">
-                        Rooms
-                      </span>
-                      <div className="flex items-center gap-3">
-                        <button
-                          type="button"
-                          onClick={() => updateForm({ rooms: Math.max(1, form.rooms - 1) })}
-                          className="w-8 h-8 flex items-center cursor-pointer justify-center rounded-full border dark:border-gray-600 text-blue-900 dark:text-blue-300 bg-white dark:bg-gray-800 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors"
-                        >
-                          -
-                        </button>
-                        <span className="text-blue-900 dark:text-blue-300 min-w-[1.25rem] text-center font-medium">
-                          {form.rooms}
-                        </span>
-                        <button
-                          type="button"
-                          onClick={() => updateForm({ rooms: form.rooms + 1 })}
-                          className="w-8 h-8 flex items-center cursor-pointer justify-center rounded-full border dark:border-gray-600 text-blue-900 dark:text-blue-300 bg-white dark:bg-gray-800 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors"
-                        >
-                          +
-                        </button>
-                      </div>
-                    </div>
+
                   </div>
                 </div>
               )}

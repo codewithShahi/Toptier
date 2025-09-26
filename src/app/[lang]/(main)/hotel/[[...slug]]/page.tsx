@@ -4,22 +4,27 @@ import { Icon } from '@iconify/react'
 // import { HomeWrapper } from '@components/themes/default'
 import TransitionLayout from '@src/utils/pageTransition'
 import HomeWrapper from '@components/themes/default/components/home/homeWrapper/homeWrapper'
-import { HotelDetailsMain } from '@components/themes/default'
+import { HotelDetailsMain ,HotelsListingMain} from '@components/themes/default'
 
 export default async function Page({ params }: {
-  params: Promise<{ lang: 'en' | 'ar' }>
+  params: Promise<{ lang: 'en' | 'ar' ,slug: string[]}>
 }) {
-  const { lang } = await params
+  const { lang,slug } = await params
   const dict = await getDictionary(lang)
 
+  const isListingPage = isNaN(Number(slug[0])) // true if not a number
+
   return (
-    // <div>home page</div>
     <TransitionLayout>
-      <div className="flex  flex-col bg-white dark:bg-gray-900  dark:text-gray-50 " >
-         <HotelDetailsMain/>
+      <div className="flex flex-col bg-white dark:bg-gray-900 dark:text-gray-50">
+        {isListingPage ? (
+          <HotelsListingMain  />
+        ) : (
+          <HotelDetailsMain  />
+        )}
       </div>
     </TransitionLayout>
   )
 }
-export const dynamic = 'force-dynamic'; // Optional: if data changes often
-// export const revalidate = 3600; // ← This enables ISR
+
+export const dynamic = "force-dynamic"

@@ -17,12 +17,18 @@ const hotelSearchSchema = z
     rooms: z.number().min(1).max(8),
     adults: z.number().min(1).max(16),
     children: z.number().min(0).max(10),
-    nationality: z.string().min(1),
+    nationality: z.string().min(1, "Nationality is required"),
   })
-  .refine((data) => new Date(data.checkout) > new Date(data.checkin), {
-    message: "Check-out date must be after check-in date",
-    path: ["checkout"],
-  });
+  .refine(
+    (data) => {
+      if (!data.checkin || !data.checkout) return true; // let min(1) handle empty
+      return new Date(data.checkout) > new Date(data.checkin);
+    },
+    {
+      message: "Check-out date must be after check-in date",
+      path: ["checkout"], // error will appear on checkout field
+    }
+  );
 
 interface HotelForm {
   destination: string;
@@ -96,7 +102,7 @@ const useHotelSearch = () => {
     nationality: "PK",
   });
 const hotelSearch_path = usePathname();
-console.log("hotelSearch_path", hotelSearch_path);
+// console.log("hotelSearch_path", hotelSearch_path);
   const queryClient = useQueryClient();
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [showGuestsDropdown, setShowGuestsDropdown] = useState(false);
@@ -260,7 +266,7 @@ const callAllModulesAPI = useCallback(
           });
           return { mod, result };
         } catch (err) {
-          console.error(`Module ${mod} failed:`, err);
+          // console.error(`Module ${mod} failed:`, err);
           return { mod, result: null };
         }
       });
@@ -278,7 +284,7 @@ const callAllModulesAPI = useCallback(
 
       return { success: true, data: results };
     } catch (err) {
-      console.error("Batch API call failed:", err);
+      // console.error("Batch API call failed:", err);
       return { success: false, error: (err as Error).message };
     } finally {
       isProcessingRef.current = false;
@@ -295,7 +301,7 @@ const callAllModulesAPI = useCallback(
     const savedForm = localStorage.getItem("hotelSearchForm");
     if (!savedForm ) return;
     if (!hotelSearch_path?.includes("/hotel_search")) return;
-console.log("Initial load with saved form");
+// console.log("Initial load with saved form");
     hasInitialLoadRun.current = true;
     setIsInitialLoading(true); // Set initial loading state
     const parsedForm: HotelForm = JSON.parse(savedForm);
@@ -325,13 +331,15 @@ console.log("Initial load with saved form");
   async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (isProcessingRef.current || isSearching) {
-      console.log('Search already in progress');
-      return { success: false, error: "Search already in progress" };
-    }
+    // if ( errors) {
+
+    //   console.log('Search already in progress');
+    //   return { success: false, error: "Search already in progress" };
+    // }
 
     // Validate first
     try {
+
       hotelSearchSchema.parse(form);
       setErrors({});
     } catch (err) {
@@ -346,14 +354,15 @@ console.log("Initial load with saved form");
     }
 
     // ✅ Start loading AFTER validation
-    setIsSearching(true);
+
 
     try {
       // Clear existing data
+          setIsSearching(true);
       dispatch(setHotels([]));
       queryClient.setQueryData(["hotel-search"], []);
       localStorage.setItem("hotelSearchForm", JSON.stringify(form));
-      console.log('Starting new search:', form);
+      // console.log('Starting new search:', form);
 
 
       const result = await callAllModulesAPI({
@@ -366,7 +375,7 @@ console.log("Initial load with saved form");
       if (result.success && result.data) {
         dispatch(setHotels(result.data));
         setPage(1);
-        console.log('Search completed:', result.data.length, 'hotels');
+        // console.log('Search completed:', result.data.length, 'hotels');
 
         // ✅ NOW navigate AFTER data is ready
         router.push("/hotel_search");
@@ -376,7 +385,7 @@ console.log("Initial load with saved form");
         throw new Error(result.error || "Search failed");
       }
     } catch (err) {
-      console.error('Search error:', err);
+      // console.error('Search error:', err);
       return { success: false, error: "Search failed" };
     } finally {
       // ✅ ALWAYS turn off loading at the end
@@ -434,7 +443,7 @@ console.log("Initial load with saved form");
           return { success: false, error: "No more data" };
         }
       } catch (err) {
-        console.error('Load more error:', err);
+        // console.error('Load more error:', err);
         return { success: false, error: "Load more failed" };
       } finally {
         setIsLoadingMore(false);
@@ -461,7 +470,7 @@ console.log("Initial load with saved form");
   }, [loadMoreData, isloadingMore, allHotelsData?.length]);
 // DETAISL BOOK NOW HANDLER
 const detailsBookNowHandler = async (hotel: any) => {
-  if (!hotel?.hotel_id || !hotel?.name || !hotel?.supplier_name) return;
+  // if (!hotel?.hotel_id || !hotel?.name || !hotel?.supplier_name) return;
 
   // 👉 store full hotel object in localStorage
   localStorage.setItem("currentHotel", JSON.stringify(hotel));
@@ -475,7 +484,7 @@ const detailsBookNowHandler = async (hotel: any) => {
   // 👉 navigate
   router.push(url);
 
-  console.log("Book Now clicked for hotel ID:", hotel.hotel_id);
+  // console.log("Book Now clicked for hotel ID:", hotel.hotel_id);
 };
 
   // Other utility functions
