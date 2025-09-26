@@ -17,11 +17,7 @@ export default async function Page({ params }: {
   return (
     <TransitionLayout>
       <div className="flex flex-col bg-white dark:bg-gray-900 dark:text-gray-50">
-        {isListingPage ? (
-          <HotelsListingMain  />
-        ) : (
           <HotelDetailsMain  />
-        )}
       </div>
     </TransitionLayout>
   )
