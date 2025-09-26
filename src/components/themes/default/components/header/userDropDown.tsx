@@ -11,7 +11,7 @@ export default function ProfileDropdown() {
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
   const router = useRouter();
-  const { user, error, isLoading: userLoading, checkSession } = useUser();
+  const { user } = useUser();
 
   // close when clicking outside
   useEffect(() => {
@@ -28,7 +28,7 @@ export default function ProfileDropdown() {
     // add your logout logic here (clear token, call API, etc.)
 
           await signOut();
-          await checkSession?.();
+          // await checkSession?.();
           router.refresh();
   };
 

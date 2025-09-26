@@ -2,7 +2,7 @@
 import classNames from 'classnames'
 import type { CommonProps } from '@src/@types/common'
 import { APP_NAME } from '@src/constants/app.constant'
-import { useAppSelector } from '@lib/redux/store'
+// import { useAppSelector } from '@lib/redux/store'
 import Image from 'next/image'
 
 interface LogoProps extends CommonProps {
@@ -16,14 +16,14 @@ interface LogoProps extends CommonProps {
 
 const Logo = (props: LogoProps) => {
     const {
-        type = 'full',
-        mode = 'light',
+        // type = "full",
+        // mode = 'light',
         className,
         imgClass,
-        style,
-        logoWidth = '100%',
+        // style,
+        // logoWidth = '100%',
     } = props
-    const app = useAppSelector((state) => state?.appData?.data?.app);
+    // const app = useAppSelector((state) => state?.appData?.data?.app);
     const baseUrl = process.env.NEXT_PUBLIC_MEDIA_URL
 
     return (
