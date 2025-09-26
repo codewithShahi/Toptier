@@ -8,6 +8,8 @@ import useDirection from "@hooks/useDirection";
 import { useParams,useRouter } from "next/navigation";
 
 import useHotelSearch from "@hooks/useHotelSearch";
+import Dropdown from "@components/core/Dropdown";
+import useCountries from "@hooks/useCountries";
 // import useHotelSearch from "@hooks/useHotelSearch"; // Import the hook
 
 export default function HotelSearch() {
@@ -15,6 +17,7 @@ export default function HotelSearch() {
   const { data: dict, isLoading } = useDictionary(lang as any);
   const [direction] = useDirection();
   const router = useRouter();
+  const {countries}=useCountries()
 
   // Use the custom hook
   const {
@@ -63,11 +66,14 @@ export default function HotelSearch() {
 
       setIsSearching(false);
     const result = await handleSubmit(e);
-    router.push("/hotel_search");
-   setIsSearching(false);
-    // if (result?.success) {
 
-    // }
+
+
+    if (result?.success) {
+        router.push("/hotel_search");
+           setIsSearching(false);
+    }
+
 
   };
 // const onSubmit = async (e: React.FormEvent) => {
@@ -88,14 +94,6 @@ export default function HotelSearch() {
       </div>
     ) : null;
 
-  const countries = [
-    { code: "PK", name: "Pakistan" },
-    { code: "IN", name: "India" },
-    { code: "AE", name: "United Arab Emirates" },
-    { code: "US", name: "United States" },
-    { code: "UK", name: "United Kingdom" },
-    { code: "CA", name: "Canada" },
-  ];
 const today = new Date();
 
 // format helper → yyyy-mm-dd
@@ -113,6 +111,9 @@ const checkout = formatDate(
   new Date(Date.UTC(tomorrow.getFullYear(), tomorrow.getMonth(), tomorrow.getDate()))
 );
 
+const selectedCountryName = countries?.find(
+    (c: any) => c.iso === form.nationality
+  )?.nicename || "Pakistan"; // Default fallback
 
   return (
     <div className="md:w-full mx-auto p-4 rounded-xl">
@@ -268,10 +269,10 @@ const checkout = formatDate(
               </button>
 
               {showGuestsDropdown && (
-                <div className="absolute z-20 w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg mt-1 md:min-w-[350px] max-h-80 overflow-y-auto">
+                <div className="absolute z-20 w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg mt-1 md:min-w-[350px] max-h-80 overflow-visible">
                   <div className="p-4 space-y-4">
                       {/* Rooms */}
-                    <div className="flex items-center justify-between">
+                    <div className="flex items-center justify-between px-1">
                       <span className="text-sm font-medium text-blue-900 dark:text-blue-300">
                         Rooms
                       </span>
@@ -289,14 +290,14 @@ const checkout = formatDate(
                         <button
                           type="button"
                           onClick={() => updateForm({ rooms: form.rooms + 1 })}
-                          className="w-8 h-8 flex items-center cursor-pointer justify-center rounded-full border dark:border-gray-600 text-blue-900 dark:text-blue-300 bg-white dark:bg-gray-800 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors"
+                          className="w-8 h-8 flex items-center cursor-pointer justify-center rounded-full border dark:border-gray-600 text-blue-900 dark:text-blue-300 bg-white dark:bg-gray-800 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors "
                         >
                           +
                         </button>
                       </div>
                     </div>
                     {/* Adults */}
-                    <div className="flex items-center justify-between">
+                    <div className="flex items-center justify-between px-1">
                       <span className="text-sm font-medium text-blue-900 dark:text-blue-300">
                         Adults
                       </span>
@@ -322,7 +323,7 @@ const checkout = formatDate(
                     </div>
 
                     {/* Children */}
-                    <div className="flex items-center justify-between">
+                    <div className="flex items-center justify-between px-1">
                       <span className="text-sm font-medium text-blue-900 dark:text-blue-300">
                         Children
                       </span>
@@ -346,6 +347,50 @@ const checkout = formatDate(
                         </button>
                       </div>
                     </div>
+                    {/* ============ NATIONALITY ============ */}
+                      <div className="relative">
+            <label className="block text-sm text-start font-medium text-blue-900 mt-2  ps-1 dark:text-gray-300 mb-2">
+              Nationality
+            </label>
+
+            <Dropdown
+              key={form.nationality} // ✅ Force re-render when nationality changes
+              label={
+                <div className="flex items-center gap-3">
+                   <svg width="16" height="18" viewBox="0 0 16 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M8.19514 17.1038C8.04735 17.2098 7.86998 17.2667 7.68803 17.2667C7.50607 17.2667 7.3287 17.2098 7.18091 17.1038C2.80793 13.9933 -1.83309 7.59516 2.85865 2.97186C4.14667 1.70746 5.88127 0.999208 7.68803 1C9.49916 1 11.2369 1.7094 12.5174 2.97096C17.2091 7.59426 12.5681 13.9915 8.19514 17.1038Z" stroke="#5B697E" strokeOpacity="0.7" strokeWidth="1.35554" strokeLinecap="round" strokeLinejoin="round" />
+                  <path d="M7.68772 9.13333C8.16806 9.13333 8.62873 8.94291 8.96838 8.60396C9.30803 8.26501 9.49885 7.80529 9.49885 7.32594C9.49885 6.84659 9.30803 6.38688 8.96838 6.04793C8.62873 5.70898 8.16806 5.51855 7.68772 5.51855C7.20738 5.51855 6.74671 5.70898 6.40706 6.04793C6.0674 6.38688 5.87659 6.84659 5.87659 7.32594C5.87659 7.80529 6.0674 8.26501 6.40706 8.60396C6.74671 8.94291 7.20738 9.13333 7.68772 9.13333Z" stroke="#5B697E" strokeOpacity="0.7" strokeWidth="1.35554" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+                  <span>{selectedCountryName}</span>
+                </div>
+              }
+              buttonClassName="w-full font-medium cursor-pointer pl-3  py-5 text-sm text-gray-700 placeholder-gray-400 bg-white hover:bg-gray-100 hover:text-gray-700 border border-gray-200 rounded-lg transition-all duration-200 focus:outline-none appearance-none flex items-center justify-between"
+              dropDirection="down"
+            >
+              {({ onClose }) => (
+                <div className="max-h-100 overflow-y-auto p-2">
+                  {countries?.map((c: any) => (
+                    <button
+                      key={c.iso}
+                      onClick={() => {
+                        updateForm({ nationality: c.iso });
+                        onClose();
+                      }}
+                      type="button"
+                      className={`w-full cursor-pointer text-left px-2 rounded-lg py-4 my-2 text-sm flex justify-between items-center ${
+                        form.nationality === c.iso
+                          ? "bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white"
+                          : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
+                      }`}
+                    >
+                      <span className="font-medium">{c.nicename}</span>
+                      <span className="font-medium">{c.iso}</span>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </Dropdown>
+          </div>
 
 
                   </div>

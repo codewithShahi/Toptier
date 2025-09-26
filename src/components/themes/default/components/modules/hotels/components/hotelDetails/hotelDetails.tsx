@@ -18,6 +18,7 @@ import { Skeleton } from "@components/core/skeleton";
 
 import  HotelSuggestionSlider  from "./hotelSuggestionSlider";
 import { useHotelDetails } from "@hooks/useHotelDetails";
+import Spinner from "@components/core/Spinner";
 
 
 
@@ -200,8 +201,8 @@ const HotelsDetails = () => {
 
       {/* Image Slider */}
       {isLoading ? (
-        <div className="max-w-[1200px] mx-auto appHorizantalSpacing mt-10">
-          <Skeleton variant="rect" height={384} className="w-full rounded-lg" />
+        <div className="max-w-[1200px] mx-auto flex items-center justify-center min-h-90 bg-gray-200 appHorizantalSpacing mt-10">
+         <Spinner/>
         </div>
       ) : (
         <SwiperImageSlider testimonials={img} />
