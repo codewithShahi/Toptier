@@ -68,10 +68,12 @@ export default function HotelSearch() {
     const result = await handleSubmit(e);
 
 
+
     if (result?.success) {
         router.push("/hotel_search");
            setIsSearching(false);
     }
+
 
   };
 // const onSubmit = async (e: React.FormEvent) => {
