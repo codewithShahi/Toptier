@@ -5,7 +5,7 @@ import DatePicker from "@components/core/DatePicker";
 import useDictionary from "@hooks/useDict";
 import useDirection from "@hooks/useDirection";
 
-import { useParams,useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
 import useHotelSearch from "@hooks/useHotelSearch";
 import Dropdown from "@components/core/Dropdown";
@@ -17,7 +17,7 @@ export default function HotelSearch() {
   const { data: dict, isLoading } = useDictionary(lang as any);
   const [direction] = useDirection();
   const router = useRouter();
-  const {countries}=useCountries()
+  const { countries } = useCountries()
 
   // Use the custom hook
   const {
@@ -64,24 +64,24 @@ export default function HotelSearch() {
 
 
 
-      setIsSearching(false);
+    setIsSearching(false);
     const result = await handleSubmit(e);
 
 
 
     if (result?.success) {
-        router.push("/hotel_search");
-           setIsSearching(false);
+      router.push("/hotel_search");
+      setIsSearching(false);
     }
 
 
   };
-// const onSubmit = async (e: React.FormEvent) => {
-//   e.preventDefault();
-//  const result = await handleSubmit(e);
-//   const url = `/hotel/${form.destination}/${form.checkin}/${form.checkout}/${form.rooms}/${form.adults}/${form.children}/PK`;
-//   router.push(url);
-// };
+  // const onSubmit = async (e: React.FormEvent) => {
+  //   e.preventDefault();
+  //  const result = await handleSubmit(e);
+  //   const url = `/hotel/${form.destination}/${form.checkin}/${form.checkout}/${form.rooms}/${form.adults}/${form.children}/PK`;
+  //   router.push(url);
+  // };
 
 
 
@@ -94,24 +94,24 @@ export default function HotelSearch() {
       </div>
     ) : null;
 
-const today = new Date();
+  const today = new Date();
 
-// format helper → yyyy-mm-dd
-const formatDate = (d: Date) => d.toISOString().split("T")[0];
+  // format helper → yyyy-mm-dd
+  const formatDate = (d: Date) => d.toISOString().split("T")[0];
 
-// default checkin = today
-const checkin = formatDate(
-  new Date(Date.UTC(today.getFullYear(), today.getMonth(), today.getDate()))
-);
+  // default checkin = today
+  const checkin = formatDate(
+    new Date(Date.UTC(today.getFullYear(), today.getMonth(), today.getDate()))
+  );
 
-// default checkout = tomorrow
-const tomorrow = new Date(today);
-tomorrow.setDate(today.getDate() + 1);
-const checkout = formatDate(
-  new Date(Date.UTC(tomorrow.getFullYear(), tomorrow.getMonth(), tomorrow.getDate()))
-);
+  // default checkout = tomorrow
+  const tomorrow = new Date(today);
+  tomorrow.setDate(today.getDate() + 1);
+  const checkout = formatDate(
+    new Date(Date.UTC(tomorrow.getFullYear(), tomorrow.getMonth(), tomorrow.getDate()))
+  );
 
-const selectedCountryName = countries?.find(
+  const selectedCountryName = countries?.find(
     (c: any) => c.iso === form.nationality
   )?.nicename || "Pakistan"; // Default fallback
 
@@ -148,60 +148,59 @@ const selectedCountryName = countries?.find(
               />
 
               {/* Dropdown */}
-        {showDestinationDropdown && form.destination.trim().length >= 3 && (
-  <div className="absolute z-50 w-full bg-white border dark:bg-gray-800 dark:text-gray-100 border-gray-200 dark:border-gray-600 rounded-xl shadow-lg mt-1 max-h-60 overflow-y-auto">
+              {showDestinationDropdown && form.destination.trim().length >= 3 && (
+                <div className="absolute z-50 w-full bg-white border dark:bg-gray-800 dark:text-gray-100 border-gray-200 dark:border-gray-600 rounded-xl shadow-lg mt-1 max-h-60 overflow-y-auto">
 
-    {/* Loading */}
-    {locationLoading ? (
-      <div className="bg-white flex items-center justify-center min-h-24 gap-2 p-3 text-sm text-gray-500">
-        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-400"></div>
-        <span>Searching...</span>
-      </div>
-    ) : (
-      <>
-        {/* Error */}
-        {locationError ? (
-          <div className="flex bg-white items-center justify-center gap-2 p-4 min-h-25 text-sm text-gray-500">
-            <Icon icon="mdi:map-marker-off-outline" width={18} height={18} />
-            <span>{locationError}</span>
-          </div>
-        ) : hotelLocations.length > 0 ? (
-          /* Results */
-          <ul role="list" className="divide-y divide-gray-100 dark:divide-gray-700">
-            {hotelLocations.map((loc: any, idx: number) => (
-              <li
-                key={loc.id ?? `${loc.city}-${idx}`}
-                onClick={() => handleSelectLocation(loc)}
-                onMouseEnter={() => setActiveIndex(idx)}
-                className={`px-4 py-3 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition flex justify-between items-center ${
-                  activeIndex === idx ? "bg-gray-100 dark:bg-gray-700" : ""
-                }`}
-              >
-                <div>
-                  <div className="font-bold text-sm text-start text-gray-900 dark:text-gray-50">
-                    {loc.city}
-                  </div>
-                  <div className="text-xs text-start text-gray-500 dark:text-gray-300">
-                    {loc.country}
-                  </div>
+                  {/* Loading */}
+                  {locationLoading ? (
+                    <div className="bg-white flex items-center justify-center min-h-24 gap-2 p-3 text-sm text-gray-500">
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-400"></div>
+                      <span>Searching...</span>
+                    </div>
+                  ) : (
+                    <>
+                      {/* Error */}
+                      {locationError ? (
+                        <div className="flex bg-white items-center justify-center gap-2 p-4 min-h-25 text-sm text-gray-500">
+                          <Icon icon="mdi:map-marker-off-outline" width={18} height={18} />
+                          <span>{locationError}</span>
+                        </div>
+                      ) : hotelLocations.length > 0 ? (
+                        /* Results */
+                        <ul role="list" className="divide-y divide-gray-100 dark:divide-gray-700">
+                          {hotelLocations.map((loc: any, idx: number) => (
+                            <li
+                              key={loc.id ?? `${loc.city}-${idx}`}
+                              onClick={() => handleSelectLocation(loc)}
+                              onMouseEnter={() => setActiveIndex(idx)}
+                              className={`px-4 py-3 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition flex justify-between items-center ${activeIndex === idx ? "bg-gray-100 dark:bg-gray-700" : ""
+                                }`}
+                            >
+                              <div>
+                                <div className="font-bold text-sm text-start text-gray-900 dark:text-gray-50">
+                                  {loc.city}
+                                </div>
+                                <div className="text-xs text-start text-gray-500 dark:text-gray-300">
+                                  {loc.country}
+                                </div>
+                              </div>
+                              <div className="text-xs text-gray-400">{loc.country_code}</div>
+                            </li>
+                          ))}
+                        </ul>
+                      ) : null
+                        //  (
+                        //   /* No results */
+                        //   // <div className="flex bg-white items-center justify-center gap-2 p-4 min-h-25 text-sm text-gray-500">
+                        //   //   {/* <Icon icon="mdi:map-marker-off-outline" width={18} height={18} />
+                        //   //   <span>No Hotel Destination Found</span> */}
+                        //   // </div>
+                        // )
+                      }
+                    </>
+                  )}
                 </div>
-                <div className="text-xs text-gray-400">{loc.country_code}</div>
-              </li>
-            ))}
-          </ul>
-        ) :     null
-        //  (
-        //   /* No results */
-        //   // <div className="flex bg-white items-center justify-center gap-2 p-4 min-h-25 text-sm text-gray-500">
-        //   //   {/* <Icon icon="mdi:map-marker-off-outline" width={18} height={18} />
-        //   //   <span>No Hotel Destination Found</span> */}
-        //   // </div>
-        // )
-        }
-      </>
-    )}
-  </div>
-)}
+              )}
 
             </div>
             <ErrorMessage error={errors.destination} />
@@ -236,7 +235,7 @@ const selectedCountryName = countries?.find(
               <DatePicker
                 direction={direction}
                 showCalendarIcon
-               defaultDate={new Date(checkout)}
+                defaultDate={new Date(checkout)}
                 className="w-full font-medium pl-1 text-sm placeholder-gray-400 hover:bg-gray-100 hover:border-gray-300 border border-gray-200 rounded-xl text-gray-900 dark:bg-gray-800 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-500 bg-white transition-all duration-200 focus:outline-none"
                 onSelect={(date) => {
                   const newCheckout = date ? date.toISOString().slice(0, 10) : "";
@@ -271,7 +270,7 @@ const selectedCountryName = countries?.find(
               {showGuestsDropdown && (
                 <div className="absolute z-20 w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg mt-1 md:min-w-[350px] max-h-80 overflow-visible">
                   <div className="p-4 space-y-4">
-                      {/* Rooms */}
+                    {/* Rooms */}
                     <div className="flex items-center justify-between px-1">
                       <span className="text-sm font-medium text-blue-900 dark:text-blue-300">
                         Rooms
@@ -348,49 +347,48 @@ const selectedCountryName = countries?.find(
                       </div>
                     </div>
                     {/* ============ NATIONALITY ============ */}
-                      <div className="relative">
-            <label className="block text-sm text-start font-medium text-blue-900 mt-2  ps-1 dark:text-gray-300 mb-2">
-              Nationality
-            </label>
+                    <div className="relative">
+                      <label className="block text-sm text-start font-medium text-blue-900 mt-2  ps-1 dark:text-gray-300 mb-2">
+                        Nationality
+                      </label>
 
-            <Dropdown
-              key={form.nationality} // ✅ Force re-render when nationality changes
-              label={
-                <div className="flex items-center gap-3">
-                   <svg width="16" height="18" viewBox="0 0 16 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M8.19514 17.1038C8.04735 17.2098 7.86998 17.2667 7.68803 17.2667C7.50607 17.2667 7.3287 17.2098 7.18091 17.1038C2.80793 13.9933 -1.83309 7.59516 2.85865 2.97186C4.14667 1.70746 5.88127 0.999208 7.68803 1C9.49916 1 11.2369 1.7094 12.5174 2.97096C17.2091 7.59426 12.5681 13.9915 8.19514 17.1038Z" stroke="#5B697E" strokeOpacity="0.7" strokeWidth="1.35554" strokeLinecap="round" strokeLinejoin="round" />
-                  <path d="M7.68772 9.13333C8.16806 9.13333 8.62873 8.94291 8.96838 8.60396C9.30803 8.26501 9.49885 7.80529 9.49885 7.32594C9.49885 6.84659 9.30803 6.38688 8.96838 6.04793C8.62873 5.70898 8.16806 5.51855 7.68772 5.51855C7.20738 5.51855 6.74671 5.70898 6.40706 6.04793C6.0674 6.38688 5.87659 6.84659 5.87659 7.32594C5.87659 7.80529 6.0674 8.26501 6.40706 8.60396C6.74671 8.94291 7.20738 9.13333 7.68772 9.13333Z" stroke="#5B697E" strokeOpacity="0.7" strokeWidth="1.35554" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-                  <span>{selectedCountryName}</span>
-                </div>
-              }
-              buttonClassName="w-full font-medium cursor-pointer pl-3  py-5 text-sm text-gray-700 placeholder-gray-400 bg-white hover:bg-gray-100 hover:text-gray-700 border border-gray-200 rounded-lg transition-all duration-200 focus:outline-none appearance-none flex items-center justify-between"
-              dropDirection="down"
-            >
-              {({ onClose }) => (
-                <div className="max-h-100 overflow-y-auto p-2">
-                  {countries?.map((c: any) => (
-                    <button
-                      key={c.iso}
-                      onClick={() => {
-                        updateForm({ nationality: c.iso });
-                        onClose();
-                      }}
-                      type="button"
-                      className={`w-full cursor-pointer text-left px-2 rounded-lg py-4 my-2 text-sm flex justify-between items-center ${
-                        form.nationality === c.iso
-                          ? "bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white"
-                          : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
-                      }`}
-                    >
-                      <span className="font-medium">{c.nicename}</span>
-                      <span className="font-medium">{c.iso}</span>
-                    </button>
-                  ))}
-                </div>
-              )}
-            </Dropdown>
-          </div>
+                      <Dropdown
+                        key={form.nationality} // ✅ Force re-render when nationality changes
+                        label={
+                          <div className="flex items-center gap-3">
+                            <svg width="16" height="18" viewBox="0 0 16 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <path d="M8.19514 17.1038C8.04735 17.2098 7.86998 17.2667 7.68803 17.2667C7.50607 17.2667 7.3287 17.2098 7.18091 17.1038C2.80793 13.9933 -1.83309 7.59516 2.85865 2.97186C4.14667 1.70746 5.88127 0.999208 7.68803 1C9.49916 1 11.2369 1.7094 12.5174 2.97096C17.2091 7.59426 12.5681 13.9915 8.19514 17.1038Z" stroke="#5B697E" strokeOpacity="0.7" strokeWidth="1.35554" strokeLinecap="round" strokeLinejoin="round" />
+                              <path d="M7.68772 9.13333C8.16806 9.13333 8.62873 8.94291 8.96838 8.60396C9.30803 8.26501 9.49885 7.80529 9.49885 7.32594C9.49885 6.84659 9.30803 6.38688 8.96838 6.04793C8.62873 5.70898 8.16806 5.51855 7.68772 5.51855C7.20738 5.51855 6.74671 5.70898 6.40706 6.04793C6.0674 6.38688 5.87659 6.84659 5.87659 7.32594C5.87659 7.80529 6.0674 8.26501 6.40706 8.60396C6.74671 8.94291 7.20738 9.13333 7.68772 9.13333Z" stroke="#5B697E" strokeOpacity="0.7" strokeWidth="1.35554" strokeLinecap="round" strokeLinejoin="round" />
+                            </svg>
+                            <span>{selectedCountryName}</span>
+                          </div>
+                        }
+                        buttonClassName="w-full font-medium cursor-pointer pl-3  py-5 text-sm text-gray-700 placeholder-gray-400 bg-white hover:bg-gray-100 hover:text-gray-700 border border-gray-200 rounded-lg transition-all duration-200 focus:outline-none appearance-none flex items-center justify-between"
+                        dropDirection="down"
+                      >
+                        {({ onClose }) => (
+                          <div className="max-h-100 overflow-y-auto p-2">
+                            {countries?.map((c: any) => (
+                              <button
+                                key={c.iso}
+                                onClick={() => {
+                                  updateForm({ nationality: c.iso });
+                                  onClose();
+                                }}
+                                type="button"
+                                className={`w-full cursor-pointer text-left px-2 rounded-lg py-4 my-2 text-sm flex justify-between items-center ${form.nationality === c.iso
+                                    ? "bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white"
+                                    : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
+                                  }`}
+                              >
+                                <span className="font-medium">{c.nicename}</span>
+                                <span className="font-medium">{c.iso}</span>
+                              </button>
+                            ))}
+                          </div>
+                        )}
+                      </Dropdown>
+                    </div>
 
 
                   </div>
