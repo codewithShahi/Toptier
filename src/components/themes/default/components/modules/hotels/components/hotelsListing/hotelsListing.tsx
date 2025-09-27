@@ -632,7 +632,7 @@ const onShowMaphandler=(hotel:any)=>{
                         />
                       </button>
                       {open && (
-                        <div className="absolute mt-2 w-full lg:w-[200px] bg-white border border-gray-200 rounded-lg shadow-lg z-10">
+                        <div className="absolute mt-1.5 w-full lg:w-[200px] bg-white border border-gray-200 rounded-lg shadow-lg z-10">
                           {options.map((opt) => (
                             <button
                               key={opt}
@@ -640,7 +640,7 @@ const onShowMaphandler=(hotel:any)=>{
                                 setSelected(opt);
                                 setOpen(false);
                               }}
-                              className={`w-full cursor-pointer text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 ${selected === opt ? "bg-gray-50 font-medium" : ""}`}
+                              className={`w-full lg:w-[180px] cursor-pointer rounded-md mx-2 my-1.5 text-left px-2 py-2 text-sm text-gray-700 hover:bg-gray-100 ${selected === opt ? "bg-gray-50 font-medium" : ""}`}
                             >
                               {opt}
                             </button>
