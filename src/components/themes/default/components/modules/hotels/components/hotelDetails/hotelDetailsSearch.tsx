@@ -4,10 +4,8 @@ import DatePicker from "@components/core/DatePicker";
 import useDirection from "@hooks/useDirection";
 import { Icon } from "@iconify/react";
 import { HotelForm } from "@hooks/useHotelDetails";
-import { useAppSelector } from "@lib/redux/store";
 import Dropdown from "@components/core/Dropdown";
 import useCountries from "@hooks/useCountries";
-import { useEffect } from "react";
 
 interface HotelDetailsSearchProps {
   form: HotelForm;
@@ -43,7 +41,6 @@ export default function HotelDetailsSearch({
   isSearching,
   totalGuests,
   guestsDropdownRef,
-  handleChange,
   updateForm,
   toggleGuestsDropdown,
   onSubmit,
