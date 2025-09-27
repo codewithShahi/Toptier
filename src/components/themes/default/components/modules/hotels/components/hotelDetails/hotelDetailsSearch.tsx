@@ -172,7 +172,7 @@ export default function HotelDetailsSearch({
                   <span>{selectedCountryName}</span>
                 </div>
               }
-              buttonClassName="w-full font-medium cursor-pointer pl-3 pr-8 py-3 text-sm text-gray-700 placeholder-gray-400 bg-white hover:bg-gray-100 hover:text-gray-700 border border-gray-200 rounded-xl transition-all duration-200 focus:outline-none appearance-none flex items-center justify-between"
+              buttonClassName="w-full font-medium cursor-pointer pl-3  py-3 text-sm text-gray-700 placeholder-gray-400 bg-white hover:bg-gray-100 hover:text-gray-700 border border-gray-200 rounded-xl transition-all duration-200 focus:outline-none appearance-none flex items-center justify-between"
               dropDirection="down"
             >
               {({ onClose }) => (

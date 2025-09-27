@@ -201,7 +201,7 @@ const HotelsDetails = () => {
 
       {/* Image Slider */}
       {isLoading ? (
-        <div className="max-w-[1200px] mx-auto flex items-center justify-center min-h-90 bg-gray-200 appHorizantalSpacing mt-10">
+        <div className="max-w-[1200px] mx-auto  flex items-center justify-center min-h-90 bg-gray-200 px-4 md:px-8 lg:px-14 mt-10">
          <Spinner/>
         </div>
       ) : (
