@@ -11,7 +11,8 @@ type LayoutBaseProps = CommonProps & LayoutContextProps
 const LayoutBase = (props: LayoutBaseProps) => {
   const { children, className, type } = props;
 
-  // const { data, loading, error } = useAppSelector((state) => state.appData);
+
+  const { data, loading, error } = useAppSelector((state) => state.appData);
 
 
 

@@ -74,14 +74,20 @@ const NewsLatter: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-14 appHorizantalSpacing">
           {/* Image */}
           <div className="order-2 lg:order-1">
-            <Image
-              src={newsletter_image || "/images/newsletter.jpg"}
-              width={1200}
-              height={393}
-              alt="Newsletter Banner"
-              className="w-full h-[250px] sm:h-[320px] lg:h-[393px] object-cover rounded-[20px_50px_20px_50px] sm:rounded-[30px_70px_30px_70px] lg:rounded-[40px_100px_40px_100px]"
-              priority
-            />
+          <div className="relative w-full h-[250px] sm:h-[320px] lg:h-[393px]">
+  <Image
+    src={newsletter_image || "/images/newsletter.jpg"}
+    alt="Newsletter Banner"
+    fill
+    priority
+    sizes="(max-width: 640px) 100vw,
+           (max-width: 1024px) 100vw,
+           1200px"
+    className="object-cover rounded-[20px_50px_20px_50px] sm:rounded-[30px_70px_30px_70px] lg:rounded-[40px_100px_40px_100px]"
+  />
+</div>
+
+
           </div>
 
           {/* Form Section */}
@@ -114,8 +120,8 @@ const NewsLatter: React.FC = () => {
                 /> */}
                 <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none">
                   <svg width="14" height="17" viewBox="0 0 14 17" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M6.79251 7.05181C8.39207 7.05181 9.68878 5.75511 9.68878 4.15554C9.68878 2.55598 8.39207 1.25928 6.79251 1.25928C5.19294 1.25928 3.89624 2.55598 3.89624 4.15554C3.89624 5.75511 5.19294 7.05181 6.79251 7.05181Z" stroke="#8C96A5" stroke-width="1.0861" />
-                    <path d="M12.5851 12.4824C12.5851 14.2817 12.5851 15.7407 6.79253 15.7407C1 15.7407 1 14.2817 1 12.4824C1 10.6831 3.59361 9.22412 6.79253 9.22412C9.99146 9.22412 12.5851 10.6831 12.5851 12.4824Z" stroke="#8C96A5" stroke-width="1.0861" />
+                    <path d="M6.79251 7.05181C8.39207 7.05181 9.68878 5.75511 9.68878 4.15554C9.68878 2.55598 8.39207 1.25928 6.79251 1.25928C5.19294 1.25928 3.89624 2.55598 3.89624 4.15554C3.89624 5.75511 5.19294 7.05181 6.79251 7.05181Z" stroke="#8C96A5" strokeWidth="1.0861" />
+                    <path d="M12.5851 12.4824C12.5851 14.2817 12.5851 15.7407 6.79253 15.7407C1 15.7407 1 14.2817 1 12.4824C1 10.6831 3.59361 9.22412 6.79253 9.22412C9.99146 9.22412 12.5851 10.6831 12.5851 12.4824Z" stroke="#8C96A5" strokeWidth="1.0861" />
                   </svg>
 
                 </div>

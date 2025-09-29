@@ -1,6 +1,7 @@
 'use client'
 import React, { createContext,  useState, useEffect, useContext } from "react";
 import { useAppDispatch } from "@lib/redux/store";
+import { setAppData } from "@lib/redux/appData";
 // import { setAppData } from '@lib/redux/appData';
 
 interface LoadingContextType {
@@ -27,9 +28,8 @@ useEffect(() => {
   const loadAppData = async () => {
     setLoading(true);
     try {
-      // const resultAction = await dispatch(setAppData());
-      // const appData = (resultAction as any)?.payload;
-//  console.log('appp dataaaaaaa',appData)
+      const resultAction = await dispatch(setAppData());
+      const appData = (resultAction as any)?.payload;
       // Now you can check agency status from response
 
     } catch (err) {
