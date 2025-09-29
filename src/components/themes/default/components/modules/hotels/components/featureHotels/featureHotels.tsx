@@ -169,7 +169,7 @@ const FeaturedHotels: React.FC = () => {
         {hotels?.map((hotel) => (
           <div
             key={hotel.id}
-            className="bg-[#F5F5F5] p-3 rounded-[65px] shadow cursor-pointer transition-all duration-300 hover:shadow-lg"
+            className="bg-[#F5F5F5] p-3 rounded-[65px]  cursor-pointer transition-all duration-300 "
             onMouseEnter={() => setHoveredId(hotel.id)}
             onMouseLeave={() => setHoveredId(null)}
           >
