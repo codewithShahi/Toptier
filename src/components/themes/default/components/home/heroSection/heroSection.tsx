@@ -29,11 +29,11 @@ const HeroSection = () => {
   // =====> Background image with fallback
   const coverImage =
    app?.app?.cover_img.trim() !== ""
-      ? app.app.cover_img
+      ? app?.app?.cover_img
       : defaultImage;
 
   const [bgError, setBgError] = useState(false);
-
+console.log('img',)
   return (
     // ✅ Animate the entire section
     <motion.section
