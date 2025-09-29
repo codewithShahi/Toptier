@@ -87,7 +87,7 @@ const ImageSlider = ({ testimonials }: { testimonials: any[] }) => {
         >
           {testimonials.map((testimonial: any, index: number) => (
             <div
-              key={testimonial.id}
+              key={index}
               className="flex-shrink-0 flex gap-4 relative"
               style={{
                 width: `${95 / slidesToShow}% `,
@@ -151,9 +151,9 @@ const ImageSlider = ({ testimonials }: { testimonials: any[] }) => {
         >
 
           <svg width="13" height="10" viewBox="0 0 14 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <g clip-path="url(#clip0_358_2931)">
-              <g clip-path="url(#clip1_358_2931)">
-                <g clip-path="url(#clip2_358_2931)">
+            <g clipPath="url(#clip0_358_2931)">
+              <g clipPath="url(#clip1_358_2931)">
+                <g clipPath="url(#clip2_358_2931)">
                   <path d="M0.333984 5.83724H10.4757L7.49232 8.82891L8.66732 10.0039L12.9602 5.71101C13.3507 5.32049 13.3507 4.68732 12.9602 4.2968L8.66732 0.00390625L7.49232 1.17891L10.4757 4.17057H0.333985L0.333984 5.83724Z" fill="#0F1112" />
                 </g>
               </g>

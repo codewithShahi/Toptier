@@ -7,7 +7,7 @@ import { Metadata } from 'next/types'
 
 export const generateMetadata = async (): Promise<Metadata> => {
   const data = await fetchAppData()
-  // console.log('appp DAta',data.data.app)
+ 
   const meta_data = data?.data?.app
   if (!meta_data) {
     return {
