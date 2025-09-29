@@ -46,7 +46,7 @@ const HotelSuggestionSlider = ({ hotels }: HotelSuggestionSliderProps) => {
               key={`${hotel.hotel_id || "hotel"}-${index}`}
               className="py-4  flex" // ✅ slide apne content ke hisaab se stretch hoga
             >
-              <div className="w-full h-full"> 
+              <div className="w-full h-full">
                 <HotelListingCard hotel={hotel} viewMode="map" />
               </div>
             </SwiperSlide>
@@ -94,9 +94,9 @@ const HotelSuggestionSlider = ({ hotels }: HotelSuggestionSliderProps) => {
           }`}
           disabled={isEnd}
         >
-          
+
 <svg width="14" height="11" viewBox="0 0 14 11" fill="none" xmlns="http://www.w3.org/2000/svg">
-<g clip-path="url(#clip0_358_2322)">
+<g clipPath="url(#clip0_358_2322)">
 <path d="M0.333984 6.82162H10.4757L7.49232 9.81328L8.66732 10.9883L12.9602 6.69538C13.3507 6.30486 13.3507 5.6717 12.9602 5.28118L8.66732 0.988281L7.49232 2.16329L10.4757 5.15494H0.333985L0.333984 6.82162Z" fill="#0F1112"/>
 </g>
 <defs>

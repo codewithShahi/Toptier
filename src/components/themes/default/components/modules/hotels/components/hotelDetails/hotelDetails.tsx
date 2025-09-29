@@ -363,7 +363,7 @@ const HotelsDetails = () => {
             {hotelDetails.rooms.map((room: any) =>
               room.options?.map((opt: any, index: number) => (
                 <RoomCard
-                  key={opt.id || `${room.id}-${index}`}
+                  key={index}
                   room={room}
                   options={opt}
                   getAmenityIcon={getAmenityIcon}
