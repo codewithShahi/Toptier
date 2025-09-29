@@ -70,7 +70,7 @@ const HotelCard = memo(function HotelCard({ hotel, viewMode, onBookNow, onMapSho
   return (
     <div
       key={hotel.hotel_id}
-      className={`bg-white p-[8px] rounded-[45px] shadow cursor-pointer transition-all duration-300 hover:shadow-lg ${viewMode === "list" ? "flex flex-col sm:flex-row max-w-none" : ""
+      className={`bg-white p-[8px] rounded-[45px] border border-gray-200 cursor-pointer transition-all duration-300 hover:shadow-lg ${viewMode === "list" ? "flex flex-col sm:flex-row max-w-none" : ""
         }`}
     >
       {/* Hotel Image */}
