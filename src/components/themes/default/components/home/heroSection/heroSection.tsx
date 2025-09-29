@@ -19,14 +19,16 @@ const variants = {
 
 const HeroSection = () => {
   const app = useAppSelector((state) => state?.appData?.data);
-    const {homePage_text, cover_img}=app.app
+  // console.log('heor app data ', app)
+ const { homepage_text } = app?.app ?? {};
+
 
   const { locale } = useLocale();
-  const { data: dict } = useDictionary(locale as any);
+  // const { data: dict } = useDictionary(locale as any);
 
   // =====> Background image with fallback
   const coverImage =
-    app?.app?.coverimage && app?.app?.cover_img.trim() !== ""
+   app?.app?.cover_img.trim() !== ""
       ? app.app.cover_img
       : defaultImage;
 
@@ -56,7 +58,7 @@ const HeroSection = () => {
      {/* Content Container */}
 <div className="relative max-w-[1200px] w-full mx-auto  z-10 min-h-[500px] flex items-center justify-center flex-col text-center px-4 gap-4 pt-6 ">
   <p className="text-4xl lg:text-5xl font-extrabold text-white  max-w-3xs lg:max-w-[38%] leading-tight">
-    {homePage_text || "Discover the World's Hidden Treasures"}
+    {homepage_text || "Discover the World's Hidden Treasures"}
   </p>
   {/* <p className="text-4xl lg:text-5xl  font-extrabold text-white  max-w-xl">
     World's Hidden Treasures

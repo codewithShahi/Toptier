@@ -21,7 +21,7 @@ export const appDataReducer = createReducer(initialState, (builder) => {
     })
     .addCase(setAppData.fulfilled, (state, action) => {
       state.loading = false;
-      state.data = action.payload;
+      state.data = action?.payload;
     })
     .addCase(setAppData.rejected, (state, action) => {
       state.loading = false;
