@@ -5,6 +5,7 @@ import { useAppSelector } from "@lib/redux/store";
 import { addToFavourite } from "@src/actions"; // :point_left: import API
 import { useUser } from "@hooks/use-user";
 import { toast } from "react-toastify";
+import Image from "next/image";
 interface Hotel {
   id: string;
   name: string;
@@ -55,7 +56,7 @@ const FeaturedHotels: React.FC = () => {
   };
 
   // simulate userId (replace with real auth value)
-  const userId = "123";
+  // const userId = "123";
   // Sync redux → local state
   useEffect(() => {
     if (featured_hotels && Array.isArray(featured_hotels)) {
@@ -174,7 +175,7 @@ const FeaturedHotels: React.FC = () => {
             onMouseLeave={() => setHoveredId(null)}
           >
             <div className="relative overflow-hidden rounded-[55px] aspect-square">
-              <img
+              <Image
                 src={hotel.img}
                 alt={hotel.name}
                 className="w-full h-full object-cover"
