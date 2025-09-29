@@ -12,7 +12,7 @@ import Spinner from '@components/core/Spinner';
 // =====> this will define which theme will be renderd default , if you have more themes you can add them here and import them here as well
 const layouts: Record<string, any> = {
     [LAYOUT_DEFAULT]: dynamic(() => import('../../../default/default'), {
-        loading: () => <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-950"><Spinner className="w-10 h-10 text-primary" /></div>,
+        loading: () => <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-950"><Spinner className="w-8 h-8 text-blue-900" /></div>,
         ssr: false
     }),
     [LAYOUT_PRO]: dynamic(() => import('../../../pro/pro'), {

@@ -10,6 +10,7 @@ import { useParams, useRouter } from "next/navigation";
 import useHotelSearch from "@hooks/useHotelSearch";
 import Dropdown from "@components/core/Dropdown";
 import useCountries from "@hooks/useCountries";
+import { set } from "lodash";
 // import useHotelSearch from "@hooks/useHotelSearch"; // Import the hook
 
 export default function HotelSearch() {
@@ -60,28 +61,50 @@ export default function HotelSearch() {
     return () => document.removeEventListener("mousedown", handler);
   }, [setShowDestinationDropdown, setShowGuestsDropdown]);
 
-  const onSubmit = async (e: React.FormEvent) => {
-
-
-
-    setIsSearching(false);
-    const result = await handleSubmit(e);
-
-
-
-    if (result?.success) {
-      router.push("/hotel_search");
-      setIsSearching(false);
-    }
-
-
-  };
   // const onSubmit = async (e: React.FormEvent) => {
-  //   e.preventDefault();
-  //  const result = await handleSubmit(e);
-  //   const url = `/hotel/${form.destination}/${form.checkin}/${form.checkout}/${form.rooms}/${form.adults}/${form.children}/PK`;
-  //   router.push(url);
+
+
+
+
+  //     setIsSearching(false);
+  //   const result = await handleSubmit(e);
+
+
+
+  //   if (result?.success) {
+  //       router.push("/hotel_search");
+  //          setIsSearching(false);
+  //   }
+
+
   // };
+const onSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+setIsSearching(true)
+  const params = new URLSearchParams({
+    destination: form.destination,
+    checkin: form.checkin,
+    checkout: form.checkout,
+    rooms: String(form.rooms),
+    adults: String(form.adults),
+    children: String(form.children),
+    nationality: form.nationality,
+  });
+  // ✅ Build the same path format
+  const destinationSlug = form.destination.trim().replace(/\s+/g, "-");
+ const url = `/hotel/${destinationSlug}/${params.get("checkin")}/${params.get(
+  "checkout"
+)}/${params.get("rooms")}/${params.get("adults")}/${params.get(
+  "children"
+)}/${params.get("nationality")}`;
+setTimeout(() => {
+    setIsSearching(false);
+ setIsSearching(false)
+router.push(url);
+  }, 500); // 1 second delay
+};
+
+
 
 
 
