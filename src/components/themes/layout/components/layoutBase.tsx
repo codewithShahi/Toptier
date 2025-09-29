@@ -20,7 +20,7 @@ const LayoutBase = (props: LayoutBaseProps) => {
       {loading ? (
         // ⏳ Show loading spinner while fetching
         <div className="fixed inset-0 bg-white dark:bg-gray-900 z-50 flex items-center justify-center">
-          <LoadingSpinner size={33} />
+          <LoadingSpinner size={33} className='text-red-500'/>
         </div>
       ) : error ? (
         // ❌ Show disabled state if API errored

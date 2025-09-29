@@ -11,7 +11,6 @@ export default async function Page({ params }: {
 }) {
   const { lang } = await params
   const dict = await getDictionary(lang)
- console.log('search param ',params)
   return (
     // <div>home page</div>
     <TransitionLayout>

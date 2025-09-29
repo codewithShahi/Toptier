@@ -25,31 +25,31 @@ import HotelMap from "./hotelMap";
 //   category?: string;
 // }
 // Types for your actual hotel data
-// interface HotelData {
-//   hotel_id: string;
-//   name: string;
-//   location: string;
-//   actual_price: string;
-//   actual_price_per_night: string;
-//   img: string;
-//   rating: string;
-//   stars: string;
-//   amenities: string[];
-//   favorite: number;
-//   address: string;
-//   latitude: string;
-//   longitude: string;
-//   currency: string;
-//   supplier_name: string;
-//   markup_price: string;
-//   markup_price_per_night: string;
-//   booking_currency: string;
-// }
-// interface HotelSearchAppProps {
-//   hotelsData: HotelData[];
-//   isLoading?: boolean;
-// }
-export default function HotelSearchApp() {
+interface HotelData {
+  hotel_id: string;
+  name: string;
+  location: string;
+  actual_price: string;
+  actual_price_per_night: string;
+  img: string;
+  rating: string;
+  stars: string;
+  amenities: string[];
+  favorite: number;
+  address: string;
+  latitude: string;
+  longitude: string;
+  currency: string;
+  supplier_name: string;
+  markup_price: string;
+  markup_price_per_night: string;
+  booking_currency: string;
+}
+interface HotelSearchAppProps {
+  // hotelData: HotelData[];
+  isLoading?: boolean;
+}
+export default function HotelSearchApp({isLoading}:HotelSearchAppProps) {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [viewMode, setViewMode] = useState<'grid' | 'list' | 'map'>('grid');
   // const [user, setUser] = useState(true);
@@ -194,7 +194,7 @@ const onShowMaphandler=(hotel:any)=>{
     setSelectedStars,
     isFilterLoading
 
-  } = useHotelFilter({ hotelsData: safeHotelsData ?? [], isLoading: false });
+  } = useHotelFilter({ hotelsData: safeHotelsData ?? [], isLoading });
 
 
 
@@ -209,141 +209,6 @@ const onShowMaphandler=(hotel:any)=>{
     }
     updatePriceRange(newRange);
   };
-  // Custom slider component
-  // interface PriceSliderProps {
-  //   min: number;
-  //   max: number;
-  //   values: [number, number]; // tuple for two values
-  //   onChange: (index: 0 | 1, value: number) => void;
-  // }
-
-  // 👇 Add state to track highlighted hotel
-  // const [highlightedHotel, setHighlightedHotel] = useState<HotelData | null>(null);
-
-  // const handleHighlightHotel = (hotel: HotelData) => {
-  //   setHighlightedHotel(hotel);
-  // };
-
-  // const PriceSlider: React.FC<PriceSliderProps> = ({ min, max, values, onChange }) => {
-  //   const getPercentage = (value: number) => ((value - min) / (max - min)) * 100;
-  //   return (
-  //     <div className="relative">
-  //       <div className="flex justify-between text-sm font-semibold text-gray-600 mb-4">
-  //         <span>${values[0]}</span>
-  //         <span>${values[1]}</span>
-  //       </div>
-  //       <div className="relative h-2 bg-gray-200 rounded-full">
-  //         <div
-  //           className="absolute h-2 bg-[#163C8C] rounded-full"
-  //           style={{
-  //             left: `${getPercentage(values[0])}%`,
-  //             right: `${100 - getPercentage(values[1])}%`
-  //           }}
-  //         ></div>
-  //         <input
-  //           type="range"
-  //           min={min}
-  //           max={max}
-  //           value={values[0]}
-  //           onChange={(e) => onChange(0, parseInt(e.target.value))}
-  //           className="absolute w-full h-2 bg-transparent appearance-none cursor-pointer slider-thumb"
-  //         />
-  //         <input
-  //           type="range"
-  //           min={min}
-  //           max={max}
-  //           value={values[1]}
-  //           onChange={(e) => onChange(1, parseInt(e.target.value))}
-  //           className="absolute w-full h-2 bg-transparent appearance-none cursor-pointer slider-thumb"
-  //         />
-  //       </div>
-  //     </div>
-  //   );
-  // };
-  // Guest rating slider
-  // interface RatingSliderProps {
-  //   value: number;
-  //   onChange: (newValue: number) => void;
-  // }
-  // const RatingSlider: React.FC<RatingSliderProps> = ({ value, onChange }) => {
-  //   const percentage = ((value - 1) / 4) * 100;
-  //   return (
-  //     <div className="space-y-4">
-  //       <div className="relative h-2 bg-gray-200 rounded-full">
-  //         <div
-  //           className="absolute h-2 bg-[#163C8C] rounded-full"
-  //           style={{ width: `${percentage}%` }}
-  //         ></div>
-  //         <input
-  //           type="range"
-  //           min={1}
-  //           max={5}
-  //           step={0.1}
-  //           value={value}
-  //           onChange={(e) => onChange(parseFloat(e.target.value))}
-  //           className="absolute w-full h-2 bg-transparent appearance-none cursor-pointer slider-thumb"
-  //         />
-  //       </div>
-  //       <div className="text-center text-sm text-gray-600">{value.toFixed(1)}+ Stars</div>
-  //     </div>
-  //   );
-  // };
-  // Render star ratings
-  // const renderStars = (rating: string) => {
-  //   const stars = [];
-  //   const numRating = parseInt(rating) || 0;
-  //   for (let i = 0; i < numRating; i++) {
-  //     stars.push(
-  //       <Icon key={i} icon="mdi:star" className="h-4 w-4 text-yellow-400" />
-  //     );
-  //   }
-  //   return stars;
-  // };
-
-
-  // Handle sort change
-  // const handleSortChange = (sortValue: string) => {
-  //   let sortBy: 'price_low' | 'price_high' | 'rating' | 'name';
-  //   switch (sortValue) {
-  //     case 'Price Low to High':
-  //       sortBy = 'price_low';
-  //       break;
-  //     case 'Price High to Low':
-  //       sortBy = 'price_high';
-  //       break;
-  //     case 'Rating':
-  //       sortBy = 'rating';
-  //       break;
-  //     case 'Name':
-  //       sortBy = 'name';
-  //       break;
-  //     default:
-  //       sortBy = 'price_low';
-  //   }
-  //   updateSortBy(sortBy);
-  // };
-  // Get sort display value
-  // const getSortDisplayValue = () => {
-  //   switch (filters.sortBy) {
-  //     case 'price_low':
-  //       return 'Price Low to High';
-  //     case 'price_high':
-  //       return 'Price High to Low';
-  //     case 'rating':
-  //       return 'Rating';
-  //     case 'name':
-  //       return 'Name';
-  //     default:
-  //       return 'Price Low to High';
-  //   }
-  // };
-  // const toggleFilterChip = (category: string) => {
-  //   setSelectedFilters(prev =>
-  //     prev.includes(category)
-  //       ? prev.filter(f => f !== category)
-  //       : [...prev, category]
-  //   );
-  // };
 
 
   const [open, setOpen] = useState(false);
@@ -748,7 +613,8 @@ const onShowMaphandler=(hotel:any)=>{
                 </div>
               </div>
             }
-            {(isInitialLoading || isFilterLoading) && !isloadingMore &&
+            {
+            (isLoading || isFilterLoading) && !isloadingMore && !hotelsData?.length &&
               <div className="w-full flex items-center justify-center">
                 <div className="w-full py-2 my-5 h-full flex gap-2 items-center justify-center  border-blue-900">
                   <Spinner size={30} className="mr-1 text-blue-900" /> <p className="text-base font-medium text-blue-900 ">Searching for Hotels</p>
@@ -757,7 +623,7 @@ const onShowMaphandler=(hotel:any)=>{
             }
 
             {/* ============>>>NO DATA FOUND  */}
-            {!(isInitialLoading || isFilterLoading) && !isloadingMore && filteredHotels?.length === 0 && (
+            {!(isLoading || isFilterLoading) && !isloadingMore && filteredHotels?.length === 0 && (
               <div className="text-center py-6 sm:py-8 md:py-15  min-w-full min-h-full flex items-center justify-start flex-col">
 
                 <Icon icon="mdi:hotel-off" className="h-16 w-16 text-gray-400 mx-auto mb-4" />
