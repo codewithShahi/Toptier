@@ -19,8 +19,6 @@ export const useLoading = () => useContext(LoadingContext);
 export const LoadingProvider = ({ children }: { children: React.ReactNode }) => {
     const dispatch = useAppDispatch();
 
-    // const app = useAppSelector((state) => state?.appData?.data?.app);
-    // const appStatus = app?.status;
     const [loading, setLoading] = useState(true); // Start loading
 
 // 2. Load app data (basic API should always run first)
