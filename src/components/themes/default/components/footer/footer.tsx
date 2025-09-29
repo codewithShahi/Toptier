@@ -85,11 +85,11 @@ const Footer = () => {
           </div>
         </div>
         </div>
-        
+
 
       </div>
       <div className="max-w-[1200px] mx-auto appHorizantalSpacing py-12 lg:py-12">
-       
+
         {/* Grid Layout for Links */}
         <div className="mt-8 lg:mt-12 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8">
           {footerItems.map((page, index) => (

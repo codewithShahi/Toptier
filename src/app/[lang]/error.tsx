@@ -15,7 +15,7 @@ export default function GlobalError({ error, reset }: { error: Error; reset: () 
                 {error.message || 'An unexpected error occurred. Please try reloading the page.'}
             </p>
             <button
-                className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded transition-colors"
+                className="bg-blue-900 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-full transition-colors"
                 onClick={reset}
             >
                 Reload Page
@@ -23,3 +23,4 @@ export default function GlobalError({ error, reset }: { error: Error; reset: () 
         </div>
     );
 }
+
