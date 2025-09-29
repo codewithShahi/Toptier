@@ -1,7 +1,7 @@
 "use client";
 import { useState, useCallback, useEffect, useRef, useMemo } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { fetchHotelsLocations, hotel_search } from "@src/actions";
+import { fetchHotelsLocations, hotel_search, hotel_search_multi } from "@src/actions";
 import { z } from "zod";
 import { useAppSelector } from "@lib/redux/store";
 import { usePathname, useRouter } from "next/navigation";
@@ -127,7 +127,7 @@ const hotelSearch_path = usePathname();
   const router = useRouter();
   const allHotelsData = useAppSelector((state) => state.root.hotels);
   const dispatch = useDispatch();
-
+// console.log('all hotel data',allHotelsData)
  const hotelModuleNames = useMemo(() => {
   return (
     modules
@@ -392,62 +392,120 @@ const callAllModulesAPI = useCallback(
 );
 
   // Fixed load more data
-  const loadMoreData = useCallback(
-    async (e?: React.SyntheticEvent) => {
-      e?.preventDefault();
+//   const loadMoreData = useCallback(
+//     async (e?: React.SyntheticEvent) => {
+//       e?.preventDefault();
+//     // console.log('loadmore hittting')
+//       if (isloadingMore || isProcessingRef.current) return;
 
-      if (isloadingMore || isProcessingRef.current) return;
+//       setIsLoadingMore(true);
 
-      setIsLoadingMore(true);
+//       try {
+//         const savedForm = localStorage.getItem("hotelSearchForm");
+//         if (!savedForm) return;
 
-      try {
-        const savedForm = localStorage.getItem("hotelSearchForm");
-        if (!savedForm) return;
-
-        const parsedForm: HotelForm = JSON.parse(savedForm);
-        const nextPage = page + 1;
+//         const parsedForm: HotelForm = JSON.parse(savedForm);
+//         const nextPage = page + 1;
 
 
-        const result = await callAllModulesAPI({
-          ...parsedForm,
-          price_from: "",
-          price_to: "",
-          rating: ""
-        }, nextPage);
+//         const result = await callAllModulesAPI({
+//           ...parsedForm,
+//           price_from: "",
+//           price_to: "",
+//           rating: ""
+//         }, nextPage);
+// console.log('load more data', result)
+//         if (result.success && result.data && result.data.length > 0) {
+//           // Get existing IDs
 
-        if (result.success && result.data && result.data.length > 0) {
-          // Get existing IDs
+//       setIsLoadingMore(false);
+//           const existingIds = new Set(allHotelsData.map(h => h.hotel_id));
 
-      setIsLoadingMore(false);
-          const existingIds = new Set(allHotelsData.map(h => h.hotel_id));
+//           // Filter only truly new hotels
+//           const newHotels = result.data.filter(hotel => {
+//             return hotel && hotel.hotel_id && !existingIds.has(hotel.hotel_id);
+//           });
 
-          // Filter only truly new hotels
-          const newHotels = result.data.filter(hotel => {
-            return hotel && hotel.hotel_id && !existingIds.has(hotel.hotel_id);
-          });
+//           if (newHotels.length > 0) {
+//             const updatedHotels = [...allHotelsData, ...newHotels];
+//             dispatch(setHotels(updatedHotels));
+//             queryClient.setQueryData(["hotel-search"], updatedHotels);
+//             setPage(nextPage);
+//             return { success: true, data: newHotels };
+//           } else {
+//             return { success: false, error: "No new data" };
+//           }
+//         } else {
+//           return { success: false, error: "No more data" };
+//         }
+//       } catch (err) {
+//         console.error('Load more error:', err);
+//         return { success: false, error: "Load more failed" };
+//       } finally {
+//         setIsLoadingMore(false);
+//       }
+//     },
+//     [page, allHotelsData, callAllModulesAPI, dispatch, queryClient, isloadingMore]
+//   );
+// multi module aproad in server
+const loadMoreData = useCallback(
+  async (e?: React.SyntheticEvent) => {
+    e?.preventDefault();
+    if (isloadingMore || isProcessingRef.current) return;
 
-          if (newHotels.length > 0) {
-            const updatedHotels = [...allHotelsData, ...newHotels];
-            dispatch(setHotels(updatedHotels));
-            queryClient.setQueryData(["hotel-search"], updatedHotels);
-            setPage(nextPage);
-            return { success: true, data: newHotels };
-          } else {
-            return { success: false, error: "No new data" };
-          }
+    setIsLoadingMore(true);
+
+    try {
+      const savedForm = localStorage.getItem("hotelSearchForm");
+      if (!savedForm) return;
+
+      const parsedForm: HotelForm = JSON.parse(savedForm);
+      const nextPage = page + 1;
+
+      // ✅ Use hotel_search_multi for pagination
+      const result = await hotel_search_multi(
+        {
+          destination: parsedForm.destination,
+          checkin: parsedForm.checkin,
+          checkout: parsedForm.checkout,
+          rooms: parsedForm.rooms,
+          adults: parsedForm.adults,
+          children: parsedForm.children,
+          nationality: parsedForm.nationality,
+          page: nextPage, //  next page
+          price_from: "0", // or keep current filters if needed
+          price_to: "5000",
+          rating: "",
+        },
+        hotelModuleNames
+      );
+      if (result.success.length > 0) {
+        // const existingIds = new Set(allHotelsData.map((h) => h.hotel_id));
+        // const newHotels = result.success.filter(
+        //   (hotel) => hotel?.hotel_id && !existingIds.has(hotel.hotel_id)
+        // );
+
+        if (result.success.length > 0) {
+          const updatedHotels = [...allHotelsData, ...result.success];
+          dispatch(setHotels(updatedHotels));
+          queryClient.setQueryData(["hotel-search"], updatedHotels);
+          setPage(nextPage);
+          return { success: true, data: result.success };
         } else {
-          return { success: false, error: "No more data" };
+          return { success: false, error: "No new hotels found" };
         }
-      } catch (err) {
-        console.error('Load more error:', err);
-        return { success: false, error: "Load more failed" };
-      } finally {
-        setIsLoadingMore(false);
+      } else {
+        return { success: false, error: "No more data" };
       }
-    },
-    [page, allHotelsData, callAllModulesAPI, dispatch, queryClient, isloadingMore]
-  );
-
+    } catch (err) {
+      console.error("Load more error:", err);
+      return { success: false, error: "Load more failed" };
+    } finally {
+      setIsLoadingMore(false);
+    }
+  },
+  [page, allHotelsData, hotelModuleNames, dispatch, queryClient, isloadingMore]
+);
   // Scroll effect for load more
   useEffect(() => {
     const handleScroll = () => {
@@ -481,7 +539,7 @@ if (selectedNationality) {
   // console.log("Nationality:", nationality);
 }
   // 👉 construct URL
-  const url = `/hotel/${hotel.hotel_id}/${slugName}/${form.checkin}/${form.checkout}/${form.rooms}/${form.adults}/${form.children}/${nationality}/${hotel.supplier_name}`;
+  const url = `/hotelDetails/${hotel.hotel_id}/${slugName}/${form.checkin}/${form.checkout}/${form.rooms}/${form.adults}/${form.children}/${nationality}/${hotel.supplier_name}`;
 
   // 👉 navigate
   router.push(url);
@@ -605,7 +663,6 @@ if (selectedNationality) {
     handleSubmit,
     loadMoreData,
     detailsBookNowHandler,
-
     // Schema for external validation
     hotelSearchSchema,
   };
