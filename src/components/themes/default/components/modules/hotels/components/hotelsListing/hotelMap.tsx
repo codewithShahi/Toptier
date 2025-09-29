@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import {
   MapContainer,
   TileLayer,
@@ -22,13 +23,15 @@ const fallbackCenter: [number, number] = [51.505, -0.09];
 interface HotelMapProps {
   hotels: {
     hotel_id: string;
+    img?: string;
     latitude: string | number;
     longitude: string | number;
     actual_price: string | number;
     location: string;
     name?: string;
     city?: string;
-    address:string;
+    stars?: string;
+    address: string;
   }[];
   currentLocation: {
     lat: number;
@@ -175,8 +178,10 @@ function CustomControls() {
   );
 }
 
+
 export default function HotelMap({ hotels, currentLocation }: HotelMapProps) {
   const [validHotels, setValidHotels] = useState<typeof hotels>([]);
+  console.log(hotels)
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
@@ -224,10 +229,10 @@ export default function HotelMap({ hotels, currentLocation }: HotelMapProps) {
 
       {/* FULLSCREEN MODAL */}
       {showModal && (
-        <div className="fixed inset-0 z-[2000] bg-black bg-opacity-50 flex items-center justify-center">
-          <div className="relative w-full h-full p-4">
+        <div className="fixed inset-0 z-[2000] rounded-md bg-black bg-opacity-50 flex items-center justify-center">
+          <div className="relative w-full h-full">
             <button
-              className="absolute top-14.5 cursor-pointer right-10 z-[3000] text-white bg-gray-600 rounded-full p-1.5"
+              className="absolute top-11 cursor-pointer right-6 z-[3000] text-white bg-gray-600 rounded-full p-1.5"
               onClick={() => setShowModal(false)}
               aria-label="Close fullscreen map"
             >
@@ -257,14 +262,34 @@ export default function HotelMap({ hotels, currentLocation }: HotelMapProps) {
                     position={[lat, lng]}
                     icon={isCurrent ? highlightedIcon(hotel.actual_price) : priceIcon(hotel.actual_price)}
                   >
-                    <Tooltip direction="top" offset={L.point(0, -10)} opacity={1}>
+                    <Tooltip direction="top"
+                      offset={L.point(0, -10)}
+                      opacity={1}
+                    >
                       <div
-                        className={`text-[12px] w-50 h-auto overflow-hidden text-wrap  px-2 py-1 leading-[1.4]   ${
-                          isCurrent ? "bg-blue-100 border border-blue-900" : "bg-white border border-gray-300"
-                        }`}
+                        className={`text-sm w-70 h-auto overflow-hidden text-wrap py-1 leading-[1.4]   ${isCurrent ? "bg-blue-100 border border-gray-400 rounded-sm" : "bg-white border rounded-sm border-gray-300"
+                          }`}
                       >
-                        <b>{hotel.name || "Hotel"}</b> <br />
-                       <span className="truncate">Address: {hotel?.address ?? ""}</span>
+                        <div className="p-2">
+                          <h3 className="text-sm font-semibold text-wrap">{hotel.name || "Hotel"}</h3>
+
+                          <p className="text-gray-500 text-xs mt-1 text-wrap">
+                            {hotel.address || hotel.city || ""}
+                          </p>
+                          {/* Stars (agar hotel.stars aaye to show karein) */}
+                          {hotel.stars && (
+                            <div className="flex items-center text-yellow-500 text-sm mt-1">
+                              {Array.from({ length: Number(hotel.stars) }).map((_, i) => (
+                                <span key={i}>★</span>
+                              ))}
+                            </div>
+                          )}
+
+
+                          <p className="text-black font-bold mt-1 text-sm">
+                            ${hotel.actual_price}
+                          </p>
+                        </div>
                       </div>
                     </Tooltip>
                   </Marker>
@@ -298,21 +323,41 @@ export default function HotelMap({ hotels, currentLocation }: HotelMapProps) {
 
             return (
               <Marker
-                key={hotel.hotel_id}
-                position={[lat, lng]}
-                icon={isCurrent ? highlightedIcon(hotel.actual_price) : priceIcon(hotel.actual_price)}
-              >
-                <Tooltip direction="top" offset={L.point(0, -10)} opacity={1}>
-                  <div
-                    className={`text-[12px] w-50 px-2 py-1 leading-[1.4] text-center overflow-hidden text-wrap  ${
-                      isCurrent ? "bg-blue-100 border border-blue-900" : "bg-white border border-gray-300"
-                    }`}
+                    key={hotel.hotel_id}
+                    position={[lat, lng]}
+                    icon={isCurrent ? highlightedIcon(hotel.actual_price) : priceIcon(hotel.actual_price)}
                   >
-                    <b>{hotel.name || "Hotel"}</b> <br />
-                    Address: {hotel.address}
-                  </div>
-                </Tooltip>
-              </Marker>
+                    <Tooltip direction="top"
+                      offset={L.point(0, -10)}
+                      opacity={1}
+                    >
+                      <div
+                        className={`text-sm w-70 h-auto overflow-hidden text-wrap  px-2 py-1 leading-[1.4]   ${isCurrent ? "bg-blue-100 border border-gray-400 rounded-sm" : "bg-white border rounded-sm border-gray-300"
+                          }`}
+                      >
+                        <div className="p-2">
+                          <h3 className="text-sm font-semibold text-wrap">{hotel.name || "Hotel"}</h3>
+
+                          <p className="text-gray-500 text-xs mt-1 text-wrap">
+                            {hotel.address || hotel.city || ""}
+                          </p>
+                          {/* Stars (agar hotel.stars aaye to show karein) */}
+                          {hotel.stars && (
+                            <div className="flex items-center text-yellow-500 text-sm mt-1">
+                              {Array.from({ length: Number(hotel.stars) }).map((_, i) => (
+                                <span key={i}>★</span>
+                              ))}
+                            </div>
+                          )}
+
+
+                          <p className="text-black font-bold mt-1 text-sm">
+                            ${hotel.actual_price}
+                          </p>
+                        </div>
+                      </div>
+                    </Tooltip>
+                  </Marker>
             );
           })}
           <CustomControls />
