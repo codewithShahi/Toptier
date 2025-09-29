@@ -2,6 +2,7 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
     // distDir: "build",
+     productionBrowserSourceMaps: true,
   async rewrites() {
 
     return [

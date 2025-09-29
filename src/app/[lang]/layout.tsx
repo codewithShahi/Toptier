@@ -7,7 +7,7 @@ import { Metadata } from 'next/types'
 
 export const generateMetadata = async (): Promise<Metadata> => {
   const data = await fetchAppData()
- 
+
   const meta_data = data?.data?.app
   if (!meta_data) {
     return {
@@ -16,8 +16,9 @@ export const generateMetadata = async (): Promise<Metadata> => {
     }
   }
 
-  const {  home_title, domain, meta_description, logo, favicon_img } = meta_data
-  // console.log('adfff', data, favicon)
+  const {  home_title, meta_description, favicon_img ,header_logo_img} = meta_data
+  // console.log('adfff', home_title,favicon_img,header_logo_img)
+  // console.log('apppp data object ----------------',meta_data)
 
   return {
     metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL!),
@@ -30,8 +31,8 @@ export const generateMetadata = async (): Promise<Metadata> => {
     },
     icons: {
       icon: favicon_img,
-      shortcut: logo,
-      apple: logo,
+      shortcut: header_logo_img,
+      apple: header_logo_img,
     },
     keywords: 'some keyword',
     title: home_title,
@@ -44,13 +45,13 @@ export const generateMetadata = async (): Promise<Metadata> => {
     referrer: 'origin-when-cross-origin',
     description: meta_description,
     openGraph: {
-      title: domain,
+      title: home_title,
       description: meta_description,
       url: process.env.NEXT_PUBLIC_SITE_URL!,
-      siteName: domain,
+      siteName: home_title,
       images: [
         {
-          url: logo,
+          url: header_logo_img,
           width: 1200,
           height: 630,
         },
