@@ -176,6 +176,7 @@ const FeaturedHotels: React.FC = () => {
           >
             <div className="relative overflow-hidden rounded-[55px] aspect-square">
               <Image
+                 fill
                 src={hotel.img}
                 alt={hotel.name}
                 className="w-full h-full object-cover"
@@ -183,9 +184,9 @@ const FeaturedHotels: React.FC = () => {
             </div>
             <div className="p-3">
               <h3
-                title={hotel.name}  
+                title={hotel.name}
                 className="text-xl font-extrabold text-gray-900 mb-2 pl-2
-             sm:text-2xl md:text-xl lg:text-2xl 
+             sm:text-2xl md:text-xl lg:text-2xl
              text-ellipsis overflow-hidden whitespace-nowrap"
                 style={{ fontFamily: "Urbanist, sans-serif" }}
               >
