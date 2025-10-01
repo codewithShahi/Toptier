@@ -119,6 +119,7 @@ const HotelCard = memo(function HotelCard({
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
             >
+              {/* path  */}
               <path
                 d="M8.03366 16.1192C7.89335 16.2197 7.72496 16.2738 7.55222 16.2738C7.37947 16.2738 7.21108 16.2197 7.07077 16.1192C2.91918 13.1661 -1.4869 7.09186 2.96732 2.7026C4.19014 1.50221 5.83693 0.829815 7.55222 0.830567C9.27166 0.830567 10.9215 1.50405 12.1371 2.70175C16.5913 7.091 12.1853 13.1644 8.03366 16.1192Z"
                 stroke={activeHotelId === hotel.hotel_id ? "white" : "#5B697E"}
@@ -183,22 +184,22 @@ const HotelCard = memo(function HotelCard({
         </div>
         {/* Buttons */}
         <div
-          className={`flex items-center gap-3 ${viewMode === "list" ? "mt-auto" : ""
+          className={`flex items-center gap-2 ${viewMode === "list" ? "mt-auto" : ""
             }`}
         >
           <button
-            className="flex-1 cursor-pointer bg-[#163D8C] hover:bg-gray-800 text-white font-medium py-2.5 px-3 text-sm sm:text-base md:text-sm lg:text-base rounded-full transition-colors duration-200 focus:outline-none"
+            className="flex-1 cursor-pointer bg-[#163D8C] hover:bg-gray-800 text-white font-medium py-3 md:py-2.5 px-3 text-sm sm:text-base md:text-sm lg:text-base rounded-full transition-colors duration-200 focus:outline-none"
             onClick={() => onBookNow && onBookNow(hotel)}
           >
             Book Now
           </button>
           <button
             onClick={toggleLike}
-            className="bg-[#EBEFF4] cursor-pointer hover:bg-gray-200 rounded-full transition-all duration-200 flex items-center justify-center flex-shrink-0 w-12 h-12 sm:w-14 sm:h-14 lg:w-11.5 lg:h-11.5"
+            className="bg-[#EBEFF4] cursor-pointer hover:bg-gray-200 rounded-full transition-all duration-200 flex items-center justify-center flex-shrink-0 w-12 h-12 sm:w-11 sm:h-11 lg:w-11.5 lg:h-11.5"
             aria-label={`${isFav && user ? "Unlike" : "Like"} ${hotel.name}`}
           >
             <svg
-              className="transition-colors duration-200 w-5 h-5 sm:w-6 sm:h-6 md:w-5 md:h-5 lg:w-4.5 lg:h-4.5"
+              className="transition-colors duration-200 w-5 h-5 sm:w-6 sm:h-6 md:w-4 md:h-4 lg:w-4.5 lg:h-4.5"
               viewBox="0 0 22 22"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"

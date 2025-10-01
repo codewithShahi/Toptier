@@ -44,10 +44,17 @@ const HotelSuggestionSlider = ({ hotels }: HotelSuggestionSliderProps) => {
           {hotels.map((hotel: any, index: number) => (
             <SwiperSlide
               key={`${hotel.hotel_id || "hotel"}-${index}`}
-              className="py-4  flex" // ✅ slide apne content ke hisaab se stretch hoga
+              className="py-4  flex" //
             >
               <div className="w-full h-full">
-                <HotelListingCard hotel={hotel} viewMode="map" />
+                <HotelListingCard
+  hotel={hotel}
+  viewMode="map"
+  activeHotelId=""
+  setActiveHotelId={() => {}}
+  onBookNow={() => {}}
+/>
+
               </div>
             </SwiperSlide>
           ))}
