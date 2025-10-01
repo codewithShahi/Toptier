@@ -95,7 +95,7 @@ function CustomControls() {
   const zoomOut = () => map.setZoom(map.getZoom() - 1);
   const locateUser = () => map.locate({ setView: true, maxZoom: 14 });
   return (
-    <div className="absolute top-22 right-5 flex flex-col gap-3 z-[1000]">
+    <div className="absolute top-22 right-5 flex flex-col gap-3 z-[500]">
       <button
         onClick={zoomIn}
         className="w-10 h-10 flex cursor-pointer items-center justify-center rounded-full bg-white shadow-md hover:bg-gray-100"
@@ -167,7 +167,7 @@ export default function HotelMap({ hotels, currentLocation }: HotelMapProps) {
     <div className="relative w-full h-[800px] rounded-2xl overflow-hidden">
       {/* Fullscreen toggle */}
       <div
-        className="absolute top-9 right-5 z-[1001] cursor-pointer"
+        className="absolute top-9 right-5 z-[30] cursor-pointer"
         onClick={() => setShowModal(true)}
         aria-label="Open fullscreen map"
       >
@@ -183,10 +183,10 @@ export default function HotelMap({ hotels, currentLocation }: HotelMapProps) {
 
       {/* FULLSCREEN MODAL */}
       {showModal && (
-        <div className="fixed inset-0 z-[2000] rounded-md bg-black bg-opacity-50 flex items-center justify-center">
+        <div className="fixed inset-0 z-[80] rounded-md bg-black bg-opacity-50 flex items-center justify-center">
           <div className="relative w-full h-full">
             <button
-              className="absolute top-11 cursor-pointer right-6 z-[3000] text-white bg-gray-600 rounded-full p-1.5"
+              className="absolute top-11 cursor-pointer right-6 z-[500] text-white bg-gray-600 rounded-full p-1.5"
               onClick={() => setShowModal(false)}
               aria-label="Close fullscreen map"
             >
