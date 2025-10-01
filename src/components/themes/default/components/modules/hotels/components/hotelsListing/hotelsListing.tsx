@@ -40,24 +40,24 @@ interface HotelSearchAppProps {
 export default function HotelSearchApp({ isLoading }: HotelSearchAppProps) {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [viewMode, setViewMode] = useState<'grid' | 'list' | 'map'>('grid');
+  const [activeHotelId, setActiveHotelId]=useState("")
+const [currentLocation, setCurrentLocation] = useState<{ lat: number; lon: number }>({
+  lat: 0,
+  lon: 0,
+});
+const onShowMaphandler=(hotel:any)=>{
+  if(!hotel) return
+  setCurrentLocation({
+    lat:hotel?.latitude,
+    lon:hotel?.longitude
+  })
+  setActiveHotelId(hotel?.hotel_id)
+// console.log('map icons is clicked for current loaction ', hotel)
+}
 
-  // ✅ NEW: State to manage active hotel in map view
-  const [activeHotelId, setActiveHotelId] = useState<string | null>(null);
-
-  const [currentLocation, setCurrentLocation] = useState<{ lat: number; lon: number }>({
-    lat: 0,
-    lon: 0,
-  });
-
-  const onShowMaphandler = (hotel: any) => {
-    if (!hotel) return;
-    setCurrentLocation({
-      lat: parseFloat(hotel?.latitude),
-      lon: parseFloat(hotel?.longitude),
-    });
-  };
-
-  const { allHotelsData: hotelsData, isloadingMore, listRef, detailsBookNowHandler } = useHotelSearch();
+  const { allHotelsData: hotelsData,
+      isloadingMore, listRef,
+        detailsBookNowHandler,isProcessingRef,loadMoreData } = useHotelSearch()
 
   const safeHotelsData = Array.isArray(hotelsData) && hotelsData?.length > 0
     ? hotelsData
@@ -79,7 +79,10 @@ export default function HotelSearchApp({ isLoading }: HotelSearchAppProps) {
     selectedStars,
     setSelectedStars,
     isFilterLoading
-  } = useHotelFilter({ hotelsData: safeHotelsData ?? [], isLoading });
+
+
+  } = useHotelFilter();
+
 
   const handlePriceChange = (index: number, value: number) => {
     const newRange: [number, number] = [...filters.priceRange];
@@ -96,8 +99,23 @@ export default function HotelSearchApp({ isLoading }: HotelSearchAppProps) {
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState("Rating");
   const dropdownRef = useRef<HTMLDivElement>(null);
+// ================ FOR LOAD MORE DATA ===============
+ useEffect(() => {
+    const handleScroll = () => {
+      if (isloadingMore || !hotelsData?.length || isProcessingRef.current) return;
 
-  // ✅ close on outside click
+      if (listRef.current) {
+        const rect = listRef.current.getBoundingClientRect();
+        if (rect.bottom <= window.innerHeight) {
+          loadMoreData(filters);
+        }
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [loadMoreData, isloadingMore, hotelsData?.length]);
+  // =========>>> close on outside click
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
@@ -107,8 +125,8 @@ export default function HotelSearchApp({ isLoading }: HotelSearchAppProps) {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
-
   const options = ["Rating", "Price Low to High", "Price High to Low", "Name"];
+
 
   return (
     <div className="min-h-screen bg-gray-50" ref={listRef}>
@@ -198,8 +216,10 @@ export default function HotelSearchApp({ isLoading }: HotelSearchAppProps) {
                 <PriceRangeSlider
                   min={priceRange.min}
                   max={priceRange.max}
-                  values={filters.priceRange}
-                  onChange={handlePriceChange}
+
+                  values={filters.priceRange}   // ← [min, max] tuple
+                  onChange={handlePriceChange}  // ← (index, value) => void
+
                 />
               </div>
 
@@ -408,6 +428,9 @@ export default function HotelSearchApp({ isLoading }: HotelSearchAppProps) {
                     hotel={hotel}
                     viewMode={viewMode}
                     onBookNow={(hotel: any) => detailsBookNowHandler(hotel)}
+                     setActiveHotelId={setActiveHotelId}
+                        activeHotelId={activeHotelId}
+
                   />
                 ))}
               </div>
@@ -431,9 +454,9 @@ export default function HotelSearchApp({ isLoading }: HotelSearchAppProps) {
                         viewMode={viewMode}
                         onBookNow={(hotel: any) => detailsBookNowHandler(hotel)}
                         onMapShow={(hotel: any) => onShowMaphandler(hotel)}
-                        // ✅ Pass active state to child
-                        activeHotelId={activeHotelId}
+                        // //  Pass active state to child
                         setActiveHotelId={setActiveHotelId}
+                        activeHotelId={activeHotelId}
                       />
                     ))}
                   </div>

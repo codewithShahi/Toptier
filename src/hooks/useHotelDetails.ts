@@ -14,7 +14,6 @@ export interface HotelForm {
   nationality: string;
   currency: string; // Add this line
 }
-
 // Validation schema
 export const hotelSearchSchema = z
   .object({
@@ -40,7 +39,6 @@ interface UseHotelDetailsOptions {
   // ✅ NEW: for refetching on same page
   onSearchRefetch?: (formData: HotelForm) => void;
 }
-
 export const useHotelDetails = ({
   initialCheckin,
   initialCheckout,
@@ -56,7 +54,6 @@ export const useHotelDetails = ({
   const formatDate = (date: Date) => {
     return date.toISOString().split("T")[0];
   };
-
   const today = new Date();
   const defaultCheckin = initialCheckin || formatDate(today);
   const tomorrow = new Date();
@@ -79,6 +76,7 @@ export const useHotelDetails = ({
   const guestsDropdownRef = useRef<HTMLDivElement | null>(null);
   const totalGuests = form.adults + form.children;
   const isFormValid = Object.keys(errors).length === 0;
+  const [seletedRoom, setSelectedRoom]=useState<any>({})
 
   const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target;
@@ -138,16 +136,30 @@ export const useHotelDetails = ({
     setIsSearching(true);
     try {
       localStorage.setItem('hotelSearchForm', JSON.stringify(form));
+    // Get currentHotel from localStorage
+    const currentHotelString = localStorage.getItem("currentHotel");
+    if (!currentHotelString) {
+      throw new Error("No current hotel found in storage");
+    }
 
-      // ✅ NEW: Use refetch mode if provided
+    const currentHotel = JSON.parse(currentHotelString);
+
+    // Get nationality from form
+    const nationality = form.nationality;
+
+    // Generate slug
+    const slugName = currentHotel.name.toLowerCase().replace(/\s+/g, "-");
+
+    // Build SAME URL as detailsBookNowHandler
+    const url = `/hotelDetails/${currentHotel.hotel_id}/${slugName}/${form.checkin}/${form.checkout}/${form.rooms}/${form.adults}/${form.children}/${nationality}/${currentHotel.supplier_name}`;
+      // NEW: Use refetch mode if provided
       if (onSearchRefetch) {
         onSearchRefetch(form);
         return { success: true, data: form };
       }
-
       // Fallback to normal search flow
       onSearchSuccess?.(form);
-      router.push('/hotel_search');
+      router.push(url);
       return { success: true, data: form };
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'An unknown error occurred';
@@ -168,7 +180,11 @@ export const useHotelDetails = ({
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [closeGuestsDropdown]);
-
+//=============== HANDLE RESERVE HOTEL -=======================
+const handleReserveRoom=(room : any)=>{
+  console.log('reserverbooking dataa===================',room)
+  setSelectedRoom(room)
+}
   const resetForm = useCallback(() => {
     const today = new Date();
     const tomorrow = new Date();
@@ -207,5 +223,6 @@ export const useHotelDetails = ({
     setExternalForm,
     validateForm,
     formatDate,
+    handleReserveRoom,seletedRoom,
   };
 };
