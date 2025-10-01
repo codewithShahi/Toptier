@@ -1,9 +1,9 @@
 import React from 'react'
 import { getDictionary } from '@src/get-dictionary'
-// import { Icon } from '@iconify/react'
+import { Icon } from '@iconify/react'
 // import { HomeWrapper } from '@components/themes/default'
 import TransitionLayout from '@src/utils/pageTransition'
-// import HomeWrapper from '@components/themes/default/components/home/homeWrapper/homeWrapper'
+import HomeWrapper from '@components/themes/default/components/home/homeWrapper/homeWrapper'
 import { HotelDetailsMain } from '@components/themes/default'
 
 export default async function Page({ params }: {
@@ -11,11 +11,12 @@ export default async function Page({ params }: {
 }) {
   const { lang } = await params
   const dict = await getDictionary(lang)
+ console.log('sluggggggggggg', params)
   return (
     // <div>home page</div>
     <TransitionLayout>
       <div className="flex  flex-col bg-white dark:bg-gray-900  dark:text-gray-50 " >
-         <HotelDetailsMain/>
+       <h1>invoce page</h1>
       </div>
     </TransitionLayout>
   )

@@ -1,6 +1,6 @@
 "use client";
 
-import Alert from "@components/core/alert";
+// import Alert from "@components/core/alert";
 import { Icon } from "@iconify/react";
 import { useAppSelector } from "@lib/redux/store";
 import { subscribe_to_newsLatter } from "@src/actions";

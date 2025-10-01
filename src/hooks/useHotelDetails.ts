@@ -3,6 +3,9 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { z } from 'zod';
 import { useRouter } from 'next/navigation';
+import useHotelSearch from './useHotelSearch';
+import { useAppDispatch } from '@lib/redux/store';
+import { setSeletecRoom } from '@lib/redux/base';
 
 // Define types
 export interface HotelForm {
@@ -50,7 +53,9 @@ export const useHotelDetails = ({
 
 }: UseHotelDetailsOptions = {}) => {
   const router = useRouter();
+ const dispatch = useAppDispatch();
 
+  const {setSelectedRoom}=useHotelSearch()
   const formatDate = (date: Date) => {
     return date.toISOString().split("T")[0];
   };
@@ -76,7 +81,7 @@ export const useHotelDetails = ({
   const guestsDropdownRef = useRef<HTMLDivElement | null>(null);
   const totalGuests = form.adults + form.children;
   const isFormValid = Object.keys(errors).length === 0;
-  const [seletedRoom, setSelectedRoom]=useState<any>({})
+
 
   const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target;
@@ -181,9 +186,15 @@ export const useHotelDetails = ({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [closeGuestsDropdown]);
 //=============== HANDLE RESERVE HOTEL -=======================
-const handleReserveRoom=(room : any)=>{
-  console.log('reserverbooking dataa===================',room)
-  setSelectedRoom(room)
+
+const handleReserveRoom=(room : any,option:any,hotelDetails:any)=>{
+  const roomData={
+    hotelDetails:hotelDetails,
+    room:room,
+    option:option
+  }
+ dispatch(setSeletecRoom(roomData));
+
 }
   const resetForm = useCallback(() => {
     const today = new Date();
@@ -223,6 +234,6 @@ const handleReserveRoom=(room : any)=>{
     setExternalForm,
     validateForm,
     formatDate,
-    handleReserveRoom,seletedRoom,
+    handleReserveRoom
   };
 };

@@ -1,7 +1,7 @@
 import React from "react";
 
-import useLocale from "@hooks/useLocale";
-import useDictionary from "@hooks/useDict";
+// import useLocale from "@hooks/useLocale";
+// import useDictionary from "@hooks/useDict";
 import Image from "next/image";
 
 export interface BookingData {
@@ -20,9 +20,9 @@ export interface BookingData {
   currency: string;
 }
 
-interface FlightBookingCardProps {
-  data: Record<string, any>; // or: data: any;
-}
+// interface FlightBookingCardProps {
+//   data: Record<string, any>; // or: data: any;
+// }
 
 const HotelBookingCard: React.FC<any> = ({ data }) => {
 // console.log("hotel data", data ?? "No data received");

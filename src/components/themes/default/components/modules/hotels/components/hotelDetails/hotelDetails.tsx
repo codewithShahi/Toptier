@@ -1,5 +1,5 @@
 "use client";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback,  useState } from "react";
 
 import { useParams,useRouter } from "next/navigation";
 
@@ -9,10 +9,10 @@ import HotelDetailsSearch from "./hotelDetailsSearch";
 import SwiperImageSlider from "./imageSlider";
 import { Icon } from "@iconify/react";
 import { RoomCard } from "./roomCard";
-import BrandStories from "./brandStories";
+// import BrandStories from "./brandStories";
 import { AccordionInfoCard } from "@components/core/accordians/accordian";
 import { useAppSelector } from "@lib/redux/store";
-import { HotelListingCard } from "../hotelsListing";
+// import { HotelListingCard } from "../hotelsListing";
 import { Skeleton } from "@components/core/skeleton";
 
 
@@ -22,19 +22,19 @@ import Spinner from "@components/core/Spinner";
 
 
 
-interface HotelDetailsPayload {
-  hotel_id: string;
-  checkin: string;
-  checkout: string;
-  rooms: number;
-  adults: number;
-  childs: number;
-  child_age: string;
-  nationality: string;
-  language: string;
-  currency: string;
-  supplier_name: string;
-}
+// interface HotelDetailsPayload {
+//   hotel_id: string;
+//   checkin: string;
+//   checkout: string;
+//   rooms: number;
+//   adults: number;
+//   childs: number;
+//   child_age: string;
+//   nationality: string;
+//   language: string;
+//   currency: string;
+//   supplier_name: string;
+// }
 
 const HotelsDetails = () => {
   const params = useParams();
@@ -63,14 +63,14 @@ const HotelsDetails = () => {
     nationality: initialNationality,
   });
 
-  // ✅ Helper to update URL
+  //  Helper to update URL
   const updateUrl = useCallback((params: typeof searchParams, hotelName: string) => {
     const slugName = hotelName.toLowerCase().replace(/\s+/g, "-");
     const newUrl = `/hotelDetails/${hotel_id}/${slugName}/${params.checkin}/${params.checkout}/${params.rooms}/${params.adults}/${params.children}/${params.nationality}/${supplier_name}`;
 
     router.replace(newUrl);
   }, [hotel_id, supplier_name, router]);
-  // ✅ Use your hook with refetch mode
+  //  Use your hook with refetch mode
   const {
     form,
     errors,
@@ -81,7 +81,7 @@ const HotelsDetails = () => {
     handleChange,
     updateForm,
     toggleGuestsDropdown,
-    onSubmit: handleSearchSubmit,
+    onSubmit: handleSearchSubmit,handleReserveRoom
   } = useHotelDetails({
     initialCheckin,
     initialCheckout,
@@ -95,17 +95,17 @@ const HotelsDetails = () => {
         children: newForm.children,
         nationality: newForm.nationality,
       };
-      // ✅ 1. Update local state to trigger refetch
+      //  1. Update local state to trigger refetch
       setSearchParams(newParams);
 
-      // ✅ 2. Update URL (only if hotel name is available)
+      //  2. Update URL (only if hotel name is available)
       if (hotelDetails?.name) {
         updateUrl(newParams, hotelDetails.name);
       }
       // If hotelDetails isn't loaded yet, URL will update via useEffect below
     },
   });
-  // ✅ Fetch hotel details based on searchParams
+  //  Fetch hotel details based on searchParams
   const { data: hotelDetails, isLoading } = useQuery({
     queryKey: ["hotel-details", { hotel_id, ...searchParams, supplier_name }],
     queryFn: () =>
@@ -127,7 +127,7 @@ const HotelsDetails = () => {
   });
   //  console.log("new form ", form);
   const [isModalOpen, setIsModalOpen] = React.useState(false);
-  // console.log("hotelDetails", form);
+  console.log("hotelDetails", hotelDetails);
   const { img } = hotelDetails || {};
 
   const amenityIcons: Record<string, string> = {
@@ -369,7 +369,7 @@ const HotelsDetails = () => {
                   getAmenityIcon={getAmenityIcon}
                   onReserve={(room, option) => {
                     //  This runs in parent when Reserit ve is clicked
-
+                   handleReserveRoom(room , option,hotelDetails)
 
                     // Example: Navigate to booking page
                     router.push(`/hotel/booking`);

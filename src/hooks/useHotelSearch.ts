@@ -5,7 +5,7 @@ import { fetchHotelsLocations, hotel_search, hotel_search_multi } from "@src/act
 import { z } from "zod";
 import { useAppSelector } from "@lib/redux/store";
 import { usePathname, useRouter } from "next/navigation";
-import { setHotels } from "@lib/redux/base";
+import { setHotels, setSeletecHotel } from "@lib/redux/base";
 import { useDispatch } from "react-redux";
 
 // Schema and interfaces remain the same...
@@ -111,10 +111,12 @@ const hotelSearch_path = usePathname();
   const [locationError, setLocationError] = useState("");
   const [activeIndex, setActiveIndex] = useState(-1);
   const [isloadingMore, setIsLoadingMore] = useState(false);
+  const [selectedHotel, setSelectedHotel]=useState<any>({})
+  const [selectedRomm,setSelectedRoom]=useState<any>({})
   // FIX 1: Add separate loading states
   const [isSearching, setIsSearching] = useState(false);
   const [isInitialLoading, setIsInitialLoading] = useState(false);
-
+ console.log('use hotel search ',selectedHotel,selectedRomm)
   const listRef = useRef<HTMLDivElement | null>(null);
   const [page, setPage] = useState(1);
 
@@ -427,7 +429,7 @@ const loadMoreData = useCallback(
 // DETAISL BOOK NOW HANDLER
 const detailsBookNowHandler = async (hotel: any) => {
   // if (!hotel?.hotel_id || !hotel?.name || !hotel?.supplier_name) return;
-
+ dispatch(setSeletecHotel({}));
   //  store full hotel object in localStorage
   localStorage.setItem("currentHotel", JSON.stringify(hotel));
   const selectedNationality=localStorage.getItem('hotelSearchForm')
@@ -436,13 +438,13 @@ const detailsBookNowHandler = async (hotel: any) => {
   let nationality;
 if (selectedNationality) {
   const parsedData = JSON.parse(selectedNationality); // now it's an object
-
    nationality = parsedData.nationality; // safely access nationality
   // console.log("Nationality:", nationality);
 }
-  //  construct URL
-  const url = `/hotelDetails/${hotel.hotel_id}/${slugName}/${form.checkin}/${form.checkout}/${form.rooms}/${form.adults}/${form.children}/${nationality}/${hotel.supplier_name}`;
 
+  //  construct URL
+  const url = `/hotelDetails/${hotel.hotel_id}/${slugName}/${form.checkin}/${form.checkout}/${form.rooms}/${form.adults}/${form.children}/${nationality}`;
+ dispatch(setSeletecHotel(hotel));
   //  navigate
   router.push(url);
 
@@ -558,6 +560,9 @@ if (selectedNationality) {
     setIsSearching,
     callAllModulesAPI, // Export for use in filters
     isProcessingRef,
+    setSelectedRoom,
+    selectedHotel,
+    selectedRomm,
 
     // Event handlers
     handleChange,

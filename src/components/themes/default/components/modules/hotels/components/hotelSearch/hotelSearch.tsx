@@ -38,8 +38,6 @@ export default function HotelSearch() {
     handleChange,
     handleSelectLocation,
     handleDestinationKeyDown,
-    handleSubmit,
-    loadMoreData,
     updateForm,
     setIsSearching,
   } = useHotelSearch();
@@ -377,7 +375,7 @@ router.push(url);
                       </label>
 
                       <Dropdown
-                        key={form.nationality} // ✅ Force re-render when nationality changes
+                        key={form.nationality} 
                         label={
                           <div className="flex items-center gap-3">
                             <svg width="16" height="18" viewBox="0 0 16 18" fill="none" xmlns="http://www.w3.org/2000/svg">

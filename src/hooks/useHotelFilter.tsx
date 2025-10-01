@@ -2,8 +2,10 @@ import { useState, useMemo, useCallback, useEffect } from "react";
 import useHotelSearch from "./useHotelSearch";
 import { setHotels } from "@lib/redux/base";
 import { useDispatch } from "react-redux";
-import { QueryClient, useQueryClient } from "@tanstack/react-query";
+import {  useQueryClient } from "@tanstack/react-query";
 import { hotel_search_multi } from "@src/actions";
+
+
 interface HotelData {
   hotel_id: string;
   name: string;
@@ -22,6 +24,7 @@ interface HotelData {
   supplier_name: string;
 }
 
+
 interface FilterState {
   priceRange: [number, number];
   selectedStars: number[];
@@ -32,7 +35,7 @@ interface FilterState {
 }
 
 interface UseHotelFilterProps {
-  hotelsData: HotelData[];
+  hotelsData: any[];
   isLoading?: boolean;
   // formData?: any;
   // setFormData?: (data: any) => void;

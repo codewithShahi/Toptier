@@ -6,6 +6,7 @@ import { addToFavourite } from "@src/actions"; // :point_left: import API
 import { useUser } from "@hooks/use-user";
 import { toast } from "react-toastify";
 import Image from "next/image";
+
 interface Hotel {
   id: string;
   name: string;

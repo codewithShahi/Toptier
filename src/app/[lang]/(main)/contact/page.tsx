@@ -1,10 +1,10 @@
 import React from 'react'
 import { getDictionary } from '@src/get-dictionary'
-import { Icon } from '@iconify/react'
+// import { Icon } from '@iconify/react'
 // import { HomeWrapper } from '@components/themes/default'
 import TransitionLayout from '@src/utils/pageTransition'
-import HomeWrapper from '@components/themes/default/components/home/homeWrapper/homeWrapper'
-import { HotelDetails } from '@components/themes/default'
+// import HomeWrapper from '@components/themes/default/components/home/homeWrapper/homeWrapper'
+// import { HotelDetails } from '@components/themes/default'
 
 export default async function Page({ params }: {
   params: Promise<{ lang: 'en' | 'ar' }>

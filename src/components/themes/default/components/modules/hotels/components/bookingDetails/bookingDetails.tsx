@@ -1,13 +1,16 @@
 // app/(main)/booking_details/page.tsx
 'use client';
 
-import { useState } from 'react';
+// import { useState } from 'react';
 import BookingForm from './bookingForm';
+import HotelInvoice from './bookingInvoice';
+import { useAppSelector } from '@lib/redux/store';
 
 export default function BookingDetails() {
-  const currenthotel=localStorage.getItem('hotelSearchForm')
-  console.log('currnt hotel ',currenthotel)
-  // console.log('')
+    const selectedRoom = useAppSelector((state) => state.root.selectedRoom);
+  const curruntBooking = localStorage.getItem('hotelSearchForm');
+  const saveBookingData = curruntBooking ? JSON.parse(curruntBooking) : {};
+  console.log()
   return (
     <section className="bg-[#F9FAFB] w-full">
       <div className="min-h-screen w-full max-w-[1200px] mx-auto justify-between flex flex-col md:flex-row lg:flex-row p-4 md:p-6 lg:p-12 mb-6 gap-8">
@@ -97,5 +100,6 @@ export default function BookingDetails() {
         </div>
       </div>
     </section>
+
   );
 }

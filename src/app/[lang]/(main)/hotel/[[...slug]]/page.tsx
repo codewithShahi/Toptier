@@ -4,8 +4,8 @@ import { getDictionary } from '@src/get-dictionary'
 // import { HomeWrapper } from '@components/themes/default'
 import TransitionLayout from '@src/utils/pageTransition'
 // import HomeWrapper from '@components/themes/default/components/home/homeWrapper/homeWrapper'
-import { HotelDetailsMain ,HotelsListingMain} from '@components/themes/default'
-import { hotel_search } from '@src/actions'
+import { HotelsListingMain} from '@components/themes/default'
+// import { hotel_search } from '@src/actions'
 
 export default async function Page({ params }: {
   params: Promise<{ lang: 'en' | 'ar' ,slug: string[]}>

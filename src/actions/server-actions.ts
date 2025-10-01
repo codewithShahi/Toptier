@@ -2,7 +2,7 @@
 import { createSession, getSession, logout } from "@lib/session";
 import { baseUrl, api_key } from "./actions";
 import { decodeBearerToken } from "@src/utils/decodeToken";
-import { cookies, headers } from "next/headers";
+import { headers } from "next/headers";
 
 
 // console.log("base",baseUrl);
@@ -577,7 +577,7 @@ export const hotel_search_multi = async (
 
 
 
-console.log('multi search result ', results)
+// console.log('multi search result ', results)
   const successful = results
   .map((result) => {
     if (result.status === "fulfilled") {
@@ -654,7 +654,48 @@ export const hotel_details = async (payload: HotelDetailsPayload) => {
 
 
 // ================ COMPLETE BOOKING API ======================
-interface BookingPayload {
+interface RoomData {
+  id: string;
+  name: string;
+  price: string;
+  currency: string;
+}
+
+interface BookingData {
+  ResultId: string;
+  TokenId: string;
+  TrackingId: string;
+}
+
+interface Guest {
+  traveller_type: "adults" | "child";
+  title: string;
+  first_name: string;
+  last_name: string;
+  nationality: string;
+  dob_day: string;
+  dob_month: string;
+  dob_year: string;
+  passport?: string;
+  passport_day?: string;
+  passport_month?: string;
+  passport_year?: string;
+  passport_issuance_day?: string;
+  passport_issuance_month?: string;
+  passport_issuance_year?: string;
+}
+
+interface UserData {
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone: string;
+  address: string;
+  nationality: string;
+  country_code: string;
+}
+
+export interface BookingPayload {
   price_original: number;
   price_markup: number;
   vat: number;
@@ -674,7 +715,7 @@ interface BookingPayload {
   hotel_email: string;
   hotel_website: string;
   hotel_address: string;
-  room_data: any[]; // array of objects
+  room_data: RoomData[];
   location: string;
   location_cords: string;
   hotel_img: string;
@@ -685,14 +726,15 @@ interface BookingPayload {
   child_ages: string | number;
   currency_original: string;
   currency_markup: string;
-  booking_data: Record<string, any>;
+  booking_data: BookingData;
   supplier: string;
   user_id?: string;
-  guest: any[]; // array of traveller info
+  guest: Guest[];
   nationality: string;
   payment_gateway?: string;
-  user_data: Record<string, any>;
+  user_data: UserData;
 }
+
 
 export const hotel_booking = async (payload: BookingPayload) => {
   try {
@@ -749,7 +791,7 @@ export const hotel_booking = async (payload: BookingPayload) => {
     });
 
     const data = await response.json().catch(() => null);
-    // console.log("hotel_booking_result", data);
+    console.log("hotel_booking_result", data);
 
     if (!response.ok || data?.status === false) {
       return { error: data?.message || "Something went wrong" };
