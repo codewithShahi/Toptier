@@ -10,6 +10,7 @@ export default async function Page({ params }: {
   const { lang } = await params
   const dict = await getDictionary(lang)
 
+  // const
   return (
     // <div>home page</div>
     <TransitionLayout>
