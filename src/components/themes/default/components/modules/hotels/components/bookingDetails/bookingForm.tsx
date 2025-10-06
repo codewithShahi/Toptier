@@ -1,8 +1,6 @@
 // components/booking/BookingForm.tsx
 'use client';
-
-// ============>>> IMPORTS <<<<================
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm, Controller, useFieldArray } from 'react-hook-form';
 import { z } from 'zod';
@@ -12,20 +10,20 @@ import { useAppSelector } from '@lib/redux/store';
 import { hotel_booking } from '@src/actions';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
+import Select from '@components/core/select';
+import { AccordionInfoCard } from '@components/core/accordians/accordian';
 
-// ============>>> VALIDATION SCHEMA <<<<================
 const bookingSchema = z.object({
   firstName: z.string().min(1, 'First name is required'),
   lastName: z.string().min(1, 'Last name is required'),
   email: z.string().email('Invalid email address'),
-  nationality: z.string().min(1, 'Nationality is required'), // read-only
-  currentCountry: z.string().min(1, 'Current country is required'), // user-selectable (ISO code)
+  nationality: z.string().min(1, 'Nationality is required'),
+  currentCountry: z.string().min(1, 'Current country is required'),
   phoneCountryCode: z.string().min(1, 'Country code is required'),
   phoneNumber: z
     .string()
     .min(8, 'Phone number is required')
     .regex(/^\+?[1-9]\d{7,14}$/, 'Enter a valid international phone number'),
-
   travellers: z
     .array(
       z.object({
@@ -35,24 +33,20 @@ const bookingSchema = z.object({
       })
     )
     .min(1, 'At least one traveller is required'),
-
   paymentMethod: z.string().min(1, 'Please select a payment method'),
-
   acceptPolicy: z
     .boolean()
     .refine((val) => val === true, {
       message: 'You must accept the cancellation policy',
     }),
 });
-
 export type BookingFormValues = z.infer<typeof bookingSchema>;
 
-// ============>>> DEFAULT FORM VALUES <<<<================
 const defaultValues: BookingFormValues = {
   firstName: '',
   lastName: '',
   email: '',
-  nationality: '', // will be set from session/props
+  nationality: '',
   currentCountry: '',
   phoneCountryCode: '',
   phoneNumber: '',
@@ -61,13 +55,11 @@ const defaultValues: BookingFormValues = {
   acceptPolicy: false,
 };
 
-// ============>>> TYPES <<<<================
 interface CountryOption {
-  iso: string; // e.g., "PK"
-  name: string; // e.g., "Pakistan"
-  phonecode: string; // e.g., "92"
+  iso: string;
+  name: string;
+  phonecode: string;
 }
-
 type RawCountry = {
   iso?: string;
   code?: string;
@@ -76,22 +68,19 @@ type RawCountry = {
   phonecode?: number | string;
 };
 
-// ============>>> MAIN COMPONENT <<<<================
 export default function BookingForm() {
-  // ============>>> HOOKS <<<<================
   const {
     control,
     handleSubmit,
     formState: { errors },
     setValue,
+    watch,
   } = useForm<BookingFormValues>({
     defaultValues,
     resolver: zodResolver(bookingSchema),
   });
 
-
   const { fields } = useFieldArray({
-
     control,
     name: 'travellers',
   });
@@ -100,26 +89,16 @@ export default function BookingForm() {
   const { payment_gateways } = useAppSelector((state) => state.appData?.data);
   const selectedHotel = useAppSelector((state) => state.root.selectedHotel);
   const selectedRoom = useAppSelector((state) => state.root.selectedRoom);
-
   const router = useRouter();
-
-  // ============>>> STATE DECLARATIONS <<<<================
-  const [isCurrentCountryOpen, setIsCurrentCountryOpen] = useState(false);
-  const [isPhoneCodeOpen, setIsPhoneCodeOpen] = useState(false);
+  const { hotelDetails } = selectedRoom || {};
   const [isTitleOpen, setIsTitleOpen] = useState<number | null>(null);
-
-  const currentCountryRef = useRef<HTMLDivElement>(null);
-  const phoneCodeRef = useRef<HTMLDivElement>(null);
   const titleRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const titles = ['Mr', 'Mrs', 'Ms', 'Dr'];
 
-  // ============>>> DERIVED DATA FROM STORE / LOCAL STORAGE <<<<================
   const curruntBooking = localStorage.getItem('hotelSearchForm');
-
   const saveBookingData = curruntBooking ? JSON.parse(curruntBooking) : {};
   const { adults = 0, children = 0, nationality, checkin, checkout } = saveBookingData;
-
   const travelers = adults + children;
-
   const { price, markup_price, id: option_id, currency: booking_currency } = selectedRoom?.option || {};
   const {
     id: hotel_id,
@@ -135,7 +114,6 @@ export default function BookingForm() {
     hotel_website,
   } = selectedRoom?.hotelDetails || {};
 
-  // ============>>> ACTIVE PAYMENT METHODS <<<<================
   const activePayments = payment_gateways
     ?.filter((p: any) => p.status)
     ?.map((p: any) => ({
@@ -145,24 +123,45 @@ export default function BookingForm() {
       icon: p.icon || null,
     })) || [];
 
-  // ============>>> COUNTRY LIST TRANSFORMATION <<<<================
   const excludedCodes = ['0', '381', '599'];
-  const countryList: CountryOption[] = (rawCountries || [])
-    .map((c: RawCountry) => ({
-      iso: c.iso || c.code,
-      name: c.nicename || c.name,
-      phonecode: c.phonecode?.toString() || '0',
-    }))
-    .filter((c: any) => !excludedCodes.includes(c.phonecode));
+  const countryList: CountryOption[] = Array.isArray(rawCountries)
+    ? rawCountries
+        .map((c: RawCountry) => ({
+          iso: c.iso || c.code || '',
+          name: c.nicename || c.name || '',
+          phonecode: c.phonecode?.toString() || '0',
+        }))
+        .filter((c) => c.iso && c.name && !excludedCodes.includes(c.phonecode))
+    : [];
 
-  // ============>>> EFFECTS <<<<================
+  const countryOptions = countryList.map((c) => ({
+    value: c.iso,
+    label: c.name,
+    iso: c.iso,
+    phonecode: c.phonecode,
+  }));
 
-  // Set nationality and initialize travellers on mount
+  const phoneCodeOptions = countryList.map((c) => ({
+    value: `+${c.phonecode}`,
+    label: `+${c.phonecode}`, // ← searchable by country name
+    iso: c.iso,
+    phonecode:  `${c.phonecode}`,
+  }));
+
+  const currentCountry = watch('currentCountry');
+  useEffect(() => {
+    if (currentCountry) {
+      const country = countryList.find(c => c.iso === currentCountry);
+      if (country) {
+        setValue('phoneCountryCode', `+${country.phonecode}`);
+      }
+    }
+  }, [currentCountry, countryList, setValue]);
+
   useEffect(() => {
     if (nationality) {
       setValue('nationality', nationality);
     }
-
     if (travelers > 0) {
       const initialTravellers = Array.from({ length: travelers }, () => ({
         title: 'Mr',
@@ -173,49 +172,22 @@ export default function BookingForm() {
     }
   }, [setValue, nationality, travelers]);
 
-  // Close dropdowns on outside click
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (currentCountryRef.current && !currentCountryRef.current.contains(e.target as Node)) {
-        setIsCurrentCountryOpen(false);
-      }
-      if (phoneCodeRef.current && !phoneCodeRef.current.contains(e.target as Node)) {
-        setIsPhoneCodeOpen(false);
-      }
-      titleRefs.current.forEach((ref) => {
-        if (ref && !ref.contains(e.target as Node)) {
-          setIsTitleOpen(null);
-        }
-      });
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
-
-  // ============>>> CONSTANTS <<<<================
-  const titles = ['Mr', 'Mrs', 'Ms', 'Dr'];
-
-  // ============>>> MUTATION: BOOK HOTEL <<<<================
-  const { mutate: bookHotel, isPending, isError } = useMutation({
+  const { mutate: bookHotel, isPending } = useMutation({
     mutationFn: async (bookingPayload: any) => {
       const response = await hotel_booking(bookingPayload);
       return response;
     },
     onSuccess: (data) => {
-      console.log('Booking successful:', data);
-      router.push(`/hotel/Invoice/${data.booking_ref_no}`);
+      router.push(`/hotel/invoice/${data.booking_ref_no}`);
+
     },
     onError: (error) => {
       console.error('Booking failed:', error);
-      // TODO: Show toast or error banner
     },
   });
 
-  // ============>>> HANDLE SUBMIT <<<<================
   const onSubmit = async (data: BookingFormValues) => {
     if (!data) return;
-
     const {
       firstName,
       lastName,
@@ -228,7 +200,6 @@ export default function BookingForm() {
       paymentMethod,
     } = data;
 
-    // Map form travellers to API guest format
     const guestPayload = (travellers || []).map((traveller: any, index: number) => ({
       traveller_type: index < adults ? 'adults' : 'childs',
       title: traveller.title || '',
@@ -247,7 +218,6 @@ export default function BookingForm() {
       passport_issuance_year: '',
     }));
 
-    // Construct full booking payload
     const bookingPayload = {
       price_original: price || 0,
       price_markup: markup_price || 0,
@@ -306,11 +276,12 @@ export default function BookingForm() {
         country_code: nationality || 'pk',
       },
     };
-
     bookHotel(bookingPayload);
   };
 
-  // ============>>> RENDER <<<<================
+  // Helper to get country by ISO
+  const getCountryByIso = (iso: string) => countryList.find(c => c.iso === iso);
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
       {/* Personal Information */}
@@ -384,7 +355,7 @@ export default function BookingForm() {
           {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>}
         </div>
 
-        {/* Nationality (read-only) */}
+        {/* Nationality (read-only with flag) */}
         <div className="w-full max-w-2xl">
           <label htmlFor="nationality" className="block text-base font-medium text-[#5B697E] mb-2">
             Nationality
@@ -392,77 +363,77 @@ export default function BookingForm() {
           <Controller
             name="nationality"
             control={control}
-            render={({ field }) => (
-              <input
-                {...field}
-                id="nationality"
-                type="text"
-                readOnly
-                className="block border border-gray-300 rounded-xl px-3 py-4 text-base w-full outline-none bg-gray-100 cursor-not-allowed"
-              />
-            )}
+            render={({ field }) => {
+              const country = getCountryByIso(field.value);
+              return (
+                <div className="block border border-gray-300 rounded-xl px-3 py-4 text-base w-full outline-none bg-gray-100 cursor-not-allowed flex items-center gap-2">
+                  {country && (
+                    <Icon icon={`flagpack:${country.iso.toLowerCase()}`} width="24" height="18" />
+                  )}
+                  <span>{country?.name || field.value}</span>
+                </div>
+              );
+            }}
           />
           {errors.nationality && <p className="text-red-500 text-sm mt-1">{errors.nationality.message}</p>}
         </div>
 
-        {/* Current Country (user-selectable dropdown) */}
+        {/* Current Country - Custom Select with flag */}
         <div className="w-full max-w-2xl">
           <label htmlFor="currentCountry" className="block text-base font-medium text-[#5B697E] mb-2">
             Current Country
           </label>
-          <Controller
-            name="currentCountry"
-            control={control}
-            render={({ field }) => (
-              <div className="relative" ref={currentCountryRef}>
-                <button
-                  type="button"
-                  onClick={() => setIsCurrentCountryOpen(!isCurrentCountryOpen)}
-                  className="flex items-center justify-between w-full px-3 py-4 border border-gray-300 rounded-xl text-base focus:outline-none focus:border-[#163C8C]"
-                >
-                  {field.value ? (
-                    <div className="flex items-center gap-2">
-                      <Icon icon={`flagpack:${field.value.toLowerCase()}`} width="24" height="18" />
-                      <span>{countryList.find((c) => c.iso === field.value)?.name || field.value}</span>
-                    </div>
-                  ) : (
-                    'Select Country'
-                  )}
-                  <Icon
-                    icon="material-symbols:keyboard-arrow-up"
-                    width="24"
-                    height="24"
-                    className={`h-5 w-5 text-gray-500 transition-transform ${
-                      isCurrentCountryOpen ? 'rotate-180' : ''
-                    }`}
-                  />
-                </button>
-                {isCurrentCountryOpen && (
-                  <div className="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-lg shadow max-h-60 overflow-y-auto">
-                    {countryList.map((country, index) => (
-                      <div
-                        key={index}
-                        onClick={() => {
-                          field.onChange(country.iso);
-                          setIsCurrentCountryOpen(false);
-                        }}
-                        className="px-4 py-2 flex items-center gap-3 hover:bg-gray-100 cursor-pointer"
-                      >
-                        <Icon icon={`flagpack:${country.iso.toLowerCase()}`} width="24" height="18" />
-                        <span>{country.name}</span>
-                        <span className="text-gray-500 text-sm">+{country.phonecode}</span>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            )}
-          />
+        <Controller
+  name="currentCountry"
+  control={control}
+  render={({ field }) => (
+    <Select
+      {...field}
+      options={countryOptions}
+      placeholder="Select Country"
+      isSearchable
+      onChange={(option: any) => field.onChange(option?.value || '')}
+      value={countryOptions.find(opt => opt.value === field.value) || null}
+      className="w-full"
+      classNames={{
+        control: () =>
+          'border border-gray-300 rounded-xl flex items-center py-2 text-base focus:ring-1 focus:ring-[#163C8C] focus:border-[#163C8C] shadow-none',
+      }}
+      components={{
+        Option: ({ children, data, ...props }) => (
+          <div
+            {...props.innerProps}
+            className="px-3 py-2 cursor-pointer flex items-center gap-2 hover:bg-gray-100"
+          >
+            <Icon
+              icon={`flagpack:${data.iso?.toLowerCase()}`}
+              width="20"
+              height="15"
+            />
+            <span>{data.label}</span>
+          </div>
+        ),
+        // SingleValue: ({ data }) => (
+        //   <div className="flex items-center gap-2">
+        //     <Icon
+        //       icon={`flagpack:${data.iso?.toLowerCase()}`}
+        //       width="20"
+        //       height="15"
+        //     />
+        //     <span>{data.label}</span>
+        //   </div>
+        // ),
+      }}
+    />
+  )}
+/>
+
           {errors.currentCountry && <p className="text-red-500 text-sm mt-1">{errors.currentCountry.message}</p>}
         </div>
 
         {/* Phone */}
-        <div className="flex flex-col sm:flex-row gap-5">
+        <div className="flex flex-col sm:flex-row gap-4">
+          {/* Phone Country Code - Custom Select with flag */}
           <div className="w-full sm:max-w-42">
             <label htmlFor="phoneCountryCode" className="block text-base font-medium text-[#5B697E] mb-2">
               Country Code
@@ -471,57 +442,38 @@ export default function BookingForm() {
               name="phoneCountryCode"
               control={control}
               render={({ field }) => (
-                <div className="relative" ref={phoneCodeRef}>
-                  <button
-                    type="button"
-                    onClick={() => setIsPhoneCodeOpen(!isPhoneCodeOpen)}
-                    className="flex items-center justify-between w-full px-3 py-4 border border-gray-300 rounded-xl text-base focus:outline-none focus:border-[#163C8C]"
-                  >
-                    {field.value ? (
-                      <div className="flex items-center gap-2">
-                        <Icon
-                          icon={`flagpack:${
-                            countryList.find((c) => c.phonecode === field.value.replace('+', ''))?.iso.toLowerCase() || 'us'
-                          }`}
-                          width="24"
-                          height="18"
-                        />
-                        <span>{field.value}</span>
+                <Select
+                  {...field}
+                  options={phoneCodeOptions}
+                  placeholder="Code"
+                  isSearchable
+                  onChange={(option: any) => field.onChange(option?.value || '')}
+                  value={phoneCodeOptions.find(opt => opt.value === field.value) || null}
+                  className="w-full"
+                  classNames={{
+                    control: () =>
+                      'border border-gray-300 rounded-xl py-2 flex text-base focus:ring-1 focus:ring-[#163C8C] focus:border-[#163C8C] shadow-none',
+                  }}
+                  components={{
+                    Option: ({ children, data, ...props }) => (
+                      <div {...props.innerProps} className="px-3 py-2 cursor-pointer flex items-center gap-2 hover:bg-gray-100">
+                        <Icon icon={`flagpack:${data.iso?.toLowerCase()}`} width="24" height="18" />
+                        <span>+{data.phonecode}</span>
                       </div>
-                    ) : (
-                      'Select Code'
-                    )}
-                    <Icon
-                      icon="material-symbols:keyboard-arrow-up"
-                      width="24"
-                      height="24"
-                      className={`h-5 w-5 text-gray-500 transition-transform ${
-                        isPhoneCodeOpen ? 'rotate-180' : ''
-                      }`}
-                    />
-                  </button>
-                  {isPhoneCodeOpen && (
-                    <div className="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-lg shadow max-h-60 overflow-y-auto">
-                      {countryList.map((country, index) => (
-                        <div
-                          key={index}
-                          onClick={() => {
-                            field.onChange(`+${country.phonecode}`);
-                            setIsPhoneCodeOpen(false);
-                          }}
-                          className="px-4 py-2 flex items-center gap-3 hover:bg-gray-100 cursor-pointer"
-                        >
-                          <Icon icon={`flagpack:${country.iso.toLowerCase()}`} width="24" height="18" />
-                          <span>+{country.phonecode}</span>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
+                    ),
+                    // SingleValue: ({ data }) => (
+                    //   <div className="flex items-center gap-2">
+                    //     <Icon icon={`flagpack:${data.iso?.toLowerCase()}`} width="24" height="18" />
+                    //     <span>{data.value}</span>
+                    //   </div>
+                    // ),
+                  }}
+                />
               )}
             />
             {errors.phoneCountryCode && <p className="text-red-500 text-sm mt-1">{errors.phoneCountryCode.message}</p>}
           </div>
+
           <div className="w-full sm:max-w-122">
             <label htmlFor="phoneNumber" className="block text-base font-medium text-[#5B697E] mb-2">
               Phone Number
@@ -549,7 +501,6 @@ export default function BookingForm() {
         <p className="text-[#0F172B66] text-base font-medium mb-4">
           Important details to complete your booking
         </p>
-
         {fields.map((field, index) => (
           <div key={field.id} className="space-y-4 mb-3">
             <div className="flex justify-between items-center">
@@ -661,7 +612,6 @@ export default function BookingForm() {
         <p className="text-[#0F172B66] text-base font-medium">
           Safe, secure transactions. Your personal information is protected.
         </p>
-
         <div className="w-full">
           <Controller
             name="paymentMethod"
@@ -679,9 +629,8 @@ export default function BookingForm() {
                           : 'border-gray-300 hover:border-[#163C8C]/50'
                       }`}
                     >
-                      {/* Checkmark indicator */}
                       {field.value === payment.name && (
-                        <div className="absolute top-4 right-2 w-6 h-6 rounded-full bg-[#163C8C] flex items-center justify-center">
+                        <div className="absolute top-4 right-3 w-6 h-6 rounded-full bg-[#163C8C] flex items-center justify-center">
                           <svg
                             className="w-4 h-4 text-white"
                             fill="none"
@@ -698,8 +647,6 @@ export default function BookingForm() {
                           </svg>
                         </div>
                       )}
-
-                      {/* Payment content */}
                       <div className="flex items-center gap-3">
                         {payment.icon ? (
                           <img src={payment.icon} alt={payment.name} className="w-10 h-6 object-contain flex-shrink-0" />
@@ -720,47 +667,26 @@ export default function BookingForm() {
       </div>
 
       {/* Cancellation Policy */}
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-4 mt-3">
         <h3 className="text-xl text-[#0F172BE5] font-semibold">Cancellation Policy</h3>
-        <div className="flex gap-2">
-          <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path
-              d="M1 10.5C1 6.729 1 4.843 2.172 3.672C3.344 2.501 5.229 2.5 9 2.5H13C16.771 2.5 18.657 2.5 19.828 3.672C20.999 4.844 21 6.729 21 10.5V12.5C21 16.271 21 18.157 19.828 19.328C18.656 20.499 16.771 20.5 13 20.5H9C5.229 20.5 3.343 20.5 2.172 19.328C1.001 18.156 1 16.271 1 12.5V10.5Z"
-              stroke="#EB001B"
-              strokeWidth="1.5"
+
+        {hotelDetails?.cancellation !== "" && (
+             <AccordionInfoCard
+                              title="Cancellation Policy"
+                              showDescription={false}
+                              showLeftIcon={false}
+                              titleClassName='text-red-500'
+                            >
+                              <div className='bg-red-100 text-red-500 p-4 w-full rounded-lg'>
+            <p
+              className="text-[#0F172B66] text-base font-medium"
+              dangerouslySetInnerHTML={{ __html: hotelDetails.cancellation }}
             />
-            <path d="M6 2.5V1M16 2.5V1M1.5 7.5H20.5" stroke="#EB001B" strokeWidth="1.5" strokeLinecap="round" />
-            <path
-              d="M6 15C6.13261 15 6.25975 15.0527 6.35352 15.1465C6.44728 15.2403 6.5 15.3674 6.5 15.5C6.5 15.6326 6.44728 15.7597 6.35352 15.8535C6.25975 15.9473 6.13261 16 6 16C5.86739 16 5.74025 15.9473 5.64648 15.8535C5.55272 15.7597 5.5 15.6326 5.5 15.5C5.5 15.3674 5.55272 15.2403 5.64648 15.1465C5.74025 15.0527 5.86739 15 6 15ZM11 15C11.1326 15 11.2597 15.0527 11.3535 15.1465C11.4473 15.2403 11.5 15.3674 11.5 15.5C11.5 15.6326 11.4473 15.7597 11.3535 15.8535C11.2597 15.9473 11.1326 16 11 16C10.8674 16 10.7403 15.9473 10.6465 15.8535C10.5527 15.7597 10.5 15.6326 10.5 15.5C10.5 15.3674 10.5527 15.2403 10.6465 15.1465C10.7403 15.0527 10.8674 15 11 15ZM16 15C16.1326 15 16.2597 15.0527 16.3535 15.1465C16.4473 15.2403 16.5 15.3674 16.5 15.5C16.5 15.6326 16.4473 15.7597 16.3535 15.8535C16.2597 15.9473 16.1326 16 16 16C15.8674 16 15.7403 15.9473 15.6465 15.8535C15.5527 15.7597 15.5 15.6326 15.5 15.5C15.5 15.3674 15.5527 15.2403 15.6465 15.1465C15.7403 15.0527 15.8674 15 16 15ZM6 11C6.13261 11 6.25975 11.0527 6.35352 11.1465C6.44728 11.2403 6.5 11.3674 6.5 11.5C6.5 11.6326 6.44728 11.7597 6.35352 11.8535C6.25975 11.9473 6.13261 12 6 12C5.86739 12 5.74025 11.9473 5.64648 11.8535C5.55272 11.7597 5.5 11.6326 5.5 11.5C5.5 11.3674 5.55272 11.2403 5.64648 11.1465C5.74025 11.0527 5.86739 11 6 11ZM11 11C11.1326 11 11.2597 11.0527 11.3535 11.1465C11.4473 11.2403 11.5 11.3674 11.5 11.5C11.5 11.6326 11.4473 11.7597 11.3535 11.8535C11.2597 11.9473 11.1326 12 11 12C10.8674 12 10.7403 11.9473 10.6465 11.8535C10.5527 11.7597 10.5 11.6326 10.5 11.5C10.5 11.3674 10.5527 11.2403 10.6465 11.1465C10.7403 11.0527 10.8674 11 11 11ZM16 11C16.1326 11 16.2597 11.0527 16.3535 11.1465C16.4473 11.2403 16.5 11.3674 16.5 11.5C16.5 11.6326 16.4473 11.7597 16.3535 11.8535C16.2597 11.9473 16.1326 12 16 12C15.8674 12 15.7403 11.9473 15.6465 11.8535C15.5527 11.7597 15.5 11.6326 15.5 11.5C15.5 11.3674 15.5527 11.2403 15.6465 11.1465C15.7403 11.0527 15.8674 11 16 11Z"
-              fill="#EB001B"
-              stroke="#EB001B"
-            />
-          </svg>
-          <h3 className="font-medium text-lg text-[#EB001B]">Cancel up to Sat 15 Nov 2025</h3>
-        </div>
-        <p className="text-[#0F172B66] text-base font-medium">
-          The full cost of the booking will be refunded. No cancellation charges apply.
-        </p>
-        <div className="flex gap-2">
-          <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path
-              d="M3.92871 3.92896L18.0697 18.071"
-              stroke="#EB001B"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-            <path
-              d="M11 21C16.5228 21 21 16.5228 21 11C21 5.47715 16.5228 1 11 1C5.47715 1 1 5.47715 1 11C1 16.5228 5.47715 21 11 21Z"
-              stroke="#EB001B"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-          <h3 className="font-medium text-lg text-[#EB001B]">Cancel on or after Sun 16 Nov 2025</h3>
-        </div>
-        <p className="text-[#0F172B66] text-base font-medium">No refund will be given.</p>
+          </div>
+                            </AccordionInfoCard>
+
+        )}
+
         <Controller
           name="acceptPolicy"
           control={control}
@@ -784,7 +710,7 @@ export default function BookingForm() {
         {errors.acceptPolicy && <p className="text-red-500 text-sm mt-1">{errors.acceptPolicy.message}</p>}
       </div>
 
-      {/* Submit Button with Loading State */}
+      {/* Submit Button */}
       <button
         type="submit"
         disabled={isPending}

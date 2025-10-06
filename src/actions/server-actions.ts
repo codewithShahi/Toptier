@@ -545,9 +545,8 @@ export const hotel_search = async (payload: HotelSearchPayload & { modules: stri
         Accept: "application/json, text/plain, */*",
       },
     });
-
     const data = await response.json().catch(() => null);
-
+    // console.log('========== data ===========',data )
     if (!response.ok || data?.status === false) {
       return { error: data?.message || "Something went wrong", module: payload.modules };
     }
@@ -583,7 +582,7 @@ export const hotel_search_multi = async (
     if (result.status === "fulfilled") {
       const value = result.value;
       if (!value.error && value.response?.length) {
-        return value.response; // ✅ just hotels
+        return value.response; //  just hotels
       }
     }
     return null;
@@ -735,11 +734,25 @@ export interface BookingPayload {
   user_data: UserData;
 }
 
+interface SessionUser {
+  user?: {
+    id?: string;
+    user_id?: string;
+    first_name?: string;
+    last_name?: string;
+    email?: string;
+    // ... add other fields you need
+  };
+  iat?: number;
+  exp?: number;
+}
 
 export const hotel_booking = async (payload: BookingPayload) => {
   try {
+     const userinfo = (await getSession()) as SessionUser | null;
+    const user_id = userinfo?.user?.user_id ?? "";
     const formData = new FormData();
-    // ✅ Append normal fields
+    //  Append normal fields
     formData.append("price_original", String(payload.price_original));
     formData.append("price_markup", String(payload.price_markup));
     formData.append("vat", String(payload.vat));
@@ -772,26 +785,21 @@ export const hotel_booking = async (payload: BookingPayload) => {
     formData.append("supplier", payload.supplier);
     formData.append("nationality", payload.nationality);
     formData.append("payment_gateway", payload.payment_gateway ?? "");
-    formData.append("user_id", payload.user_id ?? "");
+    formData.append("user_id", user_id ?? "");
 
-    // ✅ Append JSON fields (must stringify)
+    // Append JSON fields (must stringify)
     formData.append("room_data", JSON.stringify(payload.room_data));
     formData.append("booking_data", JSON.stringify(payload.booking_data));
     formData.append("guest", JSON.stringify(payload.guest));
     formData.append("user_data", JSON.stringify(payload.user_data));
-
-    // console.log("hotel_booking_payload", Object.fromEntries(formData));
-
     const response = await fetch(`${baseUrl}/hotel_booking`, {
       method: "POST",
       body: formData,
-      headers: {
-        Accept: "application/json, text/plain, */*",
-      },
+
     });
 
     const data = await response.json().catch(() => null);
-    console.log("hotel_booking_result", data);
+    // console.log("hotel_booking_result", data);
 
     if (!response.ok || data?.status === false) {
       return { error: data?.message || "Something went wrong" };
@@ -803,6 +811,33 @@ export const hotel_booking = async (payload: BookingPayload) => {
   }
 };
 
+//====================== INVOICE API ========================
+export const hotel_invoice = async (payload: string) => {
+  try {
 
+    const formData = new FormData();
+
+    // ✅ match exactly with API keys
+    formData.append("booking_ref_no", payload);
+
+
+
+    const response = await fetch(`${baseUrl}/hotels/invoice`, {
+      method: "POST",
+      body: formData,
+    });
+
+    const data = await response.json().catch(() => null);
+    // console.log("hotel_details_result", data);
+
+    if (!response.ok || data?.status === false) {
+      return { error: data?.message || "Something went wrong" };
+    }
+
+    return data;
+  } catch (error) {
+    return { error: (error as Error).message || "An error occurred" };
+  }
+};
 
 

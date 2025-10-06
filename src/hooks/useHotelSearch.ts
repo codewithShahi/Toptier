@@ -116,7 +116,7 @@ const hotelSearch_path = usePathname();
   // FIX 1: Add separate loading states
   const [isSearching, setIsSearching] = useState(false);
   const [isInitialLoading, setIsInitialLoading] = useState(false);
- console.log('use hotel search ',selectedHotel,selectedRomm)
+//  console.log('use hotel search ',selectedHotel,selectedRomm)
   const listRef = useRef<HTMLDivElement | null>(null);
   const [page, setPage] = useState(1);
 
@@ -394,7 +394,7 @@ const loadMoreData = useCallback(
           page: nextPage, //  next page
           price_from: from_price, // or keep current filters if needed
           price_to: to_price,
-          rating: selectedRating > 1 ? selectedRating : "1",
+          rating: selectedRating > 1 ? selectedRating : "",
         },
         hotelModuleNames
       );

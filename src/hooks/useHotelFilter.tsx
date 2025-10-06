@@ -31,7 +31,7 @@ interface FilterState {
   selectedRating: number;
   searchQuery: string;
   selectedAmenities: string[];
-  sortBy: 'price_low' | 'price_high' | 'rating' | 'name';
+  sortBy:string
 }
 
 interface UseHotelFilterProps {
@@ -43,12 +43,12 @@ interface UseHotelFilterProps {
 
 const useHotelFilter = () => {
   const [filters, setFilters] = useState<FilterState>({
-    priceRange: [0, 100000],
+    priceRange: [1, 5000],
     selectedStars: [],
     selectedRating:1,
     searchQuery: '',
     selectedAmenities: [],
-    sortBy: null as any, // default sort
+    sortBy: '', // default sort
   });
 const {hotelSearchMutation,form,hotelModuleNames,removeDuplicates,setIsSearching,isSearching,setIsInitialLoading,handleSubmit,callAllModulesAPI,allHotelsData}=useHotelSearch()
     const dispatch = useDispatch();
@@ -66,7 +66,7 @@ const priceRange = useMemo(() => {
 useEffect(() => {
   setFilters(prev => ({
     ...prev,
-    priceRange: [0, 5000],
+    priceRange: [1, 5000],
   }));
 }, []);
 
@@ -158,7 +158,6 @@ useEffect(() => {
     }
   });
 }
-
     return filtered;
   }, [hotelsData, filters]);
 
@@ -229,7 +228,7 @@ const updateRatingFilter = useCallback(
 
       const parsedForm = JSON.parse(savedForm);
 
-      // ✅ Use hotel_search_multi instead of manual loop
+      //  Use hotel_search_multi instead of manual loop
       const result = await hotel_search_multi(
         {
           destination: parsedForm.destination,
@@ -367,6 +366,7 @@ const resetFilters = useCallback(async (e?: any) => {
     toggleAmenityFilter,
     updateSortBy,
     resetFilters,
+
     selectedStars, setSelectedStars,isFilterLoading
   };
 };

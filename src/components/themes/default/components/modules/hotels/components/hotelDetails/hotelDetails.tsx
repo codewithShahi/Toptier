@@ -1,7 +1,7 @@
 "use client";
-import React, { useCallback,  useState } from "react";
+import React, { useCallback, useState, useRef, useEffect } from "react";
 
-import { useParams,useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
 import { useQuery } from "@tanstack/react-query";
 import { hotel_details } from "@src/actions/server-actions";
@@ -16,7 +16,7 @@ import { useAppSelector } from "@lib/redux/store";
 import { Skeleton } from "@components/core/skeleton";
 
 
-import  HotelSuggestionSlider  from "./hotelSuggestionSlider";
+import HotelSuggestionSlider from "./hotelSuggestionSlider";
 import { useHotelDetails } from "@hooks/useHotelDetails";
 import Spinner from "@components/core/Spinner";
 
@@ -81,7 +81,7 @@ const HotelsDetails = () => {
     handleChange,
     updateForm,
     toggleGuestsDropdown,
-    onSubmit: handleSearchSubmit,handleReserveRoom
+    onSubmit: handleSearchSubmit, handleReserveRoom
   } = useHotelDetails({
     initialCheckin,
     initialCheckout,
@@ -127,9 +127,19 @@ const HotelsDetails = () => {
   });
   //  console.log("new form ", form);
   const [isModalOpen, setIsModalOpen] = React.useState(false);
-  console.log("hotelDetails", hotelDetails);
+  // console.log("hotelDetails", hotelDetails);
   const { img } = hotelDetails || {};
 
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [isClamped, setIsClamped] = useState(false);
+  const textRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (textRef.current && hotelDetails?.desc) {
+      const { scrollHeight, clientHeight } = textRef.current;
+      setIsClamped(scrollHeight > clientHeight);
+    }
+  }, [hotelDetails?.desc]);
   const amenityIcons: Record<string, string> = {
     pool: "mdi:pool",
     swimming: "mdi:pool",
@@ -202,7 +212,7 @@ const HotelsDetails = () => {
       {/* Image Slider */}
       {isLoading ? (
         <div className="max-w-[1200px] mx-auto  flex items-center justify-center min-h-90 bg-gray-200 px-4 md:px-8 lg:px-14 mt-10">
-         <Spinner/>
+          <Spinner />
         </div>
       ) : (
         <SwiperImageSlider testimonials={img} />
@@ -264,10 +274,23 @@ const HotelsDetails = () => {
                 </div>
               </div>
               <div
-                className="text-gray-700 text-base md:text-lg leading-10 mb-4 md:mb-0 md:line-clamp-4 md:w-[80%]"
-                dangerouslySetInnerHTML={{ __html: hotelDetails?.desc }}
+                ref={textRef}
+                className={`text-gray-700 text-base md:text-lg leading-6 md:leading-8 mb-2 md:mb-0 overflow-hidden ${isExpanded ? 'transition-all duration-800 ease-in-out' : 'transition-all duration-800 ease-out'}`}
+                style={{
+                  maxHeight: isExpanded ? '1000px' : '4.5rem',
+                }}
+                dangerouslySetInnerHTML={{ __html: hotelDetails?.desc || '' }}
               />
-              <div className="flex md:gap-3 gap-1 mt-2">
+
+              {isClamped && (
+                <button
+                  onClick={() => setIsExpanded(!isExpanded)}
+                  className="text-blue-600 cursor-pointer underline hover:text-blue-800 font-medium text-sm md:text-base -mt-3"
+                >
+                  {isExpanded ? 'Read Less' : 'Read More'}
+                </button>
+              )}
+              <div className="flex md:gap-3 gap-1 mt-8">
                 <div className="flex gap-1 py-1 bg-[#DBFCE7] rounded-[7.45px] md:px-3 px-1 items-center">
                   <svg width="17" height="17" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <g clipPath="url(#clip0_358_1918)">
@@ -369,7 +392,7 @@ const HotelsDetails = () => {
                   getAmenityIcon={getAmenityIcon}
                   onReserve={(room, option) => {
                     //  This runs in parent when Reserit ve is clicked
-                   handleReserveRoom(room , option,hotelDetails)
+                    handleReserveRoom(room, option, hotelDetails)
 
                     // Example: Navigate to booking page
                     router.push(`/hotel/booking`);

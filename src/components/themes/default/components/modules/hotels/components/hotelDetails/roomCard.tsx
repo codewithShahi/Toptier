@@ -1,6 +1,10 @@
 // components/RoomCard.tsx (or wherever it's defined)
 import { Icon } from "@iconify/react";
+import { addToFavourite } from "@src/actions";
 import { getCurrencySymbol } from "@src/utils/getCurrencySymbals";
+import { toast } from "react-toastify";
+import { useUser } from "@hooks/use-user";
+import { useEffect, useState } from "react";
 
 interface RoomCardProps {
   room: any;
@@ -15,6 +19,41 @@ export const RoomCard = ({ room, getAmenityIcon, options, onReserve }: RoomCardP
   const price = option.markup_price || room.markup_price || room.actual_price;
   const currency = room.currency || "USD";
   const imageUrl = room.img || "/images/auth_bg.jpg";
+
+
+    // Normalize favorite state to boolean
+  const [isFav, setIsFav] = useState<boolean>(() => {
+    const fav = room.favorite;
+    return fav === 1 || fav === "1" || fav === true;
+  });
+  const { user } = useUser();
+  useEffect(() => {
+    const fav = room.favorite;
+    setIsFav(fav === 1 || fav === "1" || fav === true);
+  }, [room.favorite]);
+
+  const toggleLike = async () => {
+    if (!user) {
+      toast.error("User must be logged in to mark as favourite");
+      return;
+    }
+    try {
+      const payload = {
+        item_id: String(room.room_id || room.id), // adjust based on your actual ID field
+        module: "rooms",
+        user_id: String(user?.user_id) || "",
+      };
+      const res = await addToFavourite(payload);
+      if (res?.error) {
+        toast.error("Something went wrong :x:");
+        return;
+      }
+      setIsFav(prev => !prev);
+      toast.success(res?.message || "Updated favourites ");
+    } catch (err) {
+      toast.error("Failed to update favourites :x:");
+    }
+  };
 // console.log("room data", room);
   return (
 
@@ -121,7 +160,9 @@ export const RoomCard = ({ room, getAmenityIcon, options, onReserve }: RoomCardP
         >
           Reserve
         </button>
-        <button className="bg-[#EBEFF4] cursor-pointer rounded-full p-4">
+        <button   onClick={toggleLike} className="bg-[#EBEFF4] cursor-pointer rounded-full p-4"
+          aria-label={`${isFav && user ? "Unlike" : "Like"} ${room.name}`}
+        >
           <svg width="16" height="15" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M5.08315 1.00586C2.87423 1.00586 1.08301 2.90908 1.08301 5.25612C1.08301 9.95355 8.66222 15.3222 8.66222 15.3222C8.66222 15.3222 16.2414 9.95355 16.2414 5.25612C16.2414 2.34822 14.4502 1.00586 12.2413 1.00586C10.6749 1.00586 9.31909 1.96252 8.66222 3.35542C8.00536 1.96252 6.64952 1.00586 5.08315 1.00586Z" stroke="black" strokeOpacity="0.7" strokeWidth="1.2632" strokeLinecap="round" strokeLinejoin="round"/>
           </svg>

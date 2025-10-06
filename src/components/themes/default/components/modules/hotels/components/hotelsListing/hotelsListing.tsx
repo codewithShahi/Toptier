@@ -78,8 +78,8 @@ const onShowMaphandler=(hotel:any)=>{
     hasActiveFilters,
     selectedStars,
     setSelectedStars,
-    isFilterLoading
-
+    isFilterLoading,
+updateSortBy
 
   } = useHotelFilter();
 
@@ -125,8 +125,22 @@ const onShowMaphandler=(hotel:any)=>{
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
-  const options = ["Rating", "Price Low to High", "Price High to Low", "Name"];
+  const options = ['price_low' , 'price_high' , 'rating' , 'name'];
 
+function getOptionLabel(option: string) {
+  switch (option) {
+    case "price_low":
+      return "Low to High";
+    case "price_high":
+      return "High to Low";
+    case "rating":
+      return "Rating";
+    case "name":
+      return "Name (A–Z)";
+    default:
+      return option;
+  }
+}
 
   return (
     <div className="min-h-screen bg-gray-50" ref={listRef}>
@@ -329,7 +343,7 @@ const onShowMaphandler=(hotel:any)=>{
                         onClick={() => setOpen(!open)}
                         className="flex items-center justify-between w-full lg:w-[200px] cursor-pointer bg-[#F3F3F5] px-4 py-2.5 rounded-3xl border border-[#DFE2E6] text-xs lg:text-sm text-gray-600 focus:outline-none focus:ring-2 focus:ring-[#DFE2E6]"
                       >
-                        <span>{selected}</span>
+                        <span>{getOptionLabel(selected)}</span>
                         <Icon
                           icon="mdi:chevron-down"
                           className={`h-4 w-4 text-gray-500 transition-transform ${open ? "rotate-180" : ""}`}
@@ -343,11 +357,12 @@ const onShowMaphandler=(hotel:any)=>{
                               onClick={() => {
                                 setSelected(opt);
                                 setOpen(false);
+                                updateSortBy(opt)
                               }}
                               className={`w-full cursor-pointer text-left px-4 py-2.5 text-sm text-gray-700 rounded-md hover:bg-gray-100 transition-colors ${selected === opt ? "bg-gray-100 font-medium" : ""
                                 }`}
                             >
-                              {opt}
+                               {getOptionLabel(opt)}
                             </button>
                           ))}
                         </div>
