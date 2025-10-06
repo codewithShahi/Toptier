@@ -127,7 +127,6 @@ Total: ${bookingData.total}`;
     <div className="min-h-screen bg-gray-100 py-4 sm:py-8 px-3 sm:px-4">
       <div className="max-w-4xl mx-auto">
         <div ref={invoiceRef} className="bg-white shadow-lg">
-
           {/* Header */}
           <div className="border-b border-gray-200 p-4 sm:p-6">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">

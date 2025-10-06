@@ -383,7 +383,7 @@ export default function BookingForm() {
           <label htmlFor="currentCountry" className="block text-base font-medium text-[#5B697E] mb-2">
             Current Country
           </label>
-        <Controller
+<Controller
   name="currentCountry"
   control={control}
   render={({ field }) => (
@@ -397,36 +397,55 @@ export default function BookingForm() {
       className="w-full"
       classNames={{
         control: () =>
-          'border border-gray-300 rounded-xl flex items-center py-2 text-base focus:ring-1 focus:ring-[#163C8C] focus:border-[#163C8C] shadow-none',
+
+          'border border-gray-300 rounded-xl px-3 py-3.5 flex items-center min-h-[44px] text-base focus:ring-1 focus:ring-[#163C8C] focus:border-[#163C8C] shadow-none',
+        valueContainer: () => 'flex items-center gap-2 px-1',
+        singleValue: () =>
+          'flex items-center gap-2 text-gray-800 font-medium truncate',
+        placeholder: () => 'text-gray-400 font-normal',
+        indicatorsContainer: () => 'absolute right-4',
+
       }}
       components={{
-        Option: ({ children, data, ...props }) => (
+        Option: ({ data, ...props }) => (
           <div
             {...props.innerProps}
             className="px-3 py-2 cursor-pointer flex items-center gap-2 hover:bg-gray-100"
           >
             <Icon
               icon={`flagpack:${data.iso?.toLowerCase()}`}
-              width="20"
-              height="15"
+              width="22"
+              height="16"
+              className="rounded-sm"
             />
             <span>{data.label}</span>
           </div>
         ),
-        // SingleValue: ({ data }) => (
-        //   <div className="flex items-center gap-2">
-        //     <Icon
-        //       icon={`flagpack:${data.iso?.toLowerCase()}`}
-        //       width="20"
-        //       height="15"
-        //     />
-        //     <span>{data.label}</span>
-        //   </div>
-        // ),
+        SingleValue: ({ data }) => (
+          <div className="flex items-center gap-2 truncate">
+            <Icon
+              icon={`flagpack:${data.iso?.toLowerCase()}`}
+              width="22"
+              height="16"
+              className="rounded-sm"
+            />
+            <span>{data.label}</span>
+          </div>
+        ),
+        DropdownIndicator: () => (
+          <Icon
+            icon="material-symbols:arrow-drop-down-rounded"
+            width="24"
+            height="24"
+            className="text-gray-500"
+          />
+        ),
+        IndicatorSeparator: () => null,
       }}
     />
   )}
 />
+
 
           {errors.currentCountry && <p className="text-red-500 text-sm mt-1">{errors.currentCountry.message}</p>}
         </div>
@@ -438,39 +457,68 @@ export default function BookingForm() {
             <label htmlFor="phoneCountryCode" className="block text-base font-medium text-[#5B697E] mb-2">
               Country Code
             </label>
-            <Controller
-              name="phoneCountryCode"
-              control={control}
-              render={({ field }) => (
-                <Select
-                  {...field}
-                  options={phoneCodeOptions}
-                  placeholder="Code"
-                  isSearchable
-                  onChange={(option: any) => field.onChange(option?.value || '')}
-                  value={phoneCodeOptions.find(opt => opt.value === field.value) || null}
-                  className="w-full"
-                  classNames={{
-                    control: () =>
-                      'border border-gray-300 rounded-xl py-2 flex text-base focus:ring-1 focus:ring-[#163C8C] focus:border-[#163C8C] shadow-none',
-                  }}
-                  components={{
-                    Option: ({ children, data, ...props }) => (
-                      <div {...props.innerProps} className="px-3 py-2 cursor-pointer flex items-center gap-2 hover:bg-gray-100">
-                        <Icon icon={`flagpack:${data.iso?.toLowerCase()}`} width="24" height="18" />
-                        <span>+{data.phonecode}</span>
-                      </div>
-                    ),
-                    // SingleValue: ({ data }) => (
-                    //   <div className="flex items-center gap-2">
-                    //     <Icon icon={`flagpack:${data.iso?.toLowerCase()}`} width="24" height="18" />
-                    //     <span>{data.value}</span>
-                    //   </div>
-                    // ),
-                  }}
-                />
-              )}
+
+         <Controller
+  name="phoneCountryCode"
+  control={control}
+  render={({ field }) => (
+    <Select
+      {...field}
+      options={phoneCodeOptions}
+      placeholder="Code"
+      isSearchable
+      onChange={(option: any) => field.onChange(option?.value || '')}
+      value={phoneCodeOptions.find(opt => opt.value === field.value) || null}
+      className="w-full"
+      classNames={{
+        control: () =>
+          'border border-gray-300 rounded-xl px-3 py-3.5 flex items-center min-h-[44px] text-base focus:ring-1 focus:ring-[#163C8C] focus:border-[#163C8C] shadow-none',
+        valueContainer: () => 'flex items-center gap-2 px-1',
+        singleValue: () => 'flex items-center justify-between  text-gray-800 font-medium',
+        placeholder: () => 'text-gray-400 font-normal',
+        indicatorsContainer: () => 'absolute right-4',
+      }}
+      components={{
+        Option: ({ children, data, ...props }) => (
+          <div
+            {...props.innerProps}
+            className="px-3 py-2 cursor-pointer flex items-center gap-2 hover:bg-gray-100"
+          >
+            <Icon
+              icon={`flagpack:${data.iso?.toLowerCase()}`}
+              width="22"
+              height="16"
+              className="rounded-sm"
+
             />
+            <span>+{data.phonecode}</span>
+          </div>
+        ),
+        SingleValue: ({ data }) => (
+          <div className="flex items-center justify-between gap-2 truncate">
+            <Icon
+              icon={`flagpack:${data.iso?.toLowerCase()}`}
+              width="22"
+              height="16"
+              className="rounded-sm"
+            />
+            <span>+{data.phonecode}</span>
+          </div>
+        ),
+        DropdownIndicator: () => (
+          <Icon
+            icon="material-symbols:arrow-drop-down-rounded"
+            width="24"
+            height="24"
+            className="text-gray-500"
+          />
+        ),
+        IndicatorSeparator: () => null,
+      }}
+    />
+  )}
+/>
+
             {errors.phoneCountryCode && <p className="text-red-500 text-sm mt-1">{errors.phoneCountryCode.message}</p>}
           </div>
 
