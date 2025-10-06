@@ -366,7 +366,7 @@ export default function BookingForm() {
             render={({ field }) => {
               const country = getCountryByIso(field.value);
               return (
-                <div className="block border border-gray-300 rounded-xl px-3 py-4 text-base w-full outline-none bg-gray-100 cursor-not-allowed flex items-center gap-2">
+                <div className="border border-gray-300 rounded-xl px-3 py-4 text-base w-full outline-none bg-gray-100 cursor-not-allowed flex items-center gap-2">
                   {country && (
                     <Icon icon={`flagpack:${country.iso.toLowerCase()}`} width="24" height="18" />
                   )}
