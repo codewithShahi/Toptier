@@ -1,5 +1,5 @@
 "use client"
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { Icon } from "@iconify/react";
 import DatePicker from "@components/core/DatePicker";
 import useDictionary from "@hooks/useDict";
@@ -11,6 +11,8 @@ import useHotelSearch from "@hooks/useHotelSearch";
 import Dropdown from "@components/core/Dropdown";
 import useCountries from "@hooks/useCountries";
 import { set } from "lodash";
+import Select from "@components/core/select";
+import { boolean } from "zod";
 // import useHotelSearch from "@hooks/useHotelSearch"; // Import the hook
 
 export default function HotelSearch() {
@@ -44,7 +46,7 @@ export default function HotelSearch() {
   const guestsDropdownRef = useRef<HTMLDivElement>(null);
   const destinationDropdownRef = useRef<HTMLDivElement>(null);
   const destInputRef = useRef<HTMLInputElement | null>(null);
-
+  const [isNationalityOpen, setIsNationalityOpen]=useState<boolean>(false)
   // Outside click handler for dropdowns
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -59,23 +61,6 @@ export default function HotelSearch() {
     return () => document.removeEventListener("mousedown", handler);
   }, [setShowDestinationDropdown, setShowGuestsDropdown]);
 
-  // const onSubmit = async (e: React.FormEvent) => {
-
-
-
-
-  //     setIsSearching(false);
-  //   const result = await handleSubmit(e);
-
-
-
-  //   if (result?.success) {
-  //       router.push("/hotel_search");
-  //          setIsSearching(false);
-  //   }
-
-
-  // };
 const onSubmit = async (e: React.FormEvent) => {
   e.preventDefault();
 setIsSearching(true)
@@ -88,7 +73,7 @@ setIsSearching(true)
     children: String(form.children),
     nationality: form.nationality,
   });
-  // ✅ Build the same path format
+  //  Build the same path format
   localStorage.setItem("hotelSearchForm", JSON.stringify(form));
   const destinationSlug = form.destination.trim().replace(/\s+/g, "-");
  const url = `/hotel/${destinationSlug}/${params.get("checkin")}/${params.get(
@@ -133,10 +118,13 @@ router.push(url);
     new Date(Date.UTC(tomorrow.getFullYear(), tomorrow.getMonth(), tomorrow.getDate()))
   );
 
-  const selectedCountryName = countries?.find(
-    (c: any) => c.iso === form.nationality
-  )?.nicename || "Pakistan"; // Default fallback
 
+// Format countries for react-select
+const nationalityOptions = countries?.map((c: any) => ({
+  value: c.iso,
+  label: c.nicename || c.name,
+  iso: c.iso,
+})) || [];
   return (
     <div className="md:w-full mx-auto p-4 rounded-xl">
       <form onSubmit={onSubmit}>
@@ -369,48 +357,59 @@ router.push(url);
                       </div>
                     </div>
                     {/* ============ NATIONALITY ============ */}
-                    <div className="relative">
-                      <label className="block text-sm text-start font-medium text-blue-900 mt-2  ps-1 dark:text-gray-300 mb-2">
-                        Nationality
-                      </label>
 
-                      <Dropdown
-                        key={form.nationality} 
-                        label={
-                          <div className="flex items-center gap-3">
-                            <svg width="16" height="18" viewBox="0 0 16 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                              <path d="M8.19514 17.1038C8.04735 17.2098 7.86998 17.2667 7.68803 17.2667C7.50607 17.2667 7.3287 17.2098 7.18091 17.1038C2.80793 13.9933 -1.83309 7.59516 2.85865 2.97186C4.14667 1.70746 5.88127 0.999208 7.68803 1C9.49916 1 11.2369 1.7094 12.5174 2.97096C17.2091 7.59426 12.5681 13.9915 8.19514 17.1038Z" stroke="#5B697E" strokeOpacity="0.7" strokeWidth="1.35554" strokeLinecap="round" strokeLinejoin="round" />
-                              <path d="M7.68772 9.13333C8.16806 9.13333 8.62873 8.94291 8.96838 8.60396C9.30803 8.26501 9.49885 7.80529 9.49885 7.32594C9.49885 6.84659 9.30803 6.38688 8.96838 6.04793C8.62873 5.70898 8.16806 5.51855 7.68772 5.51855C7.20738 5.51855 6.74671 5.70898 6.40706 6.04793C6.0674 6.38688 5.87659 6.84659 5.87659 7.32594C5.87659 7.80529 6.0674 8.26501 6.40706 8.60396C6.74671 8.94291 7.20738 9.13333 7.68772 9.13333Z" stroke="#5B697E" strokeOpacity="0.7" strokeWidth="1.35554" strokeLinecap="round" strokeLinejoin="round" />
-                            </svg>
-                            <span>{selectedCountryName}</span>
-                          </div>
-                        }
-                        buttonClassName="w-full font-medium cursor-pointer pl-3  py-5 text-sm text-gray-700 placeholder-gray-400 bg-white hover:bg-gray-100 hover:text-gray-700 border border-gray-200 rounded-lg transition-all duration-200 focus:outline-none appearance-none flex items-center justify-between"
-                        dropDirection="down"
-                      >
-                        {({ onClose }) => (
-                          <div className="max-h-100 overflow-y-auto p-2">
-                            {countries?.map((c: any) => (
-                              <button
-                                key={c.iso}
-                                onClick={() => {
-                                  updateForm({ nationality: c.iso });
-                                  onClose();
-                                }}
-                                type="button"
-                                className={`w-full cursor-pointer text-left px-2 rounded-lg py-4 my-2 text-sm flex justify-between items-center ${form.nationality === c.iso
-                                    ? "bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white"
-                                    : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
-                                  }`}
-                              >
-                                <span className="font-medium">{c.nicename}</span>
-                                <span className="font-medium">{c.iso}</span>
-                              </button>
-                            ))}
-                          </div>
-                        )}
-                      </Dropdown>
-                    </div>
+<div className="relative">
+  <label className="block text-sm text-start font-medium text-blue-900 mt-2 ps-1 dark:text-gray-300 mb-2">
+    Nationality
+  </label>
+  <Select
+    options={nationalityOptions}
+    value={nationalityOptions.find((opt:any) => opt.value === form.nationality) || null}
+    onChange={(option: any) => {
+      updateForm({ nationality: option?.value || '' });
+    }}
+    isSearchable
+    placeholder="Select Nationality"
+    className="w-full"
+     onMenuOpen={() => setIsNationalityOpen(true)}   // detect dropdown open
+          onMenuClose={() => setIsNationalityOpen(false)} // detect dropdown close
+    classNames={{
+      control: () =>
+        'w-full font-medium pl-3 py-2.5 text-sm text-gray-700 placeholder-gray-400 bg-white hover:bg-gray-100 border border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 shadow-none',
+      valueContainer: () => 'flex items-center gap-2 px-1',
+      singleValue: () => 'flex items-center gap-2',
+      placeholder: () => 'text-gray-400',
+      indicatorsContainer: () => 'absolute right-3 top-3',
+    }}
+    components={{
+      Option: ({ data, ...props }) => (
+        <div
+          {...props.innerProps}
+          className="px-3 py-2 cursor-pointer flex items-center gap-2 hover:bg-gray-100"
+        >
+          <Icon icon={`flagpack:${data.iso?.toLowerCase()}`} width="20" height="15" />
+          <span>{data.label}</span>
+        </div>
+      ),
+      SingleValue: ({ data }) => (
+        <div className="flex items-center gap-2">
+          <Icon icon={`flagpack:${data.iso?.toLowerCase()}`} width="20" height="15" />
+          <span>{data.label}</span>
+        </div>
+      ),
+      DropdownIndicator: () => (
+        <Icon
+          icon="mdi:keyboard-arrow-down"
+
+          width="20"
+          height="20"
+          className={`text-gray-600 transi duration-100 ease-in-out ${isNationalityOpen ? 'rotate-180' : "rotate-0"}`}
+        />
+      ),
+      IndicatorSeparator: () => null,
+    }}
+  />
+</div>
 
 
                   </div>

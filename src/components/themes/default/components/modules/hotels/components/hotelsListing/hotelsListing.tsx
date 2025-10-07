@@ -456,7 +456,9 @@ function getOptionLabel(option: string) {
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
                 {/* Map */}
                 <div className={`${viewMode === 'map' ? 'lg:sticky static ' : ''} top-5 z-10 order-1 lg:order-2 w-full h-[400px] lg:h-[600px] bg-gray-100 rounded-3xl shadow-xl border border-gray-300 overflow-hidden`}>
-                  <HotelMap hotels={filteredHotels} currentLocation={currentLocation} />
+                  <HotelMap hotels={filteredHotels} currentLocation={currentLocation} 
+                   detailHandler={(hotel: any) => detailsBookNowHandler(hotel)}
+                  />
                 </div>
 
                 {/* Cards */}

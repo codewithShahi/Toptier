@@ -138,7 +138,10 @@ export const RoomCard = ({ room, getAmenityIcon, options, onReserve }: RoomCardP
                     height={16}
                   />
                 </div>
-                <p className="text-sm font-[500]">Free cancellation</p>
+                <p className="text-sm font-[500]">Free cancellation
+                 
+
+                </p>
               </div>
             )}
           </div>

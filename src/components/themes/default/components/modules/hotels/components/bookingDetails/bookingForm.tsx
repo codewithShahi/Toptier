@@ -94,6 +94,8 @@ export default function BookingForm() {
   const [isTitleOpen, setIsTitleOpen] = useState<number | null>(null);
   const titleRefs = useRef<(HTMLDivElement | null)[]>([]);
   const titles = ['Mr', 'Mrs', 'Ms', 'Dr'];
+  const [isCountryListOpen,setIsCountryListOpen]=useState<boolean>(false)
+    const [isPhoneCodeListOpen,setIsPhoneCodeListOpen]=useState<boolean>(false)
 
   const curruntBooking = localStorage.getItem('hotelSearchForm');
   const saveBookingData = curruntBooking ? JSON.parse(curruntBooking) : {};
@@ -406,6 +408,8 @@ export default function BookingForm() {
         indicatorsContainer: () => 'absolute right-4',
 
       }}
+       onMenuOpen={() => setIsCountryListOpen(true)}   // detect dropdown open
+          onMenuClose={() => setIsCountryListOpen(false)} // detect dropdown close
       components={{
         Option: ({ data, ...props }) => (
           <div
@@ -434,10 +438,10 @@ export default function BookingForm() {
         ),
         DropdownIndicator: () => (
           <Icon
-            icon="material-symbols:arrow-drop-down-rounded"
+            icon="mdi:keyboard-arrow-down"
             width="24"
             height="24"
-            className="text-gray-500"
+          className={`text-gray-600 transi duration-100 ease-in-out ${isCountryListOpen ? 'rotate-180' : "rotate-0"}`}
           />
         ),
         IndicatorSeparator: () => null,
@@ -478,6 +482,8 @@ export default function BookingForm() {
         placeholder: () => 'text-gray-400 font-normal',
         indicatorsContainer: () => 'absolute right-4',
       }}
+ onMenuOpen={() => setIsPhoneCodeListOpen(true)}   // detect dropdown open
+          onMenuClose={() => setIsPhoneCodeListOpen(false)} // detect dropdown close
       components={{
         Option: ({ children, data, ...props }) => (
           <div
@@ -507,10 +513,10 @@ export default function BookingForm() {
         ),
         DropdownIndicator: () => (
           <Icon
-            icon="material-symbols:arrow-drop-down-rounded"
+            icon="mdi:keyboard-arrow-down"
             width="24"
             height="24"
-            className="text-gray-500"
+          className={`text-gray-600 transi duration-100 ease-in-out ${isPhoneCodeListOpen ? 'rotate-180' : "rotate-0"}`}
           />
         ),
         IndicatorSeparator: () => null,
@@ -582,7 +588,7 @@ export default function BookingForm() {
                           width="24"
                           height="24"
                           className={`h-5 w-5 text-gray-500 transition-transform ${
-                            isTitleOpen === index ? 'rotate-180' : ''
+                            isTitleOpen === index ? 'rotate-0' : 'rotate-180'
                           }`}
                         />
                       </button>
