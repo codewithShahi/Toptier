@@ -7,6 +7,7 @@ import { useAppSelector } from "@lib/redux/store";
 import { usePathname, useRouter } from "next/navigation";
 import { setHotels, setSeletecHotel } from "@lib/redux/base";
 import { useDispatch } from "react-redux";
+import { toast } from "react-toastify";
 
 // Schema and interfaces remain the same...
 const hotelSearchSchema = z
@@ -299,18 +300,16 @@ const callAllModulesAPI = useCallback(
   // FIX 2: Fixed initial load effect with proper loading state
 
   // FIX 3: Fixed handle submit with proper error handling
- const handleSubmit = useCallback(
+const handleSubmit = useCallback(
   async (e: React.FormEvent) => {
     e.preventDefault();
-    // if ( errors) {
-    //   console.log('Search already in progress');
-    //   return { success: false, error: "Search already in progress" };
-    // }
-    // Validate first
-    try {
 
+    // Reset previous errors
+    setErrors({});
+
+    // ✅ Step 1: Validate form first (no loading yet)
+    try {
       hotelSearchSchema.parse(form);
-      setErrors({});
     } catch (err) {
       if (err instanceof z.ZodError) {
         const msgMap: Record<string, string> = {};
@@ -322,46 +321,46 @@ const callAllModulesAPI = useCallback(
       return { success: false, error: "Form validation failed" };
     }
 
-    // ✅ Start loading AFTER validation
-
+    // ✅ Step 2: Start loading AFTER validation passes
+    setIsSearching(true);
 
     try {
-      // Clear existing data
-          setIsSearching(true);
-      dispatch(setHotels([]));
-      queryClient.setQueryData(["hotel-search"], []);
+      const params = new URLSearchParams({
+        destination: form.destination,
+        checkin: form.checkin,
+        checkout: form.checkout,
+        rooms: String(form.rooms),
+        adults: String(form.adults),
+        children: String(form.children),
+        nationality: form.nationality,
+      });
+
       localStorage.setItem("hotelSearchForm", JSON.stringify(form));
 
-    // console.log('nationality ', form )
-      const result = await callAllModulesAPI({
-        ...form,
-        price_from: "",
-        price_to: "",
-        rating: ""
-      }, 1);
+      const destinationSlug = form.destination.trim().replace(/\s+/g, "-");
 
-      if (result.success && result.data) {
-        dispatch(setHotels(result.data));
-        setPage(1);
-        // console.log('Search completed:', result.data.length, 'hotels');
+      const url = `/hotel/${destinationSlug}/${params.get("checkin")}/${params.get(
+        "checkout"
+      )}/${params.get("rooms")}/${params.get("adults")}/${params.get(
+        "children"
+      )}/${params.get("nationality")}`;
 
-        // ✅ NOW navigate AFTER data is ready
-        router.push("/hotel_search");
-
-        return { success: true, data: result.data };
-      } else {
-        throw new Error(result.error || "Search failed");
-      }
+      // ✅ optional delay for UX smoothness
+      setTimeout(() => {
+        router.push(url);
+      }, 500);
     } catch (err) {
-      console.error('Search error:', err);
+      console.error("Search error:", err);
+      toast.error("Search failed. Please try again.");
       return { success: false, error: "Search failed" };
     } finally {
-      // ✅ ALWAYS turn off loading at the end
-      setIsSearching(false);
+      // ✅ Keep loader visible for a bit to avoid flicker
+      setTimeout(() => setIsSearching(false), 800);
     }
   },
-  [form, callAllModulesAPI, queryClient, router, dispatch, isSearching]
+  [form, router]
 );
+
 
   // Fixed load more data
 // multi module aproad in server

@@ -42,6 +42,7 @@ export default function HotelSearch() {
     handleDestinationKeyDown,
     updateForm,
     setIsSearching,
+    handleSubmit,
   } = useHotelSearch();
   const guestsDropdownRef = useRef<HTMLDivElement>(null);
   const destinationDropdownRef = useRef<HTMLDivElement>(null);
@@ -62,30 +63,31 @@ export default function HotelSearch() {
   }, [setShowDestinationDropdown, setShowGuestsDropdown]);
 
 const onSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
-setIsSearching(true)
-  const params = new URLSearchParams({
-    destination: form.destination,
-    checkin: form.checkin,
-    checkout: form.checkout,
-    rooms: String(form.rooms),
-    adults: String(form.adults),
-    children: String(form.children),
-    nationality: form.nationality,
-  });
-  //  Build the same path format
-  localStorage.setItem("hotelSearchForm", JSON.stringify(form));
-  const destinationSlug = form.destination.trim().replace(/\s+/g, "-");
- const url = `/hotel/${destinationSlug}/${params.get("checkin")}/${params.get(
-  "checkout"
-)}/${params.get("rooms")}/${params.get("adults")}/${params.get(
-  "children"
-)}/${params.get("nationality")}`;
-setTimeout(() => {
-    setIsSearching(false);
- setIsSearching(false)
-router.push(url);
-  }, 500); // 1 second delay
+  handleSubmit(e)
+//   e.preventDefault();
+// setIsSearching(true)
+//   const params = new URLSearchParams({
+//     destination: form.destination,
+//     checkin: form.checkin,
+//     checkout: form.checkout,
+//     rooms: String(form.rooms),
+//     adults: String(form.adults),
+//     children: String(form.children),
+//     nationality: form.nationality,
+//   });
+//   //  Build the same path format
+//   localStorage.setItem("hotelSearchForm", JSON.stringify(form));
+//   const destinationSlug = form.destination.trim().replace(/\s+/g, "-");
+//  const url = `/hotel/${destinationSlug}/${params.get("checkin")}/${params.get(
+//   "checkout"
+// )}/${params.get("rooms")}/${params.get("adults")}/${params.get(
+//   "children"
+// )}/${params.get("nationality")}`;
+// setTimeout(() => {
+//     setIsSearching(false);
+//  setIsSearching(false)
+// router.push(url);
+//   }, 500); // 1 second delay
 };
 
 

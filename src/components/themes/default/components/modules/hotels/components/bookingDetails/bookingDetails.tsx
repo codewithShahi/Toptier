@@ -15,6 +15,7 @@ export default function BookingDetails() {
   const saveBookingData = curruntBooking ? JSON.parse(curruntBooking) : {};
   const router = useRouter();
   const {hotelDetails, room , option}=selectedRoom
+  console.log("selectedRoom",selectedRoom)
 const { checkin, checkout, adults, children, rooms } = saveBookingData;
 const { price, markup_price, currency } = option;
 
@@ -60,7 +61,7 @@ const finalTotal = baseTotal + (toptierFee > 0 ? toptierFee : 0);
         <div className="w-full sm:max-w-full md:max-w-95 lg:max-w-95 border border-[#CACACA] shadow rounded-xl p-5 h-fit">
           <div className="flex gap-3 items-center mb-2 ">
             <Image
-              src={selectedRoom?.room?.img}
+              src={selectedRoom?.room?.img || 'https://toptiertravel.vip/uploads/7xd0llauy5gkwcgwk.jpg'}
               alt="Hotel"
               width={200}
               height={200}

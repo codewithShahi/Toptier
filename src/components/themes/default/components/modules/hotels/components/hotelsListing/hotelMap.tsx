@@ -37,7 +37,7 @@ interface HotelMapProps {
     lat: number;
     lon: number;
   } | null;
-    detailHandler?: (hotel: any) => void;
+  detailHandler?: (hotel: any) => void;
 }
 
 const priceIcon = (price: number | string) =>
@@ -143,7 +143,7 @@ function MapClickHandler({ onClose }: { onClose: () => void }) {
   return null;
 }
 
-export default function HotelMap({ hotels, currentLocation,detailHandler }: HotelMapProps) {
+export default function HotelMap({ hotels, currentLocation, detailHandler }: HotelMapProps) {
   const router = useRouter();
   const [validHotels, setValidHotels] = useState<typeof hotels>([]);
   const [showModal, setShowModal] = useState(false);
@@ -179,15 +179,14 @@ export default function HotelMap({ hotels, currentLocation,detailHandler }: Hote
   const renderTooltipContent = (hotel: (typeof hotels)[0], isCurrent: boolean) => {
     return (
       <div
-        className={`text-sm w-[230px] text-wrap h-auto overflow-hidden break-words rounded-xl border cursor-pointer ${
-          isCurrent
+        className={`text-sm w-[230px] text-wrap h-auto overflow-hidden break-words rounded-xl border cursor-pointer ${isCurrent
             ? 'bg-blue-800 border-blue-700 text-white'
             : 'bg-white border-gray-300 text-black'
-        }`}
-        onClick={(e) => {
-          e.stopPropagation();
-          router.push(`/hotel/${hotel.hotel_id}`);
-        }}
+          }`}
+        // onClick={(e) => {
+        //   e.stopPropagation();
+        //   router.push(`/hotel/${hotel.hotel_id}`);
+        // }}
       >
         {hotel.img && (
           <div className="w-full h-30 overflow-hidden p-2">
@@ -290,9 +289,9 @@ export default function HotelMap({ hotels, currentLocation,detailHandler }: Hote
                       },
                       click: () => {
                         if (detailHandler) {
-    detailHandler(hotel);
-    console.log("Hotel clicked: markerrrrrrrrrrrrrr", hotel);
-  }
+                          detailHandler(hotel);
+                          // console.log("Hotel clicked: markerrrrrrrrrrrrrr", hotel);
+                        }
                         setOpenTooltipId(null);
                       },
                     }}
@@ -352,14 +351,14 @@ export default function HotelMap({ hotels, currentLocation,detailHandler }: Hote
                       }
                     }, 200);
                   },
-                    click: () => {
-                        if (detailHandler) {
-    detailHandler(hotel);
-    console.log("Hotel clicked: markerrrrrrrrrrrrrr", hotel);
-  }
-                        setOpenTooltipId(null);
-                      },
-                    }}
+                  click: () => {
+                    if (detailHandler) {
+                      detailHandler(hotel);
+                      // console.log("Hotel clicked: markerrrrrrrrrrrrrr", hotel);
+                    }
+                    setOpenTooltipId(null);
+                  },
+                }}
               >
                 <Tooltip
                   direction="top"

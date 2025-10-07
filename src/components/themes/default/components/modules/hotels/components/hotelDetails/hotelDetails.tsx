@@ -277,7 +277,7 @@ const HotelsDetails = () => {
                 ref={textRef}
                 className={`text-gray-700 text-base md:text-lg leading-6 md:leading-8 mb-2 md:mb-0 overflow-hidden ${isExpanded ? 'transition-all duration-800 ease-in-out' : 'transition-all duration-800 ease-out'}`}
                 style={{
-                  maxHeight: isExpanded ? '1000px' : '4.5rem',
+                  maxHeight: isExpanded ? '1000px' : '8rem',
                 }}
                 dangerouslySetInnerHTML={{ __html: hotelDetails?.desc || '' }}
               />
