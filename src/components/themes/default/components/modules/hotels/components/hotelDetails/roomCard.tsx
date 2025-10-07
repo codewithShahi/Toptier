@@ -138,7 +138,7 @@ export const RoomCard = ({ room, getAmenityIcon, options, onReserve }: RoomCardP
       </div>
     </div>
 
-    {/* 👇 Buttons stick to bottom */}
+    {/*  Buttons stick to bottom */}
     <div className="mt-auto pt-2 border-t border-gray-100">
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center">
