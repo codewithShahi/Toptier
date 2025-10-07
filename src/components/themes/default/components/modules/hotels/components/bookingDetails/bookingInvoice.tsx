@@ -52,6 +52,7 @@ interface HotelInvoiceProps {
 
 const HotelInvoice: React.FC<HotelInvoiceProps> = ({ invoiceDetails }) => {
   const invoiceRef = useRef<HTMLDivElement>(null);
+    const appData = useAppSelector((state) => state.appData?.data?.app);
   const [showInvoiceImage, setShowInvoiceImage] = useState(false);
 
   if (!invoiceDetails?.length) {
@@ -65,7 +66,7 @@ const HotelInvoice: React.FC<HotelInvoiceProps> = ({ invoiceDetails }) => {
   const data = invoiceDetails[0];
   const travellers: Traveller[] = JSON.parse(data.guest || "[]");
   const rooms: RoomData[] = JSON.parse(data.room_data || "[]");
-  const appData = useAppSelector((state) => state.appData?.data?.app);
+
 
   // Generate the invoice URL for QR code
   const invoiceUrl = `${window.location.origin}/invoice/${data.booking_ref_no}`;
