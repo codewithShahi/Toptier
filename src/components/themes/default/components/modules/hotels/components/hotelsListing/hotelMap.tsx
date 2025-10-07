@@ -10,7 +10,7 @@ import {
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { Icon } from "@iconify/react";
-import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 const containerStyle = {
   width: "100%",
@@ -38,6 +38,7 @@ interface HotelMapProps {
   } | null;
 }
 
+// ✅ NEW: Simple price-only icon (no red pin)
 const priceIcon = (price: number | string) =>
   L.divIcon({
     html: `
@@ -50,6 +51,7 @@ const priceIcon = (price: number | string) =>
     iconAnchor: [30, 30],
   });
 
+// ✅ NEW: Highlighted price icon (blue, white text, slightly larger)
 const highlightedIcon = (price: number | string) =>
   L.divIcon({
     html: `
@@ -133,10 +135,8 @@ function CustomControls() {
 }
 
 export default function HotelMap({ hotels, currentLocation }: HotelMapProps) {
-  const router = useRouter();
   const [validHotels, setValidHotels] = useState<typeof hotels>([]);
   const [showModal, setShowModal] = useState(false);
-  const [openTooltipId, setOpenTooltipId] = useState<string | null>(null);
 
   useEffect(() => {
     const filtered = hotels.filter((hotel) => {
@@ -162,54 +162,6 @@ export default function HotelMap({ hotels, currentLocation }: HotelMapProps) {
       </div>
     );
   }
-
-  const renderTooltipContent = (hotel: (typeof hotels)[0], isCurrent: boolean) => {
-    return (
-      <div
-        className={`text-sm w-[230px] text-wrap h-auto overflow-hidden break-words rounded-xl border cursor-pointer ${
-          isCurrent
-            ? 'bg-blue-800 border-blue-700 text-white'
-            : 'bg-white border-gray-300 text-black'
-        }`}
-        onClick={(e) => {
-          e.stopPropagation();
-          router.push(`/hotel/${hotel.hotel_id}`);
-        }}
-      >
-        {hotel.img && (
-          <div className="w-full h-30 overflow-hidden p-2">
-            <img
-              src={hotel.img}
-              alt={hotel.name || "Hotel"}
-              className="w-full h-full object-cover rounded-lg"
-              onError={(e) => {
-                (e.target as HTMLImageElement).style.display = 'none';
-              }}
-            />
-          </div>
-        )}
-
-        <div className="p-3">
-          <h3 className="font-semibold">{hotel.name || "Hotel"}</h3>
-          <p className={`text-xs mt-1 ${isCurrent ? 'text-blue-100' : 'text-gray-500'}`}>
-            {hotel.address || hotel.city || ""}
-          </p>
-          {hotel.stars && (
-            <div className="flex items-center mt-1">
-              {Array.from({ length: Number(hotel.stars) }).map((_, i) => (
-                <span key={i} className={isCurrent ? 'text-yellow-300' : 'text-yellow-500'}>
-                  ★
-                </span>
-              ))}
-            </div>
-          )}
-          <p className="font-bold mt-2">
-            ${hotel.actual_price}
-          </p>
-        </div>
-      </div>
-    );
-  };
 
   return (
     <div className="relative w-full h-[800px] rounded-2xl overflow-hidden">
@@ -253,30 +205,57 @@ export default function HotelMap({ hotels, currentLocation }: HotelMapProps) {
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a>'
               />
               <FitBounds hotels={validHotels} />
-
               {validHotels.map((hotel) => {
                 const lat = Number(hotel.latitude);
                 const lng = Number(hotel.longitude);
                 const isCurrent = isSameLocation(lat, lng, currentLocation);
-                const isVisible = openTooltipId === hotel.hotel_id;
 
                 return (
                   <Marker
                     key={hotel.hotel_id}
                     position={[lat, lng]}
                     icon={isCurrent ? highlightedIcon(hotel.actual_price) : priceIcon(hotel.actual_price)}
-                    eventHandlers={{
-                      mouseover: () => setOpenTooltipId(hotel.hotel_id),
-                    }}
                   >
-                    <Tooltip
-                      direction="top"
-                      offset={L.point(0, -10)}
-                      opacity={isVisible ? 1 : 0}
-                      permanent
-                      interactive
-                    >
-                      {renderTooltipContent(hotel, isCurrent)}
+                    <Tooltip direction="top" offset={L.point(0, -10)} opacity={1}>
+                      <div
+                        className={`text-sm w-[230px] text-wrap h-auto overflow-hidden break-words rounded-xl border ${isCurrent
+                          ? 'bg-blue-800 border-blue-700 text-white'
+                          : 'bg-white border-gray-300 text-black'
+                          }`}
+                      >
+                        {/* Hotel Image (if available) */}
+                        {hotel.img && (
+                          <div className="w-full h-30 overflow-hidden p-2">
+                            <img
+                              src={hotel.img}
+                              alt={hotel.name || "Hotel"}
+                              className="w-full h-full object-cover rounded-lg"
+                              onError={(e) => {
+                                (e.target as HTMLImageElement).style.display = 'none';
+                              }}
+                            />
+                          </div>
+                        )}
+
+                        <div className="p-3">
+                          <h3 className="font-semibold">{hotel.name || "Hotel"}</h3>
+                          <p className={`text-xs mt-1 ${isCurrent ? 'text-blue-100' : 'text-gray-500'}`}>
+                            {hotel.address || hotel.city || ""}
+                          </p>
+                          {hotel.stars && (
+                            <div className="flex items-center mt-1">
+                              {Array.from({ length: Number(hotel.stars) }).map((_, i) => (
+                                <span key={i} className={isCurrent ? 'text-yellow-300' : 'text-yellow-500'}>
+                                  ★
+                                </span>
+                              ))}
+                            </div>
+                          )}
+                          <p className="font-bold mt-2">
+                            ${hotel.actual_price}
+                          </p>
+                        </div>
+                      </div>
                     </Tooltip>
                   </Marker>
                 );
@@ -288,7 +267,7 @@ export default function HotelMap({ hotels, currentLocation }: HotelMapProps) {
       )}
 
       {/* MAIN MAP */}
-      <div className="relative z-0">
+      <div className="relative z-0 ">
         <MapContainer
           style={containerStyle}
           center={fallbackCenter}
@@ -302,30 +281,57 @@ export default function HotelMap({ hotels, currentLocation }: HotelMapProps) {
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a>'
           />
           <FitBounds hotels={validHotels} />
-
           {validHotels.map((hotel) => {
             const lat = Number(hotel.latitude);
             const lng = Number(hotel.longitude);
             const isCurrent = isSameLocation(lat, lng, currentLocation);
-            const isVisible = openTooltipId === hotel.hotel_id;
 
             return (
               <Marker
                 key={hotel.hotel_id}
                 position={[lat, lng]}
                 icon={isCurrent ? highlightedIcon(hotel.actual_price) : priceIcon(hotel.actual_price)}
-                eventHandlers={{
-                  mouseover: () => setOpenTooltipId(hotel.hotel_id),
-                }}
               >
-                <Tooltip
-                  direction="top"
-                  offset={L.point(0, -10)}
-                  opacity={isVisible ? 1 : 0}
-                  permanent
-                  interactive
-                >
-                  {renderTooltipContent(hotel, isCurrent)}
+                <Tooltip direction="top" offset={L.point(0, -10)} opacity={1}>
+                  <div
+                    className={`text-sm w-[230px] text-wrap h-auto overflow-hidden break-words rounded-xl border p-2 ${isCurrent
+                      ? 'bg-blue-800 border-blue-700 text-white'
+                      : 'bg-white border-gray-300 text-black'
+                      }`}
+                  >
+                    {/* Hotel Image (if available) */}
+                    {hotel.img && (
+                      <div className="w-full h-30 overflow-hidden">
+                        <img
+                          src={hotel.img}
+                          alt={hotel.name || "Hotel"}
+                          className="w-full h-full object-cover rounded-lg"
+                          onError={(e) => {
+                            (e.target as HTMLImageElement).style.display = 'none';
+                          }}
+                        />
+                      </div>
+                    )}
+
+                    <div className="p-3">
+                      <h3 className="font-semibold">{hotel.name || "Hotel"}</h3>
+                      <p className={`text-xs mt-1 ${isCurrent ? 'text-blue-100' : 'text-gray-500'}`}>
+                        {hotel.address || hotel.city || ""}
+                      </p>
+                      {hotel.stars && (
+                        <div className="flex items-center mt-1">
+                          {Array.from({ length: Number(hotel.stars) }).map((_, i) => (
+                            <span key={i} className={isCurrent ? 'text-yellow-300' : 'text-yellow-500'}>
+                              ★
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                      <p className="font-bold mt-2">
+                        ${hotel.actual_price}
+                      </p>
+                    </div>
+                  </div>
                 </Tooltip>
               </Marker>
             );
