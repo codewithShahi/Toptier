@@ -16,6 +16,7 @@ import { AccordionInfoCard } from '@components/core/accordians/accordian';
 const bookingSchema = z.object({
   firstName: z.string().min(1, 'First name is required'),
   lastName: z.string().min(1, 'Last name is required'),
+  address: z.string().min(1, 'Address is required'),
   email: z.string().email('Invalid email address'),
   nationality: z.string().min(1, 'Nationality is required'),
   currentCountry: z.string().min(1, 'Current country is required'),
@@ -45,6 +46,7 @@ export type BookingFormValues = z.infer<typeof bookingSchema>;
 const defaultValues: BookingFormValues = {
   firstName: '',
   lastName: '',
+  address: '',
   email: '',
   nationality: '',
   currentCountry: '',
@@ -94,8 +96,8 @@ export default function BookingForm() {
   const [isTitleOpen, setIsTitleOpen] = useState<number | null>(null);
   const titleRefs = useRef<(HTMLDivElement | null)[]>([]);
   const titles = ['Mr', 'Mrs', 'Ms', 'Dr'];
-  const [isCountryListOpen,setIsCountryListOpen]=useState<boolean>(false)
-    const [isPhoneCodeListOpen,setIsPhoneCodeListOpen]=useState<boolean>(false)
+  const [isCountryListOpen, setIsCountryListOpen] = useState<boolean>(false)
+  const [isPhoneCodeListOpen, setIsPhoneCodeListOpen] = useState<boolean>(false)
 
   const curruntBooking = localStorage.getItem('hotelSearchForm');
   const saveBookingData = curruntBooking ? JSON.parse(curruntBooking) : {};
@@ -128,12 +130,12 @@ export default function BookingForm() {
   const excludedCodes = ['0', '381', '599'];
   const countryList: CountryOption[] = Array.isArray(rawCountries)
     ? rawCountries
-        .map((c: RawCountry) => ({
-          iso: c.iso || c.code || '',
-          name: c.nicename || c.name || '',
-          phonecode: c.phonecode?.toString() || '0',
-        }))
-        .filter((c) => c.iso && c.name && !excludedCodes.includes(c.phonecode))
+      .map((c: RawCountry) => ({
+        iso: c.iso || c.code || '',
+        name: c.nicename || c.name || '',
+        phonecode: c.phonecode?.toString() || '0',
+      }))
+      .filter((c) => c.iso && c.name && !excludedCodes.includes(c.phonecode))
     : [];
 
   const countryOptions = countryList.map((c) => ({
@@ -147,7 +149,7 @@ export default function BookingForm() {
     value: `+${c.phonecode}`,
     label: `+${c.phonecode}`, // ← searchable by country name
     iso: c.iso,
-    phonecode:  `${c.phonecode}`,
+    phonecode: `${c.phonecode}`,
   }));
 
   const currentCountry = watch('currentCountry');
@@ -193,6 +195,7 @@ export default function BookingForm() {
     const {
       firstName,
       lastName,
+      address,
       nationality,
       currentCountry,
       email,
@@ -229,7 +232,7 @@ export default function BookingForm() {
       first_name: firstName || '',
       last_name: lastName || '',
       email: email || '',
-      address: '',
+      address: address || '',
       phone_country_code: phoneCountryCode || '+92',
       phone: phoneNumber || '000-000-000',
       country: hotel_country || 'UNITED ARAB EMIRATES',
@@ -271,9 +274,9 @@ export default function BookingForm() {
       user_data: {
         first_name: firstName || '',
         last_name: lastName || '',
+        address: address || '',
         email: email || '',
         phone: phoneNumber || '',
-        address: '',
         nationality: nationality || 'pk',
         country_code: nationality || 'pk',
       },
@@ -328,6 +331,25 @@ export default function BookingForm() {
               )}
             />
             {errors.lastName && <p className="text-red-500 text-sm mt-1">{errors.lastName.message}</p>}
+          </div>
+          {/* Address */}
+          <div className="w-full max-w-2xl">
+            <label htmlFor="address" className="block text-base font-medium text-[#5B697E] mb-2">
+              Address
+            </label>
+            <Controller
+              name="address"
+              control={control}
+              render={({ field }) => (
+                <input
+                  {...field}
+                  id="address"
+                  type="text"
+                  className="block border border-gray-300 rounded-xl px-3 py-4 text-base w-full outline-none focus:border-[#163C8C] focus:ring-1 focus:ring-[#163C8C]"
+                />
+              )}
+            />
+            {errors.address && <p className="text-red-500 text-sm mt-1">{errors.address.message}</p>}
           </div>
         </div>
       </div>
@@ -385,70 +407,70 @@ export default function BookingForm() {
           <label htmlFor="currentCountry" className="block text-base font-medium text-[#5B697E] mb-2">
             Current Country
           </label>
-<Controller
-  name="currentCountry"
-  control={control}
-  render={({ field }) => (
-    <Select
-      {...field}
-      options={countryOptions}
-      placeholder="Select Country"
-      isSearchable
-      onChange={(option: any) => field.onChange(option?.value || '')}
-      value={countryOptions.find(opt => opt.value === field.value) || null}
-      className="w-full"
-      classNames={{
-        control: () =>
+          <Controller
+            name="currentCountry"
+            control={control}
+            render={({ field }) => (
+              <Select
+                {...field}
+                options={countryOptions}
+                placeholder="Select Country"
+                isSearchable
+                onChange={(option: any) => field.onChange(option?.value || '')}
+                value={countryOptions.find(opt => opt.value === field.value) || null}
+                className="w-full"
+                classNames={{
+                  control: () =>
 
-          'border border-gray-300 rounded-xl px-3 py-3.5 flex items-center min-h-[44px] text-base focus:ring-1 focus:ring-[#163C8C] focus:border-[#163C8C] shadow-none',
-        valueContainer: () => 'flex items-center gap-2 px-1',
-        singleValue: () =>
-          'flex items-center gap-2 text-gray-800 font-medium truncate',
-        placeholder: () => 'text-gray-400 font-normal',
-        indicatorsContainer: () => 'absolute right-4',
+                    'border border-gray-300 rounded-xl px-3 py-3.5 flex items-center min-h-[44px] text-base focus:ring-1 focus:ring-[#163C8C] focus:border-[#163C8C] shadow-none',
+                  valueContainer: () => 'flex items-center gap-2 px-1',
+                  singleValue: () =>
+                    'flex items-center gap-2 text-gray-800 font-medium truncate',
+                  placeholder: () => 'text-gray-400 font-normal',
+                  indicatorsContainer: () => 'absolute right-4',
 
-      }}
-       onMenuOpen={() => setIsCountryListOpen(true)}   // detect dropdown open
-          onMenuClose={() => setIsCountryListOpen(false)} // detect dropdown close
-      components={{
-        Option: ({ data, ...props }) => (
-          <div
-            {...props.innerProps}
-            className="px-3 py-2 cursor-pointer flex items-center gap-2 hover:bg-gray-100"
-          >
-            <Icon
-              icon={`flagpack:${data.iso?.toLowerCase()}`}
-              width="22"
-              height="16"
-              className="rounded-sm"
-            />
-            <span>{data.label}</span>
-          </div>
-        ),
-        SingleValue: ({ data }) => (
-          <div className="flex items-center gap-2 truncate">
-            <Icon
-              icon={`flagpack:${data.iso?.toLowerCase()}`}
-              width="22"
-              height="16"
-              className="rounded-sm"
-            />
-            <span>{data.label}</span>
-          </div>
-        ),
-        DropdownIndicator: () => (
-          <Icon
-            icon="mdi:keyboard-arrow-down"
-            width="24"
-            height="24"
-          className={`text-gray-600 transi duration-100 ease-in-out ${isCountryListOpen ? 'rotate-180' : "rotate-0"}`}
+                }}
+                onMenuOpen={() => setIsCountryListOpen(true)}   // detect dropdown open
+                onMenuClose={() => setIsCountryListOpen(false)} // detect dropdown close
+                components={{
+                  Option: ({ data, ...props }) => (
+                    <div
+                      {...props.innerProps}
+                      className="px-3 py-2 cursor-pointer flex items-center gap-2 hover:bg-gray-100"
+                    >
+                      <Icon
+                        icon={`flagpack:${data.iso?.toLowerCase()}`}
+                        width="22"
+                        height="16"
+                        className="rounded-sm"
+                      />
+                      <span>{data.label}</span>
+                    </div>
+                  ),
+                  SingleValue: ({ data }) => (
+                    <div className="flex items-center gap-2 truncate">
+                      <Icon
+                        icon={`flagpack:${data.iso?.toLowerCase()}`}
+                        width="22"
+                        height="16"
+                        className="rounded-sm"
+                      />
+                      <span>{data.label}</span>
+                    </div>
+                  ),
+                  DropdownIndicator: () => (
+                    <Icon
+                      icon="mdi:keyboard-arrow-down"
+                      width="24"
+                      height="24"
+                      className={`text-gray-600 transi duration-100 ease-in-out ${isCountryListOpen ? 'rotate-180' : "rotate-0"}`}
+                    />
+                  ),
+                  IndicatorSeparator: () => null,
+                }}
+              />
+            )}
           />
-        ),
-        IndicatorSeparator: () => null,
-      }}
-    />
-  )}
-/>
 
 
           {errors.currentCountry && <p className="text-red-500 text-sm mt-1">{errors.currentCountry.message}</p>}
@@ -462,68 +484,68 @@ export default function BookingForm() {
               Country Code
             </label>
 
-         <Controller
-  name="phoneCountryCode"
-  control={control}
-  render={({ field }) => (
-    <Select
-      {...field}
-      options={phoneCodeOptions}
-      placeholder="Code"
-      isSearchable
-      onChange={(option: any) => field.onChange(option?.value || '')}
-      value={phoneCodeOptions.find(opt => opt.value === field.value) || null}
-      className="w-full"
-      classNames={{
-        control: () =>
-          'border border-gray-300 rounded-xl px-3 py-3.5 flex items-center min-h-[44px] text-base focus:ring-1 focus:ring-[#163C8C] focus:border-[#163C8C] shadow-none',
-        valueContainer: () => 'flex items-center gap-2 px-1',
-        singleValue: () => 'flex items-center justify-between  text-gray-800 font-medium',
-        placeholder: () => 'text-gray-400 font-normal',
-        indicatorsContainer: () => 'absolute right-4',
-      }}
- onMenuOpen={() => setIsPhoneCodeListOpen(true)}   // detect dropdown open
-          onMenuClose={() => setIsPhoneCodeListOpen(false)} // detect dropdown close
-      components={{
-        Option: ({ children, data, ...props }) => (
-          <div
-            {...props.innerProps}
-            className="px-3 py-2 cursor-pointer flex items-center gap-2 hover:bg-gray-100"
-          >
-            <Icon
-              icon={`flagpack:${data.iso?.toLowerCase()}`}
-              width="22"
-              height="16"
-              className="rounded-sm"
+            <Controller
+              name="phoneCountryCode"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  {...field}
+                  options={phoneCodeOptions}
+                  placeholder="Code"
+                  isSearchable
+                  onChange={(option: any) => field.onChange(option?.value || '')}
+                  value={phoneCodeOptions.find(opt => opt.value === field.value) || null}
+                  className="w-full"
+                  classNames={{
+                    control: () =>
+                      'border border-gray-300 rounded-xl px-3 py-3.5 flex items-center min-h-[44px] text-base focus:ring-1 focus:ring-[#163C8C] focus:border-[#163C8C] shadow-none',
+                    valueContainer: () => 'flex items-center gap-2 px-1',
+                    singleValue: () => 'flex items-center justify-between  text-gray-800 font-medium',
+                    placeholder: () => 'text-gray-400 font-normal',
+                    indicatorsContainer: () => 'absolute right-4',
+                  }}
+                  onMenuOpen={() => setIsPhoneCodeListOpen(true)}   // detect dropdown open
+                  onMenuClose={() => setIsPhoneCodeListOpen(false)} // detect dropdown close
+                  components={{
+                    Option: ({ children, data, ...props }) => (
+                      <div
+                        {...props.innerProps}
+                        className="px-3 py-2 cursor-pointer flex items-center gap-2 hover:bg-gray-100"
+                      >
+                        <Icon
+                          icon={`flagpack:${data.iso?.toLowerCase()}`}
+                          width="22"
+                          height="16"
+                          className="rounded-sm"
 
+                        />
+                        <span>+{data.phonecode}</span>
+                      </div>
+                    ),
+                    SingleValue: ({ data }) => (
+                      <div className="flex items-center justify-between gap-2 truncate">
+                        <Icon
+                          icon={`flagpack:${data.iso?.toLowerCase()}`}
+                          width="22"
+                          height="16"
+                          className="rounded-sm"
+                        />
+                        <span>+{data.phonecode}</span>
+                      </div>
+                    ),
+                    DropdownIndicator: () => (
+                      <Icon
+                        icon="mdi:keyboard-arrow-down"
+                        width="24"
+                        height="24"
+                        className={`text-gray-600 transi duration-100 ease-in-out ${isPhoneCodeListOpen ? 'rotate-180' : "rotate-0"}`}
+                      />
+                    ),
+                    IndicatorSeparator: () => null,
+                  }}
+                />
+              )}
             />
-            <span>+{data.phonecode}</span>
-          </div>
-        ),
-        SingleValue: ({ data }) => (
-          <div className="flex items-center justify-between gap-2 truncate">
-            <Icon
-              icon={`flagpack:${data.iso?.toLowerCase()}`}
-              width="22"
-              height="16"
-              className="rounded-sm"
-            />
-            <span>+{data.phonecode}</span>
-          </div>
-        ),
-        DropdownIndicator: () => (
-          <Icon
-            icon="mdi:keyboard-arrow-down"
-            width="24"
-            height="24"
-          className={`text-gray-600 transi duration-100 ease-in-out ${isPhoneCodeListOpen ? 'rotate-180' : "rotate-0"}`}
-          />
-        ),
-        IndicatorSeparator: () => null,
-      }}
-    />
-  )}
-/>
 
             {errors.phoneCountryCode && <p className="text-red-500 text-sm mt-1">{errors.phoneCountryCode.message}</p>}
           </div>
@@ -587,9 +609,8 @@ export default function BookingForm() {
                           icon="material-symbols:keyboard-arrow-up"
                           width="24"
                           height="24"
-                          className={`h-5 w-5 text-gray-500 transition-transform ${
-                            isTitleOpen === index ? 'rotate-0' : 'rotate-180'
-                          }`}
+                          className={`h-5 w-5 text-gray-500 transition-transform ${isTitleOpen === index ? 'rotate-0' : 'rotate-180'
+                            }`}
                         />
                       </button>
                       {isTitleOpen === index && (
@@ -677,11 +698,10 @@ export default function BookingForm() {
                     <div
                       key={index}
                       onClick={() => field.onChange(payment.name)}
-                      className={`relative border rounded-xl p-4 cursor-pointer transition-all w-full ${
-                        field.value === payment.name
+                      className={`relative border rounded-xl p-4 cursor-pointer transition-all w-full ${field.value === payment.name
                           ? 'border-[#163C8C] bg-[#163C8C]/5'
                           : 'border-gray-300 hover:border-[#163C8C]/50'
-                      }`}
+                        }`}
                     >
                       {field.value === payment.name && (
                         <div className="absolute top-4 right-3 w-6 h-6 rounded-full bg-[#163C8C] flex items-center justify-center">
@@ -725,19 +745,19 @@ export default function BookingForm() {
         <h3 className="text-xl text-[#0F172BE5] font-semibold">Cancellation Policy</h3>
 
         {hotelDetails?.cancellation !== "" && (
-             <AccordionInfoCard
-                              title="Cancellation Policy"
-                              showDescription={false}
-                              showLeftIcon={false}
-                              titleClassName='text-red-500'
-                            >
-                              <div className='bg-red-100 text-red-500 p-4 w-full rounded-lg'>
-            <p
-              className="text-[#0F172B66] text-base font-medium"
-              dangerouslySetInnerHTML={{ __html: hotelDetails.cancellation }}
-            />
-          </div>
-                            </AccordionInfoCard>
+          <AccordionInfoCard
+            title="Cancellation Policy"
+            showDescription={false}
+            showLeftIcon={false}
+            titleClassName='text-red-500'
+          >
+            <div className='bg-red-100 text-red-500 p-4 w-full rounded-lg'>
+              <p
+                className="text-[#0F172B66] text-base font-medium"
+                dangerouslySetInnerHTML={{ __html: hotelDetails.cancellation }}
+              />
+            </div>
+          </AccordionInfoCard>
 
         )}
 
@@ -768,11 +788,10 @@ export default function BookingForm() {
       <button
         type="submit"
         disabled={isPending}
-        className={`w-full text-lg text-white py-3 font-medium rounded-lg mt-5 transition-colors focus:ring-2 focus:ring-offset-2 flex items-center justify-center gap-2 ${
-          isPending
+        className={`w-full text-lg text-white py-3 font-medium rounded-lg mt-5 transition-colors focus:ring-2 focus:ring-offset-2 flex items-center justify-center gap-2 ${isPending
             ? 'bg-gray-400 cursor-not-allowed'
             : 'bg-[#163C8C] hover:bg-[#0f2d6b] cursor-pointer focus:ring-[#163C8C]'
-        }`}
+          }`}
       >
         {isPending ? (
           <>

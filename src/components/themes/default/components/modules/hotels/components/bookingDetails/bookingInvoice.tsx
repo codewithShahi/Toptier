@@ -104,7 +104,7 @@ const HotelInvoice: React.FC<HotelInvoiceProps> = ({ invoiceDetails }) => {
     customer: {
       email: data.email || "N/A",
       contact: data.phone || "N/A",
-      address: "N/A",
+      address: data.address || "N/A" ,
     },
     customerCare: {
       email: "support@toptiertravel.vip",
