@@ -148,7 +148,7 @@ const [form, setForm] = useState<HotelForm>(initialForm);
           return;
         }
     setForm(prev => {
-      let newForm = { ...prev, ...updates };
+      const newForm = { ...prev, ...updates };
 
       // Auto-manage children_ages when children count changes
       if (updates.children !== undefined) {

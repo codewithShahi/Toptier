@@ -478,7 +478,7 @@ const useHotelSearch = () => {
     }
 
     setForm((prev) => {
-      let newForm = { ...prev, ...updates };
+      const newForm = { ...prev, ...updates };
 
       if (updates.children !== undefined) {
         const newChildrenCount = updates.children;
