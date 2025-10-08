@@ -151,6 +151,15 @@ export default function HotelMap({ hotels, currentLocation, detailHandler }: Hot
 
   const closeTooltip = () => setOpenTooltipId(null);
 
+  const handleHotelClick = (hotel: any) => {
+    closeTooltip();
+    if (detailHandler) {
+      detailHandler(hotel);
+    } else {
+      router.push(`/hotel/${hotel.hotel_id}`);
+    }
+  };
+
   useEffect(() => {
     const filtered = hotels.filter((hotel) => {
       const lat = Number(hotel.latitude);
@@ -179,14 +188,15 @@ export default function HotelMap({ hotels, currentLocation, detailHandler }: Hot
   const renderTooltipContent = (hotel: (typeof hotels)[0], isCurrent: boolean) => {
     return (
       <div
-        className={`text-sm w-[230px] text-wrap h-auto overflow-hidden break-words rounded-xl border cursor-pointer ${isCurrent
+        className={`text-sm w-[230px] text-wrap h-auto overflow-hidden break-words rounded-xl border cursor-pointer ${
+          isCurrent
             ? 'bg-blue-800 border-blue-700 text-white'
             : 'bg-white border-gray-300 text-black'
-          }`}
-        // onClick={(e) => {
-        //   e.stopPropagation();
-        //   router.push(`/hotel/${hotel.hotel_id}`);
-        // }}
+        }`}
+        onClick={(e) => {
+          e.stopPropagation(); 
+          handleHotelClick(hotel);
+        }}
       >
         {hotel.img && (
           <div className="w-full h-30 overflow-hidden p-2">
@@ -215,9 +225,7 @@ export default function HotelMap({ hotels, currentLocation, detailHandler }: Hot
               ))}
             </div>
           )}
-          <p className="font-bold mt-2">
-            ${hotel.actual_price}
-          </p>
+          <p className="font-bold mt-2">${hotel.actual_price}</p>
         </div>
       </div>
     );
@@ -225,7 +233,7 @@ export default function HotelMap({ hotels, currentLocation, detailHandler }: Hot
 
   return (
     <div className="relative w-full h-[800px] rounded-2xl overflow-hidden">
-      {/* Fullscreen toggle */}
+     
       <div
         className="absolute top-9 right-5 z-[30] cursor-pointer"
         onClick={() => setShowModal(true)}
@@ -241,7 +249,7 @@ export default function HotelMap({ hotels, currentLocation, detailHandler }: Hot
         </div>
       </div>
 
-      {/* FULLSCREEN MODAL */}
+      {/*================== FULLSCREEN MODAL */}
       {showModal && (
         <div className="fixed inset-0 z-[80] rounded-md bg-black bg-opacity-50 flex items-center justify-center">
           <div className="relative w-full h-full">
@@ -280,30 +288,22 @@ export default function HotelMap({ hotels, currentLocation, detailHandler }: Hot
                     eventHandlers={{
                       mouseover: () => setOpenTooltipId(hotel.hotel_id),
                       mouseout: () => {
-                        // Delayed close to prevent blink
                         setTimeout(() => {
                           if (openTooltipId === hotel.hotel_id) {
                             setOpenTooltipId(null);
                           }
                         }, 200);
                       },
-                      click: () => {
-                        if (detailHandler) {
-                          detailHandler(hotel);
-                          // console.log("Hotel clicked: markerrrrrrrrrrrrrr", hotel);
-                        }
-                        setOpenTooltipId(null);
-                      },
+                      click: () => handleHotelClick(hotel), 
                     }}
                   >
                     <Tooltip
                       direction="top"
                       offset={L.point(0, -10)}
                       opacity={1}
-                      // open={openTooltipId === hotel.hotel_id}
                       interactive
                     >
-                      {renderTooltipContent(hotel, isCurrent)}
+                      {renderTooltipContent(hotel, isCurrent)} 
                     </Tooltip>
                   </Marker>
                 );
@@ -314,7 +314,7 @@ export default function HotelMap({ hotels, currentLocation, detailHandler }: Hot
         </div>
       )}
 
-      {/* MAIN MAP */}
+      {/*=================== MAIN MAP */}
       <div className="relative z-0">
         <MapContainer
           style={containerStyle}
@@ -344,30 +344,22 @@ export default function HotelMap({ hotels, currentLocation, detailHandler }: Hot
                 eventHandlers={{
                   mouseover: () => setOpenTooltipId(hotel.hotel_id),
                   mouseout: () => {
-                    // Delayed close to prevent blink
                     setTimeout(() => {
                       if (openTooltipId === hotel.hotel_id) {
                         setOpenTooltipId(null);
                       }
                     }, 200);
                   },
-                  click: () => {
-                    if (detailHandler) {
-                      detailHandler(hotel);
-                      // console.log("Hotel clicked: markerrrrrrrrrrrrrr", hotel);
-                    }
-                    setOpenTooltipId(null);
-                  },
+                  click: () => handleHotelClick(hotel), 
                 }}
               >
                 <Tooltip
                   direction="top"
                   offset={L.point(0, -10)}
                   opacity={1}
-                  // open={openTooltipId === hotel.hotel_id}
                   interactive
                 >
-                  {renderTooltipContent(hotel, isCurrent)}
+                  {renderTooltipContent(hotel, isCurrent)} 
                 </Tooltip>
               </Marker>
             );
