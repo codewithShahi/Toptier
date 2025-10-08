@@ -127,7 +127,7 @@ const HotelsDetails = () => {
   });
   //  console.log("new form ", form);
   const [isModalOpen, setIsModalOpen] = React.useState(false);
-  console.log("hotelDetails", hotelDetails);
+  // console.log("hotelDetails", hotelDetails);
   const { img } = hotelDetails || {};
 
   const [isExpanded, setIsExpanded] = useState(false);

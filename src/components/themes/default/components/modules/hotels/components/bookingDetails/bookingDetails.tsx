@@ -15,7 +15,7 @@ export default function BookingDetails() {
   const saveBookingData = curruntBooking ? JSON.parse(curruntBooking) : {};
   const router = useRouter();
   const {hotelDetails, room , option}=selectedRoom
-  console.log("selectedRoom",selectedRoom)
+  // console.log("selectedRoom",selectedRoom)
 const { checkin, checkout, adults, children, rooms } = saveBookingData;
 const { price, markup_price, currency } = option;
 
