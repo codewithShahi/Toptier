@@ -52,7 +52,7 @@ interface HotelInvoiceProps {
 
 const HotelInvoice: React.FC<HotelInvoiceProps> = ({ invoiceDetails }) => {
   const invoiceRef = useRef<HTMLDivElement>(null);
-    const appData = useAppSelector((state) => state.appData?.data?.app);
+  const appData = useAppSelector((state) => state.appData?.data?.app);
   const [showInvoiceImage, setShowInvoiceImage] = useState(false);
 
   if (!invoiceDetails?.length) {
@@ -104,7 +104,7 @@ const HotelInvoice: React.FC<HotelInvoiceProps> = ({ invoiceDetails }) => {
     customer: {
       email: data.email || "N/A",
       contact: data.phone || "N/A",
-      address: data.address || "N/A" ,
+      address: data.address || "N/A",
     },
     customerCare: {
       email: "support@toptiertravel.vip",
@@ -328,19 +328,19 @@ View Invoice: ${invoiceUrl}`;
         </div>
 
         {/* Buttons */}
-        <div className="border-t border-gray-200 bg-white py-5 flex flex-col sm:flex-row gap-3 justify-center">
+        <div className="border-t border-gray-200 bg-white py-5 flex flex-col sm:flex-row gap-3 justify-center items-center">
           <button
             onClick={handleDownloadPDF}
-            className="flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-lg shadow-md"
+            className="flex items-center justify-center gap-2 bg-blue-800 hover:bg-gray-800 text-white font-semibold cursor-pointer h-11 px-6 rounded-full shadow-md min-w-[160px]"
           >
-<Icon icon="mdi:tray-arrow-down" width="24" height="24" />            Download PDF
+            <Icon icon="mdi:tray-arrow-down" width="20" height="20" />
+            Download PDF
           </button>
           <button
             onClick={handleShareWhatsApp}
-            className="flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-lg shadow-md"
+            className="flex items-center justify-center gap-2 bg-gray-800 hover:bg-blue-800 text-white font-semibold cursor-pointer h-11 px-12 rounded-full shadow-md min-w-[160px]"
           >
-            <Icon icon="mdi:payment" width="24" height="24" />
-            {/* <Icon icon="ic:baseline-whatsapp" width="20" /> */}
+            <Icon icon="mdi:payment" width="20" height="20" />
             Pay Now
           </button>
         </div>

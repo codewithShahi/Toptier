@@ -105,7 +105,8 @@ export default function HotelDetailsSearch({
           </div>
 
           {/* Guests */}
-          <div className="relative" ref={guestsDropdownRef}>
+          <div className="flex flex-col">
+               <div className="relative" ref={guestsDropdownRef}>
             <label className="block text-sm text-start font-medium text-gray-500 mb-2 dark:text-gray-300">
               {dict?.hotel_search?.guest_button?.title}
             </label>
@@ -127,8 +128,16 @@ export default function HotelDetailsSearch({
             </button>
 
             {showGuestsDropdown && (
-              <div className="absolute z-20 w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg mt-1 md:min-w-[350px] max-h-80 overflow-y-auto">
+              <div className="absolute z-20 w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg mt-1 md:min-w-[350px] max-h-auto overflow-visible">
                 <div className="p-4 space-y-4">
+                     <div className="flex items-center justify-between">
+                    <span className="text-sm font-medium text-blue-900 dark:text-blue-300">Rooms</span>
+                    <div className="flex items-center gap-3">
+                      <button type="button" onClick={() => updateForm({ rooms: Math.max(1, form.rooms - 1) })} className="w-8 h-8 flex items-center cursor-pointer justify-center rounded-full border dark:border-gray-600 text-blue-900 dark:text-blue-300 bg-white dark:bg-gray-800 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors">-</button>
+                      <span className="text-blue-900 dark:text-blue-300 min-w-[1.25rem] text-center font-medium">{form.rooms}</span>
+                      <button type="button" onClick={() => updateForm({ rooms: form.rooms + 1 })} className="w-8 h-8 flex items-center cursor-pointer justify-center rounded-full border dark:border-gray-600 text-blue-900 dark:text-blue-300 bg-white dark:bg-gray-800 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors">+</button>
+                    </div>
+                  </div>
                   <div className="flex items-center justify-between">
                     <span className="text-sm font-medium text-blue-900 dark:text-blue-300">Adults</span>
                     <div className="flex items-center gap-3">
@@ -145,63 +154,71 @@ export default function HotelDetailsSearch({
                       <button type="button" onClick={() => updateForm({ children: form.children + 1 })} className="w-8 h-8 flex items-center cursor-pointer justify-center rounded-full border dark:border-gray-600 text-blue-900 dark:text-blue-300 bg-white dark:bg-gray-800 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors">+</button>
                     </div>
                   </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium text-blue-900 dark:text-blue-300">Rooms</span>
-                    <div className="flex items-center gap-3">
-                      <button type="button" onClick={() => updateForm({ rooms: Math.max(1, form.rooms - 1) })} className="w-8 h-8 flex items-center cursor-pointer justify-center rounded-full border dark:border-gray-600 text-blue-900 dark:text-blue-300 bg-white dark:bg-gray-800 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors">-</button>
-                      <span className="text-blue-900 dark:text-blue-300 min-w-[1.25rem] text-center font-medium">{form.rooms}</span>
-                      <button type="button" onClick={() => updateForm({ rooms: form.rooms + 1 })} className="w-8 h-8 flex items-center cursor-pointer justify-center rounded-full border dark:border-gray-600 text-blue-900 dark:text-blue-300 bg-white dark:bg-gray-800 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors">+</button>
-                    </div>
-                  </div>
+
                 </div>
+                    {form.children > 0 && (
+  <div className="px-4 py-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-2">
+      {Array.from({ length: form.children }, (_, index) => {
+        const currentAge = form.children_ages?.[index] ?? 0;
+        return (
+          <div key={index} className="flex flex-col">
+            <label className="text-xs text-start ps-1 font-medium text-gray-700 mb-1">
+              Child Age {index + 1}
+            </label>
+           <Dropdown
+  label={
+    <span className="block text-left w-full px-1 py-2 text-sm text-gray-700">
+      {currentAge || 1} years
+    </span>
+  }
+  buttonClassName="w-full text-left border flex justify-between items-center border-gray-200 rounded-xl px-2.5 py-2 text-sm focus:outline-none hover:bg-gray-50"
+  dropDirection="down"
+>
+  {({ onClose }) => (
+    <div className="max-h-48 overflow-y-auto p-1">
+      {Array.from({ length: 12 }, (_, i) => i + 1).map((age) => (  // starts from 1 now
+        <button
+          key={age}
+          type="button"
+          onClick={() => {
+            const newAges =
+              Array.isArray(form.children_ages) && form.children_ages.length > 0
+                ? [...form.children_ages]
+                : [1];
+
+            newAges[index] = age;
+            updateForm({ children_ages: newAges });
+            onClose();
+          }}
+          className={`w-full text-left px-3 py-3  text-sm rounded-lg ${
+            currentAge === age
+              ? 'bg-gray-200 text-gray-700 font-medium'
+              : 'text-gray-700 hover:bg-gray-100'
+          }`}
+        >
+          {age} years
+        </button>
+      ))}
+    </div>
+  )}
+</Dropdown>
+
+          </div>
+        );
+      })}
+    </div>
+  </div>
+)}
               </div>
             )}
+
+
           </div>
 
-          {/* Nationality Dropdown */}
-          {/* <div className="relative">
-            <label className="block text-sm text-start font-medium text-gray-500 dark:text-gray-300 mb-2">
-              Nationality
-            </label>
+          </div>
 
-            <Dropdown
-              key={form.nationality} // ✅ Force re-render when nationality changes
-              label={
-                <div className="flex items-center gap-2">
-                   <svg width="16" height="18" viewBox="0 0 16 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M8.19514 17.1038C8.04735 17.2098 7.86998 17.2667 7.68803 17.2667C7.50607 17.2667 7.3287 17.2098 7.18091 17.1038C2.80793 13.9933 -1.83309 7.59516 2.85865 2.97186C4.14667 1.70746 5.88127 0.999208 7.68803 1C9.49916 1 11.2369 1.7094 12.5174 2.97096C17.2091 7.59426 12.5681 13.9915 8.19514 17.1038Z" stroke="#5B697E" strokeOpacity="0.7" strokeWidth="1.35554" strokeLinecap="round" strokeLinejoin="round" />
-                  <path d="M7.68772 9.13333C8.16806 9.13333 8.62873 8.94291 8.96838 8.60396C9.30803 8.26501 9.49885 7.80529 9.49885 7.32594C9.49885 6.84659 9.30803 6.38688 8.96838 6.04793C8.62873 5.70898 8.16806 5.51855 7.68772 5.51855C7.20738 5.51855 6.74671 5.70898 6.40706 6.04793C6.0674 6.38688 5.87659 6.84659 5.87659 7.32594C5.87659 7.80529 6.0674 8.26501 6.40706 8.60396C6.74671 8.94291 7.20738 9.13333 7.68772 9.13333Z" stroke="#5B697E" strokeOpacity="0.7" strokeWidth="1.35554" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-                  <span>{selectedCountryName}</span>
-                </div>
-              }
-              buttonClassName="w-full font-medium cursor-pointer pl-3  py-3 text-sm text-gray-700 placeholder-gray-400 bg-white hover:bg-gray-100 hover:text-gray-700 border border-gray-200 rounded-xl transition-all duration-200 focus:outline-none appearance-none flex items-center justify-between"
-              dropDirection="down"
-            >
-              {({ onClose }) => (
-                <div className="max-h-100 overflow-y-auto p-2">
-                  {countries?.map((c: any) => (
-                    <button
-                      key={c.iso}
-                      onClick={() => {
-                        updateForm({ nationality: c.iso });
-                        onClose();
-                      }}
-                      type="button"
-                      className={`w-full cursor-pointer text-left px-2 rounded-lg py-4 my-2 text-sm flex justify-between items-center ${
-                        form.nationality === c.iso
-                          ? "bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white"
-                          : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
-                      }`}
-                    >
-                      <span className="font-medium">{c.nicename}</span>
-                      <span className="font-medium">{c.iso}</span>
-                    </button>
-                  ))}
-                </div>
-              )}
-            </Dropdown>
-          </div> */}
+
           {/* Nationality - Custom Select */}
 <div className="relative">
   <label className="block text-sm text-start font-medium text-gray-500 dark:text-gray-300 mb-2">

@@ -530,7 +530,7 @@ export const hotel_search = async (payload: HotelSearchPayload & { modules: stri
   formData.append("language", "en");
   formData.append("currency", "usd");
   formData.append("child_age", "0");
-  formData.append("module_name", payload.modules); // ✅ single module
+  formData.append("module_name", payload.modules); //  single module
   formData.append("pagination", String(payload.page));
   formData.append("price_from", payload.price_from || "");
   formData.append("price_to", payload.price_to || "");

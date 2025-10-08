@@ -64,30 +64,6 @@ export default function HotelSearch() {
 
 const onSubmit = async (e: React.FormEvent) => {
   handleSubmit(e)
-//   e.preventDefault();
-// setIsSearching(true)
-//   const params = new URLSearchParams({
-//     destination: form.destination,
-//     checkin: form.checkin,
-//     checkout: form.checkout,
-//     rooms: String(form.rooms),
-//     adults: String(form.adults),
-//     children: String(form.children),
-//     nationality: form.nationality,
-//   });
-//   //  Build the same path format
-//   localStorage.setItem("hotelSearchForm", JSON.stringify(form));
-//   const destinationSlug = form.destination.trim().replace(/\s+/g, "-");
-//  const url = `/hotel/${destinationSlug}/${params.get("checkin")}/${params.get(
-//   "checkout"
-// )}/${params.get("rooms")}/${params.get("adults")}/${params.get(
-//   "children"
-// )}/${params.get("nationality")}`;
-// setTimeout(() => {
-//     setIsSearching(false);
-//  setIsSearching(false)
-// router.push(url);
-//   }, 500); // 1 second delay
 };
 
 
@@ -280,7 +256,7 @@ const nationalityOptions = countries?.map((c: any) => ({
               </button>
 
               {showGuestsDropdown && (
-                <div className="absolute z-20 w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg mt-1 md:min-w-[350px] max-h-80 overflow-visible">
+                <div className="absolute z-20 w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg mt-1 md:min-w-[350px] max-h-auto overflow-visible">
                   <div className="p-4 space-y-4">
                     {/* Rooms */}
                     <div className="flex items-center justify-between px-1">
@@ -334,7 +310,8 @@ const nationalityOptions = countries?.map((c: any) => ({
                     </div>
 
                     {/* Children */}
-                    <div className="flex items-center justify-between px-1">
+                    <div className="flex flex-col ">
+                       <div className="flex items-center justify-between px-1">
                       <span className="text-sm font-medium text-blue-900 dark:text-blue-300">
                         Children
                       </span>
@@ -357,10 +334,71 @@ const nationalityOptions = countries?.map((c: any) => ({
                           +
                         </button>
                       </div>
+
+
                     </div>
+{/* Child Ages */}
+
+                  {form.children > 0 && (
+  <div className="mt-4 px-1">
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-2">
+      {Array.from({ length: form.children }, (_, index) => {
+        const currentAge = form.children_ages?.[index] ?? 0;
+        return (
+          <div key={index} className="flex flex-col">
+            <label className="text-xs text-start font-medium text-gray-700 mb-1">
+              Child Age {index + 1}
+            </label>
+           <Dropdown
+  label={
+    <span className="block text-left w-full px-1 py-2 text-sm text-gray-700">
+      {currentAge || 1} years
+    </span>
+  }
+  buttonClassName="w-full text-left border flex justify-between items-center border-gray-200 rounded-xl px-2.5 py-2 text-sm focus:outline-none hover:bg-gray-50"
+  dropDirection="down"
+>
+  {({ onClose }) => (
+    <div className="max-h-48 overflow-y-auto p-1">
+      {Array.from({ length: 12 }, (_, i) => i + 1).map((age) => (  // starts from 1 now
+        <button
+          key={age}
+          type="button"
+          onClick={() => {
+            const newAges =
+              Array.isArray(form.children_ages) && form.children_ages.length > 0
+                ? [...form.children_ages]
+                : [1];
+
+            newAges[index] = age;
+            updateForm({ children_ages: newAges });
+            onClose();
+          }}
+          className={`w-full text-left px-3 py-3 mb-1 text-sm rounded-lg ${
+            currentAge === age
+              ? 'bg-gray-200 text-gray-700 font-medium'
+              : 'text-gray-700 hover:bg-gray-100'
+          }`}
+        >
+          {age} years
+        </button>
+      ))}
+    </div>
+  )}
+</Dropdown>
+
+          </div>
+        );
+      })}
+    </div>
+  </div>
+)}
+
+                    </div>
+
                     {/* ============ NATIONALITY ============ */}
 
-<div className="relative">
+<div className="relative px-1">
   <label className="block text-sm text-start font-medium text-blue-900 mt-2 ps-1 dark:text-gray-300 mb-2">
     Nationality
   </label>
@@ -417,6 +455,7 @@ const nationalityOptions = countries?.map((c: any) => ({
                   </div>
                 </div>
               )}
+
             </div>
 
             {/* Search button */}

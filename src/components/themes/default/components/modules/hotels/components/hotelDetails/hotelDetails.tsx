@@ -86,7 +86,7 @@ const HotelsDetails = () => {
     initialCheckin,
     initialCheckout,
     initialNationality,
-    onSearchRefetch: (newForm) => {
+    onSearchRefetch: (newForm :any) => {
       const newParams = {
         checkin: newForm.checkin,
         checkout: newForm.checkout,
@@ -393,7 +393,6 @@ const HotelsDetails = () => {
                   onReserve={(room, option) => {
                     //  This runs in parent when Reserit ve is clicked
                     handleReserveRoom(room, option, hotelDetails)
-
                     // Example: Navigate to booking page
                     router.push(`/hotel/booking`);
                   }}

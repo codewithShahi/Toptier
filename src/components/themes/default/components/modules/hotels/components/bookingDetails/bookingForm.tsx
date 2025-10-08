@@ -422,7 +422,7 @@ export default function BookingForm() {
                 classNames={{
                   control: () =>
 
-                    'border border-gray-300 rounded-xl px-3 py-3.5 flex items-center min-h-[44px] text-base focus:ring-1 focus:ring-[#163C8C] focus:border-[#163C8C] shadow-none',
+                    'border border-gray-300 cursor-pointer rounded-xl px-3 py-3.5 flex items-center min-h-[44px] text-base focus:ring-1 focus:ring-[#163C8C] focus:border-[#163C8C] shadow-none',
                   valueContainer: () => 'flex items-center gap-2 px-1',
                   singleValue: () =>
                     'flex items-center gap-2 text-gray-800 font-medium truncate',
@@ -498,7 +498,7 @@ export default function BookingForm() {
                   className="w-full"
                   classNames={{
                     control: () =>
-                      'border border-gray-300 rounded-xl px-3 py-3.5 flex items-center min-h-[44px] text-base focus:ring-1 focus:ring-[#163C8C] focus:border-[#163C8C] shadow-none',
+                      'border border-gray-300 cursor-pointer rounded-xl px-3 py-3.5 flex items-center min-h-[44px] text-base focus:ring-1 focus:ring-[#163C8C] focus:border-[#163C8C] shadow-none',
                     valueContainer: () => 'flex items-center gap-2 px-1',
                     singleValue: () => 'flex items-center justify-between  text-gray-800 font-medium',
                     placeholder: () => 'text-gray-400 font-normal',
@@ -602,7 +602,7 @@ export default function BookingForm() {
                       <button
                         type="button"
                         onClick={() => setIsTitleOpen(isTitleOpen === index ? null : index)}
-                        className="flex items-center justify-between w-full px-3 py-4 border border-gray-300 rounded-xl text-base focus:outline-none focus:border-[#163C8C]"
+                        className="flex cursor-pointer items-center justify-between w-full px-3 py-4 border border-gray-300 rounded-xl text-base focus:outline-none focus:border-[#163C8C]"
                       >
                         {field.value || 'Select Title'}
                         <Icon
