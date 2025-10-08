@@ -15,7 +15,7 @@ export function Layout({ children }: LayoutProps): React.JSX.Element {
   <div
     className="w-full md:w-3/5 min-h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-800"
     style={{
-      backgroundImage: `linear-gradient(to right, rgba(0,0,0,0.7), rgba(0,0,0,0.5)), url('/images/auth_bg.jpg')`,
+      backgroundImage: `linear-gradient(to right, rgba(0,0,0,0.8), rgba(0,0,0,0.7)), url('/images/auth_image.jpg')`,
       backgroundSize: "cover",
       backgroundPosition: "center",
       backgroundRepeat: "no-repeat",
