@@ -1,11 +1,14 @@
 "use client";
 import { useState, useEffect } from "react";
 import { Icon } from "@iconify/react";
-import { useAppSelector } from "@lib/redux/store";
-import { addToFavourite } from "@src/actions"; // :point_left: import API
+import { useAppDispatch, useAppSelector } from "@lib/redux/store";
+import { addToFavourite } from "@src/actions";
 import { useUser } from "@hooks/use-user";
 import { toast } from "react-toastify";
 import Image from "next/image";
+import { setSeletecHotel } from "@lib/redux/base";
+import { useRouter } from "next/navigation";
+import Spinner from "@components/core/Spinner";
 
 interface Hotel {
   id: string;
@@ -19,12 +22,18 @@ interface Hotel {
   amenities?: string[];
   favorite?: number;
 }
+
 const FeaturedHotels: React.FC = () => {
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [hotels, setHotels] = useState<Hotel[]>([]);
+  // ✅ Track loading per hotel ID
+  const [loadingHotelId, setLoadingHotelId] = useState<string | null>(null);
+
   const { featured_hotels } = useAppSelector((state) => state.appData?.data);
   const { user } = useUser();
-  // Amenity keyword → Iconify icon name
+  const router = useRouter();
+  const dispatch = useAppDispatch();
+
   const amenityIcons: Record<string, string> = {
     pool: "mdi:pool",
     swimming: "mdi:pool",
@@ -36,7 +45,7 @@ const FeaturedHotels: React.FC = () => {
     wifi: "mdi:wifi",
     shuttle: "mdi:bus",
     airport: "mdi:airplane",
-    non: "mdi:smoke-detector-off", // Non-smoking rooms
+    non: "mdi:smoke-detector-off",
     smoke: "mdi:smoke-detector-off",
     coffee: "mdi:coffee",
     tea: "mdi:coffee",
@@ -46,6 +55,7 @@ const FeaturedHotels: React.FC = () => {
     hair: "mdi:hair-dryer",
     luxury: "mdi:crown",
   };
+
   const getAmenityIcon = (amenity: string): string => {
     const lower = amenity.toLowerCase();
     for (const key in amenityIcons) {
@@ -53,12 +63,9 @@ const FeaturedHotels: React.FC = () => {
         return amenityIcons[key];
       }
     }
-    return "mdi:check-circle-outline"; // fallback icon
+    return "mdi:check-circle-outline";
   };
 
-  // simulate userId (replace with real auth value)
-  // const userId = "123";
-  // Sync redux → local state
   useEffect(() => {
     if (featured_hotels && Array.isArray(featured_hotels)) {
       setHotels(featured_hotels);
@@ -66,8 +73,8 @@ const FeaturedHotels: React.FC = () => {
   }, [featured_hotels]);
 
   const renderStars = (stars: number) => {
-    const fullStars = Math.floor(stars); // whole stars
-    const hasHalfStar = stars % 1 >= 0.5; // check if half star
+    const fullStars = Math.floor(stars);
+    const hasHalfStar = stars % 1 >= 0.5;
     const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
     const starsArr = [];
     for (let i = 0; i < fullStars; i++) {
@@ -105,14 +112,14 @@ const FeaturedHotels: React.FC = () => {
     }
     return starsArr;
   };
-  // :heart: Handle Favorite API
-  const toggleLike = async (hotel: Hotel) => {
-    try {
-      if (!user) {
-        toast.error("User must be logged in to mark as favourite ");
-        return;
-      }
 
+  const toggleLike = async (hotel: Hotel) => {
+    if (!user) {
+      toast.error("User must be logged in to mark as favourite");
+      return;
+    }
+
+    try {
       const payload = {
         item_id: String(hotel.id),
         module: "hotels",
@@ -121,21 +128,21 @@ const FeaturedHotels: React.FC = () => {
 
       const res = await addToFavourite(payload);
       if (res?.error) {
-        // console.error("Error updating favourite:", res.error);
+        toast.error("Failed to update favourite");
         return;
       }
-      // update local state
+
       setHotels((prev) =>
         prev.map((h) =>
           h.id === hotel.id ? { ...h, favorite: h.favorite === 1 ? 0 : 1 } : h
         )
       );
       toast.success(res?.message || "Updated favourites ✅");
-
     } catch (err) {
-      // console.error("toggleLike error:", err);
+      toast.error("Something went wrong");
     }
   };
+
   const bgColors = [
     "bg-red-100",
     "bg-yellow-100",
@@ -146,8 +153,59 @@ const FeaturedHotels: React.FC = () => {
     "bg-teal-100",
     "bg-orange-100",
   ];
+
   const getRandomBg = (idx: number) => {
-    return bgColors[idx % bgColors.length]; // rotates through colors
+    return bgColors[idx % bgColors.length];
+  };
+
+  const detailsBookNowHandler = async (hotel: Hotel) => {
+    // ✅ Set loading for THIS hotel only
+    setLoadingHotelId(hotel.id);
+
+    try {
+      dispatch(setSeletecHotel({}));
+      localStorage.setItem("currentHotel", JSON.stringify(hotel));
+
+      const slugName = hotel.name.toLowerCase().replace(/\s+/g, "-");
+      const today = new Date();
+      const tomorrow = new Date();
+      tomorrow.setDate(today.getDate() + 1);
+      const formatDate = (d: Date) => d.toISOString().split("T")[0];
+
+      const storedForm = localStorage.getItem("hotelSearchForm");
+      let formData;
+
+      if (storedForm) {
+        formData = JSON.parse(storedForm);
+      } else {
+        formData = {
+          checkin: formatDate(today),
+          checkout: formatDate(tomorrow),
+          rooms: 1,
+          adults: 2,
+          children: 0,
+          children_ages: [],
+          nationality: "PK",
+          destination: hotel?.city || "Dubai",
+          latitude: "",
+          longitude: "",
+        };
+        localStorage.setItem("hotelSearchForm", JSON.stringify(formData));
+      }
+
+      const url = `/hotelDetails/${hotel.id}/${slugName}/${formData.checkin}/${formData.checkout}/${formData.rooms}/${formData.adults}/${formData.children}/${formData.nationality}`;
+
+      dispatch(setSeletecHotel(hotel));
+
+      setTimeout(() => {
+        router.push(url);
+      }, 500);
+    } catch (error) {
+      console.error("Booking redirect failed:", error);
+    } finally {
+      // ✅ Clear loading after navigation starts
+      setLoadingHotelId(null);
+    }
   };
 
   return (
@@ -168,16 +226,16 @@ const FeaturedHotels: React.FC = () => {
         </p>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 items-start">
-        {hotels?.map((hotel) => (
+        {hotels?.map((hotel, index) => (
           <div
-            key={hotel.id}
-            className="bg-[#F5F5F5] p-3 rounded-[65px]  cursor-pointer transition-all duration-300 "
+            key={hotel.id || index}
+            className="bg-[#F5F5F5] p-3 rounded-[65px] cursor-pointer transition-all duration-300"
             onMouseEnter={() => setHoveredId(hotel.id)}
             onMouseLeave={() => setHoveredId(null)}
           >
             <div className="relative overflow-hidden rounded-[55px] aspect-square">
               <Image
-                 fill
+                fill
                 src={hotel.img}
                 alt={hotel.name}
                 className="w-full h-full object-cover"
@@ -186,9 +244,7 @@ const FeaturedHotels: React.FC = () => {
             <div className="p-3">
               <h3
                 title={hotel.name}
-                className="text-xl font-extrabold text-gray-900 mb-2 pl-2
-             sm:text-2xl md:text-xl lg:text-2xl
-             text-ellipsis overflow-hidden whitespace-nowrap"
+                className="text-xl font-extrabold text-gray-900 mb-2 pl-2 sm:text-2xl md:text-xl lg:text-2xl text-ellipsis overflow-hidden whitespace-nowrap"
                 style={{ fontFamily: "Urbanist, sans-serif" }}
               >
                 {hotel.name}
@@ -197,11 +253,11 @@ const FeaturedHotels: React.FC = () => {
               <p className="text-[16px] sm:text-[17px] lg:text-[18px] my-2 font-[400] text-[#5B697E] pl-2">
                 {hotel.city}, {hotel.country}
               </p>
-              {/* Stars - now above pricing */}
+
               <div className="flex items-center gap-1 mb-1 pl-1">
                 {renderStars(Number(hotel.stars))}
               </div>
-              {/* Price & Rooms */}
+
               <div className="flex justify-between items-center pl-2">
                 <div className="flex gap-2 items-center">
                   <p className="text-[24px] sm:text-[28px] lg:text-[30px] font-[900]">
@@ -211,31 +267,21 @@ const FeaturedHotels: React.FC = () => {
                     /night
                   </p>
                 </div>
-                {/* Commented out green rooms left text */}
-                {/* <div className="flex items-center gap-2">
-                  <Icon
-                    icon="material-symbols:circle"
-                    className="text-[#00A63E]"
-                    width="11px"
-                    height="11px"
-                  />
-                  <p className="text-[14px] sm:text-[15px] lg:text-[16px] text-[#00A63E] font-[500]">
-                    {hotel.left_rooms} rooms left
-                  </p>
-                </div> */}
               </div>
+
               <div
-                className={`overflow-hidden transition-all duration-700 ease-in-out ${hoveredId === hotel.id ? "max-h-[500px]" : "max-h-0"
-                  }`}
+                className={`overflow-hidden transition-all duration-700 ease-in-out ${
+                  hoveredId === hotel.id ? "max-h-[500px]" : "max-h-0"
+                }`}
               >
                 <div className="py-[16px]">
                   <div className="border-t border-[#E1E1E1] pt-[20px] mt-[24px] space-y-2">
                     {hotel.amenities && hotel.amenities.length > 0 ? (
-                      <div className="grid  grid-cols-2 gap-x-2 gap-y-4">
+                      <div className="grid grid-cols-2 gap-x-2 gap-y-4">
                         {hotel.amenities.slice(0, 4).map((amenity, idx) => (
                           <div key={idx} className="flex gap-3 items-center">
                             <div
-                              className={`min-w-10 min-h-10  flex items-center justify-center rounded-lg ${getRandomBg(
+                              className={`min-w-10 min-h-10 flex items-center justify-center rounded-lg ${getRandomBg(
                                 idx
                               )}`}
                             >
@@ -254,25 +300,35 @@ const FeaturedHotels: React.FC = () => {
                       </div>
                     ) : (
                       <div className="flex flex-col items-center justify-center py-3.5">
-                        <p className="text-gray-500 text-sm sm:text-base">No amenities found</p>
+                        <p className="text-gray-500 text-sm sm:text-base">
+                          No amenities found
+                        </p>
                       </div>
                     )}
-
-
-
                   </div>
                 </div>
               </div>
             </div>
             <div className="flex items-center gap-3 px-2 mb-3">
-              <button className="flex-1 ml-3 cursor-pointer bg-[#163D8C] hover:bg-gray-800 text-white font-medium py-3 px-3 text-sm sm:text-base md:text-sm lg:text-base rounded-full transition-colors duration-200">
-                Book Now
+              <button
+                onClick={() => detailsBookNowHandler(hotel)}
+                disabled={loadingHotelId === hotel.id}
+                className={`flex-1 ml-3 cursor-pointer bg-[#163D8C] hover:bg-gray-800 text-white font-medium py-3 px-3 text-sm sm:text-base md:text-sm lg:text-base rounded-full transition-colors duration-200 ${
+                  loadingHotelId === hotel.id ? "opacity-60 cursor-not-allowed" : ""
+                }`}
+              >
+                {loadingHotelId === hotel.id ? (
+                  <div className="flex items-center justify-center space-x-2">
+                    <Spinner />
+                    <span>Loading...</span>
+                  </div>
+                ) : (
+                  "Book Now"
+                )}
               </button>
               <button
                 onClick={() => toggleLike(hotel)}
-                className="bg-[#EBEFF4] mr-3 cursor-pointer hover:bg-gray-200 rounded-full transition-all duration-200
-             flex items-center justify-center flex-shrink-0
-             w-12 h-12 sm:w-14 sm:h-14 lg:w-12 lg:h-12"
+                className="bg-[#EBEFF4] mr-3 cursor-pointer hover:bg-gray-200 rounded-full transition-all duration-200 flex items-center justify-center flex-shrink-0 w-12 h-12 sm:w-14 sm:h-14 lg:w-12 lg:h-12"
                 aria-label={`${hotel.favorite === 1 && user ? "Unlike" : "Like"} ${hotel.name}`}
               >
                 <svg
@@ -299,4 +355,5 @@ const FeaturedHotels: React.FC = () => {
     </div>
   );
 };
+
 export default FeaturedHotels;

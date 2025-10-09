@@ -189,12 +189,12 @@ export default function SignUpForm() {
         <div className="w-full max-w-md space-y-6 sm:space-y-8 animate-fade-in">
           <div className="text-start">
             <h2 className="text-lg sm:text-3xl font-meduim text-gray-900 mb-2 dark:text-gray-100">
-              Create an Account
+              {dict?.signup_form?.create_account || "Create an Account"}
             </h2>
            <p className="text-base text-gray-500 mt-1">
-          Already have an account?{" "}
+          {dict?.signup_form?.already_have_account || "All ready have an account?"} {" "}
           <Link href="/auth/login" className="text-blue-900 hover:underline">
-            Sign in
+            {dict?.signup_form?.sign_in || "Sign In"} 
           </Link>
         </p>
 
@@ -211,7 +211,7 @@ export default function SignUpForm() {
 
                 <label className="block text-sm font-medium text-gray-700  mb-2 dark:text-gray-100">
                   {
-                    dict?.signup_form?.fields?.first_name?.label
+                    dict?.signup_form?.first_name || "First Name *"
                   }
                 </label>
                 <Controller
@@ -224,7 +224,7 @@ export default function SignUpForm() {
                         {...field}
                         type="text"
                         // placeholder={dict?.signup_form?.fields?.first_name?.placeholder}
-                        placeholder="First Name"
+                        placeholder={dict?.signup_form?.first_name_placeholder || "Enter your first name"}
                         size="lg"
                         // className={`w-full px-3 py-2 h-11 text-sm border rounded-lg font-medium placeholder-gray-400 dark:placeholder-gray-400 text-gray-800 dark:text-gray-50 focus:outline-none  transition-all duration-200 bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 border-gray-300 dark:border-gray-600 ${direction === "rtl" ? "pr-10 pl-10" : "pl-10 pr-10"}`}
                         className="w-full text-xs focus:ring-none "
@@ -236,7 +236,7 @@ export default function SignUpForm() {
                           <span>
                             <Icon icon="mdi:warning-circle" width="15" height="15" />
                           </span>
-                          <span>{errors.first_name.message}</span>
+                          <span>{dict.errors.first_name.message}</span>
                         </div>
                       )}
                     </div>
@@ -246,7 +246,7 @@ export default function SignUpForm() {
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-100 mb-2">
-                  {dict?.signup_form?.fields?.last_name.label}
+                  {dict?.signup_form?.last_name || "Last Name *"}
                 </label>
                 <Controller
                   name="last_name"
@@ -256,10 +256,10 @@ export default function SignUpForm() {
                       <Input
                         {...field}
                         type="text"
-                        placeholder="Last Name"
+                        placeholder={dict?.signup_form?.last_name || "Last Name *"}
                         // placeholder={dict?.signup_form?.fields?.last_name?.placeholder}
                         size="lg"
-
+                        
                         invalid={!!errors.last_name}
 
 
@@ -269,7 +269,7 @@ export default function SignUpForm() {
                           <span>
                             <Icon icon="mdi:warning-circle" width="15" height="15" />
                           </span>
-                          <span>{errors.last_name.message}</span>
+                           <span>{dict.errors.last_name_message}</span>
                         </div>
                       )}
                     </div>
@@ -280,7 +280,7 @@ export default function SignUpForm() {
 <div>
      <label className="block text-sm font-medium text-gray-700  mb-2 dark:text-gray-100">
                   {
-                    "Select country"
+                    dict?.signup_form?.country || "Select Country"
                   }
                 </label>
                            <Controller
@@ -293,7 +293,7 @@ export default function SignUpForm() {
       value={countryOptions.find((option :any) => option.value === field.value)}
       onChange={(option) => field.onChange(option?.value)}
       // placeholder={dict?.signup_form?.fields?.country?.placeholder}
-      placeholder="Select Country"
+      placeholder={dict?.signup_form?.country_placeholder || "Select Country"}
       size="lg"
       styles={customStyles}
       isSearchable
@@ -310,7 +310,7 @@ export default function SignUpForm() {
               <div>
               <label className="block text-sm font-medium text-gray-700 mb-2 dark:text-gray-100">
                 {/* {dict?.signup_form?.fields?.email?.label} */}
-                Phone Number
+                {dict?.signup_form?.phone_number || "Phone Number"}
               </label>
               <Controller
                 name="phone"
@@ -321,7 +321,7 @@ export default function SignUpForm() {
                       {...field}
                       type="text"
                       // placeholder={dict?.signup_form?.fields?.email?.placeholder}
-                      placeholder="Phone Number (+92xxxxxxxxxxx)"
+                      placeholder={dict?.signup_form?.phone_number_placeholder || "Phone Number (+92xxx-xxxxxxx)"}
                       size="lg"
                       className="w-full text-xs"
                       invalid={!!errors.phone}
@@ -332,7 +332,7 @@ export default function SignUpForm() {
                         <span>
                           <Icon icon="mdi:warning-circle" width="15" height="15" />
                         </span>
-                         <span>{errors.phone.message}</span>
+                         <span>{dict.errors.phone.message}</span>
                       </div>
                     )}
                   </div>
@@ -342,7 +342,7 @@ export default function SignUpForm() {
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2 dark:text-gray-100">
-                {dict?.signup_form?.fields?.email?.label}
+                {dict?.signup_form?.email || "Email*"}
               </label>
               <Controller
                 name="email"
@@ -353,7 +353,7 @@ export default function SignUpForm() {
                       {...field}
                       type="email"
                       // placeholder={dict?.signup_form?.fields?.email?.placeholder}
-                      placeholder="Email Address"
+                      placeholder={dict?.signup_form?.email_placeholder || "Email Address"}
                       size="lg"
                       className="w-full text-xs"
                       invalid={!!errors.email}
@@ -377,7 +377,7 @@ export default function SignUpForm() {
               <label className="block text-sm font-medium text-gray-700 mb-2 dark:text-gray-100">
                 {isLoading
                   ? "Loading..."
-                  : dict?.signup_form?.fields?.password?.label || "Password *"}
+                  : dict?.signup_form?.password || "Password *"}
               </label>
               <div className="relative">
                 <Controller
@@ -389,7 +389,7 @@ export default function SignUpForm() {
                         {...field}
                         type={showPassword ? "text" : "password"}
                         // placeholder={dict?.login_form?.fields?.password?.placeholder}
-                        placeholder="Enter Password"
+                        placeholder={dict?.signup_form?.password_placeholder || "Enter Password"}
                         size="lg"
                         className="w-full"
                         invalid={!!errors.password}
@@ -440,7 +440,7 @@ export default function SignUpForm() {
     htmlFor="human_checkbox"
     className="text-sm text-gray-600 dark:text-gray-100 leading-relaxed cursor-pointer flex-1"
   >
-    I am human
+    {dict?.signup_form?.human || "I am human"}
   </label>
 </div>
 {errors.human && (
@@ -471,21 +471,21 @@ export default function SignUpForm() {
                 htmlFor="terms-checkbox"
                 className="text-sm text-gray-600 dark:text-gray-100 leading-relaxed cursor-pointer flex-1"
               >
-                I am agree to the{" "}
+                {dict?.signup_form?.agree || "I am agree to the"} {" "}
                 <a
                   href="/terms-and-conditions"
                   className="text-blue-900 hover:text-blue-800 font-medium "
                   target="_blank"
                 >
-                  Terms of Use
+                  {dict?.signup_form?.terms_of_use || "Terms of Use"}
                 </a>{" "}
-                and{" "}
+                {dict?.signup_form?.and || "and"}  {" "}
                 <a
                   href="/privacy-policy"
                   className="text-blue-900 hover:text-blue-800 font-medium "
                   target="_blank"
                 >
-                  Privacy Policy
+                  {dict?.signup_form?.privacy_policy || "Privacy Policy"}
                 </a>
               </label>
             </div>

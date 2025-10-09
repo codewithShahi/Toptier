@@ -1,0 +1,30 @@
+{
+  "signup_form": {
+    "create_account": "Créer un compte",
+    "already_have_account": "Vous avez déjà un compte ?",
+    "sign_in": "Se connecter",
+    "first_name": "Prénom",
+    "first_name_placeholder": "Entrez votre prénom",
+    "last_name": "Nom de famille",
+    "last_name_placeholder": "Entrez votre nom de famille",
+    "country": "Sélectionnez le pays",
+    "country_placeholder": "Sélectionnez le pays",
+    "phone_number": "Numéro de téléphone",
+    "phone_number_placeholder": "Numéro de téléphone (+92xxx-xxxxxxx)",
+    "email": "Email*",
+    "email_placeholder": "Adresse e-mail",
+    "password": "Mot de passe*",
+    "password_placeholder": "Entrez le mot de passe",
+    "human": "Je suis humain",
+    "agree": "J'accepte les",
+    "terms_of_use": "conditions d'utilisation",
+    "and": "et",
+    "privacy_policy": "politique de confidentialité",
+    "create_account_button": "Créer un compte"
+  },
+  "errors": {
+    "first_name_required": "Le prénom est requis",
+    "last_name_required": "Le nom de famille est requis",
+    "phone_number_required": "Le numéro de téléphone est requis"
+  }
+}

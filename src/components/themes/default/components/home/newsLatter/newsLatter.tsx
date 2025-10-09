@@ -92,9 +92,9 @@ const NewsLatter: React.FC = () => {
 
           {/* Form Section */}
           <div className="flex flex-col gap-2 sm:gap-4 order-1 lg:order-2">
-            <button className="text-white bg-[#010101]/60 hover:bg-black/70 transition cursor-pointer text-sm font-medium px-3 w-[91px] h-[28px] rounded-md mb-2">
+            <p className="text-white bg-[#0101019E] pt-1 transition text-sm font-medium px-3 w-[91px] h-[28px] rounded-md mb-2">
               Newsletter
-            </button>
+            </p>
             <div>
               <p className="text-[28px] sm:text-[36px] lg:text-[44px] text-[#051036] font-[900] w-full lg:max-w-100 leading-13">
                {newsletter_title}

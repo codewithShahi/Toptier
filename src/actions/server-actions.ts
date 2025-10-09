@@ -546,12 +546,12 @@ export const hotel_search = async (payload: HotelSearchPayload & { modules: stri
       },
     });
     const data = await response.json().catch(() => null);
-    // console.log('========== data ===========',data )
+    console.log('========== payload ===========',payload )
     if (!response.ok || data?.status === false) {
       return { error: data?.message || "Something went wrong", module: payload.modules };
     }
 
-    return { ...data, module: payload.modules }; // ✅ attach module name to result
+    return { ...data, module: payload.modules }; //  attach module name to result
   } catch (error) {
     return { error: (error as Error).message || "An error occurred", module: payload.modules };
   }
@@ -589,7 +589,7 @@ export const hotel_search_multi = async (
   })
   .filter(Boolean) // remove nulls
   .flat(); // flatten into single array
-
+   console.log('range filter data ', successful)
   return {
     success: successful,
     total: successful.length,

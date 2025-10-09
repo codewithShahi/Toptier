@@ -21,7 +21,7 @@ export function Layout({ children }: LayoutProps): React.JSX.Element {
       backgroundRepeat: "no-repeat",
     }}
   >
-    <div className="max-w-lg xl:max-w-md lg:max-w-full mx-auto flex flex-col justify-center items-center text-center px-4">
+    <div className="max-w-lg xl:max-w-md lg:max-w-full mx-auto  flex flex-col justify-center items-center text-center px-4">
       <h2 className="text-4xl font-extrabold text-white mb-3">
         Top Tier Travel
       </h2>

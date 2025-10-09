@@ -117,7 +117,7 @@ if (storedForm) {
   }
 }
 
-// ✅ Initialize state
+//  Initialize state
 const [form, setForm] = useState<HotelForm>(initialForm);
 
 
@@ -141,7 +141,7 @@ const [form, setForm] = useState<HotelForm>(initialForm);
     }
   }, [errors]);
 
-  // ✅ Enhanced updateForm to handle children_ages
+  //  Enhanced updateForm to handle children_ages
   const updateForm = useCallback((updates: Partial<HotelForm>) => {
       if (updates.children !== undefined && updates.children > 12) {
           toast.warning("You’ve reached the maximum limit of children.");

@@ -74,7 +74,7 @@ export default function Login({ ...props }): React.JSX.Element {
         <div className="w-full max-w-md space-y-6 sm:space-y-8 animate-fade-in">
           <div className="text-start">
             <h2 className="text-lg sm:text-3xl font-meduim text-gray-900 mb-2 dark:text-gray-100">
-              Sign in
+              {dict.login_form.text|| "Sign in"}
             </h2>
             <p className="text-gray-600 text-base dark:text-gray-100">
               { "New user ? "} <Link href={`/auth/signup`} className="text-blue-900 hover:underline">Create an account</Link>
