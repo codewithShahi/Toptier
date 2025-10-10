@@ -5,6 +5,8 @@ import { getDictionary } from '@src/get-dictionary'
 import TransitionLayout from '@src/utils/pageTransition'
 // import HomeWrapper from '@components/themes/default/components/home/homeWrapper/homeWrapper'
 import { HotelDetailsMain } from '@components/themes/default'
+import { Metadata } from 'next';
+export const metadata = { title: `Toptier | HotelDetails` } satisfies Metadata;
 
 export default async function Page({ params }: {
   params: Promise<{ lang: 'en' | 'ar' }>

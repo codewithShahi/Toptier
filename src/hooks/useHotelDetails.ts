@@ -17,7 +17,7 @@ export interface HotelForm {
   children: number;
   nationality: string;
   currency: string;
-  children_ages?: number[]; // 👈 NEW
+  children_ages?: number[]; //  NEW
 }
 
 // ✅ Updated schema with optional children_ages
@@ -219,8 +219,8 @@ const [form, setForm] = useState<HotelForm>(initialForm);
       const currentHotel = JSON.parse(currentHotelString);
       const nationality = form.nationality;
       const slugName = currentHotel.name.toLowerCase().replace(/\s+/g, "-");
-
-      // ✅ Include children_ages in URL
+      // const supplier=storedForm?.suplier_name
+      //  Include children_ages in URL
       const childrenAgesParam = form.children_ages?.join(",") || "";
       const url = `/hotelDetails/${currentHotel.hotel_id}/${slugName}/${form.checkin}/${form.checkout}/${form.rooms}/${form.adults}/${form.children}/${nationality}/${currentHotel.supplier_name}/${childrenAgesParam}`;
 

@@ -1,9 +1,13 @@
 import { useAppSelector } from "@lib/redux/store";
 import React from "react";
 import Image from "next/image";
+import useDictionary from "@hooks/useDict";
+import useLocale from "@hooks/useLocale";
 
 const OfferSection = () => {
   const { our_services } = useAppSelector((state) => state.appData.data);
+  const { locale } = useLocale();
+   const { data: dict } = useDictionary(locale as any);
 
   const handleScrollToTop = () => {
     window.scrollTo({
@@ -28,14 +32,13 @@ const OfferSection = () => {
               className="text-4xl  text-[#112233] mb-4 font-[900]"
               style={{ fontFamily: "Urbanist, sans-serif" }}
             >
-              Why Choose Us
+              {dict?.offer_sec?.offer_heading || "Why Choose Us"}
             </h1>
             <p
               className="text-base sm:text-lg text-[#697488] max-w-md mx-auto mt-4 leading-relaxed px-6"
               style={{ fontFamily: "Urbanist, sans-serif" }}
             >
-              Experience world-class comfort and unmatched hospitality — all in
-              the heart of paradise.
+              {dict?.offer_sec?.offer_subheading || "Experience unparalleled travel services with us, where your satisfaction is our top priority."}
             </p>
           </div>
 

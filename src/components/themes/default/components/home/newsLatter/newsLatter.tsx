@@ -1,5 +1,7 @@
 "use client";
 
+import useDictionary from "@hooks/useDict";
+import useLocale from "@hooks/useLocale";
 // import Alert from "@components/core/alert";
 import { Icon } from "@iconify/react";
 import { useAppSelector } from "@lib/redux/store";
@@ -23,6 +25,8 @@ const NewsLatter: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<{ type: "success" | "danger"; text: string } | null>(null);
   const [errors, setErrors] = useState<Partial<FormData>>({});
+  const { locale } = useLocale();
+   const { data: dict } = useDictionary(locale as any);
 
     const app = useAppSelector((state) => state?.appData?.data);
       const {newsletter_description, newsletter_image,newsletter_title}=app.app
@@ -92,8 +96,8 @@ const NewsLatter: React.FC = () => {
 
           {/* Form Section */}
           <div className="flex flex-col gap-2 sm:gap-4 order-1 lg:order-2">
-            <p className="text-white bg-[#0101019E] pt-1 transition text-sm font-medium px-3 w-[91px] h-[28px] rounded-md mb-2">
-              Newsletter
+            <p className="text-white bg-[#0101019E] pt-1 transition text-sm font-medium px-3 max-w-30 text-center h-[29px] rounded-md mb-2">
+              {dict?.news_letter_sec?.letter || "NewsLetter"}
             </p>
             <div>
               <p className="text-[28px] sm:text-[36px] lg:text-[44px] text-[#051036] font-[900] w-full lg:max-w-100 leading-13">
@@ -127,8 +131,8 @@ const NewsLatter: React.FC = () => {
                 </div>
                 <input
                   type="text"
-                  name="name"
-                  placeholder="Name"
+                  name={dict?.news_letter_sec?.letter_name || "name"}
+                  placeholder={dict?.news_letter_sec?.letter_name_placeholder || "Name"}
                   value={formData.name}
                   onChange={handleChange}
                   className={`w-full bg-[#F3F3F3] pl-10 px-4 h-[45px] sm:h-[47px] lg:h-[49px] rounded-lg focus:outline-none focus:ring-2 ${errors.name
@@ -158,8 +162,8 @@ const NewsLatter: React.FC = () => {
                 </div>
                 <input
                   type="email"
-                  name="email"
-                  placeholder="Email"
+                  name={dict?.news_letter_sec?.letter_email || "email"}
+                  placeholder={dict?.news_letter_sec?.letter_email_placeholder || "Email"}
                   value={formData.email}
                   onChange={handleChange}
                   className={`w-full bg-[#F3F3F3] pl-10 px-4 h-[45px] sm:h-[47px] lg:h-[49px] rounded-lg focus:outline-none focus:ring-2 ${errors.email
@@ -190,7 +194,7 @@ const NewsLatter: React.FC = () => {
                     height="24"
                   />
                 ) : (
-                  "Continue"
+                  dict?.news_letter_sec?.letter_continue || "Continue"
                 )}
               </button>
             </div>

@@ -11,6 +11,8 @@ import "swiper/css/navigation";
 import HotelsListingCard from "./hotelListingCard";
 import { PriceRangeSlider } from "@components/core/priceRangeSlider";
 import HotelMap from "./hotelMap";
+import useLocale from "@hooks/useLocale";
+import useDictionary from "@hooks/useDict";
 
 // Types for your actual hotel data
 interface HotelData {
@@ -41,6 +43,8 @@ export default function HotelSearchApp({ isLoading }: HotelSearchAppProps) {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [viewMode, setViewMode] = useState<'grid' | 'list' | 'map'>('grid');
   const [activeHotelId, setActiveHotelId]=useState("")
+  const { locale } = useLocale();
+  const { data: dict } = useDictionary(locale as any);
 const [currentLocation, setCurrentLocation] = useState<{ lat: number; lon: number }>({
   lat: 0,
   lon: 0,
@@ -130,13 +134,13 @@ updateSortBy
 function getOptionLabel(option: string) {
   switch (option) {
     case "price_low":
-      return "Low to High";
+      return dict?.hotel_listing?.low_to_high || "Low to High";
     case "price_high":
-      return "High to Low";
+      return dict?.hotel_listing?.high_to_low || "High to Low";
     case "rating":
-      return "Rating";
+      return dict?.hotel_listing?.rating || "Rating";
     case "name":
-      return "Name (A–Z)";
+      return dict?.hotel_listing?.name_a_to_z || "Name (A–Z)";
     default:
       return option;
   }
@@ -204,18 +208,18 @@ function getOptionLabel(option: string) {
           {viewMode !== "map" && <div className="hidden lg:block w-80 flex-shrink-0">
             <div className="bg-white rounded-xl border border-[#EBEBEB] p-4">
               <div className="flex items-center justify-between mb-6 border-b pb-5 border-gray-200">
-                <h2 className="text-lg font-bold text-[#112233]">Advanced Search</h2>
+                <h2 className="text-lg font-bold text-[#112233]">{dict?.hotel_listing?.advanced_search || "Advance Search"}</h2>
               </div>
               {/* Search Location */}
               <div className="mb-8">
-                <label className="block text-base font-semibold text-[#112233] mb-3">Search Hotels</label>
+                <label className="block text-base font-semibold text-[#112233] mb-3">{dict?.hotel_listing?.search_hotels || "Search Hotels"}</label>
                 <div className="relative">
                   <svg width="18" height="17" className="absolute cursor-pointer left-4 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-500" viewBox="0 0 18 17" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M13.5098 13.4063L16.3686 16.2651M15.4655 8.37544C15.4655 10.2217 14.732 11.9924 13.4265 13.298C12.121 14.6035 10.3503 15.3369 8.50398 15.3369C6.65767 15.3369 4.88699 14.6035 3.58146 13.298C2.27592 11.9924 1.54248 10.2217 1.54248 8.37544C1.54248 6.52913 2.27592 4.75845 3.58146 3.45292C4.88699 2.14738 6.65767 1.41394 8.50398 1.41394C10.3503 1.41394 12.121 2.14738 13.4265 3.45292C14.732 4.75845 15.4655 6.52913 15.4655 8.37544Z" stroke="#0F172B" strokeOpacity="0.6" strokeWidth="1.3923" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                   <input
                     type="text"
-                    placeholder="search by hotel names"
+                    placeholder={dict?.hotel_listing?.search_by_hotel_name || "search by hotel name"}
                     value={filters.searchQuery}
                     onChange={(e) => updateSearchQuery(e.target.value)}
                     className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl font-medium text-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-600 focus:border-transparent"
@@ -225,7 +229,7 @@ function getOptionLabel(option: string) {
               {/* Price Range */}
               <div className="mb-8 ">
                 <p className="block text-base font-semibold text-[#112233] mb-3">
-                  Price Range (per night)
+                  {dict?.hotel_listing?.price_range || "Price Range"} {dict?.hotel_listing?.per_night || "per night"}
                 </p>
                 <PriceRangeSlider
                   min={priceRange.min}
@@ -239,7 +243,7 @@ function getOptionLabel(option: string) {
 
               <div className="mb-8">
                 <label className="block text-base font-semibold text-[#112233] mb-3">
-                  Hotel Stars
+                  {dict?.hotel_listing?.hotel_stars || "Hotel Stars"}
                 </label>
                 <div className="space-y-3">
                   {[5, 4, 3, 2, 1].map((stars) => (
@@ -268,7 +272,7 @@ function getOptionLabel(option: string) {
                             : "text-gray-600"
                             }`}
                         >
-                          ({stars} Stars)
+                          ({stars} {dict?.hotel_listing?.stars || "Stars"})
                         </span>
                       </div>
                     </div>
@@ -283,14 +287,14 @@ function getOptionLabel(option: string) {
                   disabled={!hasActiveFilters}
                   className="w-full py-3 bg-[#E5E7EB] border border-[#E5E7EB] cursor-pointer text-[#163C8C] rounded-lg font-medium hover:bg-gray-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Reset Filters
+                  {dict?.hotel_listing?.reset_filters || "Reset Filters"}
                 </button>
                 <button
                   onClick={resetFilters}
                   disabled={!hasActiveFilters}
                   className="w-full py-3 bg-[#163C8C] border border-[#163C8C] cursor-pointer text-white rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Apply
+                  {dict?.hotel_listing?.apply || "Apply"}
                 </button>
               </div>
             </div>
@@ -331,13 +335,13 @@ function getOptionLabel(option: string) {
                     </button>
                   )}
                   <span className="text-gray-500 font-medium text-sm lg:text-base pl-2">
-                    {filteredHotels?.length} hotels found
+                    {filteredHotels?.length} {dict?.hotel_listing?.hotels_found || "Hotels found"}
                   </span>
                 </div>
 
                 <div className="flex flex-col lg:flex-row lg:items-center gap-3 lg:gap-2 w-full lg:w-auto">
                   <div className="flex items-center gap-2 w-full lg:w-auto">
-                    <span className="text-gray-600 font-medium text-sm lg:text-base whitespace-nowrap">Sort :</span>
+                    <span className="text-gray-600 font-medium text-sm lg:text-base whitespace-nowrap">{dict?.hotel_listing?.sort || "Sort"} :</span>
                     <div className="relative flex-1 lg:flex-none" ref={dropdownRef}>
                       <button
                         onClick={() => setOpen(!open)}
@@ -485,7 +489,7 @@ function getOptionLabel(option: string) {
             {isloadingMore &&
               <div className="w-full flex items-center justify-center">
                 <div className="w-[50%] py-2 my-5 flex gap-2 items-center justify-center rounded-full border border-blue-900 bg-white ">
-                  <Spinner size={30} className="mr-1 text-blue-900" /> <p className="text-base font-medium text-blue-900 ">Loading more</p>
+                  <Spinner size={30} className="mr-1 text-blue-900" /> <p className="text-base font-medium text-blue-900 ">{dict?.hotel_listing?.loading_more || "Loading more"}</p>
                 </div>
               </div>
             }
@@ -494,7 +498,7 @@ function getOptionLabel(option: string) {
             {(isLoading || isFilterLoading) && !isloadingMore && !hotelsData?.length &&
               <div className="w-full flex items-center justify-center">
                 <div className="w-full py-2 my-5 h-full flex gap-2 items-center justify-center  border-blue-900">
-                  <Spinner size={30} className="mr-1 text-blue-900" /> <p className="text-base font-medium text-blue-900 ">Searching for Hotels</p>
+                  <Spinner size={30} className="mr-1 text-blue-900" /> <p className="text-base font-medium text-blue-900 ">{dict?.hotel_listing?.searching_for_hotels || "Searching for Hotels"}</p>
                 </div>
               </div>
             }
@@ -503,13 +507,13 @@ function getOptionLabel(option: string) {
             {!(isLoading || isFilterLoading) && !isloadingMore && filteredHotels?.length === 0 && (
               <div className="text-center py-6 sm:py-8 md:py-15  min-w-full min-h-full flex items-center justify-start flex-col">
                 <Icon icon="mdi:hotel-off" className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">No hotels found</h3>
-                <p className="text-gray-600 mb-4">Try adjusting your filters or search criteria</p>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">{dict?.hotel_listing?.no_hotels_found || "No hotels found"}</h3>
+                <p className="text-gray-600 mb-4">{dict?.hotel_listing?.search_criteria || "Try adjusting your filters or search criteria"}</p>
                 <button
                   onClick={() => resetFilters(event)}
                   className="bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors"
                 >
-                  Reset All Filters
+                  {dict?.hotel_listing?.reset_all_filters || "Reset All Filters"}
                 </button>
               </div>
             )}
@@ -528,7 +532,7 @@ function getOptionLabel(option: string) {
 
           <div className="absolute bottom-3 left-8 right-8 bg-white rounded-2xl max-h-[90vh] overflow-y-auto mx-1">
             <div className="sticky z-20 top-0 bg-white border-b border-gray-200 px-4 py-4 flex items-center justify-between">
-              <h2 className="text-lg font-bold text-gray-900">Filters & Search</h2>
+              <h2 className="text-lg font-bold text-gray-900">{dict?.hotel_listing?.filters_search || "Filters & Search"}</h2>
               <button
                 onClick={() => setMobileFiltersOpen(false)}
                 className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
@@ -539,7 +543,7 @@ function getOptionLabel(option: string) {
             <div className="p-4 space-y-6 max-w-lg mx-auto w-full">
               <div>
                 <label className="z-10 text-sm font-semibold text-gray-900 mb-3">
-                  Search Hotels
+                  {dict?.hotel_listing?.search_hotels || "Search Hotels"}
                 </label>
                 <div className="relative">
                   <svg width="18" height="17" className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-500" viewBox="0 0 18 17" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -556,7 +560,7 @@ function getOptionLabel(option: string) {
               </div>
               <div>
                 <label className="block text-sm font-semibold cursor-pointer text-gray-900 mb-3">
-                  Price Range (per night)
+                  {dict?.hotel_listing?.rice_range || "Price Range"} {dict?.hotel_listing?.per_night || "per night"}
                 </label>
                 <PriceRangeSlider
                   min={priceRange.min}
@@ -567,7 +571,7 @@ function getOptionLabel(option: string) {
               </div>
               <div className="mb-8">
                 <label className="block text-base font-semibold text-[#112233] mb-3">
-                  Hotel Stars
+                  {dict?.hotel_listing?.hotel_stars || "Hotel Stars"}
                 </label>
                 <div className="space-y-3">
                   {[5, 4, 3, 2, 1].map((stars) => (
@@ -610,13 +614,13 @@ function getOptionLabel(option: string) {
                 disabled={!hasActiveFilters}
                 className="w-full py-2.5 text-sm bg-gray-100 text-blue-600 cursor-pointer rounded-lg font-medium hover:bg-gray-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Reset Filters
+                {dict?.hotel_listing?.reset_filters || "Reset Filters"}
               </button>
               <button
                 onClick={() => setMobileFiltersOpen(false)}
                 className="w-full py-2.5 text-sm bg-[#163C8C] text-white cursor-pointer rounded-lg font-medium hover:bg-[#163C8C] transition-colors"
               >
-                Apply Filters ({totalResults} hotels)
+                {dict?.hotel_listing?.apply_filters || "Apply Filters"} ({totalResults} {dict?.hotel_listing?.hotels || "hotels"})
               </button>
             </div>
           </div>

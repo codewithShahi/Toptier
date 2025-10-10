@@ -454,18 +454,18 @@ const useHotelSearch = () => {
     //  generate slug
     const slugName = hotel.name.toLowerCase().replace(/\s+/g, "-");
     let nationality;
+    let suplier_name;
     if (selectedNationality) {
       const parsedData = JSON.parse(selectedNationality); // now it's an object
       nationality = parsedData.nationality; // safely access nationality
+      
       // console.log("Nationality:", nationality);
     }
-
     //  construct URL
     const url = `/hotelDetails/${hotel.hotel_id}/${slugName}/${form.checkin}/${form.checkout}/${form.rooms}/${form.adults}/${form.children}/${nationality}`;
     dispatch(setSeletecHotel(hotel));
     //  navigate
     router.push(url);
-
     // console.log("Book Now clicked for hotel ID:", hotel.hotel_id);
   };
 

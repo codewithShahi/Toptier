@@ -4,6 +4,8 @@ import { useAppSelector } from "@lib/redux/store";
 import { addToFavourite } from "@src/actions";
 import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
+import useDictionary from "@hooks/useDict";
+import useLocale from "@hooks/useLocale";
 
 interface Destination {
   id: number;
@@ -17,6 +19,8 @@ const FeaturedDestinations: React.FC = () => {
   const { featured_tours } = useAppSelector((state) => state.appData?.data);
   const { user } = useUser();
   const [destinations, setDestinations] = useState<Destination[]>([]);
+  const { locale } = useLocale();
+   const { data: dict } = useDictionary(locale as any);
 
   useEffect(() => {
     if (featured_tours && Array.isArray(featured_tours)) {
@@ -26,7 +30,7 @@ const FeaturedDestinations: React.FC = () => {
 
   const toggleLike = async (tour: Destination) => {
     if (!user) {
-      toast.error("User must be logged in to mark as favourite");
+      toast.error(dict?.featured_dest?.error || "User must be logged in to mark as favourite");
       return;
     }
 
@@ -90,19 +94,19 @@ const FeaturedDestinations: React.FC = () => {
             className="text-4xl font-bold text-gray-900 mb-2 md:mb-4"
             style={{ fontFamily: "Urbanist, sans-serif" }}
           >
-            Featured Destination
+            {dict?.featured_dest?.dest_heading || "Featured Destination"}
           </h1>
           <p
             className="text-base sm:text-lg text-[#697488] max-w-xl mx-auto mt-4 leading-relaxed px-6"
             style={{ fontFamily: "Urbanist, sans-serif" }}
           >
-            Discover the most stunning and sought-after travel spots, curated
-            for unforgettable experiences around the globe.
+            {dict?.featured_dest?.dest_subheading ||
+              "Discover the most stunning and sought-after travel spots, curated for unforgettable experiences around the globe."}
           </p>
         </div>
 
         {destinations.length === 0 ? (
-          <p className="text-center text-gray-500">No featured destinations</p>
+          <p className="text-center text-gray-500">{dict?.featured_dest?.no_feature_dest || "No Featured Destination"} </p>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 cursor-pointer lg:grid-cols-3 gap-6">
             {destinations.map((tour) => (
@@ -141,7 +145,7 @@ const FeaturedDestinations: React.FC = () => {
                                  rounded-full transition-colors duration-200"
                       style={{ fontFamily: "Inter, sans-serif" }}
                     >
-                      Explore Now
+                      {dict?.featured_dest?.dest_explore || "Explore Now"}
                     </button>
 
                     <button

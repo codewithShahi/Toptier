@@ -3,6 +3,7 @@ import { getDictionary } from '@src/get-dictionary'
 // import { Icon } from '@iconify/react'
 // import { HomeWrapper } from '@components/themes/default'
 import TransitionLayout from '@src/utils/pageTransition'
+import Contactus from '@components/themes/default/components/home/contactUs/contactus'
 // import HomeWrapper from '@components/themes/default/components/home/homeWrapper/homeWrapper'
 // import { HotelDetails } from '@components/themes/default'
 
@@ -15,9 +16,9 @@ export default async function Page({ params }: {
   return (
     // <div>home page</div>
     <TransitionLayout>
-      <div className="flex  flex-col bg-white dark:bg-gray-900  dark:text-gray-50 " >
+      <div className="flex  flex-col bg-white dark:bg-gray-900  dark:text-gray-50 appHorizantalSpacing " >
          {/* <HotelDetails/> */}
-         contact page
+         <Contactus />
       </div>
     </TransitionLayout>
   )

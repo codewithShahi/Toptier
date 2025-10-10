@@ -8,12 +8,14 @@ import HotelInvoice from './bookingInvoice';
 import { useAppSelector } from '@lib/redux/store';
 import { getCurrencySymbol } from '@src/utils/getCurrencySymbals';
 import Image from 'next/image';
+import useCurrency from '@hooks/useCurrency';
 
 export default function BookingDetails() {
   const selectedRoom = useAppSelector((state) => state.root.selectedRoom);
   const curruntBooking = localStorage.getItem('hotelSearchForm');
   const saveBookingData = curruntBooking ? JSON.parse(curruntBooking) : {};
   const router = useRouter();
+  const {priceRateConverssion}=useCurrency()
   const {hotelDetails, room , option}=selectedRoom
   // console.log("selectedRoom",selectedRoom)
 const { checkin, checkout, adults, children, rooms } = saveBookingData;
@@ -122,22 +124,23 @@ const finalTotal = baseTotal + (toptierFee > 0 ? toptierFee : 0);
     <div className="flex justify-between border-t border-gray-200 pt-3">
       <span className="text-gray-600">Room Price</span>
       <span className="font-semibold text-[#0F172B]">
-        {getCurrencySymbol(currency)}{price}
+        {priceRateConverssion(parseFloat(price))}
+
       </span>
     </div>
 
     <div className="flex justify-between">
       <span className="text-gray-600">TopTier Fee</span>
       <span className="font-semibold text-[#0F172B]">
-        {getCurrencySymbol(currency)}{" "}
-        {toptierFee === 0 ? "0" : markup_price}
+
+        {toptierFee === 0 ? priceRateConverssion(parseFloat("0")) : priceRateConverssion(parseFloat(markup_price))}
       </span>
     </div>
 
     <div className="flex justify-between items-center border-t border-gray-300 pt-3 mt-2">
       <span className="text-lg font-semibold text-[#0F172B]">Total</span>
       <span className="text-lg font-bold text-[#163C8C]">
-        {getCurrencySymbol(currency)}{finalTotal.toFixed(2)}
+        {priceRateConverssion(parseFloat(String(finalTotal)))}
       </span>
     </div>
   </div>

@@ -2,7 +2,8 @@
 // import { getDictionary } from '@src/get-dictionary'
 import { DashboardMain } from '@components/themes/layout'
 import TransitionLayout from '@src/utils/pageTransition'
-
+import { Metadata } from 'next/types'
+export const metadata = { title: `Toptier | Dashboard ` } satisfies Metadata;
 export default async function Page() {
 
   return (

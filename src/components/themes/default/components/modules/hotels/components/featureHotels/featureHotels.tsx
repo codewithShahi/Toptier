@@ -9,6 +9,9 @@ import Image from "next/image";
 import { setSeletecHotel } from "@lib/redux/base";
 import { useRouter } from "next/navigation";
 import Spinner from "@components/core/Spinner";
+import useDictionary from "@hooks/useDict";
+import useLocale from "@hooks/useLocale";
+import useCurrency from "@hooks/useCurrency";
 
 interface Hotel {
   id: string;
@@ -28,12 +31,14 @@ const FeaturedHotels: React.FC = () => {
   const [hotels, setHotels] = useState<Hotel[]>([]);
   // ✅ Track loading per hotel ID
   const [loadingHotelId, setLoadingHotelId] = useState<string | null>(null);
+  const { locale } = useLocale();
+   const { data: dict } = useDictionary(locale as any);
 
   const { featured_hotels } = useAppSelector((state) => state.appData?.data);
   const { user } = useUser();
   const router = useRouter();
   const dispatch = useAppDispatch();
-
+ const {priceRateConverssion}=useCurrency()
   const amenityIcons: Record<string, string> = {
     pool: "mdi:pool",
     swimming: "mdi:pool",
@@ -115,7 +120,7 @@ const FeaturedHotels: React.FC = () => {
 
   const toggleLike = async (hotel: Hotel) => {
     if (!user) {
-      toast.error("User must be logged in to mark as favourite");
+      toast.error(dict?.featured_hotels?.error_login_required || "User must be logged in to mark as favourite");
       return;
     }
 
@@ -128,7 +133,7 @@ const FeaturedHotels: React.FC = () => {
 
       const res = await addToFavourite(payload);
       if (res?.error) {
-        toast.error("Failed to update favourite");
+        toast.error(dict?.featured_hotels?.error_failed_fav|| "Failed to update favourite");
         return;
       }
 
@@ -139,7 +144,7 @@ const FeaturedHotels: React.FC = () => {
       );
       toast.success(res?.message || "Updated favourites ✅");
     } catch (err) {
-      toast.error("Something went wrong");
+      toast.error(dict?.featured_hotels?.something_wrong || "Something went wrong");
     }
   };
 
@@ -215,14 +220,13 @@ const FeaturedHotels: React.FC = () => {
           className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-4"
           style={{ fontFamily: "Urbanist, sans-serif" }}
         >
-          Featured Hotels
+           {dict?.featured_hotels?.heading || "Featured Hotels"}
         </h1>
         <p
           className="text-base sm:text-lg text-[#697488] max-w-md mx-auto leading-relaxed px-4"
           style={{ fontFamily: "Urbanist, sans-serif" }}
         >
-          Experience world-class comfort and unmatched hospitality in the heart
-          of paradise
+          {dict?.featured_hotels?.subheading || "Explore our handpicked selection of top-rated hotels, offering exceptional comfort and unforgettable experiences worldwide."}
         </p>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 items-start">
@@ -261,10 +265,10 @@ const FeaturedHotels: React.FC = () => {
               <div className="flex justify-between items-center pl-2">
                 <div className="flex gap-2 items-center">
                   <p className="text-[24px] sm:text-[28px] lg:text-[30px] font-[900]">
-                    ${hotel.price}
+                    {priceRateConverssion(parseFloat( hotel.price))}
                   </p>
                   <p className="text-[14px] sm:text-[16px] lg:text-[17px] font-[400] text-[#5B697E]">
-                    /night
+                    {dict?.featured_hotels?.per_night || "per night"}
                   </p>
                 </div>
               </div>
@@ -301,7 +305,7 @@ const FeaturedHotels: React.FC = () => {
                     ) : (
                       <div className="flex flex-col items-center justify-center py-3.5">
                         <p className="text-gray-500 text-sm sm:text-base">
-                          No amenities found
+                          {dict?.featured_hotels?.no_amenities || "No amenities found"}
                         </p>
                       </div>
                     )}
@@ -320,10 +324,10 @@ const FeaturedHotels: React.FC = () => {
                 {loadingHotelId === hotel.id ? (
                   <div className="flex items-center justify-center space-x-2">
                     <Spinner />
-                    <span>Loading...</span>
+                    <span>{dict?.featured_hotels?.loading || "Loading..."}</span>
                   </div>
                 ) : (
-                  "Book Now"
+                  dict?.featured_hotels?.book_now || "Book Now"
                 )}
               </button>
               <button

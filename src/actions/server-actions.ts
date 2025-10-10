@@ -615,7 +615,7 @@ export const hotel_details = async (payload: HotelDetailsPayload) => {
 
     const formData = new FormData();
 
-    // ✅ match exactly with API keys
+    //  match exactly with API keys
     formData.append("hotel_id", String(payload.hotel_id));
     formData.append("checkin", payload.checkin);
     formData.append("checkout", payload.checkout);
@@ -626,9 +626,9 @@ export const hotel_details = async (payload: HotelDetailsPayload) => {
     formData.append("nationality", payload.nationality || "PK");
     formData.append("language", payload.language || "en");
     formData.append("currency", payload.currency || "usd");
-    formData.append("supplier_name", payload.supplier_name || "stuba");
+    formData.append("supplier_name", payload.supplier_name || "");
 
-    // console.log("hotel_details_payload", Object.fromEntries(formData));
+    console.log("hotel_details_payload", payload);
 
     const response = await fetch(`${baseUrl}/hotel_details`, {
       method: "POST",
@@ -639,7 +639,7 @@ export const hotel_details = async (payload: HotelDetailsPayload) => {
     });
 
     const data = await response.json().catch(() => null);
-    // console.log("hotel_details_result", data);
+    console.log("hotel_details_result===============", data);
 
     if (!response.ok || data?.status === false) {
       return { error: data?.message || "Something went wrong" };

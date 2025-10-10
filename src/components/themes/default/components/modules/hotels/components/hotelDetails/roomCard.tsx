@@ -5,6 +5,7 @@ import { getCurrencySymbol } from "@src/utils/getCurrencySymbals";
 import { toast } from "react-toastify";
 import { useUser } from "@hooks/use-user";
 import { useEffect, useState } from "react";
+import useCurrency from "@hooks/useCurrency";
 
 interface RoomCardProps {
   room: any;
@@ -14,6 +15,9 @@ interface RoomCardProps {
 }
 
 export const RoomCard = ({ room, getAmenityIcon, options, onReserve }: RoomCardProps) => {
+    const { user } = useUser();
+   const {priceRateConverssion}=useCurrency()
+
   const option = options || {};
   const price = option.markup_price || room.markup_price || room.actual_price;
   const currency = room.currency || "USD";
@@ -25,7 +29,6 @@ export const RoomCard = ({ room, getAmenityIcon, options, onReserve }: RoomCardP
     return fav === 1 || fav === "1" ? 1 : 0;
   });
 
-  const { user } = useUser();
 
   useEffect(() => {
     const fav = room.favorite;
@@ -139,7 +142,7 @@ export const RoomCard = ({ room, getAmenityIcon, options, onReserve }: RoomCardP
                   />
                 </div>
                 <p className="text-sm font-[500]">Free cancellation
-                 
+
 
                 </p>
               </div>
@@ -152,7 +155,7 @@ export const RoomCard = ({ room, getAmenityIcon, options, onReserve }: RoomCardP
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center">
               <h2 className="text-xl font-[900] text-[#0F172B]">
-                {getCurrencySymbol(currency)} {parseFloat(price).toFixed(2)}
+                {priceRateConverssion(parseFloat(price))}
               </h2>
               <p className="text-[#5B697E] text-sm font-[500] ps-1">/night</p>
             </div>

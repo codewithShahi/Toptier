@@ -66,7 +66,7 @@ const HotelsDetails = () => {
   //  Helper to update URL
   const updateUrl = useCallback((params: typeof searchParams, hotelName: string) => {
     const slugName = hotelName.toLowerCase().replace(/\s+/g, "-");
-    const newUrl = `/hotelDetails/${hotel_id}/${slugName}/${params.checkin}/${params.checkout}/${params.rooms}/${params.adults}/${params.children}/${params.nationality}/${supplier_name}`;
+    const newUrl = `/hotelDetails/${hotel_id}/${slugName}/${params.checkin}/${params.checkout}/${params.rooms}/${params.adults}/${params.children}/${params.nationality}/stuba`;
 
     router.replace(newUrl);
   }, [hotel_id, supplier_name, router]);
@@ -106,6 +106,17 @@ const HotelsDetails = () => {
     },
   });
   //  Fetch hotel details based on searchParams
+let currentHotel: any = null;
+
+const storedHotel = localStorage.getItem("currentHotel");
+if (storedHotel) {
+  try {
+    currentHotel = JSON.parse(storedHotel);
+  } catch (error) {
+    console.error("Invalid JSON in localStorage currentHotel:", error);
+  }
+}
+  console.log('current hotel ', currentHotel)
   const { data: hotelDetails, isLoading } = useQuery({
     queryKey: ["hotel-details", { hotel_id, ...searchParams, supplier_name }],
     queryFn: () =>
@@ -120,7 +131,7 @@ const HotelsDetails = () => {
         nationality: searchParams.nationality,
         language: "en",
         currency: "USD",
-        supplier_name,
+        supplier_name:currentHotel?.supplier_name || "",
       }),
     enabled: !!hotel_id,
     staleTime: 0, // Always fetch fresh data
@@ -334,7 +345,7 @@ const HotelsDetails = () => {
                       <div className="min-w-10 min-h-10 flex items-center justify-center rounded-lg bg-green-100">
                         <Icon icon={getAmenityIcon(amenity)} className="text-gray-700" width={20} height={20} />
                       </div>
-                      <p className="text-base font-[500] text-gray-700">{amenity}</p>
+                      <p className="text-base font-[500] text-gray-700 text-ellipsis ">{amenity}</p>
                     </div>
                   ))}
                 </div>

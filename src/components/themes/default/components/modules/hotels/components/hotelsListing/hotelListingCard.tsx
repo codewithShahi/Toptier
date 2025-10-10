@@ -6,6 +6,9 @@ import { toast } from "react-toastify";
 import { addToFavourite } from "@src/actions";
 import { useUser } from "@hooks/use-user";
 import { getCurrencySymbol } from "@src/utils/getCurrencySymbals";
+import useLocale from "@hooks/useLocale";
+import useDictionary from "@hooks/useDict";
+import useCurrency from "@hooks/useCurrency";
 
 interface HotelListingCardProps {
   hotel: any;
@@ -25,7 +28,7 @@ const HotelCard = memo(function HotelCard({
   setActiveHotelId,
 }: HotelListingCardProps) {
   const { user } = useUser();
-
+  const {priceRateConverssion}=useCurrency()
   // Use number state to match API (0 = not fav, 1 = fav)
   const [isFav, setIsFav] = useState<number>(() => {
     return hotel.favorite === 1 || hotel.favorite === "1" ? 1 : 0;
@@ -45,6 +48,9 @@ const HotelCard = memo(function HotelCard({
     }
     return stars;
   }, []);
+
+  const { locale } = useLocale();
+        const { data: dict, isLoading } = useDictionary(locale as any);
 
   const toggleLike = async () => {
     if (!user) {
@@ -173,8 +179,8 @@ const HotelCard = memo(function HotelCard({
           >
             <div className="flex gap-2 items-center mb-2 sm:mb-0">
               <p className="text-[24px] sm:text-[28px] lg:text-[30px] font-[900]">
-                <span className="text-base">{getCurrencySymbol(hotel.currency)}</span>{" "}
-                {hotel.actual_price || hotel.price}
+                <span className="text-base">{priceRateConverssion(parseFloat(hotel.actual_price || hotel.price))}</span>{" "}
+                {/* {hotel.actual_price || hotel.price} */}
               </p>
               <p className="text-[14px] sm:text-[16px] lg:text-[17px] font-[400] text-[#5B697E]">
                 /night
@@ -190,7 +196,7 @@ const HotelCard = memo(function HotelCard({
             className="flex-1 cursor-pointer bg-[#163D8C] hover:bg-gray-800 text-white font-medium py-3 md:py-2.5 px-3 text-sm sm:text-base md:text-sm lg:text-base rounded-full transition-colors duration-200 focus:outline-none"
             onClick={() => onBookNow && onBookNow(hotel)}
           >
-            Book Now
+            {dict?.hotel_listing?.book_now || "Book Now"}
           </button>
           <button
             onClick={toggleLike}

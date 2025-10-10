@@ -22,6 +22,7 @@ export default function HotelSearch() {
   const router = useRouter();
   const { countries } = useCountries()
 
+  
   // Use the custom hook
   const {
     form,
@@ -110,7 +111,7 @@ const nationalityOptions = countries?.map((c: any) => ({
           {/* Destination */}
           <div className="relative" ref={destinationDropdownRef}>
             <label className="block text-sm text-start font-medium text-gray-500 dark:text-gray-300 mb-2">
-              {/* {"where to? "}  */} Where to?
+              {/* {"where to? "}  */} {dict?.home_page?.hero_section?.where_to || "Where to?" }
             </label>
             <div className="relative">
               <div className={`absolute ${direction === "ltr" ? "left-3" : "right-2"} top-1/2 transform -translate-y-1/2 text-gray-400`}>
@@ -131,7 +132,7 @@ const nationalityOptions = countries?.map((c: any) => ({
                 }}
                 autoComplete="off"
                 onKeyDown={handleDestinationKeyDown}
-                placeholder={"search city or hotel..."}
+                placeholder={dict?.home_page?.hero_section?.hotel_search_placeholder || "search city or hotel..."}
                 className={`w-full ${direction === "ltr" ? "pl-9" : "pr-9"}  pr-4 py-3 text-sm font-medium dark:text-gray-200 placeholder-gray-700 focus:outline-none hover:bg-gray-100 hover:border-gray-300 border border-gray-200 rounded-xl text-gray-900 dark:bg-gray-800 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-500 transition-all duration-200`}
               />
 
@@ -199,7 +200,8 @@ const nationalityOptions = countries?.map((c: any) => ({
             {/* Check-in */}
             <div className="relative">
               <label className="block text-sm text-start font-medium text-gray-500 dark:text-gray-300 mb-2">
-                {/* {isLoading ? "Loading..." : dict?.hotel_search?.checkin?.title} */}Check - in
+                {/* {isLoading ? "Loading..." : dict?.hotel_search?.checkin?.title} */}
+                {dict?.home_page?.hero_section?.check_in || "Check - in"}
               </label>
               <DatePicker
                 direction={direction}
@@ -218,7 +220,8 @@ const nationalityOptions = countries?.map((c: any) => ({
             {/* Check-out */}
             <div className="relative">
               <label className="block text-sm font-medium text-start text-gray-500 dark:text-gray-300 mb-2">
-                {/* {isLoading ? "Loading..." : dict?.hotel_search?.checkout?.title} */} Check - out
+                {/* {isLoading ? "Loading..." : dict?.hotel_search?.checkout?.title} */} 
+                {dict?.home_page?.hero_section?.check_out || "Check - out"}
               </label>
               <DatePicker
                 direction={direction}
@@ -236,7 +239,8 @@ const nationalityOptions = countries?.map((c: any) => ({
             {/* Guests */}
             <div className="relative" ref={guestsDropdownRef}>
               <label className="block text-sm text-start font-medium text-gray-500 mb-2 dark:text-gray-300">
-                {/* {isLoading ? "Loading..." : dict?.hotel_search?.guest_button?.title} */} Guests
+                {/* {isLoading ? "Loading..." : dict?.hotel_search?.guest_button?.title} */} 
+                {dict?.home_page?.hero_section?.guests || "Guests"}
               </label>
               <button
                 type="button"
@@ -261,7 +265,7 @@ const nationalityOptions = countries?.map((c: any) => ({
                     {/* Rooms */}
                     <div className="flex items-center justify-between px-1">
                       <span className="text-sm font-medium text-blue-900 dark:text-blue-300">
-                        Rooms
+                        {dict?.home_page?.hero_section?.rooms || "Rooms"}
                       </span>
                       <div className="flex items-center gap-3">
                         <button
@@ -286,7 +290,7 @@ const nationalityOptions = countries?.map((c: any) => ({
                     {/* Adults */}
                     <div className="flex items-center justify-between px-1">
                       <span className="text-sm font-medium text-blue-900 dark:text-blue-300">
-                        Adults
+                        {dict?.home_page?.hero_section?.adults || "Adults"}
                       </span>
                       <div className="flex items-center gap-3">
                         <button
@@ -313,7 +317,7 @@ const nationalityOptions = countries?.map((c: any) => ({
                     <div className="flex flex-col ">
                        <div className="flex items-center justify-between px-1">
                       <span className="text-sm font-medium text-blue-900 dark:text-blue-300">
-                        Children
+                        {dict?.home_page?.hero_section?.children || "Children"}
                       </span>
                       <div className="flex items-center gap-3">
                         <button
@@ -352,7 +356,7 @@ const nationalityOptions = countries?.map((c: any) => ({
            <Dropdown
   label={
     <span className="block text-left w-full px-1 py-2 text-sm text-gray-700">
-      {currentAge || 1} years
+      {currentAge || 1} {dict?.home_page?.hero_section?.years || "years"}
     </span>
   }
   buttonClassName="w-full text-left border flex justify-between items-center border-gray-200 rounded-xl px-2.5 py-2 text-sm focus:outline-none hover:bg-gray-50"
@@ -380,7 +384,7 @@ const nationalityOptions = countries?.map((c: any) => ({
               : 'text-gray-700 hover:bg-gray-100'
           }`}
         >
-          {age} years
+          {age} {dict?.home_page?.hero_section?.years || "years"}
         </button>
       ))}
     </div>
@@ -400,7 +404,7 @@ const nationalityOptions = countries?.map((c: any) => ({
 
 <div className="relative px-1">
   <label className="block text-sm text-start font-medium text-blue-900 mt-2 ps-1 dark:text-gray-300 mb-2">
-    Nationality
+    {dict?.home_page?.hero_section?.nationality || "Nationality"}
   </label>
   <Select
     options={nationalityOptions}
@@ -477,7 +481,8 @@ const nationalityOptions = countries?.map((c: any) => ({
                       <path d="M12.7761 13.5548L15.635 16.4137M14.7318 8.524C14.7318 10.3703 13.9984 12.141 12.6929 13.4465C11.3873 14.7521 9.61664 15.4855 7.77033 15.4855C5.92403 15.4855 4.15335 14.7521 2.84781 13.4465C1.54228 12.141 0.808838 10.3703 0.808838 8.524C0.808838 6.67769 1.54228 4.90701 2.84781 3.60148C4.15335 2.29594 5.92403 1.5625 7.77033 1.5625C9.61664 1.5625 11.3873 2.29594 12.6929 3.60148C13.9984 4.90701 14.7318 6.67769 14.7318 8.524Z" stroke="white" strokeWidth="1.3923" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                     <span className="hidden md:block text-white dark:text-gray-50 font-normal">
-                      {/* {isLoading ? "Loading..." : dict?.hotel_search?.search_btnText} */} Search Homes
+                      {/* {isLoading ? "Loading..." : dict?.hotel_search?.search_btnText} */} 
+                      {dict?.home_page?.hero_section?.search_homes || "Search Homes"}
                     </span>
                   </>
                 )}
