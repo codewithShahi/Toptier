@@ -4,7 +4,6 @@ import { Icon } from "@iconify/react";
 import DatePicker from "@components/core/DatePicker";
 import useDictionary from "@hooks/useDict";
 import useDirection from "@hooks/useDirection";
-import { format } from 'date-fns';
 
 import { useParams, useRouter } from "next/navigation";
 
@@ -15,6 +14,7 @@ import { set } from "lodash";
 import Select from "@components/core/select";
 import { boolean } from "zod";
 import CustomDateRangePicker from "@components/core/dateRange/dateRange";
+import { addDays, format } from 'date-fns';
 // import useHotelSearch from "@hooks/useHotelSearch"; // Import the hook
 
 export default function HotelSearch() {
