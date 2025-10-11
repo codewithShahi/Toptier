@@ -7,7 +7,7 @@ import useLocale from "@hooks/useLocale";
 const OfferSection = () => {
   const { our_services } = useAppSelector((state) => state.appData.data);
   const { locale } = useLocale();
-   const { data: dict } = useDictionary(locale as any);
+  const { data: dict } = useDictionary(locale as any);
 
   const handleScrollToTop = () => {
     window.scrollTo({
@@ -59,7 +59,7 @@ const OfferSection = () => {
                       {service.title}
                     </h3>
                     <p
-                      className="text-blue-100 text-md leading-relaxed mb-7 max-w-[70%] line-clamp-3"
+                      className={`text-blue-100 text-md leading-relaxed mb-7 max-w-[70%] line-clamp-3  ${locale === 'ar' ? 'mr-auto' : ''}`}
                       style={{ fontFamily: "Urbanist, sans-serif" }}
                       dangerouslySetInnerHTML={{ __html: service.description }}
                     />
@@ -67,7 +67,14 @@ const OfferSection = () => {
 
                   <button
                     onClick={handleScrollToTop}
-                    className="bg-white text-[#112233] cursor-pointer px-5 sm:px-6 md:px-7 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm md:text-base font-semibold hover:bg-gray-100 transition-colors w-fit"
+                    className={`
+                    bg-white text-[#112233] cursor-pointer 
+                    px-5 sm:px-6 md:px-7 py-2 sm:py-2.5 
+                    rounded-full text-xs sm:text-sm md:text-base 
+                    font-semibold hover:bg-gray-100 transition-colors 
+                    w-fit
+                    ${locale === 'ar' ? 'mr-auto' : ''}
+                  `}
                     style={{ fontFamily: "Urbanist, sans-serif" }}
                   >
                     {service.button_text}
@@ -78,9 +85,11 @@ const OfferSection = () => {
                 {service.background_image && (
                   <div className="absolute -right-15 top-30 opacity-100">
                     <div className="opacity-100 w-[180px] h-[180px] flex items-center justify-center">
-                      <img
+                      <Image
                         src={service.background_image}
                         alt={service.title}
+                        width={100}
+                        height={100}
                         className="w-full h-full object-cover -rotate-10"
                       />
                     </div>

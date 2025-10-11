@@ -14,6 +14,7 @@ interface Props {
 
 // ✅ Remove "async" — this is a regular function component
 const HotelsListingMain = ({ slug }: Props) => {
+  if(!slug) return null
   const city = slug[0]?.replace(/-/g, " ") || "";
   const dispatch = useDispatch();
   const { hotelModuleNames } = useHotelSearch();

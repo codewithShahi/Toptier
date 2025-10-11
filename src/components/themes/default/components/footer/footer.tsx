@@ -22,8 +22,7 @@ const Footer = () => {
     // business_name,
     home_title,
   } = app.app
-// const {languages,currencies }=useAppSelector((state) => state.appData?.data)
-  // states
+
   const [email, setEmail] = useState('')
   const [loading, setLoading] = useState(false)
   const [alert, setAlert] = useState<{ type: 'success' | 'danger'; msg: string } | null>(null)
@@ -67,7 +66,7 @@ const Footer = () => {
   const supportPages = app?.cms?.filter((page: any) => page.name === 'Footer' && page.category === 'support')
   const companyPages = app?.cms?.filter((page: any) => page.name === 'Footer' && page.category === 'company')
   const downloadsPages = app?.cms?.filter((page: any) => page.name === 'Footer' && page.category === 'downloads')
-
+console.log('cmsssssssssssssss',app.cms)
   const footerItems = [
     { title: dict?.footer?.title_explore || 'Explore', links: [...explorePages] },
     { title: dict?.footer?.title_support || 'Support', links: [...supportPages] },
@@ -102,7 +101,7 @@ const Footer = () => {
                 {page.links.map((link: any, i: number) => (
                   <li key={i}>
                     <Link
-                      href={`/${link.slug_url}`}
+                      href={`/pages/${link.slug_url}`}
                       className="text-[#11223399] text-base hover:text-blue-700 transition-colors duration-200"
                     >
                       {link.page_name.charAt(0).toUpperCase() + link.page_name.slice(1)}
@@ -155,17 +154,17 @@ const Footer = () => {
 
      {/* <footer className="bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 py-6"> */}
   <div className="max-w-[1200px] mx-auto py-6 border-t border-gray-200 px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-4">
-    
+
     <p className="text-base font-medium text-gray-800 dark:text-gray-400">
       © 2025  {home_title.toUpperCase()} {dict?.footer?.copyright || "All rights reserved."}
     </p>
 
-   
+
     <div className='flex items-center gap-5'>
    <div className="flex items-center gap-5">
   <div className="flex items-center text-sm text-gray-600 dark:text-gray-400 space-x-4">
 
-  
+
   <div className="relative w-19 text-gray-400"> {/* 👈 Fixed width for alignment */}
     {/* <select
       id="language-select"
@@ -181,12 +180,12 @@ const Footer = () => {
         ))}
     </select> */}
     <LanguageDropdown/>
-    
+
 
   </div>
 
-  
-  <div className="relative w-15"> 
+
+  <div className="relative w-15">
   <CurrencyDropdown/>
   </div>
 
@@ -194,14 +193,14 @@ const Footer = () => {
 
 
   <div className="flex space-x-5">
- 
+
   </div>
 </div>
- 
+
 
 
 <div className="flex space-x-5 items-center">
-  
+
   <a
     target="_blank"
     href={social_facebook}

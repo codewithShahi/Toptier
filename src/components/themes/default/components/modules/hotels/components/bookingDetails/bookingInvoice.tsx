@@ -3,6 +3,8 @@
 import React, { useRef, useState } from "react";
 import { Icon } from "@iconify/react";
 import { useAppSelector } from "@lib/redux/store";
+import useDictionary from "@hooks/useDict"; // ✅ Add dictionary hook
+import useLocale from "@hooks/useLocale";
 
 interface Traveller {
   traveller_type: string;
@@ -53,12 +55,16 @@ interface HotelInvoiceProps {
 const HotelInvoice: React.FC<HotelInvoiceProps> = ({ invoiceDetails }) => {
   const invoiceRef = useRef<HTMLDivElement>(null);
   const appData = useAppSelector((state) => state.appData?.data?.app);
+  const { locale } = useLocale();
+  const { data: dict } = useDictionary(locale as any);
   const [showInvoiceImage, setShowInvoiceImage] = useState(false);
+  const lang = locale || "en";
+  const useDirection = lang === "ar" ? "rtl" : "ltr";
 
   if (!invoiceDetails?.length) {
     return (
       <div className="flex items-center justify-center min-h-screen text-gray-600 text-lg">
-        No invoice details found.
+        {dict?.hotelInvoice?.errors?.noInvoiceFound}
       </div>
     );
   }
@@ -66,7 +72,6 @@ const HotelInvoice: React.FC<HotelInvoiceProps> = ({ invoiceDetails }) => {
   const data = invoiceDetails[0];
   const travellers: Traveller[] = JSON.parse(data.guest || "[]");
   const rooms: RoomData[] = JSON.parse(data.room_data || "[]");
-
 
   // Generate the invoice URL for QR code
   const invoiceUrl = `${window.location.origin}/invoice/${data.booking_ref_no}`;
@@ -114,7 +119,7 @@ const HotelInvoice: React.FC<HotelInvoiceProps> = ({ invoiceDetails }) => {
   };
 
   const handleDownloadPDF = () => {
-    alert("PDF download functionality will be implemented later.");
+    alert(dict?.hotelInvoice?.alert?.pdfNotImplemented);
   };
 
   const handleShareWhatsApp = () => {
@@ -146,28 +151,42 @@ View Invoice: ${invoiceUrl}`;
             className="h-16 w-auto object-contain rounded-md"
           />
 
-          <div className="flex-1 text-left sm:text-right">
-            <div className="">
-              <span className="text-sm font-semibold">Payment Status: </span>
+          <div
+            className={`flex-1 ${lang === "ar" ? "text-right sm:text-left" : "text-left sm:text-right"
+              }`}
+          >
+            <div>
+              <span className="text-sm font-semibold">
+                {dict?.hotelInvoice?.header?.paymentStatus}
+              </span>
               <span className="text-sm text-green-600 font-semibold">
                 {bookingData.paymentStatus}
               </span>
             </div>
-            <div className="">
-              <span className="text-sm font-semibold">Booking Status: </span>
+            <div>
+              <span className="text-sm font-semibold">
+                {dict?.hotelInvoice?.header?.bookingStatus}
+              </span>
               <span className="text-sm text-blue-600 font-semibold">
                 {bookingData.bookingStatus}
               </span>
             </div>
             <div className="text-sm text-gray-600">
               <div>
-                <span className="font-semibold">Phone:</span> {bookingData.phone}
+                <span className="font-semibold">
+                  {dict?.hotelInvoice?.header?.phone}
+                </span>{" "}
+                {bookingData.phone}
               </div>
               <div>
-                <span className="font-semibold">Email:</span> {bookingData.email}
+                <span className="font-semibold">
+                  {dict?.hotelInvoice?.header?.email}
+                </span>{" "}
+                {bookingData.email}
               </div>
             </div>
           </div>
+
 
           {/* QR Code - links to invoice page */}
           <div className="w-20 h-20 p-1 cursor-pointer" onClick={() => setShowInvoiceImage(true)}>
@@ -183,39 +202,47 @@ View Invoice: ${invoiceUrl}`;
         <div className="p-6 space-y-6">
           {/* Booking Note */}
           <div className="border bg-[#F5F5F5] border-gray-200 rounded-lg p-4 text-start">
-            Payable through Toptier Travel acting as agent for the service operating company.
+            {dict?.hotelInvoice?.bookingNote}
           </div>
 
           {/* Booking Info */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 border border-gray-200 rounded-lg p-4">
             <div>
-              <div className="text-xs font-semibold text-gray-500 mb-1">Booking ID</div>
+              <div className="text-xs font-semibold text-gray-500 mb-1">{dict?.hotelInvoice?.bookingInfo?.bookingId}</div>
               <div className="text-sm font-medium">{bookingData.bookingId}</div>
             </div>
             <div>
-              <div className="text-xs font-semibold text-gray-500 mb-1">Reference</div>
+              <div className="text-xs font-semibold text-gray-500 mb-1">{dict?.hotelInvoice?.bookingInfo?.reference}</div>
               <div className="text-sm font-medium">{bookingData.bookingReference}</div>
             </div>
             <div>
-              <div className="text-xs font-semibold text-gray-500 mb-1">Date</div>
+              <div className="text-xs font-semibold text-gray-500 mb-1">{dict?.hotelInvoice?.bookingInfo?.date}</div>
               <div className="text-sm font-medium">{bookingData.bookingDate}</div>
             </div>
             <div>
-              <div className="text-xs font-semibold text-gray-500 mb-1">Location</div>
+              <div className="text-xs font-semibold text-gray-500 mb-1">{dict?.hotelInvoice?.bookingInfo?.location}</div>
               <div className="text-sm font-medium">{bookingData.hotel.location}</div>
             </div>
           </div>
 
           {/* Travellers */}
           <div className="border border-gray-200 rounded-lg p-4">
-            <h3 className="text-sm font-bold text-gray-700 mb-3 uppercase">Travellers</h3>
+            <h3 className="text-sm font-bold text-gray-700 mb-3 uppercase">
+              {dict?.hotelInvoice?.travellers?.title}
+            </h3>
             <div className="overflow-x-auto">
               <table className="w-full text-sm border border-gray-200 rounded-md">
                 <thead className="bg-gray-50">
                   <tr>
-                    <th className="text-left p-2 font-semibold text-gray-600">No</th>
-                    <th className="text-left p-2 font-semibold text-gray-600">SR</th>
-                    <th className="text-left p-2 font-semibold text-gray-600">Name</th>
+                    <th className="text-left p-2 font-semibold text-gray-600">
+                      {dict?.hotelInvoice?.travellers?.table?.no}
+                    </th>
+                    <th className="text-left p-2 font-semibold text-gray-600">
+                      {dict?.hotelInvoice?.travellers?.table?.sr}
+                    </th>
+                    <th className="text-left p-2 font-semibold text-gray-600">
+                      {dict?.hotelInvoice?.travellers?.table?.name}
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
@@ -244,51 +271,54 @@ View Invoice: ${invoiceUrl}`;
             <p className="text-sm text-gray-600 mb-2">{bookingData.hotel.address}</p>
             <div className="text-sm text-gray-700 space-y-1">
               <div>
-                <span className="font-semibold">Phone:</span> {bookingData.hotel.phone}
+                <span className="font-semibold">{dict?.hotelInvoice?.hotelInfo?.phone}</span> {bookingData.hotel.phone}
               </div>
               <div>
-                <span className="font-semibold">Email:</span> {bookingData.hotel.email}
+                <span className="font-semibold">{dict?.hotelInvoice?.hotelInfo?.email}</span> {bookingData.hotel.email}
               </div>
               <div>
-                <span className="font-semibold">Website:</span> {bookingData.hotel.website}
+                <span className="font-semibold">{dict?.hotelInvoice?.hotelInfo?.website}</span> {bookingData.hotel.website}
               </div>
             </div>
           </div>
 
           {/* Room Details */}
           <div className="border border-gray-200 rounded-lg p-4">
-            <h3 className="text-lg font-bold text-gray-800 mb-3">Room Details</h3>
+            <h3 className="text-lg font-bold text-gray-800 mb-3">
+              {dict?.hotelInvoice?.roomDetails?.title}
+            </h3>
             <p className="text-sm mb-2">
-              <span className="font-semibold">Checkin:</span> {bookingData.room.checkin}
+              <span className="font-semibold">{dict?.hotelInvoice?.roomDetails?.checkin}</span> {bookingData.room.checkin}
             </p>
             <p className="text-sm mb-2">
-              <span className="font-semibold">Checkout:</span> {bookingData.room.checkout}
+              <span className="font-semibold">{dict?.hotelInvoice?.roomDetails?.checkout}</span> {bookingData.room.checkout}
             </p>
             <p className="text-sm mb-2">
-              <span className="font-semibold">Type:</span> {bookingData.room.type}
+              <span className="font-semibold">{dict?.hotelInvoice?.roomDetails?.type}</span> {bookingData.room.type}
             </p>
             <p className="text-sm">
-              <span className="font-semibold">Total:</span> {bookingData.total}
+              <span className="font-semibold">{dict?.hotelInvoice?.roomDetails?.total}</span> {bookingData.total}
             </p>
           </div>
 
           {/* Fare + Tax Info */}
           <div className="border border-gray-200 rounded-lg p-4">
-            <h4 className="text-2xl font-bold text-gray-800 text-center mb-3">Rate Comment</h4>
+            <h4 className="text-2xl font-bold text-gray-800 text-center mb-3">
+              {dict?.hotelInvoice?.fareAndTax?.rateCommentTitle}
+            </h4>
             <p className="text-gray-700 mb-4">
-              Estimated total amount of taxes & fees for this booking: {bookingData.taxes} payable on
-              arrival. City tax may vary by accommodation. Check-in hour 14:00 - 00:00. Check-out hour
-              12:30 - 12:00.
+              {dict?.hotelInvoice?.fareAndTax?.taxMessage
+                .replace("{tax}", invoiceDetails[0].tax || "0")}
             </p>
 
             <div className="flex justify-between items-center p-3 bg-gray-50 rounded mb-2">
-              <span className="text-sm font-semibold">TAX</span>
+              <span className="text-sm font-semibold">{dict?.hotelInvoice?.fareAndTax?.taxLabel}</span>
               <span className="text-sm font-semibold">
                 {"%"} {invoiceDetails[0].tax}
               </span>
             </div>
             <div className="flex justify-between items-center p-3 bg-gray-100 rounded">
-              <span className="text-sm font-bold">Total</span>
+              <span className="text-sm font-bold">{dict?.hotelInvoice?.fareAndTax?.totalLabel}</span>
               <span className="text-sm font-bold">{bookingData.total}</span>
             </div>
           </div>
@@ -296,31 +326,35 @@ View Invoice: ${invoiceUrl}`;
           {/* Customer Info */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <div className="border border-gray-200 bg-gray-50 p-4 rounded-lg">
-              <h4 className="text-sm font-bold text-gray-700 mb-3">Customer</h4>
+              <h4 className="text-sm font-bold text-gray-700 mb-3">
+                {dict?.hotelInvoice?.customer?.title}
+              </h4>
               <div className="text-sm space-y-1">
                 <p>
-                  <span className="font-semibold">Email:</span> {bookingData.customer.email}
+                  <span className="font-semibold">{dict?.hotelInvoice?.customer?.email}</span> {bookingData.customer.email}
                 </p>
                 <p>
-                  <span className="font-semibold">Contact:</span> {bookingData.customer.contact}
+                  <span className="font-semibold">{dict?.hotelInvoice?.customer?.contact}</span> {bookingData.customer.contact}
                 </p>
                 <p>
-                  <span className="font-semibold">Address:</span> {bookingData.customer.address}
+                  <span className="font-semibold">{dict?.hotelInvoice?.customer?.address}</span> {bookingData.customer.address}
                 </p>
               </div>
             </div>
 
             <div className="border border-gray-200 bg-gray-50 p-4 rounded-lg">
-              <h4 className="text-sm font-bold text-gray-700 mb-3">Customer Care</h4>
+              <h4 className="text-sm font-bold text-gray-700 mb-3">
+                {dict?.hotelInvoice?.customerCare?.title}
+              </h4>
               <div className="text-sm space-y-1">
                 <p>
-                  <span className="font-semibold">Email:</span> {appData.contact_email}
+                  <span className="font-semibold">{dict?.hotelInvoice?.customerCare?.email}</span> {appData.contact_email}
                 </p>
                 <p>
-                  <span className="font-semibold">Contact:</span> {appData.contact_phone}
+                  <span className="font-semibold">{dict?.hotelInvoice?.customerCare?.contact}</span> {appData.contact_phone}
                 </p>
                 <p>
-                  <span className="font-semibold">Website:</span> {appData.site_url}
+                  <span className="font-semibold">{dict?.hotelInvoice?.customerCare?.website}</span> {appData.site_url}
                 </p>
               </div>
             </div>
@@ -334,19 +368,17 @@ View Invoice: ${invoiceUrl}`;
             className="flex items-center justify-center gap-2 bg-blue-800 hover:bg-gray-800 text-white font-semibold cursor-pointer h-11 px-6 rounded-full shadow-md min-w-[160px]"
           >
             <Icon icon="mdi:tray-arrow-down" width="20" height="20" />
-            Download PDF
+            {dict?.hotelInvoice?.buttons?.downloadPdf}
           </button>
           <button
             onClick={handleShareWhatsApp}
             className="flex items-center justify-center gap-2 bg-gray-800 hover:bg-blue-800 text-white font-semibold cursor-pointer h-11 px-12 rounded-full shadow-md min-w-[160px]"
           >
             <Icon icon="mdi:payment" width="20" height="20" />
-            Pay Now
+            {dict?.hotelInvoice?.buttons?.payNow}
           </button>
         </div>
       </div>
-
-
     </div>
   );
 };

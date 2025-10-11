@@ -841,3 +841,40 @@ export const hotel_invoice = async (payload: string) => {
 };
 
 
+// ============== CMS CONTENT PAGE =====================
+interface cms_page_payload {
+  slug_url: string;
+  lang: string;
+
+}
+
+export const cms_pages_content = async (payload: cms_page_payload) => {
+  try {
+
+    const formData = new FormData();
+    //  match exactly with API keys
+    formData.append("slug_url", String(payload.slug_url));
+    formData.append("lang", payload.lang);
+
+    console.log("hotel_details_payload", payload);
+
+    const response = await fetch(`${baseUrl}/cms_page`, {
+      method: "POST",
+      body: formData,
+      headers: {
+        Accept: "application/json, text/plain, */*",
+      },
+    });
+
+    const data = await response.json().catch(() => null);
+    console.log("cms_page ===============", data);
+
+    if (!response.ok || data?.status === false) {
+      return { error: data?.message || "Something went wrong" };
+    }
+
+    return data;
+  } catch (error) {
+    return { error: (error as Error).message || "An error occurred" };
+  }
+};

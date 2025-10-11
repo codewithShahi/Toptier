@@ -5,14 +5,18 @@ import { Icon } from "@iconify/react";
 // import Button from "@components/core/button";
 import HeaderLogo from "@components/themes/layout/components/common/headerLogo";
 import { useUser } from "@hooks/use-user";
-// import Alert from "@components/core/alert";
-// import { signOut } from "@src/actions";
-// import { Router } from "next/router";
 import ProfileDropdown from "./userDropDown"
+import { useAppSelector } from "@lib/redux/store";
 
 const HeaderMenus = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { user } = useUser();
+    const {modules} = useAppSelector((state) => state.appData?.data)
+const activeModules = modules.filter((mod:any) => mod.status === "1");
+const uniqueModules = Array.from(
+  new Map(activeModules.map((mod: any) => [mod.type, mod])).values()
+);
+
   // const router=Router()
   return (
     <header className="w-full  max-w-[1200px] mx-auto overflow-visible">
@@ -27,9 +31,16 @@ const HeaderMenus = () => {
           {/* Desktop Menu */}
           <nav className="text-[16px] pt-1.5">
             <div className="hidden md:flex items-center gap-8 text-gray-700">
-              <Link href="/hotels" className="header-nav-item">
-                Hotels
-              </Link>
+{uniqueModules.map((mod: any) => (
+  <Link
+    key={mod.id}
+    href={`/${mod.type.toLowerCase()}`}
+    className="header-nav-item capitalize text-gray-800 hover:text-blue-700"
+  >
+    {mod.type}
+  </Link>
+))}
+
               <Link href="/contact" className="header-nav-item">
                 Contact
               </Link>
@@ -37,7 +48,6 @@ const HeaderMenus = () => {
                 Support
               </Link>
             </div>
-
           </nav>
         </div>
 

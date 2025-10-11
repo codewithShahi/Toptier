@@ -117,7 +117,6 @@
     "title_company": "الشركة",
     "title_downloads": "التنزيلات"
   },
-  
   "hotel_listing": {
     "advanced_search": "بحث متقدم",
     "search_hotels": "ابحث عن الفنادق",
@@ -149,5 +148,179 @@
     "address": "العنوان",
     "email": "البريد الإلكتروني",
     "phone": "الهاتف"
-  }
+  },
+  "hotelDetails": {
+    "hotelNamePlaceholder": "اسم الفندق",
+    "aboutThisProperty": "حول هذه المنشأة",
+    "noAmenities": "لا توجد وسائل راحة",
+    "showMore": "عرض المزيد",
+    "chooseYourRoom": "اختر غرفتك",
+    "noRoomsAvailable": "لا توجد غرف متاحة للتواريخ المحددة.",
+    "theToptierWayToTravel": "طريقة توبتير للسفر",
+    "noBrandStories": "لا توجد قصص علامة تجارية متاحة لهذه المنشأة.",
+    "needToKnowDetails": "تفاصيل يجب معرفتها",
+    "frequentlyAskedQuestions": "الأسئلة المتكررة",
+    "noSimilarHotels": "لم يتم العثور على فنادق مماثلة.",
+    "readMore": "اقرأ المزيد",
+    "readLess": "اقرأ أقل",
+    "topRated": "الأعلى تقييمًا",
+    "freeCancellation": "إلغاء مجاني",
+    "bestPriceGuarantee": "أفضل سعر مضمون",
+    "map": "خريطة",
+    "unableToLoad": "غير قادر على تحميل تفاصيل الفندق",
+    "pleaseTryAgain": "يرجى المحاولة مرة أخرى لاحقًا.",
+    "allAmenities": "جميع وسائل الراحة",
+    "youmightAlsoLike": "قد يعجبك أيضًا"
+  },
+  "bookingForm": {
+    "personalInformation": {
+      "title": "المعلومات الشخصية",
+      "subtitle": "أخبرنا باسم الشخص الذي سيقوم بتسجيل الوصول.",
+      "firstNameLabel": "الاسم الأول",
+      "lastNameLabel": "اسم العائلة",
+      "addressLabel": "العنوان"
+    },
+    "contactInformation": {
+      "title": "معلومات الاتصال",
+      "subtitle": "سوف نرسل تأكيد الحجز إلى عنوان البريد الإلكتروني هذا.",
+      "emailLabel": "عنوان البريد الإلكتروني",
+      "nationalityLabel": "الجنسية",
+      "currentCountryLabel": "الدولة الحالية",
+      "phoneCodeLabel": "رمز الدولة",
+      "phoneNumberLabel": "رقم الهاتف"
+    },
+    "travelersInformation": {
+      "title": "معلومات المسافرين",
+      "subtitle": "تفاصيل مهمة لإكمال الحجز الخاص بك",
+      "adultTraveller": "مسافر بالغ",
+      "childTraveller": "مسافر طفل",
+      "titleLabel": "اللقب"
+    },
+    "paymentMethod": {
+      "title": "طريقة الدفع",
+      "subtitle": "معاملات آمنة ومحمية. معلوماتك الشخصية محفوظة.",
+      "noPaymentMethods": "لا توجد طرق دفع متاحة"
+    },
+    "cancellationPolicy": {
+      "title": "سياسة الإلغاء",
+      "acceptText": "أوافق على سياسة الإلغاء لهذا الحجز و",
+      "termsAndConditions": "الشروط والأحكام"
+    },
+    "buttons": {
+      "confirmAndBook": "تأكيد وحجز",
+      "processing": "جارٍ المعالجة..."
+    },
+    "errors": {
+      "firstNameRequired": "الاسم الأول مطلوب",
+      "lastNameRequired": "اسم العائلة مطلوب",
+      "addressRequired": "العنوان مطلوب",
+      "invalidEmail": "عنوان البريد الإلكتروني غير صالح",
+      "nationalityRequired": "الجنسية مطلوبة",
+      "currentCountryRequired": "الدولة الحالية مطلوبة",
+      "countryCodeRequired": "رمز الدولة مطلوب",
+      "phoneNumberRequired": "رقم الهاتف مطلوب",
+      "invalidPhoneNumber": "يرجى إدخال رقم هاتف دولي صالح",
+      "atLeastOneTraveller": "مطلوب مسافر واحد على الأقل",
+      "titleRequired": "اللقب مطلوب",
+      "paymentMethodRequired": "يرجى اختيار طريقة دفع",
+      "acceptPolicyRequired": "يجب قبول سياسة الإلغاء"
+    },
+    "titles": {
+      "mr": "السيد",
+      "mrs": "السيدة",
+      "ms": "الآنسة",
+      "dr": "الدكتور"
+    }
+  },
+  "bookingDetails": {
+    "pageTitle": "تفاصيل الحجز",
+    "bookingSummary": "ملخص الحجز",
+    "roomName": "اسم الغرفة",
+    "checkinDate": "تاريخ تسجيل الوصول",
+    "checkoutDate": "تاريخ تسجيل المغادرة",
+    "roomQuantity": "عدد الغرف",
+    "nights": "الليالي",
+    "guests": "الضيوف",
+    "roomPrice": "سعر الغرفة",
+    "toptierFee": "رسوم توبتير",
+    "total": "الإجمالي",
+    "adults": "البالغون",
+    "children": "الأطفال"
+  },
+  "hotelInvoice": {
+    "errors": {
+      "noInvoiceFound": "لم يتم العثور على تفاصيل الفاتورة."
+    },
+    "header": {
+      "paymentStatus": "حالة الدفع:",
+      "bookingStatus": "حالة الحجز:",
+      "phone": "الهاتف:",
+      "email": "البريد الإلكتروني:"
+    },
+    "bookingNote": "يتم الدفع عبر شركة توب تير ترافيل بصفتها وكيلًا لشركة التشغيل.",
+    "bookingInfo": {
+      "bookingId": "معرّف الحجز",
+      "reference": "المرجع",
+      "date": "التاريخ",
+      "location": "الموقع"
+    },
+    "travellers": {
+      "title": "المسافرون",
+      "table": {
+        "no": "الرقم",
+        "sr": "التسلسل",
+        "name": "الاسم"
+      }
+    },
+    "hotelInfo": {
+      "phone": "الهاتف:",
+      "email": "البريد الإلكتروني:",
+      "website": "الموقع الإلكتروني:"
+    },
+    "roomDetails": {
+      "title": "تفاصيل الغرفة",
+      "checkin": "تسجيل الوصول:",
+      "checkout": "تسجيل المغادرة:",
+      "type": "النوع:",
+      "total": "الإجمالي:"
+    },
+    "fareAndTax": {
+      "rateCommentTitle": "ملاحظات السعر",
+      "taxMessage": "المبلغ الإجمالي التقديري للضرائب والرسوم لهذا الحجز: {tax} يُدفع عند الوصول. قد تختلف ضريبة المدينة حسب مكان الإقامة. وقت تسجيل الوصول من الساعة 14:00 إلى 00:00. وقت تسجيل المغادرة من الساعة 12:30 إلى 12:00.",
+      "taxLabel": "الضريبة",
+      "totalLabel": "الإجمالي"
+    },
+    "customer": {
+      "title": "العميل",
+      "email": "البريد الإلكتروني:",
+      "contact": "جهة الاتصال:",
+      "address": "العنوان:"
+    },
+    "customerCare": {
+      "title": "خدمة العملاء",
+      "email": "البريد الإلكتروني:",
+      "contact": "جهة الاتصال:",
+      "website": "الموقع الإلكتروني:"
+    },
+    "buttons": {
+      "downloadPdf": "تحميل ملف PDF",
+      "payNow": "ادفع الآن"
+    },
+    "alert": {
+      "pdfNotImplemented": "سيتم تنفيذ وظيفة تحميل PDF لاحقًا."
+    }
+  },
+  "support": {
+  "heading": "الدعم",
+  "p_1": "في",
+  "p_3": "، نحن شغوفون بمساعدتك على استكشاف العالم براحة وثقة. دعمك يساعدنا على الاستمرار في تقديم أفضل تجارب السفر، وعروض الفنادق، والإلهام لكل مسافر.",
+  "contact_us": "اتصل بنا",
+  "empower_travelers": "تمكين المسافرين",
+  "empower_travelers_p": "مساهمتك تساعد المسافرين على اكتشاف الجواهر الخفية والوجهات الموثوقة حول العالم.",
+  "sustain_quality": "الحفاظ على الجودة",
+  "sustain_quality_p": "نحن نعمل باستمرار على تحسين خدماتنا وتقديم تجارب سفر أفضل للجميع.",
+  "community_growth": "نمو المجتمع",
+  "community_growth_p": "انضم إلى مهمتنا لبناء مجتمع عالمي من المسافرين الشغوفين الذين يحبون الاستكشاف."
+}
+
 }

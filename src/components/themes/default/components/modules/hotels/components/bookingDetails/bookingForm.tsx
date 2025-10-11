@@ -12,65 +12,63 @@ import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import Select from '@components/core/select';
 import { AccordionInfoCard } from '@components/core/accordians/accordian';
+import useDictionary from '@hooks/useDict'; // ✅ Add this
+import useLocale from '@hooks/useLocale';
 
-const bookingSchema = z.object({
-  firstName: z.string().min(1, 'First name is required'),
-  lastName: z.string().min(1, 'Last name is required'),
-  address: z.string().min(1, 'Address is required'),
-  email: z.string().email('Invalid email address'),
-  nationality: z.string().min(1, 'Nationality is required'),
-  currentCountry: z.string().min(1, 'Current country is required'),
-  phoneCountryCode: z.string().min(1, 'Country code is required'),
-  phoneNumber: z
-    .string()
-    .min(8, 'Phone number is required')
-    .regex(/^\+?[1-9]\d{7,14}$/, 'Enter a valid international phone number'),
-  travellers: z
-    .array(
-      z.object({
-        title: z.string().min(1, 'Title is required'),
-        firstName: z.string().min(1, 'First name is required'),
-        lastName: z.string().min(1, 'Last name is required'),
-      })
-    )
-    .min(1, 'At least one traveller is required'),
-  paymentMethod: z.string().min(1, 'Please select a payment method'),
-  acceptPolicy: z
-    .boolean()
-    .refine((val) => val === true, {
-      message: 'You must accept the cancellation policy',
-    }),
-});
-export type BookingFormValues = z.infer<typeof bookingSchema>;
-
-const defaultValues: BookingFormValues = {
-  firstName: '',
-  lastName: '',
-  address: '',
-  email: '',
-  nationality: '',
-  currentCountry: '',
-  phoneCountryCode: '',
-  phoneNumber: '',
-  travellers: [{ title: 'Mr', firstName: '', lastName: '' }],
-  paymentMethod: '',
-  acceptPolicy: false,
+// ✅ Get dict for error messages
+const useBookingFormSchema = (dict: any) => {
+  return z.object({
+    firstName: z.string().min(1, dict?.bookingForm?.errors?.firstNameRequired),
+    lastName: z.string().min(1, dict?.bookingForm?.errors?.lastNameRequired),
+    address: z.string().min(1, dict?.bookingForm?.errors?.addressRequired),
+    email: z.string().email(dict?.bookingForm?.errors?.invalidEmail),
+    nationality: z.string().min(1, dict?.bookingForm?.errors?.nationalityRequired),
+    currentCountry: z.string().min(1, dict?.bookingForm?.errors?.currentCountryRequired),
+    phoneCountryCode: z.string().min(1, dict?.bookingForm?.errors?.countryCodeRequired),
+    phoneNumber: z
+      .string()
+      .min(8, dict?.bookingForm?.errors?.phoneNumberRequired)
+      .regex(/^\+?[1-9]\d{7,14}$/, dict?.bookingForm?.errors?.invalidPhoneNumber),
+    travellers: z
+      .array(
+        z.object({
+          title: z.string().min(1, dict?.bookingForm?.errors?.titleRequired),
+          firstName: z.string().min(1, dict?.bookingForm?.errors?.firstNameRequired),
+          lastName: z.string().min(1, dict?.bookingForm?.errors?.lastNameRequired),
+        })
+      )
+      .min(1, dict?.bookingForm?.errors?.atLeastOneTraveller),
+    paymentMethod: z.string().min(1, dict?.bookingForm?.errors?.paymentMethodRequired),
+    acceptPolicy: z
+      .boolean()
+      .refine((val) => val === true, {
+        message: dict?.bookingForm?.errors?.acceptPolicyRequired,
+      }),
+  });
 };
 
-interface CountryOption {
-  iso: string;
-  name: string;
-  phonecode: string;
-}
-type RawCountry = {
-  iso?: string;
-  code?: string;
-  nicename?: string;
-  name?: string;
-  phonecode?: number | string;
-};
+export type BookingFormValues = z.infer<ReturnType<typeof useBookingFormSchema>>;
 
 export default function BookingForm() {
+    const { locale } = useLocale();
+   const { data: dict } = useDictionary(locale as any);
+
+  const bookingSchema = useBookingFormSchema(dict);
+
+  const defaultValues: BookingFormValues = {
+    firstName: '',
+    lastName: '',
+    address: '',
+    email: '',
+    nationality: '',
+    currentCountry: '',
+    phoneCountryCode: '',
+    phoneNumber: '',
+    travellers: [{ title: dict?.bookingForm?.titles?.mr, firstName: '', lastName: '' }],
+    paymentMethod: '',
+    acceptPolicy: false,
+  };
+
   const {
     control,
     handleSubmit,
@@ -95,9 +93,14 @@ export default function BookingForm() {
   const { hotelDetails } = selectedRoom || {};
   const [isTitleOpen, setIsTitleOpen] = useState<number | null>(null);
   const titleRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const titles = ['Mr', 'Mrs', 'Ms', 'Dr'];
-  const [isCountryListOpen, setIsCountryListOpen] = useState<boolean>(false)
-  const [isPhoneCodeListOpen, setIsPhoneCodeListOpen] = useState<boolean>(false)
+  const titles = [
+    dict?.bookingForm?.titles?.mr,
+    dict?.bookingForm?.titles?.mrs,
+    dict?.bookingForm?.titles?.ms,
+    dict?.bookingForm?.titles?.dr,
+  ];
+  const [isCountryListOpen, setIsCountryListOpen] = useState<boolean>(false);
+  const [isPhoneCodeListOpen, setIsPhoneCodeListOpen] = useState<boolean>(false);
 
   const curruntBooking = localStorage.getItem('hotelSearchForm');
   const saveBookingData = curruntBooking ? JSON.parse(curruntBooking) : {};
@@ -128,14 +131,14 @@ export default function BookingForm() {
     })) || [];
 
   const excludedCodes = ['0', '381', '599'];
-  const countryList: CountryOption[] = Array.isArray(rawCountries)
+  const countryList = Array.isArray(rawCountries)
     ? rawCountries
-      .map((c: RawCountry) => ({
-        iso: c.iso || c.code || '',
-        name: c.nicename || c.name || '',
-        phonecode: c.phonecode?.toString() || '0',
-      }))
-      .filter((c) => c.iso && c.name && !excludedCodes.includes(c.phonecode))
+        .map((c: any) => ({
+          iso: c.iso || c.code || '',
+          name: c.nicename || c.name || '',
+          phonecode: c.phonecode?.toString() || '0',
+        }))
+        .filter((c) => c.iso && c.name && !excludedCodes.includes(c.phonecode))
     : [];
 
   const countryOptions = countryList.map((c) => ({
@@ -147,7 +150,7 @@ export default function BookingForm() {
 
   const phoneCodeOptions = countryList.map((c) => ({
     value: `+${c.phonecode}`,
-    label: `+${c.phonecode}`, // ← searchable by country name
+    label: `+${c.phonecode}`,
     iso: c.iso,
     phonecode: `${c.phonecode}`,
   }));
@@ -155,7 +158,7 @@ export default function BookingForm() {
   const currentCountry = watch('currentCountry');
   useEffect(() => {
     if (currentCountry) {
-      const country = countryList.find(c => c.iso === currentCountry);
+      const country = countryList.find((c) => c.iso === currentCountry);
       if (country) {
         setValue('phoneCountryCode', `+${country.phonecode}`);
       }
@@ -168,13 +171,13 @@ export default function BookingForm() {
     }
     if (travelers > 0) {
       const initialTravellers = Array.from({ length: travelers }, () => ({
-        title: 'Mr',
+        title: dict?.bookingForm?.titles?.mr,
         firstName: '',
         lastName: '',
       }));
       setValue('travellers', initialTravellers);
     }
-  }, [setValue, nationality, travelers]);
+  }, [setValue, nationality, travelers, dict]);
 
   const { mutate: bookHotel, isPending } = useMutation({
     mutationFn: async (bookingPayload: any) => {
@@ -183,7 +186,6 @@ export default function BookingForm() {
     },
     onSuccess: (data) => {
       router.push(`/hotel/invoice/${data.booking_ref_no}`);
-
     },
     onError: (error) => {
       console.error('Booking failed:', error);
@@ -284,21 +286,22 @@ export default function BookingForm() {
     bookHotel(bookingPayload);
   };
 
-  // Helper to get country by ISO
-  const getCountryByIso = (iso: string) => countryList.find(c => c.iso === iso);
+  const getCountryByIso = (iso: string) => countryList.find((c) => c.iso === iso);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
       {/* Personal Information */}
       <div className="mb-12">
-        <h3 className="text-xl text-[#0F172BE5] font-semibold mb-2">Personal Information</h3>
+        <h3 className="text-xl text-[#0F172BE5] font-semibold mb-2">
+          {dict?.bookingForm?.personalInformation?.title}
+        </h3>
         <p className="text-[#0F172B66] font-medium text-base mb-4">
-          Tell us the name of the person checking in.
+          {dict?.bookingForm?.personalInformation?.subtitle}
         </p>
         <div className="grid grid-cols-1 gap-6">
           <div className="w-full max-w-2xl">
             <label htmlFor="firstName" className="block text-base font-medium text-[#5B697E] mb-2">
-              First Name
+              {dict?.bookingForm?.personalInformation?.firstNameLabel}
             </label>
             <Controller
               name="firstName"
@@ -316,7 +319,7 @@ export default function BookingForm() {
           </div>
           <div className="w-full max-w-2xl">
             <label htmlFor="lastName" className="block text-base font-medium text-[#5B697E] mb-2">
-              Last Name
+              {dict?.bookingForm?.personalInformation?.lastNameLabel}
             </label>
             <Controller
               name="lastName"
@@ -332,10 +335,9 @@ export default function BookingForm() {
             />
             {errors.lastName && <p className="text-red-500 text-sm mt-1">{errors.lastName.message}</p>}
           </div>
-          {/* Address */}
           <div className="w-full max-w-2xl">
             <label htmlFor="address" className="block text-base font-medium text-[#5B697E] mb-2">
-              Address
+              {dict?.bookingForm?.personalInformation?.addressLabel}
             </label>
             <Controller
               name="address"
@@ -356,13 +358,15 @@ export default function BookingForm() {
 
       {/* Contact Information */}
       <div className="flex flex-col gap-3 mb-12">
-        <h3 className="text-xl text-[#0F172BE5] font-semibold">Contact Information</h3>
+        <h3 className="text-xl text-[#0F172BE5] font-semibold">
+          {dict?.bookingForm?.contactInformation?.title}
+        </h3>
         <p className="text-[#0F172B66] text-base font-medium">
-          We'll send your confirmation to this email address.
+          {dict?.bookingForm?.contactInformation?.subtitle}
         </p>
         <div className="w-full max-w-2xl">
           <label htmlFor="email" className="block text-base font-medium text-[#5B697E] mb-2">
-            Email Address
+            {dict?.bookingForm?.contactInformation?.emailLabel}
           </label>
           <Controller
             name="email"
@@ -379,10 +383,9 @@ export default function BookingForm() {
           {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>}
         </div>
 
-        {/* Nationality (read-only with flag) */}
         <div className="w-full max-w-2xl">
           <label htmlFor="nationality" className="block text-base font-medium text-[#5B697E] mb-2">
-            Nationality
+            {dict?.bookingForm?.contactInformation?.nationalityLabel}
           </label>
           <Controller
             name="nationality"
@@ -402,10 +405,9 @@ export default function BookingForm() {
           {errors.nationality && <p className="text-red-500 text-sm mt-1">{errors.nationality.message}</p>}
         </div>
 
-        {/* Current Country - Custom Select with flag */}
         <div className="w-full max-w-2xl">
           <label htmlFor="currentCountry" className="block text-base font-medium text-[#5B697E] mb-2">
-            Current Country
+            {dict?.bookingForm?.contactInformation?.currentCountryLabel}
           </label>
           <Controller
             name="currentCountry"
@@ -414,24 +416,22 @@ export default function BookingForm() {
               <Select
                 {...field}
                 options={countryOptions}
-                placeholder="Select Country"
+                placeholder={dict?.bookingForm?.contactInformation?.currentCountryLabel}
                 isSearchable
                 onChange={(option: any) => field.onChange(option?.value || '')}
-                value={countryOptions.find(opt => opt.value === field.value) || null}
+                value={countryOptions.find((opt) => opt.value === field.value) || null}
                 className="w-full"
                 classNames={{
                   control: () =>
-
                     'border border-gray-300 cursor-pointer rounded-xl px-3 py-3.5 flex items-center min-h-[44px] text-base focus:ring-1 focus:ring-[#163C8C] focus:border-[#163C8C] shadow-none',
                   valueContainer: () => 'flex items-center gap-2 px-1',
                   singleValue: () =>
                     'flex items-center gap-2 text-gray-800 font-medium truncate',
                   placeholder: () => 'text-gray-400 font-normal',
                   indicatorsContainer: () => 'absolute right-4',
-
                 }}
-                onMenuOpen={() => setIsCountryListOpen(true)}   // detect dropdown open
-                onMenuClose={() => setIsCountryListOpen(false)} // detect dropdown close
+                onMenuOpen={() => setIsCountryListOpen(true)}
+                onMenuClose={() => setIsCountryListOpen(false)}
                 components={{
                   Option: ({ data, ...props }) => (
                     <div
@@ -463,7 +463,9 @@ export default function BookingForm() {
                       icon="mdi:keyboard-arrow-down"
                       width="24"
                       height="24"
-                      className={`text-gray-600 transi duration-100 ease-in-out ${isCountryListOpen ? 'rotate-180' : "rotate-0"}`}
+                      className={`text-gray-600 transi duration-100 ease-in-out ${
+                        isCountryListOpen ? 'rotate-180' : 'rotate-0'
+                      }`}
                     />
                   ),
                   IndicatorSeparator: () => null,
@@ -471,19 +473,14 @@ export default function BookingForm() {
               />
             )}
           />
-
-
           {errors.currentCountry && <p className="text-red-500 text-sm mt-1">{errors.currentCountry.message}</p>}
         </div>
 
-        {/* Phone */}
         <div className="flex flex-col sm:flex-row gap-4">
-          {/* Phone Country Code - Custom Select with flag */}
           <div className="w-full sm:max-w-42">
             <label htmlFor="phoneCountryCode" className="block text-base font-medium text-[#5B697E] mb-2">
-              Country Code
+              {dict?.bookingForm?.contactInformation?.phoneCodeLabel}
             </label>
-
             <Controller
               name="phoneCountryCode"
               control={control}
@@ -491,23 +488,23 @@ export default function BookingForm() {
                 <Select
                   {...field}
                   options={phoneCodeOptions}
-                  placeholder="Code"
+                  placeholder={dict?.bookingForm?.contactInformation?.phoneCodeLabel}
                   isSearchable
                   onChange={(option: any) => field.onChange(option?.value || '')}
-                  value={phoneCodeOptions.find(opt => opt.value === field.value) || null}
+                  value={phoneCodeOptions.find((opt) => opt.value === field.value) || null}
                   className="w-full"
                   classNames={{
                     control: () =>
                       'border border-gray-300 cursor-pointer rounded-xl px-3 py-3.5 flex items-center min-h-[44px] text-base focus:ring-1 focus:ring-[#163C8C] focus:border-[#163C8C] shadow-none',
                     valueContainer: () => 'flex items-center gap-2 px-1',
-                    singleValue: () => 'flex items-center justify-between  text-gray-800 font-medium',
+                    singleValue: () => 'flex items-center justify-between text-gray-800 font-medium',
                     placeholder: () => 'text-gray-400 font-normal',
                     indicatorsContainer: () => 'absolute right-4',
                   }}
-                  onMenuOpen={() => setIsPhoneCodeListOpen(true)}   // detect dropdown open
-                  onMenuClose={() => setIsPhoneCodeListOpen(false)} // detect dropdown close
+                  onMenuOpen={() => setIsPhoneCodeListOpen(true)}
+                  onMenuClose={() => setIsPhoneCodeListOpen(false)}
                   components={{
-                    Option: ({ children, data, ...props }) => (
+                    Option: ({ data, ...props }) => (
                       <div
                         {...props.innerProps}
                         className="px-3 py-2 cursor-pointer flex items-center gap-2 hover:bg-gray-100"
@@ -517,7 +514,6 @@ export default function BookingForm() {
                           width="22"
                           height="16"
                           className="rounded-sm"
-
                         />
                         <span>+{data.phonecode}</span>
                       </div>
@@ -538,7 +534,9 @@ export default function BookingForm() {
                         icon="mdi:keyboard-arrow-down"
                         width="24"
                         height="24"
-                        className={`text-gray-600 transi duration-100 ease-in-out ${isPhoneCodeListOpen ? 'rotate-180' : "rotate-0"}`}
+                        className={`text-gray-600 transi duration-100 ease-in-out ${
+                          isPhoneCodeListOpen ? 'rotate-180' : 'rotate-0' 
+                        }`}
                       />
                     ),
                     IndicatorSeparator: () => null,
@@ -546,13 +544,12 @@ export default function BookingForm() {
                 />
               )}
             />
-
             {errors.phoneCountryCode && <p className="text-red-500 text-sm mt-1">{errors.phoneCountryCode.message}</p>}
           </div>
 
           <div className="w-full sm:max-w-122">
             <label htmlFor="phoneNumber" className="block text-base font-medium text-[#5B697E] mb-2">
-              Phone Number
+              {dict?.bookingForm?.contactInformation?.phoneNumberLabel}
             </label>
             <Controller
               name="phoneNumber"
@@ -573,21 +570,25 @@ export default function BookingForm() {
 
       {/* Travelers Information */}
       <div className="flex flex-col gap-3 mb-12">
-        <h3 className="text-xl text-[#0F172BE5] font-semibold">Travelers Information</h3>
+        <h3 className="text-xl text-[#0F172BE5] font-semibold">
+          {dict?.bookingForm?.travelersInformation?.title}
+        </h3>
         <p className="text-[#0F172B66] text-base font-medium mb-4">
-          Important details to complete your booking
+          {dict?.bookingForm?.travelersInformation?.subtitle}
         </p>
         {fields.map((field, index) => (
           <div key={field.id} className="space-y-4 mb-3">
             <div className="flex justify-between items-center">
               <h4 className="text-lg text-[#0F172BE5] font-medium">
-                {index < adults ? `Adult Traveller ${index + 1}` : `Child Traveller ${index - adults + 1}`}
+                {index < adults
+                  ? `${dict?.bookingForm?.travelersInformation?.adultTraveller} ${index + 1}`
+                  : `${dict?.bookingForm?.travelersInformation?.childTraveller} ${index - adults + 1}`}
               </h4>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-[1fr_1.5fr_1.5fr] gap-4">
               <div className="w-full">
                 <label htmlFor={`travellers.${index}.title`} className="block text-base font-medium text-[#5B697E] mb-2">
-                  Title
+                  {dict?.bookingForm?.travelersInformation?.titleLabel}
                 </label>
                 <Controller
                   name={`travellers.${index}.title`}
@@ -604,13 +605,14 @@ export default function BookingForm() {
                         onClick={() => setIsTitleOpen(isTitleOpen === index ? null : index)}
                         className="flex cursor-pointer items-center justify-between w-full px-3 py-4 border border-gray-300 rounded-xl text-base focus:outline-none focus:border-[#163C8C]"
                       >
-                        {field.value || 'Select Title'}
+                        {field.value || `Select ${dict?.bookingForm?.travelersInformation?.titleLabel}`}
                         <Icon
                           icon="material-symbols:keyboard-arrow-up"
                           width="24"
                           height="24"
-                          className={`h-5 w-5 text-gray-500 transition-transform ${isTitleOpen === index ? 'rotate-0' : 'rotate-180'
-                            }`}
+                          className={`h-5 w-5 text-gray-500 transition-transform ${
+                            isTitleOpen === index ? 'rotate-0' : 'rotate-180'
+                          }`}
                         />
                       </button>
                       {isTitleOpen === index && (
@@ -638,7 +640,7 @@ export default function BookingForm() {
               </div>
               <div className="w-full">
                 <label htmlFor={`travellers.${index}.firstName`} className="block text-base font-medium text-[#5B697E] mb-2">
-                  First Name
+                  {dict?.bookingForm?.personalInformation?.firstNameLabel}
                 </label>
                 <Controller
                   name={`travellers.${index}.firstName`}
@@ -658,7 +660,7 @@ export default function BookingForm() {
               </div>
               <div className="w-full">
                 <label htmlFor={`travellers.${index}.lastName`} className="block text-base font-medium text-[#5B697E] mb-2">
-                  Last Name
+                  {dict?.bookingForm?.personalInformation?.lastNameLabel}
                 </label>
                 <Controller
                   name={`travellers.${index}.lastName`}
@@ -683,9 +685,11 @@ export default function BookingForm() {
 
       {/* Payment Method */}
       <div className="flex flex-col gap-3 mb-2">
-        <h3 className="text-xl text-[#0F172BE5] font-semibold">Payment Method</h3>
+        <h3 className="text-xl text-[#0F172BE5] font-semibold">
+          {dict?.bookingForm?.paymentMethod?.title}
+        </h3>
         <p className="text-[#0F172B66] text-base font-medium">
-          Safe, secure transactions. Your personal information is protected.
+          {dict?.bookingForm?.paymentMethod?.subtitle}
         </p>
         <div className="w-full">
           <Controller
@@ -698,10 +702,11 @@ export default function BookingForm() {
                     <div
                       key={index}
                       onClick={() => field.onChange(payment.name)}
-                      className={`relative border rounded-xl p-4 cursor-pointer transition-all w-full ${field.value === payment.name
+                      className={`relative border rounded-xl p-4 cursor-pointer transition-all w-full ${
+                        field.value === payment.name
                           ? 'border-[#163C8C] bg-[#163C8C]/5'
                           : 'border-gray-300 hover:border-[#163C8C]/50'
-                        }`}
+                      }`}
                     >
                       {field.value === payment.name && (
                         <div className="absolute top-4 right-3 w-6 h-6 rounded-full bg-[#163C8C] flex items-center justify-center">
@@ -732,7 +737,9 @@ export default function BookingForm() {
                     </div>
                   ))
                 ) : (
-                  <div className="col-span-full text-gray-500 py-4">No payment methods available</div>
+                  <div className="col-span-full text-gray-500 py-4">
+                    {dict?.bookingForm?.paymentMethod?.noPaymentMethods}
+                  </div>
                 )}
               </div>
             )}
@@ -742,23 +749,24 @@ export default function BookingForm() {
 
       {/* Cancellation Policy */}
       <div className="flex flex-col gap-4 mt-3">
-        <h3 className="text-xl text-[#0F172BE5] font-semibold">Cancellation Policy</h3>
+        <h3 className="text-xl text-[#0F172BE5] font-semibold">
+          {dict?.bookingForm?.cancellationPolicy?.title}
+        </h3>
 
         {hotelDetails?.cancellation !== "" && (
           <AccordionInfoCard
-            title="Cancellation Policy"
+            title={dict?.bookingForm?.cancellationPolicy?.title}
             showDescription={false}
             showLeftIcon={false}
-            titleClassName='text-red-500'
+            titleClassName="text-red-500"
           >
-            <div className='bg-red-100 text-red-500 p-4 w-full rounded-lg'>
+            <div className="bg-red-100 text-red-500 p-4 w-full rounded-lg">
               <p
                 className="text-[#0F172B66] text-base font-medium"
                 dangerouslySetInnerHTML={{ __html: hotelDetails.cancellation }}
               />
             </div>
           </AccordionInfoCard>
-
         )}
 
         <Controller
@@ -773,9 +781,9 @@ export default function BookingForm() {
                 className="w-5 h-5 rounded border border-[#0F172B66] mt-0.5 focus:ring-[#163C8C] focus:border-[#163C8C]"
               />
               <span className="text-[#0F172B66] text-base font-medium">
-                I accept the cancellation policy for this booking and the{' '}
+                {dict?.bookingForm?.cancellationPolicy?.acceptText}{' '}
                 <span className="text-[#163C8C] underline cursor-pointer hover:text-[#0f2d6b]">
-                  Terms & Conditions
+                  {dict?.bookingForm?.cancellationPolicy?.termsAndConditions}
                 </span>
               </span>
             </label>
@@ -788,18 +796,17 @@ export default function BookingForm() {
       <button
         type="submit"
         disabled={isPending}
-        className={`w-full text-lg text-white py-3 font-medium rounded-lg mt-5 transition-colors focus:ring-2 focus:ring-offset-2 flex items-center justify-center gap-2 ${isPending
-            ? 'bg-gray-400 cursor-not-allowed'
-            : 'bg-[#163C8C] hover:bg-[#0f2d6b] cursor-pointer focus:ring-[#163C8C]'
-          }`}
+        className={`w-full text-lg text-white py-3 font-medium rounded-lg mt-5 transition-colors focus:ring-2 focus:ring-offset-2 flex items-center justify-center gap-2 ${
+          isPending ? 'bg-gray-400 cursor-not-allowed' : 'bg-[#163C8C] hover:bg-[#0f2d6b] cursor-pointer focus:ring-[#163C8C]'
+        }`}
       >
         {isPending ? (
           <>
             <Icon icon="svg-spinners:ring-resize" width="20" height="20" className="text-white" />
-            Processing...
+            {dict?.bookingForm?.buttons?.processing}
           </>
         ) : (
-          'Confirm & Book'
+          dict?.bookingForm?.buttons?.confirmAndBook
         )}
       </button>
     </form>
