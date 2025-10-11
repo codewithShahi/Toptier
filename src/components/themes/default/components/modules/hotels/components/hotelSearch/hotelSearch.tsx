@@ -15,7 +15,6 @@ import { set } from "lodash";
 import Select from "@components/core/select";
 import { boolean } from "zod";
 import CustomDateRangePicker from "@components/core/dateRange/dateRange";
-import { addDays } from 'date-fns';
 // import useHotelSearch from "@hooks/useHotelSearch"; // Import the hook
 
 export default function HotelSearch() {
