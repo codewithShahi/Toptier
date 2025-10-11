@@ -8,6 +8,9 @@ import Dropdown from "@components/core/Dropdown";
 import useCountries from "@hooks/useCountries";
 import Select from "@components/core/select";
 import { useState } from "react";
+import CustomDateRangePicker from "@components/core/dateRange/dateRange";
+import { addDays, format } from 'date-fns';
+
 
 interface HotelDetailsSearchProps {
   form: HotelForm;
@@ -69,41 +72,42 @@ export default function HotelDetailsSearch({
       <div className="bg-white appHorizantalSpacing dark:bg-gray-800 rounded-3xl space-y-4 md:space-y-0 max-w-[1200px] mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3 md:gap-4 items-end">
           {/* Check-in */}
-          <div className="relative">
-            <label className="block text-sm text-start font-medium text-gray-500 dark:text-gray-300 mb-2">
-              {dict?.hotel_search?.checkin?.title}
-            </label>
-            <DatePicker
-              direction={direction}
-              showCalendarIcon
-              className="w-full font-medium pl-2 text-sm placeholder-gray-400 hover:bg-gray-100 hover:border-gray-300 border border-gray-200 rounded-xl text-gray-900 dark:bg-gray-800 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-500 bg-white transition-all duration-200 focus:outline-none"
-              defaultDate={new Date(form.checkin)}
-              onSelect={(date) => {
-                const newCheckin = date ? date.toISOString().slice(0, 10) : "";
-                updateForm({ checkin: newCheckin });
-              }}
-            />
-            <ErrorMessage error={errors.checkin} />
-          </div>
+         <div className="sm:col-span-2 lg:col-span-2 ">
+           <label className="block text-sm text-start font-medium text-gray-500 dark:text-gray-300 mb-2">
+             {"check-in"} {"|"} {"check-out"}
+           </label>
+           <CustomDateRangePicker
 
-          {/* Check-out */}
-          <div className="relative">
-            <label className="block text-sm font-medium text-start text-gray-500 dark:text-gray-300 mb-2">
-              {dict?.hotel_search?.checkout?.title}
-            </label>
-            <DatePicker
-              direction={direction}
-              showCalendarIcon
-              defaultDate={new Date(form.checkout)}
-              className="w-full font-medium pl-2 text-sm placeholder-gray-400 hover:bg-gray-100 hover:border-gray-300 border border-gray-200 rounded-xl text-gray-900 dark:bg-gray-800 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-500 bg-white transition-all duration-200 focus:outline-none"
-              onSelect={(date) => {
-                const newCheckout = date ? date.toISOString().slice(0, 10) : "";
-                updateForm({ checkout: newCheckout });
-              }}
-            />
-            <ErrorMessage error={errors.checkout} />
-          </div>
+            initialStartDate={
+           form.checkin
+             ? new Date(form.checkin)
+             : new Date()
+         }
+         initialEndDate={
+           form.checkout
+             ? new Date(form.checkout)
+             : addDays(new Date(), 1)
+         }
+         onChange={(range) => {
 
+           //  safely extract the selection from the date range picker
+           const { startDate, endDate } = range || range;
+
+           if (startDate && endDate) {
+             //  format using date-fns (avoids timezone shift from toISOString)
+             const checkin = format(startDate, "yyyy-MM-dd");
+             const checkout = format(endDate, "yyyy-MM-dd");
+             //  update your form or state
+             updateForm({ checkin, checkout });
+
+           }
+         }}
+           />
+           <div className="flex space-x-2 mt-1">
+             <ErrorMessage error={errors.checkin} />
+             <ErrorMessage error={errors.checkout} />
+           </div>
+         </div>
           {/* Guests */}
           <div className="flex flex-col">
             <div className="relative" ref={guestsDropdownRef}>

@@ -4,10 +4,9 @@ import { getDictionary } from '@src/get-dictionary'
 // import { HomeWrapper } from '@components/themes/default'
 import TransitionLayout from '@src/utils/pageTransition'
 // import HomeWrapper from '@components/themes/default/components/home/homeWrapper/homeWrapper'
-import { HotelsListingMain} from '@components/themes/default'
 // import { hotel_search } from '@src/actions'
 import { Metadata } from 'next';
-import { HeroSection, FeaturedHotels } from '@components/themes/default'
+import { HeroSection, FeaturedHotels, HotelsListingMain } from '@components/themes/default'
 
 export const metadata = { title: `Toptier | HotelListing` } satisfies Metadata;
 export default async function Page({ params }: {

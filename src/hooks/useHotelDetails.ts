@@ -222,7 +222,7 @@ const [form, setForm] = useState<HotelForm>(initialForm);
       // const supplier=storedForm?.suplier_name
       //  Include children_ages in URL
       const childrenAgesParam = form.children_ages?.join(",") || "";
-      const url = `/hotelDetails/${currentHotel.hotel_id}/${slugName}/${form.checkin}/${form.checkout}/${form.rooms}/${form.adults}/${form.children}/${nationality}/${currentHotel.supplier_name}/${childrenAgesParam}`;
+      const url = `/hotelDetails/${currentHotel.hotel_id}/${slugName}/${form.checkin}/${form.checkout}/${form.rooms}/${form.adults}/${form.children}/${nationality}/${childrenAgesParam}`;
 
       if (onSearchRefetch) {
         onSearchRefetch(form);

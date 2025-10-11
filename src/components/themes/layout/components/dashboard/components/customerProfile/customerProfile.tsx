@@ -72,11 +72,11 @@ export default function CustomerProfile() {
         email: user.email || "",
         phone: user.phone || "",
         phone_country_code: user.phone_country_code?.toString() || "",
-        country_code: user.country_code || "",
-        state: user.state || "",
-        city: user.city || "",
-        address1: user.address1 || "",
-        address2: user.address2 || "",
+        // country_code: user.country_code || "",
+        // state: user.state || "",
+        // city: user.city || "",
+        // address1: user.address1 || "",
+        // address2: user.address2 || "",
       });
     }
   }, [user, reset]);

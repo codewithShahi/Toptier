@@ -202,80 +202,10 @@ body:is(.dark *) {
 /* =============
    REACT DAY PICKER - GLOBAL STYLES (Tailwind-based)
 ============= */
-
-@layer components {
-  .rdp {
-    @apply p-2;
-  }
-
-  .rdp_caption {
-    @apply flex justify-center py-2 relative items-center;
-  }
-
-  .rdp_caption_label {
-    @apply text-sm font-medium text-blue-900 dark:text-blue-300;
-  }
-
-  .rdp_nav {
-    @apply flex items-center;
-  }
-
-  .rdp_nav_button {
-    @apply h-6 w-6 bg-transparent hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-full flex items-center justify-center;
-  }
-
-  .rdp_nav_button_previous {
-    @apply absolute left-1;
-  }
-
-  .rdp_nav_button_next {
-    @apply absolute right-1;
-  }
-
-  .rdp_table {
-    @apply w-full border-collapse;
-  }
-
-  .rdp_head_row {
-    @apply flex;
-  }
-
-  .rdp_head_cell {
-    @apply text-blue-700 dark:text-blue-400 font-medium text-xs w-9 text-center;
-  }
-
-  .rdp_row {
-    @apply flex w-full mt-1;
-  }
-
-  .rdp_cell {
-    @apply h-9 w-9 text-center text-sm p-0;
-  }
-
-  .rdp_day {
-    @apply h-9 w-9 p-0 font-normal rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900/30 aria-selected:opacity-100 focus:outline-none transition-colors;
-  }
-
-  .rdp_day_selected {
-    @apply bg-blue-900 text-white hover:bg-blue-800 dark:bg-blue-800 dark:hover:bg-blue-700 rounded-lg font-medium transition-colors;
-  }
-
-  .rdp_day_disabled {
-    @apply text-gray-300 dark:text-gray-600 cursor-not-allowed;
-  }
-
-  .rdp_day_today {
-    @apply text-blue-900 font-bold dark:text-blue-400;
-  }
-
-  .rdp_day_outside {
-    @apply text-gray-400 dark:text-gray-600 opacity-50;
-  }
-
-  .rdp_day:focus {
-    @apply outline outline-2 outline-blue-500 rounded-lg;
-  }
+.rdrDefinedRangesWrapper{
+  @apply hidden
 }
-
-
+.rdrCalendarWrapper {
+  @apply rounded-xl border border-gray-200 shadow
+}
 

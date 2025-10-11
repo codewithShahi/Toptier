@@ -4,6 +4,7 @@ import { Icon } from "@iconify/react";
 import DatePicker from "@components/core/DatePicker";
 import useDictionary from "@hooks/useDict";
 import useDirection from "@hooks/useDirection";
+import { format } from 'date-fns';
 
 import { useParams, useRouter } from "next/navigation";
 
@@ -13,6 +14,8 @@ import useCountries from "@hooks/useCountries";
 import { set } from "lodash";
 import Select from "@components/core/select";
 import { boolean } from "zod";
+import CustomDateRangePicker from "@components/core/dateRange/dateRange";
+import { addDays } from 'date-fns';
 // import useHotelSearch from "@hooks/useHotelSearch"; // Import the hook
 
 export default function HotelSearch() {
@@ -22,7 +25,7 @@ export default function HotelSearch() {
   const router = useRouter();
   const { countries } = useCountries()
 
-  
+
   // Use the custom hook
   const {
     form,
@@ -197,49 +200,48 @@ const nationalityOptions = countries?.map((c: any) => ({
 
           {/* Dates & Guests row */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {/* Check-in */}
-            <div className="relative">
-              <label className="block text-sm text-start font-medium text-gray-500 dark:text-gray-300 mb-2">
-                {/* {isLoading ? "Loading..." : dict?.hotel_search?.checkin?.title} */}
-                {dict?.home_page?.hero_section?.check_in || "Check - in"}
-              </label>
-              <DatePicker
-                direction={direction}
-                showCalendarIcon
-                className="w-full font-medium pl-1 text-sm placeholder-gray-400 hover:bg-gray-100 hover:border-gray-300 border border-gray-200 rounded-xl text-gray-900 dark:bg-gray-800 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-500 bg-white transition-all duration-200 focus:outline-none"
-                defaultDate={new Date(checkin)}
-                onSelect={(date) => {
-                  const newCheckin = date ? date.toISOString().slice(0, 10) : "";
-                  updateForm({ checkin: newCheckin });
+  {/* Date Range Picker */}
+<div className="sm:col-span-2 lg:col-span-2">
+  <label className="block text-sm text-start font-medium text-gray-500 dark:text-gray-300 mb-2">
+    {dict?.home_page?.hero_section?.check_in} {"|"} {dict?.home_page?.hero_section?.check_out}
+  </label>
+  <CustomDateRangePicker
 
-                }}
-              />
-              <ErrorMessage error={errors.checkin} />
-            </div>
+   initialStartDate={
+  form.checkin
+    ? new Date(form.checkin)
+    : new Date()
+}
+initialEndDate={
+  form.checkout
+    ? new Date(form.checkout)
+    : addDays(new Date(), 1)
+}
+onChange={(range) => {
 
-            {/* Check-out */}
-            <div className="relative">
-              <label className="block text-sm font-medium text-start text-gray-500 dark:text-gray-300 mb-2">
-                {/* {isLoading ? "Loading..." : dict?.hotel_search?.checkout?.title} */} 
-                {dict?.home_page?.hero_section?.check_out || "Check - out"}
-              </label>
-              <DatePicker
-                direction={direction}
-                showCalendarIcon
-                defaultDate={new Date(checkout)}
-                className="w-full font-medium pl-1 text-sm placeholder-gray-400 hover:bg-gray-100 hover:border-gray-300 border border-gray-200 rounded-xl text-gray-900 dark:bg-gray-800 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-500 bg-white transition-all duration-200 focus:outline-none"
-                onSelect={(date) => {
-                  const newCheckout = date ? date.toISOString().slice(0, 10) : "";
-                  updateForm({ checkout: newCheckout });
-                }}
-              />
-              <ErrorMessage error={errors.checkout} />
-            </div>
+  //  safely extract the selection from the date range picker
+  const { startDate, endDate } = range || range;
+
+  if (startDate && endDate) {
+    //  format using date-fns (avoids timezone shift from toISOString)
+    const checkin = format(startDate, "yyyy-MM-dd");
+    const checkout = format(endDate, "yyyy-MM-dd");
+    //  update your form or state
+    updateForm({ checkin, checkout });
+
+  }
+}}
+  />
+  <div className="flex space-x-2 mt-1">
+    <ErrorMessage error={errors.checkin} />
+    <ErrorMessage error={errors.checkout} />
+  </div>
+</div>
 
             {/* Guests */}
             <div className="relative" ref={guestsDropdownRef}>
               <label className="block text-sm text-start font-medium text-gray-500 mb-2 dark:text-gray-300">
-                {/* {isLoading ? "Loading..." : dict?.hotel_search?.guest_button?.title} */} 
+                {/* {isLoading ? "Loading..." : dict?.hotel_search?.guest_button?.title} */}
                 {dict?.home_page?.hero_section?.guests || "Guests"}
               </label>
               <button
@@ -481,7 +483,7 @@ const nationalityOptions = countries?.map((c: any) => ({
                       <path d="M12.7761 13.5548L15.635 16.4137M14.7318 8.524C14.7318 10.3703 13.9984 12.141 12.6929 13.4465C11.3873 14.7521 9.61664 15.4855 7.77033 15.4855C5.92403 15.4855 4.15335 14.7521 2.84781 13.4465C1.54228 12.141 0.808838 10.3703 0.808838 8.524C0.808838 6.67769 1.54228 4.90701 2.84781 3.60148C4.15335 2.29594 5.92403 1.5625 7.77033 1.5625C9.61664 1.5625 11.3873 2.29594 12.6929 3.60148C13.9984 4.90701 14.7318 6.67769 14.7318 8.524Z" stroke="white" strokeWidth="1.3923" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                     <span className="hidden md:block text-white dark:text-gray-50 font-normal">
-                      {/* {isLoading ? "Loading..." : dict?.hotel_search?.search_btnText} */} 
+                      {/* {isLoading ? "Loading..." : dict?.hotel_search?.search_btnText} */}
                       {dict?.home_page?.hero_section?.search_homes || "Search Homes"}
                     </span>
                   </>

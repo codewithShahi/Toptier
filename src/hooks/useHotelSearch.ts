@@ -349,7 +349,7 @@ const useHotelSearch = () => {
         });
 
         localStorage.setItem("hotelSearchForm", JSON.stringify(form));
-
+       console.log('data range ===============', form)
         const destinationSlug = form.destination.trim().replace(/\s+/g, "-");
 
         const url = `/hotel/${destinationSlug}/${params.get(
@@ -458,7 +458,7 @@ const useHotelSearch = () => {
     if (selectedNationality) {
       const parsedData = JSON.parse(selectedNationality); // now it's an object
       nationality = parsedData.nationality; // safely access nationality
-      
+
       // console.log("Nationality:", nationality);
     }
     //  construct URL

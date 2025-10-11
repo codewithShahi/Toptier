@@ -53,7 +53,7 @@ const HotelsDetails = () => {
   // Helper to update URL
   const updateUrl = useCallback((params: typeof searchParams, hotelName: string) => {
     const slugName = hotelName.toLowerCase().replace(/\s+/g, "-");
-    const newUrl = `/hotelDetails/${hotel_id}/${slugName}/${params.checkin}/${params.checkout}/${params.rooms}/${params.adults}/${params.children}/${params.nationality}/stuba`;
+    const newUrl = `/hotelDetails/${hotel_id}/${slugName}/${params.checkin}/${params.checkout}/${params.rooms}/${params.adults}/${params.children}/${params.nationality}`;
     router.replace(newUrl);
   }, [hotel_id, router]);
 
