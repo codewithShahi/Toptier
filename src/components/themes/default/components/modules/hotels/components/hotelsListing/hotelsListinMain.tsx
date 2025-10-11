@@ -9,32 +9,33 @@ import { setHotels } from "@lib/redux/base";
 import { useDispatch } from "react-redux";
 
 interface Props {
-  slug: string[];
+  slug?: string[]; 
 }
 
-// ✅ Remove "async" — this is a regular function component
 const HotelsListingMain = ({ slug }: Props) => {
-  if(!slug) return null
-  const city = slug[0]?.replace(/-/g, " ") || "";
   const dispatch = useDispatch();
   const { hotelModuleNames } = useHotelSearch();
 
-  const isSlugValid = slug.length === 7 && slug.every(Boolean);
+  const slugArr = Array.isArray(slug) ? slug : [];
+  const city = slugArr[0]?.replace(/-/g, " ") ?? "";
+  const isSlugValid = slugArr.length === 7 && slugArr.every(Boolean);
+
+  
+  const enabled = isSlugValid && !!hotelModuleNames?.length;
 
   const { data, isLoading, error } = useQuery({
-    queryKey: ['hotels', ...slug],
+    queryKey: ["hotels", ...slugArr],
     queryFn: async () => {
-      if (!hotelModuleNames?.length || !isSlugValid) return [];
-
+      // queryFn will only run when `enabled` is true
       const result = await hotel_search_multi(
         {
           destination: city,
-          checkin: slug[1],
-          checkout: slug[2],
-          rooms: Number(slug[3]),
-          adults: Number(slug[4]),
-          children: Number(slug[5]),
-          nationality: slug[6],
+          checkin: slugArr[1],
+          checkout: slugArr[2],
+          rooms: Number(slugArr[3]),
+          adults: Number(slugArr[4]),
+          children: Number(slugArr[5]),
+          nationality: slugArr[6],
           page: 1,
           price_from: "0",
           price_to: "5000",
@@ -43,19 +44,21 @@ const HotelsListingMain = ({ slug }: Props) => {
         hotelModuleNames
       );
 
-      return result.success;
+      return result?.success ?? [];
     },
     staleTime: 1000 * 60 * 5,
-    enabled: isSlugValid, // ⚠️ important: don't fetch if slug is incomplete
+    enabled,
   });
-  // console.log('search data',data)
 
   useEffect(() => {
-    dispatch(setHotels([]))
     if (Array.isArray(data)) {
       dispatch(setHotels(data));
+    } else {
+      dispatch(setHotels([]));
     }
   }, [data, dispatch]);
+
+  if (!slugArr.length) return null;
 
   if (error) return <div>Error loading hotels</div>;
 
