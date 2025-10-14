@@ -30,8 +30,12 @@ const HotelsDetails = () => {
 
   // Extract from URL
   const hotel_id = slugArr[0] || "";
-  const supplier_name = slugArr[8] || "";
+  // const supplier_name = slugArr[8] || "";
+       const savedhotel = localStorage.getItem("currentHotel");
+        if (!savedhotel) return;
 
+        const parsedForm: any = JSON.parse(savedhotel);
+         const {supplier_name}=parsedForm
   // Get initial values from URL or fallback
   const initialCheckin = slugArr[2] || "";
   const initialCheckout = slugArr[3] || "";
@@ -92,7 +96,7 @@ const HotelsDetails = () => {
 
   // ✅ Removed localStorage usage for supplier_name — using URL directly
   const { data: hotelDetails, isLoading } = useQuery({
-    queryKey: ["hotel-details", { hotel_id, ...searchParams, supplier_name }],
+    queryKey: ["hotel-details", { hotel_id, ...searchParams }],
     queryFn: () =>
       hotel_details({
         hotel_id,
@@ -105,12 +109,11 @@ const HotelsDetails = () => {
         nationality: searchParams.nationality,
         language: "en",
         currency: "USD",
-        supplier_name: supplier_name, // ✅ Now using URL-derived value
+        supplier_name: supplier_name, // Now using URL-derived value
       }),
     enabled: !!hotel_id,
     staleTime: 0,
   });
-  console.log('=================== hotelDetails ', hotelDetails)
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const { img } = hotelDetails || {};
 
@@ -374,7 +377,7 @@ const HotelsDetails = () => {
                 </div>
               )}
 
-              
+
               {hotelDetails?.amenities && hotelDetails.amenities.length > 4 && (
                 <div className="mt-6 text-center">
                   <button
