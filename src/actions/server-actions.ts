@@ -35,10 +35,8 @@ export async function getHeaders(contentType: string = "application/x-www-form-u
   if (contentType) {
     headers["Content-Type"] = contentType;
   }
-
   return headers;
 }
-
 // ---------------- Fetch App Data ---------------- //
 // define what your session looks like
 interface SessionUser {
@@ -592,8 +590,8 @@ interface HotelDetailsPayload {
 export const hotel_details = async (payload: HotelDetailsPayload) => {
   try {
     const formData = new FormData();
-
     //  match exactly with API keys
+
     formData.append("hotel_id", String(payload.hotel_id));
     formData.append("checkin", payload.checkin);
     formData.append("checkout", payload.checkout);
@@ -605,7 +603,7 @@ export const hotel_details = async (payload: HotelDetailsPayload) => {
     formData.append("language", payload.language || "en");
     formData.append("currency", payload.currency || "usd");
     formData.append("supplier_name", payload.supplier_name || "");
-
+console.log('detailss paylaod', formData)
 
     const response = await fetch(`${baseUrl}/hotel_details`, {
       method: "POST",
@@ -616,7 +614,6 @@ export const hotel_details = async (payload: HotelDetailsPayload) => {
     });
 
     const data = await response.json().catch(() => null);
-
     if (!response.ok || data?.status === false) {
       return { error: data?.message || "Something went wrong" };
     }

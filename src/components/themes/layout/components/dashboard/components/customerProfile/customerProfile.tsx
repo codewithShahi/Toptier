@@ -10,7 +10,7 @@ import Button from "@components/core/button";
 import useCountries from "@hooks/useCountries";
 import { useUser } from "@hooks/use-user";
 import { toast } from "react-toastify";
-import { update_profile } from "@src/actions"; // 👈 Add this action
+import { profile_update } from "@src/actions";
 import { useRouter } from "next/navigation";
 
 // Define schema for profile update
@@ -33,7 +33,7 @@ const profileSchema = zod.object({
 type ProfileFormValues = zod.infer<typeof profileSchema>;
 
 export default function CustomerProfile() {
-  const { user } = useUser(); // 👈 Get user from session
+  const { user } = useUser();
   const { countries } = useCountries();
   const router = useRouter();
 
@@ -63,21 +63,66 @@ export default function CustomerProfile() {
     },
   });
 
+  const { password, ...valuesToSave } = watch();
+
+  useEffect(() => {
+    if (user) {
+      sessionStorage.setItem("profileDraft", JSON.stringify(valuesToSave));
+    }
+  }, [valuesToSave, user]);
   // Load user data into form on mount
   useEffect(() => {
     if (user) {
-      reset({
-        first_name: user.first_name || "",
-        last_name: user.last_name || "",
-        email: user.email || "",
-        phone: user.phone || "",
-        phone_country_code: user.phone_country_code?.toString() || "",
-        // country_code: user.country_code || "",
-        // state: user.state || "",
-        // city: user.city || "",
-        // address1: user.address1 || "",
-        // address2: user.address2 || "",
-      });
+      const draft = sessionStorage.getItem("profileDraft");
+
+      if (draft) {
+        try {
+          const parsed = JSON.parse(draft);
+          reset({
+            first_name: parsed.first_name || user.first_name || "",
+            last_name: parsed.last_name || user.last_name || "",
+            email: parsed.email || user.email || "",
+            phone: parsed.phone || user.phone || "",
+            phone_country_code: parsed.phone_country_code || user.phone_country_code?.toString() || "",
+            country_code: parsed.country_code || user.country_code?.toString() || "",
+            state: parsed.state || user.state?.toString() || "",
+            city: parsed.city || user.city?.toString() || "",
+            address1: parsed.address1 || user.address1?.toString() || "",
+            address2: parsed.address2 || user.address2?.toString() || "",
+            password: "", // Always blank
+          });
+        } catch (e) {
+          // Agar draft corrupt hai, to seedha user data se bhar do
+          reset({
+            first_name: user.first_name || "",
+            last_name: user.last_name || "",
+            email: user.email || "",
+            phone: user.phone || "",
+            phone_country_code: user.phone_country_code?.toString() || "",
+            country_code: user.country_code?.toString() || "",
+            state: user.state?.toString() || "",
+            city: user.city?.toString() || "",
+            address1: user.address1?.toString() || "",
+            address2: user.address2?.toString() || "",
+            password: "",
+          });
+        }
+      } else {
+        // Agar draft nahi hai, to user data se bhar do
+        reset({
+          first_name: user.first_name || "",
+          last_name: user.last_name || "",
+          email: user.email || "",
+          phone: user.phone || "",
+          phone_country_code: user.phone_country_code?.toString() || "",
+          country_code: user.country_code?.toString() || "",
+          state: user.state?.toString() || "",
+          city: user.city?.toString() || "",
+          address1: user.address1?.toString() || "",
+          address2: user.address2?.toString() || "",
+          password: "",
+        });
+      }
     }
   }, [user, reset]);
 
@@ -89,10 +134,11 @@ export default function CustomerProfile() {
     phonecode: c.phonecode?.toString() || "0",
   }));
 
-  const onSubmit = async (data: ProfileFormValues) => {
-    setIsSubmitting(true);
-    try {
-      const payload = {
+
+  const onSubmit = async ( ProfileFormValues) => {
+  setIsSubmitting(true);
+  try {
+    const payload = {
         user_id: user?.user_id, //  From session
         first_name: data.first_name,
         last_name: data.last_name,
@@ -106,31 +152,26 @@ export default function CustomerProfile() {
         address1: data.address1 || undefined,
         address2: data.address2 || undefined,
       };
-console.log("update", payload)
-    //   const response = await update_profile(payload); // Call your API
+    console.log("update", payload);
 
-    //   if (response.error) {
-    //     throw new Error(response.error);
-    //   }
+    // ✅ Jab submit ho jaye, draft clear kardo
+    sessionStorage.removeItem("profileDraft");
 
-      toast.success("Profile updated successfully!");
-      // Optionally refresh user data or redirect
-      // router.push("/profile"); // or window.location.reload();
+    toast.success("Profile updated successfully!");
+  } catch (err: any) {
+    toast.error(err.message || "Failed to update profile");
+  } finally {
+    setIsSubmitting(false);
+  }
+};
 
-    } catch (err: any) {
-      toast.error(err.message || "Failed to update profile");
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-//   if (userLoading) {
-//     return (
-//       <div className="bg-gray-50 flex justify-center items-center min-h-screen">
-//         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-900"></div>
-//       </div>
-//     );
-//   }
+  //   if (userLoading) {
+  //     return (
+  //       <div className="bg-gray-50 flex justify-center items-center min-h-screen">
+  //         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-900"></div>
+  //       </div>
+  //     );
+  //   }
 
   if (!user) {
     return (
@@ -240,15 +281,16 @@ console.log("update", payload)
               render={({ field }) => (
                 <Select
                   {...field}
-                  options={countryOptions.map((c:any) => ({ ...c, label: `+${c.phonecode}` }))}
-                  value={countryOptions.find((c:any) => c.value === field.value)}
+                  options={countryOptions.map((c: any) => ({ ...c, label: `+${c.phonecode}` }))}
+                  value={countryOptions.find((c: any) => c.value === field.value)}
                   onChange={(option) => field.onChange(option?.value)}
                   placeholder="Select Country Code"
                   size="lg"
                   isSearchable
-                          classNames={{
+                  classNames={{
                     control: () =>
-                      'border border-gray-300 cursor-pointer rounded-lg px-3 py-0 flex items-center min-h-[44px] text-base focus:ring-1 focus:ring-[#163C8C] focus:border-[#163C8C] shadow-none'}}
+                      'border border-gray-300 cursor-pointer rounded-lg px-3 py-0 flex items-center min-h-[44px] text-base focus:ring-1 focus:ring-[#163C8C] focus:border-[#163C8C] shadow-none'
+                  }}
                 />
               )}
             />
@@ -288,14 +330,15 @@ console.log("update", payload)
                 <Select
                   {...field}
                   options={countryOptions}
-                  value={countryOptions.find((c:any) => c.value === field.value)}
+                  value={countryOptions.find((c: any) => c.value === field.value)}
                   onChange={(option) => field.onChange(option?.value)}
                   placeholder="Select Country"
                   size="lg"
                   isSearchable
-                                  classNames={{
+                  classNames={{
                     control: () =>
-                      'border border-gray-300 cursor-pointer rounded-lg px-3 py-0 flex items-center min-h-[44px] text-base focus:ring-1 focus:ring-[#163C8C] focus:border-[#163C8C] shadow-none'}}
+                      'border border-gray-300 cursor-pointer rounded-lg px-3 py-0 flex items-center min-h-[44px] text-base focus:ring-1 focus:ring-[#163C8C] focus:border-[#163C8C] shadow-none'
+                  }}
                 />
               )}
             />

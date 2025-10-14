@@ -110,7 +110,6 @@ const HotelsDetails = () => {
     enabled: !!hotel_id,
     staleTime: 0,
   });
-
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const { img } = hotelDetails || {};
 

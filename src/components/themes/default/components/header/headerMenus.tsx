@@ -11,13 +11,17 @@ import { useAppSelector } from "@lib/redux/store";
 const HeaderMenus = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { user } = useUser();
-    const {modules} = useAppSelector((state) => state.appData?.data)
+    const {modules , cms} = useAppSelector((state) => state.appData?.data)
 const activeModules = modules.filter((mod:any) => mod.status === "1");
 const uniqueModules = Array.from(
   new Map(activeModules.map((mod: any) => [mod.type, mod])).values()
 );
-
-  // const router=Router()
+const headerPages = cms
+  .filter((page:any) => page.name === "Header")
+  .map((page:any) => ({
+    page_name: page.page_name,
+    slug_url: page.slug_url,
+  }));
   return (
     <header className="w-full  max-w-[1200px] mx-auto overflow-visible">
       <div className="flex items-center justify-between h-22 appHorizantalSpacing">
@@ -38,6 +42,15 @@ const uniqueModules = Array.from(
     className="header-nav-item capitalize text-gray-800 hover:text-blue-700"
   >
     {mod.type}
+  </Link>
+))}
+{headerPages.map((page: any, index:number) => (
+  <Link
+    key={index}
+    href={`/pages/${page.slug_url}`}
+    className="header-nav-item capitalize text-gray-800 hover:text-blue-700"
+  >
+    {page.page_name}
   </Link>
 ))}
 

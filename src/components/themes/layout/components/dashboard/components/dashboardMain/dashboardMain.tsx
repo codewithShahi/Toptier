@@ -3,6 +3,7 @@
 import { useState, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { fetch_dashboard_data, get_profile } from "@src/actions";
+import { count } from "console";
 
 const ITEMS_PER_PAGE_OPTIONS = [5, 10, 15, 20] as const;
 
@@ -54,6 +55,12 @@ export default function Dashboard() {
   const total = data?.total || 0;
   const totalPages = Math.ceil(total / pagination.limit);
 
+
+// Count payment statuses
+const paidCount = bookings.filter((b:any) => b.payment === "paid").length;
+const unpaidCount = bookings.filter((b:any) => b.payment === "unpaid").length;
+const cancelledCount = bookings.filter((b:any) => b.payment === "cancelled").length;
+
 //  ========================== fetch profile data ==========
 const { data: cartResults, isLoading: profileLoading } = useQuery({
     queryKey: ["profile"],
@@ -61,8 +68,7 @@ const { data: cartResults, isLoading: profileLoading } = useQuery({
     staleTime: Infinity,  // Data never becomes stale
   gcTime: Infinity,
   });
- const { total_bookings = "0", pending_bookings = "0", balance = "0" } = cartResults?.data[0] || {};
-
+ const { total_bookings = "0", pending_bookings = "0", balance = "0" , first_name="", last_name=""} = cartResults?.data[0] || {};
 
   const handleLimitChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setPagination({ page: 1, limit: Number(e.target.value) });
@@ -118,7 +124,7 @@ const getPageNumbers = () => {
 
   return (
     <div className="w-full max-w-[1200px] mx-auto bg-gray-50  py-10 appHorizantalSpacing">
-      <h1 className="text-3xl font-bold text-[#0F172A] mb-1">Welcome back</h1>
+      <h1 className="text-3xl font-bold text-[#0F172A] mb-1">Welcome back, {first_name}{" "}{last_name}</h1>
       <p className="text-[#475569] text-base font-normal mb-8">
         Here’s a quick look at your travel account
       </p>
@@ -137,10 +143,10 @@ const getPageNumbers = () => {
 
 <div className="flex gap-2">
   {[
-    { label: "All", value: "" },
-    { label: "Paid", value: "paid" },
-    { label: "Unpaid", value: "unpaid" },
-    { label: "Cancelled", value: "cancelled" },
+    { label: "All", value: "",count:bookings?.length },
+    { label: "Paid", value: "paid", count:paidCount },
+    { label: "Unpaid", value: "unpaid", count:unpaidCount },
+    { label: "Cancelled", value: "cancelled",count: cancelledCount },
   ].map((option) => (
     <button
       key={option.value}
@@ -154,7 +160,7 @@ const getPageNumbers = () => {
           : "bg-gray-100 text-gray-700 border-gray-200 hover:bg-gray-100 "
       }`}
     >
-      <span className="text-sm">{option.label}</span>
+      <span className="text-sm">{option.label}({option.count})</span>
     </button>
   ))}
 </div>
@@ -184,51 +190,53 @@ className="border border-gray-200 hover:bg-gray-100 text-sm rounded-xl w-64 px-3
         {/* Table */}
         {!isLoading && !isError && (
           <>
-            <table className="w-full text-sm text-gray-700">
-              <thead className="bg-[#F9FAFB] text-gray-500 uppercase text-xs">
-                <tr>
-                  <th className="py-5 px-6 text-left">Client Name</th>
-                  <th className="py-5 px-6 text-left">Booking ID</th>
-                  <th className="py-5 px-6 text-left">PNR</th>
-                  <th className="py-5 px-6 text-left">Payment</th>
-                  <th className="py-5 px-6 text-left">Booking</th>
-                  <th className="py-5 px-6 text-left">Date</th>
-                  <th className="py-5 px-6 text-left">Price</th>
-                </tr>
-              </thead>
-              <tbody>
-                {bookings.length > 0 ? (
-                  bookings.map((b: any, index: number) => (
-                    <tr key={index} className="border-t border-gray-200 hover:bg-gray-50">
-                      <td className="py-6 px-6">{b.customer}</td>
-                      <td className="py-6 px-6">#{b.reference}</td>
-                      <td className="py-6 px-6">{b.pnr || "—"}</td>
-                      <td className="py-6 px-6">
-                        <span
-                          className={`px-3 py-1 rounded-full text-xs ${
-                            b.payment === "paid"
-                              ? "bg-green-100 text-green-600"
-                              : "bg-yellow-100 text-yellow-600"
-                          }`}
-                        >
-                          {b.payment.charAt(0).toUpperCase() + b.payment.slice(1)}
-                        </span>
-                      </td>
-                      <td className="py-6 px-6 capitalize">{b.service}</td>
-                      <td className="py-6 px-6">{formatDate(b.date)}</td>
-                      <td className="py-6 px-6">${b.total_price}</td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan={7} className="text-center py-6 text-gray-500">
-                      No bookings found.
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-
+       {/* Responsive Table Wrapper */}
+<div className="overflow-x-auto">
+  <table className="w-full text-sm text-gray-700 min-w-full">
+    <thead className="bg-[#F9FAFB] text-gray-500 uppercase text-xs whitespace-nowrap">
+      <tr>
+        <th className="py-5 px-6 text-left">Client Name</th>
+        <th className="py-5 px-6 text-left">Booking ID</th>
+        <th className="py-5 px-6 text-left">PNR</th>
+        <th className="py-5 px-6 text-left">Payment</th>
+        <th className="py-5 px-6 text-left">Booking</th>
+        <th className="py-5 px-6 text-left">Date</th>
+        <th className="py-5 px-6 text-left">Price</th>
+      </tr>
+    </thead>
+    <tbody>
+      {bookings.length > 0 ? (
+        bookings.map((b: any, index: number) => (
+          <tr key={index} className="border-t border-gray-200 hover:bg-gray-50 whitespace-nowrap">
+            <td className="py-6 px-6">{b.customer}</td>
+            <td className="py-6 px-6">#{b.reference}</td>
+            <td className="py-6 px-6">{b.pnr || "—"}</td>
+            <td className="py-6 px-6">
+              <span
+                className={`px-3 py-1 rounded-full text-xs ${
+                  b.payment === "paid"
+                    ? "bg-green-100 text-green-600"
+                    : "bg-yellow-100 text-yellow-600"
+                }`}
+              >
+                {b.payment.charAt(0).toUpperCase() + b.payment.slice(1)}
+              </span>
+            </td>
+            <td className="py-6 px-6 capitalize">{b.service}</td>
+            <td className="py-6 px-6">{formatDate(b.date)}</td>
+            <td className="py-6 px-6">${b.total_price}</td>
+          </tr>
+        ))
+      ) : (
+        <tr>
+          <td colSpan={7} className="text-center py-6 text-gray-500">
+            No bookings found.
+          </td>
+        </tr>
+      )}
+    </tbody>
+  </table>
+</div>
             {/*  Pagination */}
             <div className="flex justify-between border-t px-8 py-6 items-center text-sm text-gray-600">
               <div className="flex items-center gap-2">
@@ -236,7 +244,7 @@ className="border border-gray-200 hover:bg-gray-100 text-sm rounded-xl w-64 px-3
                 <select
                   value={pagination.limit}
                   onChange={handleLimitChange}
-                  className="border border-gray-300 rounded px-2 py-1"
+                  className="border border-gray-300 rounded px-2 py-1 cursor-pointer"
                 >
                   {ITEMS_PER_PAGE_OPTIONS.map((num) => (
                     <option key={num} value={num}>
@@ -254,7 +262,7 @@ className="border border-gray-200 hover:bg-gray-100 text-sm rounded-xl w-64 px-3
       className={`px-3 py-1 rounded border ${
         pagination.page === 1
           ? "text-gray-400 cursor-not-allowed"
-          : "hover:bg-gray-100"
+          : "hover:bg-gray-100 cursor-pointer"
       }`}
     >
       Prev
@@ -270,7 +278,7 @@ className="border border-gray-200 hover:bg-gray-100 text-sm rounded-xl w-64 px-3
           className={`w-8 h-8 flex items-center justify-center rounded ${
             pagination.page === page
               ? "bg-blue-900 text-white"
-              : "hover:bg-gray-100"
+              : "hover:bg-gray-100 cursor-pointer"
           }`}
         >
           {page}
@@ -284,7 +292,7 @@ className="border border-gray-200 hover:bg-gray-100 text-sm rounded-xl w-64 px-3
       className={`px-3 py-1 rounded border ${
         pagination.page === totalPages
           ? "text-gray-400 cursor-not-allowed"
-          : "hover:bg-gray-100"
+          : "hover:bg-gray-100 cursor-pointer"
       }`}
     >
       Next

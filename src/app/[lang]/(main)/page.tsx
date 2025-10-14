@@ -6,11 +6,11 @@ import TransitionLayout from '@src/utils/pageTransition'
 import HomeWrapper from '@components/themes/default/components/home/homeWrapper/homeWrapper'
 
 export default async function Page({ params }: {
-  params: Promise<{ lang: 'en' | 'ar' }>
+  params: Promise<{ lang: 'en' | 'ar' | 'fr'| 'tr' | 'ru' | 'ge' | 'ch' }>
 }) {
   const { lang } = await params
   const dict = await getDictionary(lang)
-
+console.log('paramdsssssssssss', lang)
   return (
     // <div>home page</div>
     <TransitionLayout>
