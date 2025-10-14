@@ -63,66 +63,21 @@ export default function CustomerProfile() {
     },
   });
 
-  const { password, ...valuesToSave } = watch();
-
-  useEffect(() => {
-    if (user) {
-      sessionStorage.setItem("profileDraft", JSON.stringify(valuesToSave));
-    }
-  }, [valuesToSave, user]);
   // Load user data into form on mount
   useEffect(() => {
     if (user) {
-      const draft = sessionStorage.getItem("profileDraft");
-
-      if (draft) {
-        try {
-          const parsed = JSON.parse(draft);
-          reset({
-            first_name: parsed.first_name || user.first_name || "",
-            last_name: parsed.last_name || user.last_name || "",
-            email: parsed.email || user.email || "",
-            phone: parsed.phone || user.phone || "",
-            phone_country_code: parsed.phone_country_code || user.phone_country_code?.toString() || "",
-            country_code: parsed.country_code || user.country_code?.toString() || "",
-            state: parsed.state || user.state?.toString() || "",
-            city: parsed.city || user.city?.toString() || "",
-            address1: parsed.address1 || user.address1?.toString() || "",
-            address2: parsed.address2 || user.address2?.toString() || "",
-            password: "", // Always blank
-          });
-        } catch (e) {
-          // Agar draft corrupt hai, to seedha user data se bhar do
-          reset({
-            first_name: user.first_name || "",
-            last_name: user.last_name || "",
-            email: user.email || "",
-            phone: user.phone || "",
-            phone_country_code: user.phone_country_code?.toString() || "",
-            country_code: user.country_code?.toString() || "",
-            state: user.state?.toString() || "",
-            city: user.city?.toString() || "",
-            address1: user.address1?.toString() || "",
-            address2: user.address2?.toString() || "",
-            password: "",
-          });
-        }
-      } else {
-        // Agar draft nahi hai, to user data se bhar do
-        reset({
-          first_name: user.first_name || "",
-          last_name: user.last_name || "",
-          email: user.email || "",
-          phone: user.phone || "",
-          phone_country_code: user.phone_country_code?.toString() || "",
-          country_code: user.country_code?.toString() || "",
-          state: user.state?.toString() || "",
-          city: user.city?.toString() || "",
-          address1: user.address1?.toString() || "",
-          address2: user.address2?.toString() || "",
-          password: "",
-        });
-      }
+      reset({
+        first_name: user.first_name || "",
+        last_name: user.last_name || "",
+        email: user.email || "",
+        phone: user.phone || "",
+        phone_country_code: user.phone_country_code?.toString() || "",
+        country_code: user.country_code?.toString() || "",
+        state: user.state?.toString() || "",
+        city: user.city?.toString() || "",
+        address1: user.address1?.toString() || "",
+        address2: user.address2?.toString() || "",
+      });
     }
   }, [user, reset]);
 
@@ -134,36 +89,39 @@ export default function CustomerProfile() {
     phonecode: c.phonecode?.toString() || "0",
   }));
 
-
-  const onSubmit = async ( ProfileFormValues) => {
-  setIsSubmitting(true);
-  try {
-    const payload = {
-        user_id: user?.user_id, //  From session
+  const onSubmit = async (data: ProfileFormValues) => {
+    setIsSubmitting(true);
+    try {
+      const payload = {
+        user_id: user?.user_id,
         first_name: data.first_name,
         last_name: data.last_name,
         email: data.email,
         phone: data.phone,
-        phone_country_code: parseInt(data.phone_country_code, 10),
-        password: data.password || undefined, // Optional
-        country_code: data.country_code || undefined,
-        state: data.state || undefined,
-        city: data.city || undefined,
-        address1: data.address1 || undefined,
-        address2: data.address2 || undefined,
+        phone_country_code: data.phone_country_code,
+        password: data.password || undefined,
+        country_code: data.country_code || "",
+        state: data.state || "",
+        city: data.city || "",
+        address1: data.address1 || "",
+        address2: data.address2 || "",
       };
-    console.log("update", payload);
 
-    // ✅ Jab submit ho jaye, draft clear kardo
-    sessionStorage.removeItem("profileDraft");
+      const response = await profile_update(payload);
 
-    toast.success("Profile updated successfully!");
-  } catch (err: any) {
-    toast.error(err.message || "Failed to update profile");
-  } finally {
-    setIsSubmitting(false);
-  }
-};
+      if (response?.error) {
+        throw new Error(response.error);
+      }
+
+      toast.success("Profile updated successfully!");
+      window.location.reload();
+
+    } catch (err: any) {
+      toast.error(err.message || "Failed to update profile");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   //   if (userLoading) {
   //     return (
@@ -416,12 +374,31 @@ export default function CustomerProfile() {
 
         {/* Submit Button */}
         <div className="mt-8 flex justify-center">
-          <Button
+          {/* <Button
             size="lg"
             disabled={isSubmitting}
             className={`w-full bg-blue-900  text-center flex justify-center text-white ${isSubmitting ? 'opacity-60 cursor-not-allowed' : ''}`}
             type="submit"
             onClick={handleSubmit(onSubmit)}
+          >
+            {isSubmitting ? (
+              <>
+                <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V6a6 6 0 016 6 6 6 0 01-6 6H6a6 6 0 01-6-6z"></path>
+                </svg>
+                Updating...
+              </>
+            ) : (
+              "Update Profile"
+            )}
+          </Button> */}
+
+          <Button
+            size="lg"
+            disabled={isSubmitting}
+            className={`w-full bg-blue-900 text-center flex justify-center text-white ${isSubmitting ? 'opacity-60 cursor-not-allowed' : ''}`}
+            type="submit" // ✅ bas yehi hona chahiye
           >
             {isSubmitting ? (
               <>
