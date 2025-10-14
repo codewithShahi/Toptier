@@ -27,24 +27,14 @@ const HotelsDetails = () => {
   const slugArr = (params?.slug as string[]) || [];
   const { locale } = useLocale();
   const { data: dict } = useDictionary(locale as any);
-
-  // Extract from URL
-  const hotel_id = slugArr[0] || "";
-  // const supplier_name = slugArr[8] || "";
-       const savedhotel = localStorage.getItem("currentHotel");
-        if (!savedhotel) return;
-
-        const parsedForm: any = JSON.parse(savedhotel);
-         const {supplier_name}=parsedForm
-  // Get initial values from URL or fallback
-  const initialCheckin = slugArr[2] || "";
+  // State for query params (used by useQuery)
+   const initialCheckin = slugArr[2] || "";
   const initialCheckout = slugArr[3] || "";
   const initialRooms = Number(slugArr[4]) || 1;
   const initialAdults = Number(slugArr[5]) || 2;
   const initialChildren = Number(slugArr[6]) || 0;
   const initialNationality = slugArr[7] || "US";
-
-  // State for query params (used by useQuery)
+   const hotel_id = slugArr[0] || "";
   const [searchParams, setSearchParams] = useState({
     checkin: initialCheckin,
     checkout: initialCheckout,
@@ -127,6 +117,19 @@ const HotelsDetails = () => {
       setIsClamped(scrollHeight > clientHeight);
     }
   }, [hotelDetails?.desc]);
+  const { featured_hotels } = useAppSelector((state) => state.appData?.data);
+
+  // Extract from URL
+ 
+  // const supplier_name = slugArr[8] || "";
+       const savedhotel = localStorage.getItem("currentHotel");
+        if (!savedhotel) return;
+
+        const parsedForm: any = JSON.parse(savedhotel);
+         const {supplier_name}=parsedForm
+  // Get initial values from URL or fallback
+ 
+
 
   const amenityIcons: Record<string, string> = {
     pool: "mdi:pool",
@@ -179,7 +182,6 @@ const HotelsDetails = () => {
     return "mdi:check-circle-outline";
   };
 
-  const { featured_hotels } = useAppSelector((state) => state.appData?.data);
   const isDataLoaded = !!hotelDetails;
 
   return (
