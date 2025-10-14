@@ -614,6 +614,7 @@ console.log('detailss paylaod', formData)
     });
 
     const data = await response.json().catch(() => null);
+    console.log('===============details',JSON.stringify(data))
     if (!response.ok || data?.status === false) {
       return { error: data?.message || "Something went wrong" };
     }

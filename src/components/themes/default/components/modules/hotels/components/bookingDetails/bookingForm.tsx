@@ -15,7 +15,7 @@ import { AccordionInfoCard } from '@components/core/accordians/accordian';
 import useDictionary from '@hooks/useDict'; // ✅ Add this
 import useLocale from '@hooks/useLocale';
 
-// ✅ Get dict for error messages
+// Get dict for error messages
 const useBookingFormSchema = (dict: any) => {
   return z.object({
     firstName: z.string().min(1, dict?.bookingForm?.errors?.firstNameRequired),
@@ -104,9 +104,9 @@ export default function BookingForm() {
 
   const curruntBooking = localStorage.getItem('hotelSearchForm');
   const saveBookingData = curruntBooking ? JSON.parse(curruntBooking) : {};
-  const { adults = 0, children = 0, nationality, checkin, checkout } = saveBookingData;
+  const { adults = 0, children = 0, nationality, checkin, checkout ,} = saveBookingData;
   const travelers = adults + children;
-  const { price, markup_price, id: option_id, currency: booking_currency } = selectedRoom?.option || {};
+  const { price, markup_price, id: option_id, currency: booking_currency,extrabeds_quantity,extrabed_price,quantity ,markup_price_per_night,per_day,service_fee,child , currency} = selectedRoom?.option || {};
   const {
     id: hotel_id,
     address: hotel_address,
@@ -120,7 +120,7 @@ export default function BookingForm() {
     hotel_phone,
     hotel_website,
   } = selectedRoom?.hotelDetails || {};
-
+console.log('=================' ,selectedRoom)
   const activePayments = payment_gateways
     ?.filter((p: any) => p.status)
     ?.map((p: any) => ({
@@ -129,6 +129,7 @@ export default function BookingForm() {
       label: p.label || p.name,
       icon: p.icon || null,
     })) || [];
+
 
   const excludedCodes = ['0', '381', '599'];
   const countryList = Array.isArray(rawCountries)
@@ -140,6 +141,7 @@ export default function BookingForm() {
         }))
         .filter((c) => c.iso && c.name && !excludedCodes.includes(c.phonecode))
     : [];
+
 
   const countryOptions = countryList.map((c) => ({
     value: c.iso,
@@ -213,16 +215,7 @@ export default function BookingForm() {
       first_name: traveller.firstName || '',
       last_name: traveller.lastName || '',
       nationality: nationality || '',
-      dob_day: '',
-      dob_month: '',
-      dob_year: '',
-      passport: '',
-      passport_day: '',
-      passport_month: '',
-      passport_year: '',
-      passport_issuance_day: '',
-      passport_issuance_month: '',
-      passport_issuance_year: '',
+     age:""
     }));
 
     const bookingPayload = {
@@ -247,10 +240,13 @@ export default function BookingForm() {
       hotel_address: hotel_address || '',
       room_data: [
         {
-          id: option_id || '',
-          name: selectedRoom?.room?.name || '',
-          price: price || '',
-          currency: booking_currency || 'USD',
+  room_id:option_id,
+  room_name:selectedRoom?.room?.name,
+  room_price: price,
+  room_qaunitity:quantity,
+  room_extrabed_price: extrabed_price,
+  room_extrabed: extrabeds_quantity,
+  room_actual_price: price
         },
       ],
       location: hotel_location || '',
@@ -263,11 +259,7 @@ export default function BookingForm() {
       child_ages: '',
       currency_original: booking_currency || 'USD',
       currency_markup: booking_currency || 'USD',
-      booking_data: {
-        ResultId: '',
-        TokenId: '',
-        TrackingId: '',
-      },
+      booking_data: selectedRoom?.option,
       supplier: supplier_name || '',
       user_id: '',
       guest: guestPayload,
@@ -535,7 +527,7 @@ export default function BookingForm() {
                         width="24"
                         height="24"
                         className={`text-gray-600 transi duration-100 ease-in-out ${
-                          isPhoneCodeListOpen ? 'rotate-180' : 'rotate-0' 
+                          isPhoneCodeListOpen ? 'rotate-180' : 'rotate-0'
                         }`}
                       />
                     ),

@@ -66,7 +66,6 @@ const Footer = () => {
   const supportPages = app?.cms?.filter((page: any) => page.name === 'Footer' && page.category === 'support')
   const companyPages = app?.cms?.filter((page: any) => page.name === 'Footer' && page.category === 'company')
   const downloadsPages = app?.cms?.filter((page: any) => page.name === 'Footer' && page.category === 'downloads')
-console.log('cmsssssssssssssss',app.cms)
   const footerItems = [
     { title: dict?.footer?.title_explore || 'Explore', links: [...explorePages] },
     { title: dict?.footer?.title_support || 'Support', links: [...supportPages] },
@@ -91,7 +90,6 @@ console.log('cmsssssssssssssss',app.cms)
 
       </div>
       <div className="max-w-[1200px] mx-auto appHorizantalSpacing py-12 lg:py-12">
-
         {/* Grid Layout for Links */}
         <div className="mt-8 lg:mt-12 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8">
           {footerItems.map((page, index) => (
