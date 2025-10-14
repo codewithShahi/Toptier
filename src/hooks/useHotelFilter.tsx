@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback, useEffect } from "react";
+import { useState, useMemo, useCallback, useEffect, useRef } from "react";
 import useHotelSearch from "./useHotelSearch";
 import { setHotels } from "@lib/redux/base";
 import { useDispatch } from "react-redux";
@@ -57,12 +57,12 @@ const queryClient = useQueryClient();
   const [isFilterLoading, setIsFilterLoading] = useState(false);
   const hotelsData=[...allHotelsData]
   // Calculate price range from actual data
-// ✅ static price range
+//  static price range
 const priceRange = useMemo(() => {
   return { min: 0, max: 5000 };
 }, []);
 
-// ✅ initialize filters once when component mounts
+//  initialize filters once when component mounts
 useEffect(() => {
   setFilters(prev => ({
     ...prev,
@@ -162,49 +162,59 @@ useEffect(() => {
   }, [hotelsData, filters]);
 
   // Filter update functions
+const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
+
 const updatePriceRange = useCallback(
-  async (newRange: [number, number]) => {
+  (newRange: [number, number]) => {
+    // Update local state instantly
     setFilters(prev => ({ ...prev, priceRange: newRange }));
 
-    try {
-
-      setIsFilterLoading(true);
-      dispatch(setHotels([])); // Clear old data
-
-      const savedForm = localStorage.getItem("hotelSearchForm");
-      if (!savedForm) return;
-      const parsedForm = JSON.parse(savedForm);
-      //  Use hotel_search_multi instead of manual loop
-      const result = await hotel_search_multi(
-        {
-          destination: parsedForm.destination,
-          checkin: parsedForm.checkin,
-          checkout: parsedForm.checkout,
-          rooms: parsedForm.rooms,
-          adults: parsedForm.adults,
-          children: parsedForm.children,
-          nationality: parsedForm.nationality,
-          page: 1,
-          price_from: String(newRange[0]),
-          price_to: String(newRange[1]),
-          rating: "", // keep current rating
-        },
-        hotelModuleNames
-      );
-
-      //  Dispatch merged results
-      dispatch(setHotels([...result.success]));
-           setIsFilterLoading(false);
-      // Optional: update React Query cache if used elsewhere
-      queryClient.setQueryData(["hotel-search"], result.success);
-    } catch (err) {
-      console.error("Price filter fetch failed", err);
-    } finally {
-      setIsFilterLoading(false);
+    // Clear any existing debounce timeout
+    if (debounceTimeout.current) {
+      clearTimeout(debounceTimeout.current);
     }
+
+    // Set a new debounce delay (e.g., 600ms)
+    debounceTimeout.current = setTimeout(async () => {
+      try {
+        setIsFilterLoading(true);
+        dispatch(setHotels([])); // Clear old data
+
+        const savedForm = localStorage.getItem("hotelSearchForm");
+        if (!savedForm) return;
+        const parsedForm = JSON.parse(savedForm);
+
+        const result = await hotel_search_multi(
+          {
+            destination: parsedForm.destination,
+            checkin: parsedForm.checkin,
+            checkout: parsedForm.checkout,
+            rooms: parsedForm.rooms,
+            adults: parsedForm.adults,
+            children: parsedForm.children,
+            nationality: parsedForm.nationality,
+            page: 1,
+            price_from: String(newRange[0]),
+            price_to: String(newRange[1]),
+            rating: "", // keep current rating
+          },
+          hotelModuleNames
+        );
+
+        dispatch(setHotels([...result.success]));
+        queryClient.setQueryData(["hotel-search"], result.success);
+      } catch (err) {
+        console.error("Price filter fetch failed", err);
+      } finally {
+        setIsFilterLoading(false);
+      }
+    }, 600);
   },
-  [hotelModuleNames, filters.selectedRating, dispatch, queryClient]
+  [hotelModuleNames, dispatch, queryClient]
 );
+
+// attach static ref container to function
+(updatePriceRange as any).debounceRef = { current: null };
 
   const toggleStarFilter = useCallback((stars: number) => {
     setFilters(prev => ({

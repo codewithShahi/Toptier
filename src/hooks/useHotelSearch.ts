@@ -336,7 +336,6 @@ const useHotelSearch = () => {
 
       //  Step 2: Start loading AFTER validation passes
       setIsSearching(true);
-
       try {
         const params = new URLSearchParams({
           destination: form.destination,
@@ -349,7 +348,7 @@ const useHotelSearch = () => {
         });
 
         localStorage.setItem("hotelSearchForm", JSON.stringify(form));
-       console.log('data range ===============', form)
+      //  console.log('data range ===============', form)
         const destinationSlug = form.destination.trim().replace(/\s+/g, "-");
 
         const url = `/hotel/${destinationSlug}/${params.get(

@@ -4,12 +4,11 @@ import { baseUrl, api_key } from "./actions";
 import { decodeBearerToken } from "@src/utils/decodeToken";
 import { headers } from "next/headers";
 
-
 // console.log("base",baseUrl);
 
 // ============== GET DYNAMIC DOMAIN ===============
 export async function getDomain(): Promise<string> {
-  const h =await  headers();
+  const h = await headers();
   const host = h.get("domain") || "booknow.co";
 
   if (host.includes("localhost")) {
@@ -60,7 +59,6 @@ export const fetchAppData = async () => {
     // explicitly type userinfo
     const userinfo = (await getSession()) as SessionUser | null;
     const user_id = userinfo?.user?.user_id ?? "";
-
     const formData = new FormData();
     formData.append("api_key", api_key ?? "");
     formData.append("language", "en");
@@ -84,13 +82,11 @@ export const fetchAppData = async () => {
       return { error: data?.message || "Something went wrong" };
     }
 
-
     return data;
   } catch (error) {
     return { error: (error as Error).message || "An error occurred" };
   }
 };
-
 
 //--------------------------- FETCH COUNTRY LIST ----------------------//
 
@@ -171,17 +167,15 @@ export const subscribe_to_newsLatter = async (payload: Payload) => {
 interface newsLaterPayload {
   item_id: string;
   module: string;
-  user_id:string
+  user_id: string;
 }
 
 export const addToFavourite = async (payload: newsLaterPayload) => {
-
-
   try {
     const formData = new FormData();
     formData.append("item_id", payload.item_id);
     formData.append("module", payload.module);
-     formData.append("user_id", payload.user_id);
+    formData.append("user_id", payload.user_id);
 
     const response = await fetch(`${baseUrl}/favourites`, {
       method: "POST",
@@ -211,7 +205,7 @@ export const fetchDestinations = async (city: string) => {
     const response = await fetch(`${baseUrl}/flights-cities`, {
       method: "POST",
       body: formData,
-     headers: await getHeaders("application/json"),
+      headers: await getHeaders("application/json"),
     });
 
     const data = await response.json().catch(() => null);
@@ -224,7 +218,6 @@ export const fetchDestinations = async (city: string) => {
     return { error: (error as Error).message || "An error occurred" };
   }
 };
-
 
 //---------------------------- SIGN UP --------------------------------------//
 export const sign_up = async (signUpData: {
@@ -268,7 +261,6 @@ export const sign_up = async (signUpData: {
   }
 };
 
-
 //---------------------------- LOGIN --------------------------------------//
 export const signIn = async (payload: { email: string; password: string }) => {
   try {
@@ -286,7 +278,7 @@ export const signIn = async (payload: { email: string; password: string }) => {
     if (!response.ok || data?.status === false) {
       return { error: data?.message || "Something went wrong" };
     }
-const userinfo=data?.data
+    const userinfo = data?.data;
     // const user = decodeBearerToken(data.data);
     await createSession(userinfo);
 
@@ -320,14 +312,10 @@ export const forget_password = async (payload: {
     const response = await fetch(`${baseUrl}/forget-password`, {
       method: "POST",
       body: new URLSearchParams({
-
-
         email: payload.email,
-
         // terms: signUpData.terms.toString(),
       }).toString(),
-            headers: await getHeaders("application/x-www-form-urlencoded"),
-
+      headers: await getHeaders("application/x-www-form-urlencoded"),
     });
     const data = await response.json().catch(() => null);
     if (!response.ok || data?.status === false) {
@@ -367,7 +355,6 @@ export const activate_account = async (payload: {
   }
 };
 
-
 //---------------------------- UPDATE PROFILE ---------------------------
 interface User {
   address1: string;
@@ -392,8 +379,7 @@ export const update_profile = async (payload: User) => {
     const response = await fetch(`${baseUrl}/update-profile`, {
       method: "POST",
       body: formData.toString(),
-            headers: await getHeaders("application/x-www-form-urlencoded"),
-
+      headers: await getHeaders("application/x-www-form-urlencoded"),
     });
     const data = await response.json().catch(() => null);
 
@@ -420,11 +406,9 @@ export const change_password = async (payload: {
     const response = await fetch(`${baseUrl}/update-password`, {
       method: "POST",
       body: new URLSearchParams({
-
         ...payload,
       }).toString(),
-           headers: await getHeaders("application/x-www-form-urlencoded"),
-
+      headers: await getHeaders("application/x-www-form-urlencoded"),
     });
     const data = await response.json().catch(() => null);
     if (!response.ok || data?.status === false) {
@@ -478,8 +462,6 @@ export const change_password = async (payload: {
 //     formData.append('price_low_to_high', "")
 //     formData.append('rating',payload.rating || "")
 
-
-
 //     console.log('seaarch_payaod',formData)
 //     const response = await fetch(`${baseUrl}/hotel_search`, {
 //       method: "POST",
@@ -500,7 +482,6 @@ export const change_password = async (payload: {
 //     return { error: (error as Error).message || "An error occurred" };
 //   }
 // };
-
 
 // for multi models
 interface HotelSearchPayload {
@@ -546,7 +527,7 @@ export const hotel_search = async (payload: HotelSearchPayload & { modules: stri
       },
     });
     const data = await response.json().catch(() => null);
-    console.log('========== payload ===========',payload )
+
     if (!response.ok || data?.status === false) {
       return { error: data?.message || "Something went wrong", module: payload.modules };
     }
@@ -558,7 +539,7 @@ export const hotel_search = async (payload: HotelSearchPayload & { modules: stri
 };
 // New function: accepts array of modules
 export const hotel_search_multi = async (
-  basePayload: Omit<HotelSearchPayload, 'modules'>,
+  basePayload: Omit<HotelSearchPayload, "modules">,
   modules: string[]
 ) => {
   if (!modules?.length) {
@@ -574,22 +555,20 @@ export const hotel_search_multi = async (
   // Use allSettled to avoid one failure breaking all
   const results = await Promise.allSettled(promises);
 
-
-
-// console.log('multi search result ', results)
+  // console.log('multi search result ', results)
   const successful = results
-  .map((result) => {
-    if (result.status === "fulfilled") {
-      const value = result.value;
-      if (!value.error && value.response?.length) {
-        return value.response; //  just hotels
+    .map((result) => {
+      if (result.status === "fulfilled") {
+        const value = result.value;
+        if (!value.error && value.response?.length) {
+          return value.response; //  just hotels
+        }
       }
-    }
-    return null;
-  })
-  .filter(Boolean) // remove nulls
-  .flat(); // flatten into single array
-   console.log('range filter data ', successful)
+      return null;
+    })
+    .filter(Boolean) // remove nulls
+    .flat(); // flatten into single array
+  console.log("range filter data ", successful);
   return {
     success: successful,
     total: successful.length,
@@ -612,7 +591,6 @@ interface HotelDetailsPayload {
 
 export const hotel_details = async (payload: HotelDetailsPayload) => {
   try {
-
     const formData = new FormData();
 
     //  match exactly with API keys
@@ -628,7 +606,6 @@ export const hotel_details = async (payload: HotelDetailsPayload) => {
     formData.append("currency", payload.currency || "usd");
     formData.append("supplier_name", payload.supplier_name || "");
 
-    console.log("hotel_details_payload", payload);
 
     const response = await fetch(`${baseUrl}/hotel_details`, {
       method: "POST",
@@ -639,7 +616,6 @@ export const hotel_details = async (payload: HotelDetailsPayload) => {
     });
 
     const data = await response.json().catch(() => null);
-    console.log("hotel_details_result===============", data);
 
     if (!response.ok || data?.status === false) {
       return { error: data?.message || "Something went wrong" };
@@ -650,7 +626,6 @@ export const hotel_details = async (payload: HotelDetailsPayload) => {
     return { error: (error as Error).message || "An error occurred" };
   }
 };
-
 
 // ================ COMPLETE BOOKING API ======================
 interface RoomData {
@@ -749,7 +724,7 @@ interface SessionUser {
 
 export const hotel_booking = async (payload: BookingPayload) => {
   try {
-     const userinfo = (await getSession()) as SessionUser | null;
+    const userinfo = (await getSession()) as SessionUser | null;
     const user_id = userinfo?.user?.user_id ?? "";
     const formData = new FormData();
     //  Append normal fields
@@ -795,7 +770,6 @@ export const hotel_booking = async (payload: BookingPayload) => {
     const response = await fetch(`${baseUrl}/hotel_booking`, {
       method: "POST",
       body: formData,
-
     });
 
     const data = await response.json().catch(() => null);
@@ -814,13 +788,10 @@ export const hotel_booking = async (payload: BookingPayload) => {
 //====================== INVOICE API ========================
 export const hotel_invoice = async (payload: string) => {
   try {
-
     const formData = new FormData();
 
     //  match exactly with API keys
     formData.append("booking_ref_no", payload);
-
-
 
     const response = await fetch(`${baseUrl}/hotels/invoice`, {
       method: "POST",
@@ -840,23 +811,19 @@ export const hotel_invoice = async (payload: string) => {
   }
 };
 
-
 // ============== CMS CONTENT PAGE =====================
 interface cms_page_payload {
   slug_url: string;
   lang: string;
-
 }
 
 export const cms_pages_content = async (payload: cms_page_payload) => {
   try {
-
     const formData = new FormData();
     //  match exactly with API keys
     formData.append("slug_url", String(payload.slug_url));
     formData.append("lang", payload.lang);
 
-    console.log("hotel_details_payload", payload);
 
     const response = await fetch(`${baseUrl}/cms_page`, {
       method: "POST",
@@ -867,7 +834,6 @@ export const cms_pages_content = async (payload: cms_page_payload) => {
     });
 
     const data = await response.json().catch(() => null);
-    console.log("cms_page ===============", data);
 
     if (!response.ok || data?.status === false) {
       return { error: data?.message || "Something went wrong" };
@@ -876,5 +842,136 @@ export const cms_pages_content = async (payload: cms_page_payload) => {
     return data;
   } catch (error) {
     return { error: (error as Error).message || "An error occurred" };
+  }
+};
+//===================== PROFILE =======================
+export const get_profile = async () => {
+  try {
+     const userinfo = (await getSession()) as SessionUser | null;
+    const user_id = userinfo?.user?.user_id ?? "";
+    const formData = new FormData();
+    formData.append("user_id", user_id);
+
+    const response = await fetch(`${baseUrl}/profile`, {
+      method: "POST",
+      body: formData,
+      headers: {
+        Accept: "application/json, text/plain, */*",
+      },
+    });
+
+    const data = await response.json().catch(() => null);
+    if (!response.ok || data?.status === false) {
+      return { error: data?.message || "Something went wrong" };
+    }
+
+    return data;
+  } catch (error) {
+    return { error: (error as Error).message || "An error occurred" };
+  }
+};
+// ================== DASHBOARD API ====================
+interface dashboardPayload {
+page : string;
+limit : string ;
+search : string ;
+payment_status: string;
+}
+export const fetch_dashboard_data = async (payload: dashboardPayload) => {
+  try {
+     const userinfo = (await getSession()) as SessionUser | null;
+    const user_id = userinfo?.user?.user_id ?? "";
+    const formData = new FormData();
+    // match exactly with API keys
+    formData.append("api_key", api_key ?? "");
+    formData.append("user_id",user_id );
+    formData.append("page", payload.page);
+    formData.append("limit", payload.limit);
+    formData.append("search", payload.search);
+    formData.append("payment_status", payload.payment_status);
+    const response = await fetch(`${baseUrl}/user_bookings`, {
+      method: "POST",
+      body: formData,
+      headers: {
+        Accept: "application/json, text/plain, */*",
+      },
+    });
+
+    const data = await response.json().catch(() => null);
+
+    if (!response.ok || data?.status === false) {
+      return { error: data?.message || "Something went wrong" };
+    }
+
+    return data;
+  } catch (error) {
+    return { error: (error as Error).message || "An error occurred" };
+  }
+};
+
+// ====================== PROFILE UPDATE (NEW ENDPOINT: /profile_update) ======================
+// @src/actions/index.ts
+interface ProfileUpdatePayload {
+  user_id: string | number;
+  first_name: string;
+  last_name: string;
+  email: string;
+  password?: string;
+  phone: string;
+  phone_country_code: string | number;
+  country_code: string | number;
+  state: string;
+  city: string;
+  address1: string;
+  address2: string;
+}
+
+export const profile_update = async (payload: ProfileUpdatePayload) => {
+  const formData = new URLSearchParams();
+
+  for (const [key, value] of Object.entries(payload)) {
+    if (value !== undefined && value !== null) {
+      formData.append(key, String(value));
+    }
+  }
+
+  try {
+    const response = await fetch(`${baseUrl}/profile_update`, {
+      method: "POST",
+      body: formData.toString(),
+      headers: await getHeaders("application/x-www-form-urlencoded"),
+    });
+
+    const data = await response.json().catch(() => null);
+
+    if (!response.ok || data?.status === false) {
+      return { error: data?.message || "Failed to update profile" };
+    }
+
+    const session = await getSession();
+    if (session?.user) {
+      const newSession = {
+        ...session,
+        user: {
+          ...session.user,
+          user_id: String(payload.user_id),
+          first_name: payload.first_name,
+          last_name: payload.last_name,
+          email: payload.email,
+          phone: payload.phone,
+          phone_country_code: String(payload.phone_country_code),
+          country_code: String(payload.country_code),
+          state: payload.state,
+          city: payload.city,
+          address1: payload.address1,
+          address2: payload.address2,
+        },
+      };
+      await createSession(newSession as any);
+    }
+
+    return { success: true, data };
+  } catch (error) {
+    return { error: (error as Error).message || "An error occurred while updating profile" };
   }
 };

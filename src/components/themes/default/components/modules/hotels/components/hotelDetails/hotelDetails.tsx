@@ -90,16 +90,7 @@ const HotelsDetails = () => {
     },
   });
 
-  let currentHotel: any = null;
-  const storedHotel = localStorage.getItem("currentHotel");
-  if (storedHotel) {
-    try {
-      currentHotel = JSON.parse(storedHotel);
-    } catch (error) {
-      console.error("Invalid JSON in localStorage currentHotel:", error);
-    }
-  }
-
+  // ✅ Removed localStorage usage for supplier_name — using URL directly
   const { data: hotelDetails, isLoading } = useQuery({
     queryKey: ["hotel-details", { hotel_id, ...searchParams, supplier_name }],
     queryFn: () =>
@@ -114,7 +105,7 @@ const HotelsDetails = () => {
         nationality: searchParams.nationality,
         language: "en",
         currency: "USD",
-        supplier_name: currentHotel?.supplier_name || "",
+        supplier_name: supplier_name, // ✅ Now using URL-derived value
       }),
     enabled: !!hotel_id,
     staleTime: 0,
@@ -249,56 +240,65 @@ const HotelsDetails = () => {
           <div className="grid grid-cols-12">
             <div className="lg:col-span-8 col-span-12 flex flex-col gap-2 lg:pe-4">
               <h1 className="text-2xl font-[800]">{hotelDetails?.name}</h1>
-              <p className="text-md font-[500] text-[#9297A0] md:hidden block">{hotelDetails?.address}</p>
-              <div className="flex items-center pb-1">
-                <div>
-                  <svg width="14" height="14" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M8.54662 14.6615L4.40353 17.1574C4.2205 17.2739 4.02915 17.3238 3.82949 17.3071C3.62982 17.2905 3.45511 17.2239 3.30536 17.1075C3.15561 16.991 3.03914 16.8456 2.95594 16.6712C2.87275 16.4968 2.85611 16.3011 2.90603 16.0842L4.00419 11.367L0.335316 8.19734C0.168927 8.04759 0.0651005 7.87687 0.023836 7.68519C-0.0174285 7.49351 -0.00511573 7.30649 0.0607743 7.12413C0.126664 6.94177 0.226498 6.79202 0.360275 6.67488C0.494051 6.55774 0.677079 6.48287 0.909358 6.45025L5.75128 6.02596L7.62316 1.58338C7.70635 1.38371 7.83547 1.23396 8.01051 1.13412C8.18555 1.03429 8.36425 0.984375 8.54662 0.984375C8.72898 0.984375 8.90768 1.03429 9.08272 1.13412C9.25776 1.23396 9.38688 1.38371 9.47007 1.58338L11.342 6.02596L16.1839 6.45025C16.4168 6.48353 16.5998 6.55841 16.733 6.67488C16.8661 6.79135 16.9659 6.9411 17.0325 7.12413C17.099 7.30716 17.1117 7.49451 17.0704 7.68619C17.0291 7.87787 16.925 8.04825 16.7579 8.19734L13.089 11.367L14.1872 16.0842C14.2371 16.3005 14.2205 16.4962 14.1373 16.6712C14.0541 16.8462 13.9376 16.9917 13.7879 17.1075C13.6381 17.2233 13.4634 17.2898 13.2637 17.3071C13.0641 17.3244 12.8727 17.2745 12.6897 17.1574L8.54662 14.6615Z" fill="#FE9A00" />
-                  </svg>
-                </div>
-                <div className="flex items-center pt-1">
-                  <span className="text-md font-[700] pl-1">{hotelDetails?.stars}</span>
-                  <span className="pl-2">
-                    <svg width="7" height="7" viewBox="0 0 7 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <circle cx="3.07317" cy="3.98436" r="3.07317" fill="#4F5E74" />
-                    </svg>
-                  </span>
-                  <span className="text-md pl-2 font-[500] text-[#9297A0]">(5)</span>
-                  <span className="pl-2">
-                    <svg width="7" height="7" viewBox="0 0 7 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <circle cx="3.07317" cy="3.98436" r="3.07317" fill="#4F5E74" />
-                    </svg>
-                  </span>
-                  <span className="text-md pl-2 font-[500] text-[#9297A0] line-clamp-2 lg:line-clamp-1" title={hotelDetails?.address}>
-                    {hotelDetails?.address}Km
-                  </span>
-                  <span className="pl-2">
-                    <svg width="7" height="7" viewBox="0 0 7 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <circle cx="3.07317" cy="3.98436" r="3.07317" fill="#4F5E74" />
-                    </svg>
-                  </span>
-                  <span className="text-md pl-2 font-[600]">{dict?.hotelDetails?.map}</span>
-                </div>
-              </div>
-              <div
-                ref={textRef}
-                className={`text-gray-700 text-base md:text-lg leading-6 md:leading-8 mb-2 md:mb-0 overflow-hidden ${
-                  isExpanded ? "transition-all duration-800 ease-in-out" : "transition-all duration-800 ease-out"
-                }`}
-                style={{
-                  maxHeight: isExpanded ? "1000px" : "8rem",
-                }}
-                dangerouslySetInnerHTML={{ __html: hotelDetails?.desc || "" }}
-              />
 
-              {isClamped && (
-                <button
-                  onClick={() => setIsExpanded(!isExpanded)}
-                  className="text-blue-600 cursor-pointer underline hover:text-blue-800 font-medium text-sm md:text-base -mt-3"
-                >
-                  {isExpanded ? dict?.hotelDetails?.readLess : dict?.hotelDetails?.readMore}
-                </button>
-              )}
+              {/* ✅ Conditional rendering: only show if description exists and is non-empty */}
+              {hotelDetails?.desc && hotelDetails.desc.trim() !== "" ? (
+                <>
+                  <p className="text-md font-[500] text-[#9297A0] md:hidden block">{hotelDetails?.address}</p>
+                  <div className="flex items-center pb-1">
+                    <div>
+                      <svg width="14" height="14" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M8.54662 14.6615L4.40353 17.1574C4.2205 17.2739 4.02915 17.3238 3.82949 17.3071C3.62982 17.2905 3.45511 17.2239 3.30536 17.1075C3.15561 16.991 3.03914 16.8456 2.95594 16.6712C2.87275 16.4968 2.85611 16.3011 2.90603 16.0842L4.00419 11.367L0.335316 8.19734C0.168927 8.04759 0.0651005 7.87687 0.023836 7.68519C-0.0174285 7.49351 -0.00511573 7.30649 0.0607743 7.12413C0.126664 6.94177 0.226498 6.79202 0.360275 6.67488C0.494051 6.55774 0.677079 6.48287 0.909358 6.45025L5.75128 6.02596L7.62316 1.58338C7.70635 1.38371 7.83547 1.23396 8.01051 1.13412C8.18555 1.03429 8.36425 0.984375 8.54662 0.984375C8.72898 0.984375 8.90768 1.03429 9.08272 1.13412C9.25776 1.23396 9.38688 1.38371 9.47007 1.58338L11.342 6.02596L16.1839 6.45025C16.4168 6.48353 16.5998 6.55841 16.733 6.67488C16.8661 6.79135 16.9659 6.9411 17.0325 7.12413C17.099 7.30716 17.1117 7.49451 17.0704 7.68619C17.0291 7.87787 16.925 8.04825 16.7579 8.19734L13.089 11.367L14.1872 16.0842C14.2371 16.3005 14.2205 16.4962 14.1373 16.6712C14.0541 16.8462 13.9376 16.9917 13.7879 17.1075C13.6381 17.2233 13.4634 17.2898 13.2637 17.3071C13.0641 17.3244 12.8727 17.2745 12.6897 17.1574L8.54662 14.6615Z" fill="#FE9A00" />
+                      </svg>
+                    </div>
+                    <div className="flex items-center pt-1">
+                      <span className="text-md font-[700] pl-1">{hotelDetails?.stars}</span>
+                      <span className="pl-2">
+                        <svg width="7" height="7" viewBox="0 0 7 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <circle cx="3.07317" cy="3.98436" r="3.07317" fill="#4F5E74" />
+                        </svg>
+                      </span>
+                      <span className="text-md pl-2 font-[500] text-[#9297A0]">(5)</span>
+                      <span className="pl-2">
+                        <svg width="7" height="7" viewBox="0 0 7 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <circle cx="3.07317" cy="3.98436" r="3.07317" fill="#4F5E74" />
+                        </svg>
+                      </span>
+                      <span className="text-md pl-2 font-[500] text-[#9297A0] line-clamp-2 lg:line-clamp-1" title={hotelDetails?.address}>
+                        {hotelDetails?.address}
+                      </span>
+                      <span className="pl-2">
+                        <svg width="7" height="7" viewBox="0 0 7 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <circle cx="3.07317" cy="3.98436" r="3.07317" fill="#4F5E74" />
+                        </svg>
+                      </span>
+                      <span className="text-md pl-2 font-[600]">{dict?.hotelDetails?.map}</span>
+                    </div>
+                  </div>
+
+                  <div
+                    ref={textRef}
+                    className={`text-gray-700 text-base md:text-lg leading-6 md:leading-8 mb-2 md:mb-0 overflow-hidden ${
+                      isExpanded ? "transition-all duration-800 ease-in-out" : "transition-all duration-800 ease-out"
+                    }`}
+                    style={{
+                      maxHeight: isExpanded ? "1000px" : "8rem",
+                    }}
+                    dangerouslySetInnerHTML={{ __html: hotelDetails?.desc || "" }}
+                  />
+
+                  {isClamped && (
+                    <button
+                      onClick={() => setIsExpanded(!isExpanded)}
+                      className="text-blue-600 cursor-pointer underline hover:text-blue-800 font-medium text-sm md:text-base -mt-3"
+                    >
+                      {isExpanded ? dict?.hotelDetails?.readLess : dict?.hotelDetails?.readMore}
+                    </button>
+                  )}
+                </>
+              ) : null}
+
+              {/* Badges: always visible */}
               <div className="flex md:gap-3 gap-1 mt-8">
                 <div className="flex gap-1 py-1 bg-[#DBFCE7] rounded-[7.45px] md:px-3 px-1 items-center">
                   <svg width="17" height="17" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">

@@ -69,10 +69,10 @@ const HotelCard = memo(function HotelCard({
         return;
       }
 
-      // ✅ Toggle local state: 0 ↔ 1
+      //  Toggle local state: 0 ↔ 1
       const newFavStatus = isFav === 1 ? 0 : 1;
       setIsFav(newFavStatus);
-      toast.success(res?.message || "Updated favourites ✅");
+      toast.success(res?.message || "Updated favourites ");
     } catch (err) {
       toast.error("Failed to update favourites :x:");
     }

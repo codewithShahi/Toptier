@@ -2,7 +2,8 @@
 import React from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-import L from "leaflet";
+import { useSelector } from "react-redux";
+import { RootState } from "../redux/store";
 
 // Fix Leaflet marker icon issue in Next.js / React
 import iconUrl from "leaflet/dist/images/marker-icon.png";
@@ -10,13 +11,19 @@ import iconShadowUrl from "leaflet/dist/images/marker-shadow.png";
 import useLocale from "@hooks/useLocale";
 import useDictionary from "@hooks/useDict";
 
-// const DefaultIcon = L.icon({
-//   iconUrl,
-//   shadowUrl: iconShadowUrl,
-//   iconAnchor: [12, 41],
-// });
-// L.Marker.prototype.options.icon = DefaultIcon;
-    
+  import L from "leaflet";
+
+const DefaultIcon = L.icon({
+  iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
+  shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
+  iconAnchor: [12, 41],
+});
+
+L.Marker.prototype.options.icon = DefaultIcon;
+
+  
+  
+
 // Lahore Coordinates
 const lahorePosition: [number, number] = [31.582045, 74.329376];
 
@@ -27,7 +34,10 @@ export default function Contactus() {
   const { locale } = useLocale();
         const { data: dict, isLoading } = useDictionary(locale as any);
 
-  
+const app = useSelector((state: RootState) => state.appData?.data);
+
+console.log("App data in contact us:", app);
+
   return (
     <div className="appHorizantalSpacing max-w-[1200px] mx-auto">
       <div className="border border-gray-300 rounded-md my-6">
@@ -52,7 +62,7 @@ export default function Contactus() {
                     </span>
                     <strong>{dict?.contact?.address || "Address"}</strong>
                   </div>
-                  <p className="font-[400]">1355 Market St, Suite 900, San Francisco, United States</p>
+                  <p className="font-[400]">{app?.app?.address}</p>
                 </div>
 
                 {/* Email */}
@@ -69,7 +79,7 @@ export default function Contactus() {
                     </span>
                     <strong>{dict?.contact?.email || "Email"}</strong>
                   </div>
-                  <p className="font-[400]">email@agency.com</p>
+                  <p className="font-[400]">{app?.app?.contact_email}</p>
                 </div>
 
                 {/* Phone */}
@@ -92,18 +102,18 @@ export default function Contactus() {
                     </span>
                     <strong>{dict?.contact?.phone || "Phone"}</strong>
                   </div>
-                  <p className="font-[400]">+123456789</p>
+                  <p className="font-[400]">{app?.app?.contact_phone}</p>
                 </div>
 
               </div>
             </div>
 
             {/* RIGHT SIDE - MAP */}
-            <div className="col-span-12 md:col-span-8 h-[400px] z-[999]">
+            <div className="col-span-12 md:col-span-8 h-[400px]">
               <MapContainer
                 center={lahorePosition}
                 zoom={12}
-                style={{ width: "100%", height: "100%", borderRadius: "8px" }}
+                style={{ width: "100%", height: "100%", borderRadius: "8px", zIndex: 0 }}
                 scrollWheelZoom={true}
               >
                 <TileLayer
@@ -121,6 +131,7 @@ export default function Contactus() {
     </div>
   );
 }
+
 
 
 // import React, { useState } from 'react';

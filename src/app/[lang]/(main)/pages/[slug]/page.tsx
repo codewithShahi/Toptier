@@ -46,7 +46,6 @@ const Page = async ({ params }: Props): Promise<React.JSX.Element> => {
   const response = await cms_pages_content(payload);
   const page_data = response?.data[0];
   const dict = await getDictionary(lang);
- console.log('==================reso', page_data)
   if (!page_data) {
     return (
       <TransitionLayout>

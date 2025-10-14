@@ -8,7 +8,7 @@ export default async function Page() {
 
   return (
     <TransitionLayout>
-    <div className="flex  flex-col w-full h-full dark:bg-gray-900  dark:text-gray-50 " >
+    <div className="flex  flex-col min-w-full h-full dark:bg-gray-900  dark:text-gray-50 " >
        <DashboardMain/>
     </div>
     </TransitionLayout>

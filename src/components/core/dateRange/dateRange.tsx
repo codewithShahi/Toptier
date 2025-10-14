@@ -1,5 +1,4 @@
 'use client';
-
 import { useState, useRef, useEffect } from 'react';
 import { addDays, format } from 'date-fns';
 import { DateRangePicker, Range, RangeKeyDict } from 'react-date-range';
@@ -24,6 +23,7 @@ export default function CustomDateRangePicker({
       key: 'selection',
     },
   ]);
+  
   const [isOpen, setIsOpen] = useState(false);
   const pickerRef = useRef<HTMLDivElement>(null);
 
