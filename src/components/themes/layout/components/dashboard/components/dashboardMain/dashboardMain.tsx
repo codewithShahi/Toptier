@@ -70,9 +70,7 @@ const { data: cartResults, isLoading: profileLoading } = useQuery({
 
   const handlePageChange = (newPage: number) => {
      setPagination((prev) => ({ ...prev, page: newPage }));
-    if (newPage >= 1 && newPage <= totalPages) {
-
-    }
+   
   };
   // Numeric Pagination Logic with Ellipsis
 const getPageNumbers = () => {

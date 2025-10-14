@@ -3,7 +3,6 @@ import React from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { useSelector } from "react-redux";
-import { RootState } from "../redux/store";
 
 // Fix Leaflet marker icon issue in Next.js / React
 import iconUrl from "leaflet/dist/images/marker-icon.png";
@@ -12,6 +11,7 @@ import useLocale from "@hooks/useLocale";
 import useDictionary from "@hooks/useDict";
 
   import L from "leaflet";
+import { useAppSelector } from "@lib/redux/store";
 
 const DefaultIcon = L.icon({
   iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
@@ -34,7 +34,7 @@ export default function Contactus() {
   const { locale } = useLocale();
         const { data: dict, isLoading } = useDictionary(locale as any);
 
-const app = useSelector((state: RootState) => state.appData?.data);
+const app = useAppSelector((state) => state.appData?.data);
 
 console.log("App data in contact us:", app);
 

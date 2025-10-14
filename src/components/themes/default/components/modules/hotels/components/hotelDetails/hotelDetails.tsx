@@ -278,9 +278,8 @@ const HotelsDetails = () => {
 
                   <div
                     ref={textRef}
-                    className={`text-gray-700 text-base md:text-lg leading-6 md:leading-8 mb-2 md:mb-0 overflow-hidden ${
-                      isExpanded ? "transition-all duration-800 ease-in-out" : "transition-all duration-800 ease-out"
-                    }`}
+                    className={`text-gray-700 text-base md:text-lg leading-6 md:leading-8 mb-2 md:mb-0 overflow-hidden ${isExpanded ? "transition-all duration-800 ease-in-out" : "transition-all duration-800 ease-out"
+                      }`}
                     style={{
                       maxHeight: isExpanded ? "1000px" : "8rem",
                     }}
@@ -348,14 +347,23 @@ const HotelsDetails = () => {
             {/* Amenities Column */}
             <div className="lg:col-span-4 col-span-12 lg:mt-0 mt-6">
               <h1 className="text-[22px] font-[700]">{dict?.hotelDetails?.aboutThisProperty}</h1>
+
               {hotelDetails?.amenities && hotelDetails.amenities.length > 0 ? (
-                <div className="grid grid-cols-2 gap-x-4 gap-y-6 mt-2 h-full max-h-[200px]">
-                  {hotelDetails.amenities.slice(0, 6).map((amenity: any, idx: number) => (
-                    <div key={idx} className="flex gap-3 items-center">
-                      <div className="min-w-10 min-h-10 flex items-center justify-center rounded-lg bg-green-100">
-                        <Icon icon={getAmenityIcon(amenity)} className="text-gray-700" width={20} height={20} />
+                <div className="grid grid-cols-2 gap-x-4 gap-y-6 mt-2">
+                  {/* Show only first 4 amenities (2 rows × 2 cols = 4 items) */}
+                  {hotelDetails.amenities.slice(0, 4).map((amenity: any, idx: number) => (
+                    <div key={idx} className="flex gap-3 items-start"> {/* items-start for better alignment with long text */}
+                      <div className="min-w-10 min-h-10 flex items-center justify-center rounded-lg bg-green-100 flex-shrink-0">
+                        <Icon
+                          icon={getAmenityIcon(amenity)}
+                          className="text-gray-700"
+                          width={20}
+                          height={20}
+                        />
                       </div>
-                      <p className="text-base font-[500] text-gray-700 text-ellipsis">{amenity}</p>
+                      <p className="text-base font-[500] text-gray-700 break-words">
+                        {amenity}
+                      </p>
                     </div>
                   ))}
                 </div>
@@ -366,11 +374,12 @@ const HotelsDetails = () => {
                 </div>
               )}
 
-              {hotelDetails?.amenities && hotelDetails.amenities.length > 6 && (
-                <div className="mt-18 sm:mt-6 sm:mb-0 mb-2 text-center relative z-10">
+              
+              {hotelDetails?.amenities && hotelDetails.amenities.length > 4 && (
+                <div className="mt-6 text-center">
                   <button
                     onClick={() => setIsModalOpen(true)}
-                    className="text-[#163C8C] text-lg text-center rounded-full py-1.5 cursor-pointer font-medium font-urbanist border border-[#163C8C] px-4 w-full hover:bg-[#163C8C] hover:text-white transition-colors"
+                    className="text-[#163C8C] text-lg rounded-full py-1.5 px-4 w-full max-w-xs mx-auto font-medium font-urbanist border border-[#163C8C] hover:bg-[#163C8C] hover:text-white transition-colors"
                   >
                     {dict?.hotelDetails?.showMore}
                   </button>
