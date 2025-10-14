@@ -12,7 +12,7 @@ export default function ProfileDropdown() {
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
   const router = useRouter();
-  const { user,checkSession } = useUser();
+  const { user, checkSession } = useUser();
 
   // close when clicking outside
   useEffect(() => {
@@ -71,7 +71,7 @@ export default function ProfileDropdown() {
             </li>
 
             {/* My Bookings */}
-            <li>
+            {/* <li>
               <Link
                 href="/bookings"
                 className="flex items-center gap-4 px-4 py-3  text-gray-500 hover:bg-gray-100 rounded-lg transition"
@@ -83,7 +83,7 @@ export default function ProfileDropdown() {
 </svg>
                 <span className="text-[15px] font-base font-medium">My Bookings</span>
               </Link>
-            </li>
+            </li> */}
               <li>
               <Link
                 href="/dashboard"

@@ -10,7 +10,7 @@ import Button from "@components/core/button";
 import useCountries from "@hooks/useCountries";
 import { useUser } from "@hooks/use-user";
 import { toast } from "react-toastify";
-import { profile_update } from "@src/actions";
+import { update_profile } from "@src/actions"; // 👈 Add this action
 import { useRouter } from "next/navigation";
 
 // Define schema for profile update
@@ -33,7 +33,7 @@ const profileSchema = zod.object({
 type ProfileFormValues = zod.infer<typeof profileSchema>;
 
 export default function CustomerProfile() {
-  const { user } = useUser();
+  const { user } = useUser(); // 👈 Get user from session
   const { countries } = useCountries();
   const router = useRouter();
 
@@ -72,11 +72,11 @@ export default function CustomerProfile() {
         email: user.email || "",
         phone: user.phone || "",
         phone_country_code: user.phone_country_code?.toString() || "",
-        country_code: user.country_code?.toString() || "",
-        state: user.state?.toString() || "",
-        city: user.city?.toString() || "",
-        address1: user.address1?.toString() || "",
-        address2: user.address2?.toString() || "",
+        // country_code: user.country_code || "",
+        // state: user.state || "",
+        // city: user.city || "",
+        // address1: user.address1 || "",
+        // address2: user.address2 || "",
       });
     }
   }, [user, reset]);
@@ -93,28 +93,29 @@ export default function CustomerProfile() {
     setIsSubmitting(true);
     try {
       const payload = {
-        user_id: user?.user_id,
+        user_id: user?.user_id, //  From session
         first_name: data.first_name,
         last_name: data.last_name,
         email: data.email,
         phone: data.phone,
-        phone_country_code: data.phone_country_code,
-        password: data.password || undefined,
-        country_code: data.country_code || "",
-        state: data.state || "",
-        city: data.city || "",
-        address1: data.address1 || "",
-        address2: data.address2 || "",
+        phone_country_code: parseInt(data.phone_country_code, 10),
+        password: data.password || undefined, // Optional
+        country_code: data.country_code || undefined,
+        state: data.state || undefined,
+        city: data.city || undefined,
+        address1: data.address1 || undefined,
+        address2: data.address2 || undefined,
       };
+console.log("update", payload)
+    //   const response = await update_profile(payload); // Call your API
 
-      const response = await profile_update(payload);
-
-      if (response?.error) {
-        throw new Error(response.error);
-      }
+    //   if (response.error) {
+    //     throw new Error(response.error);
+    //   }
 
       toast.success("Profile updated successfully!");
-      window.location.reload();
+      // Optionally refresh user data or redirect
+      // router.push("/profile"); // or window.location.reload();
 
     } catch (err: any) {
       toast.error(err.message || "Failed to update profile");
@@ -123,13 +124,13 @@ export default function CustomerProfile() {
     }
   };
 
-  //   if (userLoading) {
-  //     return (
-  //       <div className="bg-gray-50 flex justify-center items-center min-h-screen">
-  //         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-900"></div>
-  //       </div>
-  //     );
-  //   }
+//   if (userLoading) {
+//     return (
+//       <div className="bg-gray-50 flex justify-center items-center min-h-screen">
+//         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-900"></div>
+//       </div>
+//     );
+//   }
 
   if (!user) {
     return (
@@ -239,16 +240,15 @@ export default function CustomerProfile() {
               render={({ field }) => (
                 <Select
                   {...field}
-                  options={countryOptions.map((c: any) => ({ ...c, label: `+${c.phonecode}` }))}
-                  value={countryOptions.find((c: any) => c.value === field.value)}
+                  options={countryOptions.map((c:any) => ({ ...c, label: `+${c.phonecode}` }))}
+                  value={countryOptions.find((c:any) => c.value === field.value)}
                   onChange={(option) => field.onChange(option?.value)}
                   placeholder="Select Country Code"
                   size="lg"
                   isSearchable
-                  classNames={{
+                          classNames={{
                     control: () =>
-                      'border border-gray-300 cursor-pointer rounded-lg px-3 py-0 flex items-center min-h-[44px] text-base focus:ring-1 focus:ring-[#163C8C] focus:border-[#163C8C] shadow-none'
-                  }}
+                      'border border-gray-300 cursor-pointer rounded-lg px-3 py-0 flex items-center min-h-[44px] text-base focus:ring-1 focus:ring-[#163C8C] focus:border-[#163C8C] shadow-none'}}
                 />
               )}
             />
@@ -288,15 +288,14 @@ export default function CustomerProfile() {
                 <Select
                   {...field}
                   options={countryOptions}
-                  value={countryOptions.find((c: any) => c.value === field.value)}
+                  value={countryOptions.find((c:any) => c.value === field.value)}
                   onChange={(option) => field.onChange(option?.value)}
                   placeholder="Select Country"
                   size="lg"
                   isSearchable
-                  classNames={{
+                                  classNames={{
                     control: () =>
-                      'border border-gray-300 cursor-pointer rounded-lg px-3 py-0 flex items-center min-h-[44px] text-base focus:ring-1 focus:ring-[#163C8C] focus:border-[#163C8C] shadow-none'
-                  }}
+                      'border border-gray-300 cursor-pointer rounded-lg px-3 py-0 flex items-center min-h-[44px] text-base focus:ring-1 focus:ring-[#163C8C] focus:border-[#163C8C] shadow-none'}}
                 />
               )}
             />
@@ -374,31 +373,12 @@ export default function CustomerProfile() {
 
         {/* Submit Button */}
         <div className="mt-8 flex justify-center">
-          {/* <Button
+          <Button
             size="lg"
             disabled={isSubmitting}
             className={`w-full bg-blue-900  text-center flex justify-center text-white ${isSubmitting ? 'opacity-60 cursor-not-allowed' : ''}`}
             type="submit"
             onClick={handleSubmit(onSubmit)}
-          >
-            {isSubmitting ? (
-              <>
-                <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V6a6 6 0 016 6 6 6 0 01-6 6H6a6 6 0 01-6-6z"></path>
-                </svg>
-                Updating...
-              </>
-            ) : (
-              "Update Profile"
-            )}
-          </Button> */}
-
-          <Button
-            size="lg"
-            disabled={isSubmitting}
-            className={`w-full bg-blue-900 text-center flex justify-center text-white ${isSubmitting ? 'opacity-60 cursor-not-allowed' : ''}`}
-            type="submit" // ✅ bas yehi hona chahiye
           >
             {isSubmitting ? (
               <>

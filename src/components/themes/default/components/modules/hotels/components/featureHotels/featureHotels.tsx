@@ -214,7 +214,7 @@ const FeaturedHotels: React.FC = () => {
   };
 
   return (
-    <div className="w-full max-w-[1200px] mx-auto appHorizantalSpacing py-6">
+    <div className="w-full max-w-[1200px] mx-auto mt-8 appHorizantalSpacing py-6">
       <div className="text-center mb-8 md:mb-12">
         <h1
           className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-4"
