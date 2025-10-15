@@ -321,5 +321,80 @@
     "sustain_quality_p": "Nous améliorons continuellement nos services et créons de meilleures expériences de voyage pour tous.",
     "community_growth": "Développement communautaire",
     "community_growth_p": "Rejoignez notre mission visant à construire une communauté mondiale de voyageurs passionnés par l’exploration."
+  },
+  "profilelabels": {
+    "profileHeading": "Informations du profil",
+    "firstName": "Prénom",
+    "lastName": "Nom de famille",
+    "email": "E-mail",
+    "password": "Mot de passe (facultatif)",
+    "phoneCode": "Indicatif pays",
+    "phoneNumber": "Numéro de téléphone",
+    "country": "Pays",
+    "state": "Région / Département",
+    "city": "Ville",
+    "address1": "Adresse 1",
+    "address2": "Adresse 2"
+  },
+  "profileplaceholders": {
+    "firstName": "Prénom",
+    "lastName": "Nom de famille",
+    "email": "Adresse e-mail",
+    "password": "Nouveau mot de passe (laisser vide pour conserver l’actuel)",
+    "phoneNumber": "Numéro de téléphone (ex. : 923483344559)",
+    "state": "Région ou département",
+    "city": "Ville",
+    "address1": "Ligne d’adresse 1",
+    "address2": "Ligne d’adresse 2",
+    "selectCountryCode": "Sélectionner l’indicatif pays",
+    "selectCountry": "Sélectionner le pays"
+  },
+  "profiletoasts": {
+    "success": "Profil mis à jour avec succès !",
+    "error": "Échec de la mise à jour du profil"
+  },
+  "profilebuttons": {
+    "updateProfile": "Mettre à jour le profil",
+    "updating": "Mise à jour en cours…"
+  },
+  "profilemessages": {
+    "loginRequired": "Veuillez vous connecter pour voir votre profil."
+  },
+  "profileerrors": {
+    "firstNameRequired": "Le prénom est requis",
+    "lastNameRequired": "Le nom de famille est requis",
+    "invalidEmail": "Adresse e-mail invalide",
+    "phoneRequired": "Le numéro de téléphone est requis",
+    "invalidPhone": "Veuillez saisir un numéro de téléphone international valide",
+    "countryCodeRequired": "L’indicatif pays est requis",
+    "passwordTooShort": "Le mot de passe doit comporter au moins 6 caractères"
+  },
+  "dashboard": {
+    "welcome_back": "Bon retour,",
+    "overview_text": "Voici un aperçu rapide de votre compte voyage",
+    "wallet_balance": "Solde du portefeuille",
+    "wallet_balance_sub": "Solde total du portefeuille",
+    "bookings": "Réservations",
+    "bookings_sub": "Total des réservations",
+    "pending_invoices": "Factures en attente",
+    "pending_invoices_sub": "Factures en attente",
+    "all": "Tous",
+    "paid": "Payé",
+    "unpaid": "Impayé",
+    "cancelled": "Annulé",
+    "search_placeholder": "Recherche...",
+    "client_name": "Nom du client",
+    "booking_id": "ID de réservation",
+    "pnr": "PNR",
+    "payment": "Paiement",
+    "booking": "Réservation",
+    "date": "Date",
+    "price": "Prix",
+    "no_bookings_found": "Aucune réservation trouvée.",
+    "showing": "Affichage",
+    "of": "de",
+    "entries": "entrées",
+    "prev": "Précédent",
+    "next": "Suivant"
   }
 }

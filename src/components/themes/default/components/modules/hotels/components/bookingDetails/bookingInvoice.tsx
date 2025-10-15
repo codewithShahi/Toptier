@@ -1,10 +1,13 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Icon } from "@iconify/react";
 import { useAppSelector } from "@lib/redux/store";
 import useDictionary from "@hooks/useDict"; // ✅ Add dictionary hook
 import useLocale from "@hooks/useLocale";
+import { prapare_payment ,processed_payment} from "@src/actions";
+import { useRouter } from "next/navigation";
+import Dropdown from "@components/core/Dropdown";
 
 interface Traveller {
   traveller_type: string;
@@ -60,7 +63,17 @@ const HotelInvoice: React.FC<HotelInvoiceProps> = ({ invoiceDetails }) => {
   const [showInvoiceImage, setShowInvoiceImage] = useState(false);
   const lang = locale || "en";
   const useDirection = lang === "ar" ? "rtl" : "ltr";
-
+  const router = useRouter();
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string >(invoiceDetails[0].payment_gateway);
+  const { payment_gateways } = useAppSelector((state) => state.appData?.data);
+  const activePayments = payment_gateways
+    ?.filter((p: any) => p.status)
+    ?.map((p: any) => ({
+      id: p.id,
+      name: p.name,
+      label: p.label || p.name,
+      icon: p.icon || null,
+    })) || [];
   if (!invoiceDetails?.length) {
     return (
       <div className="flex items-center justify-center min-h-screen text-gray-600 text-lg">
@@ -68,13 +81,13 @@ const HotelInvoice: React.FC<HotelInvoiceProps> = ({ invoiceDetails }) => {
       </div>
     );
   }
-
   const data = invoiceDetails[0];
   const travellers: Traveller[] = JSON.parse(data.guest || "[]");
   const rooms: RoomData[] = JSON.parse(data.room_data || "[]");
 
+console.log('==================invoice details', invoiceDetails,selectedPaymentMethod)
   // Generate the invoice URL for QR code
-  const invoiceUrl = `${window.location.origin}/invoice/${data.booking_ref_no}`;
+  const invoiceUrl = `${window.location.origin}/hotel/invoice/${data.booking_ref_no}`;
 
   const bookingData = {
     paymentStatus: data.payment_status,
@@ -121,7 +134,34 @@ const HotelInvoice: React.FC<HotelInvoiceProps> = ({ invoiceDetails }) => {
   const handleDownloadPDF = () => {
     alert(dict?.hotelInvoice?.alert?.pdfNotImplemented);
   };
+ const handlePayNow=async ()=>{
+    const re_id=invoiceDetails[0].booking_ref_no
+    const response=await prapare_payment({
+      booking_ref_no:re_id,
+      invoice_url: invoiceUrl,
+      payment_getway: selectedPaymentMethod
+    })
+    const result=response?.data
 
+    if(response.success){
+       const {payload, payment_gateway}=result
+      const payment_response= await processed_payment({
+        payload:payload,
+        payment_gateway:payment_gateway
+      })
+      console.log('=============', payment_response)
+      const payment_result= payment_response?.data
+          if( payment_response.success){
+              router.push(payment_result?.checkout_url)
+          }
+                console.log('=============', payment_result)
+
+    }
+
+ }
+ const handleSelectPayment =(payment:any)=>{
+  setSelectedPaymentMethod(payment.name.toLowerCase())
+ }
   const handleShareWhatsApp = () => {
     const message = `Hotel Booking Confirmation
 Booking Reference: ${bookingData.bookingReference}
@@ -130,13 +170,12 @@ Check-in: ${bookingData.room.checkin}
 Check-out: ${bookingData.room.checkout}
 Guest: ${travellers[0]?.first_name || "N/A"}
 Total: ${bookingData.total}
-
 View Invoice: ${invoiceUrl}`;
 
     const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, "_blank");
   };
-
+console.log('pnrrrrrrrrrrrr',invoiceDetails[0].pnr)
   return (
     <div className="min-h-screen bg-gray-100 py-6 sm:py-10 px-4 sm:px-6">
       <div
@@ -197,23 +236,94 @@ View Invoice: ${invoiceUrl}`;
             />
           </div>
         </div>
+{bookingData.paymentStatus === "unpaid" && (
+ <div className="mt-3 mx-6 p-4 bg-white border border-gray-200 rounded-xl  grid grid-cols-1 md:grid-cols-4 items-center gap-6">
+  {/* Pay With Label */}
+  <div className="text-lg font-semibold text-gray-800">Pay With</div>
 
+  {/* Selected Payment Method Dropdown */}
+  <Dropdown
+    label={
+      <div className="flex items-center gap-2">
+        {selectedPaymentMethod ? (
+          <>
+            <span>{selectedPaymentMethod || "Select"}</span>
+          </>
+        ) : (
+          <span className="text-gray-500">Select payment method</span>
+        )}
+      </div>
+    }
+    dropDirection="down"
+    buttonClassName="w-full justify-between px-4 py-2.5 border border-gray-300 rounded-lg bg-white hover:bg-gray-50 text-left"
+  >
+    {({ onClose }) => (
+      <div className="p-1 max-h-60 overflow-y-auto">
+        {activePayments.map((method: any) => (
+          <button
+            key={method.id}
+            type="button"
+            onClick={() => {
+              handleSelectPayment(method);
+              onClose();
+            }}
+            className={`w-full flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg ${
+              selectedPaymentMethod === method.id
+                ? "bg-blue-100 text-blue-900"
+                : "text-gray-700 hover:bg-gray-100"
+            }`}
+          >
+            {method.icon ? (
+              <img src={method.icon} alt={method.label} className="w-5 h-5 rounded" />
+            ) : (
+              <div className="w-5 h-5 bg-gray-200 rounded flex items-center justify-center text-xs">
+                {method.label.charAt(0)}
+              </div>
+            )}
+            <span>{method.label}</span>
+          </button>
+        ))}
+      </div>
+    )}
+  </Dropdown>
+
+  {/* Proceed Button */}
+  <button
+    onClick={handlePayNow}
+    disabled={!selectedPaymentMethod}
+    className={`px-6 py-2.5 rounded-lg font-bold text-white w-full ${
+      !selectedPaymentMethod
+        ? "bg-gray-400 cursor-not-allowed"
+        : "bg-blue-900 hover:bg-blue-700"
+    }`}
+  >
+    Proceed
+  </button>
+
+  {/* Total Amount */}
+  <div className="text-xl font-bold text-gray-800 text-center md:text-right">
+    USD {bookingData.total.replace(/[^0-9.,]/g, "")}
+  </div>
+</div>
+
+)}
         {/* Booking Details */}
         <div className="p-6 space-y-6">
           {/* Booking Note */}
-          <div className="border bg-[#F5F5F5] border-gray-200 rounded-lg p-4 text-start">
+          {invoiceDetails[0].cancellation_request ==="1" && <div className="border bg-red-100 border-red-200 rounded-lg p-4 text-start">
             {dict?.hotelInvoice?.bookingNote}
-          </div>
+          </div>}
 
           {/* Booking Info */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 border border-gray-200 rounded-lg p-4">
-            <div>
-              <div className="text-xs font-semibold text-gray-500 mb-1">{dict?.hotelInvoice?.bookingInfo?.bookingId}</div>
-              <div className="text-sm font-medium">{bookingData.bookingId}</div>
-            </div>
+
             <div>
               <div className="text-xs font-semibold text-gray-500 mb-1">{dict?.hotelInvoice?.bookingInfo?.reference}</div>
               <div className="text-sm font-medium">{bookingData.bookingReference}</div>
+            </div>
+               <div>
+              <div className="text-xs font-semibold text-gray-500 mb-1">{dict?.hotelInvoice?.bookingInfo?.bookingId}</div>
+              <div className="text-sm font-medium">{invoiceDetails[0]?.pnr === null ? "N/A" : invoiceDetails[0]?.pnr}</div>
             </div>
             <div>
               <div className="text-xs font-semibold text-gray-500 mb-1">{dict?.hotelInvoice?.bookingInfo?.date}</div>
@@ -371,11 +481,12 @@ View Invoice: ${invoiceUrl}`;
             {dict?.hotelInvoice?.buttons?.downloadPdf}
           </button>
           <button
-            onClick={handleShareWhatsApp}
+          type="submit"
+            onClick={handlePayNow}
             className="flex items-center justify-center gap-2 bg-gray-800 hover:bg-blue-800 text-white font-semibold cursor-pointer h-11 px-12 rounded-full shadow-md min-w-[160px]"
           >
             <Icon icon="mdi:payment" width="20" height="20" />
-            {dict?.hotelInvoice?.buttons?.payNow}
+            {dict?.hotelInvoice?.buttons?.payNow}rdgdfgdfdsf
           </button>
         </div>
       </div>

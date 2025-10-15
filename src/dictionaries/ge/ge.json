@@ -321,5 +321,80 @@
     "sustain_quality_p": "Wir verbessern kontinuierlich unsere Dienstleistungen und schaffen bessere Reiseerlebnisse für alle.",
     "community_growth": "Gemeinschaftswachstum",
     "community_growth_p": "Schließen Sie sich unserer Mission an, eine globale Gemeinschaft leidenschaftlicher Reisender aufzubauen, die das Entdecken lieben."
+  },
+  "profilelabels": {
+    "profileHeading": "Profilinformationen",
+    "firstName": "Vorname",
+    "lastName": "Nachname",
+    "email": "E-Mail",
+    "password": "Passwort (optional)",
+    "phoneCode": "Ländercode",
+    "phoneNumber": "Telefonnummer",
+    "country": "Land",
+    "state": "Bundesland / Region",
+    "city": "Stadt",
+    "address1": "Adresse 1",
+    "address2": "Adresse 2"
+  },
+  "profileplaceholders": {
+    "firstName": "Vorname",
+    "lastName": "Nachname",
+    "email": "E-Mail-Adresse",
+    "password": "Neues Passwort (leer lassen, um aktuelles zu behalten)",
+    "phoneNumber": "Telefonnummer (z. B. 923483344559)",
+    "state": "Bundesland oder Region",
+    "city": "Stadt",
+    "address1": "Adresszeile 1",
+    "address2": "Adresszeile 2",
+    "selectCountryCode": "Ländercode auswählen",
+    "selectCountry": "Land auswählen"
+  },
+  "profiletoasts": {
+    "success": "Profil erfolgreich aktualisiert!",
+    "error": "Fehler beim Aktualisieren des Profils"
+  },
+  "profilebuttons": {
+    "updateProfile": "Profil aktualisieren",
+    "updating": "Wird aktualisiert…"
+  },
+  "profilemessages": {
+    "loginRequired": "Bitte melden Sie sich an, um Ihr Profil anzuzeigen."
+  },
+  "profileerrors": {
+    "firstNameRequired": "Vorname ist erforderlich",
+    "lastNameRequired": "Nachname ist erforderlich",
+    "invalidEmail": "Ungültige E-Mail-Adresse",
+    "phoneRequired": "Telefonnummer ist erforderlich",
+    "invalidPhone": "Geben Sie eine gültige internationale Telefonnummer ein",
+    "countryCodeRequired": "Ländercode ist erforderlich",
+    "passwordTooShort": "Das Passwort muss mindestens 6 Zeichen lang sein"
+  },
+  "dashboard": {
+    "welcome_back": "Willkommen zurück,",
+    "overview_text": "Hier ist ein kurzer Überblick über Ihr Reisekonto",
+    "wallet_balance": "Wallet-Guthaben",
+    "wallet_balance_sub": "Gesamtguthaben",
+    "bookings": "Buchungen",
+    "bookings_sub": "Gesamtbuchungen",
+    "pending_invoices": "Ausstehende Rechnungen",
+    "pending_invoices_sub": "Ausstehende Rechnungen",
+    "all": "Alle",
+    "paid": "Bezahlt",
+    "unpaid": "Unbezahlt",
+    "cancelled": "Storniert",
+    "search_placeholder": "Suche...",
+    "client_name": "Kundenname",
+    "booking_id": "Buchungs-ID",
+    "pnr": "PNR",
+    "payment": "Zahlung",
+    "booking": "Buchung",
+    "date": "Datum",
+    "price": "Preis",
+    "no_bookings_found": "Keine Buchungen gefunden.",
+    "showing": "Zeige",
+    "of": "von",
+    "entries": "Einträge",
+    "prev": "Zurück",
+    "next": "Weiter"
   }
 }

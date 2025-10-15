@@ -112,68 +112,67 @@
     "subscribe": "Subscribe",
     "success": "Subscribed successfully",
     "copyright": "All rights reserved.",
-    "title_explore":"Explore",
-    "title_support":"Support",
-    "title_company":"Company",
-    "title_downloads":"Downloads"
+    "title_explore": "Explore",
+    "title_support": "Support",
+    "title_company": "Company",
+    "title_downloads": "Downloads"
   },
-   "hotel_listing":{
-    "advanced_search":"Advanced Search",
-    "search_hotels":"Search Hotels",
-    "search_by_hotel_name":"search by hotel name",
-    "per_night":"(per night)",
-    "price_range":"Price Range",
-    "hotel_stars":"Hotel Stars",
-    "stars":"stars",
-    "reset_filters":"Reset Filters",
-    "apply":"Apply",
-    "hotels_found":"hotels found",
-    "loading_more":"Loading more",
-    "searching_for_hotels":"Searching for hotels...",
-    "no_hotels_found":"No hotels found",
-    "search_criteria":"Try adjusting your filters or search criteria",
-    "reset_all_filters":"Reset All Filters",
-    "filters_search":"Filters & Search",
-    "apply_filters":"Apply Filters",
-    "hotels":"hotels",
-    "sort":"Sort",
-    "rating":"Rating",
-    "low_to_high":"Low to High",
-    "high_to_low":"High to Low",
-    "name_a_to_z":"Name (A–Z)",
-    "book_now":"Book Now"
+  "hotel_listing": {
+    "advanced_search": "Advanced Search",
+    "search_hotels": "Search Hotels",
+    "search_by_hotel_name": "search by hotel name",
+    "per_night": "(per night)",
+    "price_range": "Price Range",
+    "hotel_stars": "Hotel Stars",
+    "stars": "stars",
+    "reset_filters": "Reset Filters",
+    "apply": "Apply",
+    "hotels_found": "hotels found",
+    "loading_more": "Loading more",
+    "searching_for_hotels": "Searching for hotels...",
+    "no_hotels_found": "No hotels found",
+    "search_criteria": "Try adjusting your filters or search criteria",
+    "reset_all_filters": "Reset All Filters",
+    "filters_search": "Filters & Search",
+    "apply_filters": "Apply Filters",
+    "hotels": "hotels",
+    "sort": "Sort",
+    "rating": "Rating",
+    "low_to_high": "Low to High",
+    "high_to_low": "High to Low",
+    "name_a_to_z": "Name (A–Z)",
+    "book_now": "Book Now"
   },
-  "contact":{
-    "contact_us":"Contact Us",
-    "address":"Address",
-    "email":"Email",
-    "phone":"Phone"
-
+  "contact": {
+    "contact_us": "Contact Us",
+    "address": "Address",
+    "email": "Email",
+    "phone": "Phone"
   },
- "hotelDetails": {
-  "hotelNamePlaceholder": "Hotel Name",
-  "aboutThisProperty": "About this Property",
-  "noAmenities": "No amenities found",
-  "showMore": "Show more",
-  "chooseYourRoom": "Choose your room",
-  "noRoomsAvailable": "No rooms available for your selected dates.",
-  "theToptierWayToTravel": "The Toptier Way to Travel",
-  "noBrandStories": "No brand stories available for this property.",
-  "needToKnowDetails": "Need-to-Know Details",
-  "frequentlyAskedQuestions": "Frequently asked questions",
-  "noSimilarHotels": "No similar hotels found.",
-  "readMore": "Read More",
-  "readLess": "Read Less",
-  "topRated": "Top Rated",
-  "freeCancellation": "Free Cancellation",
-  "bestPriceGuarantee": "Best Price Guarantee",
-  "map": "Map",
-  "unableToLoad": "Unable to load hotel details",
-  "pleaseTryAgain": "Please try again later.",
-  "allAmenities": "All Amenities",
-  "youmightAlsoLike": "You might also like"
-},
- "bookingForm": {
+  "hotelDetails": {
+    "hotelNamePlaceholder": "Hotel Name",
+    "aboutThisProperty": "About this Property",
+    "noAmenities": "No amenities found",
+    "showMore": "Show more",
+    "chooseYourRoom": "Choose your room",
+    "noRoomsAvailable": "No rooms available for your selected dates.",
+    "theToptierWayToTravel": "The Toptier Way to Travel",
+    "noBrandStories": "No brand stories available for this property.",
+    "needToKnowDetails": "Need-to-Know Details",
+    "frequentlyAskedQuestions": "Frequently asked questions",
+    "noSimilarHotels": "No similar hotels found.",
+    "readMore": "Read More",
+    "readLess": "Read Less",
+    "topRated": "Top Rated",
+    "freeCancellation": "Free Cancellation",
+    "bestPriceGuarantee": "Best Price Guarantee",
+    "map": "Map",
+    "unableToLoad": "Unable to load hotel details",
+    "pleaseTryAgain": "Please try again later.",
+    "allAmenities": "All Amenities",
+    "youmightAlsoLike": "You might also like"
+  },
+  "bookingForm": {
     "personalInformation": {
       "title": "Personal Information",
       "subtitle": "Tell us the name of the person checking in.",
@@ -233,7 +232,7 @@
       "dr": "Dr"
     }
   },
-   "bookingDetails": {
+  "bookingDetails": {
     "pageTitle": "Booking Details",
     "bookingSummary": "Booking Summary",
     "roomName": "Room Name",
@@ -248,7 +247,6 @@
     "adults": "Adults",
     "children": "Children"
   },
-
   "hotelInvoice": {
     "errors": {
       "noInvoiceFound": "No invoice details found."
@@ -259,9 +257,9 @@
       "phone": "Phone:",
       "email": "Email:"
     },
-    "bookingNote": "Payable through Toptier Travel acting as agent for the service operating company.",
+    "bookingNote": "Cancellation request sent. we will update as soon as we change the status",
     "bookingInfo": {
-      "bookingId": "Booking ID",
+      "bookingId": "PNR",
       "reference": "Reference",
       "date": "Date",
       "location": "Location"
@@ -312,18 +310,91 @@
       "pdfNotImplemented": "PDF download functionality will be implemented later."
     }
   },
-
-  "support":{
-    "heading":"Support",
-    "p_1":"At",
-    "p_3":", we are passionate about helping you explore the world with comfort and confidence. Your support helps us continue offering the best travel experiences, hotel deals, and inspiration for every traveler.",
-    "contact_us":"Contact Us",
-    "empower_travelers":"Empower Travelers",
-    "empower_travelers_p":"Your contribution helps travelers discover hidden gems and trusted destinations worldwide.",
-    "sustain_quality":"Sustain Quality",
-    "sustain_quality_p":"We continuously enhance our services and create better travel experiences for everyone.",
-    "community_growth":"Community Growth",
-    "community_growth_p":"Join our mission to build a global community of passionate travelers who love to explore."
+  "support": {
+    "heading": "Support",
+    "p_1": "At",
+    "p_3": ", we are passionate about helping you explore the world with comfort and confidence. Your support helps us continue offering the best travel experiences, hotel deals, and inspiration for every traveler.",
+    "contact_us": "Contact Us",
+    "empower_travelers": "Empower Travelers",
+    "empower_travelers_p": "Your contribution helps travelers discover hidden gems and trusted destinations worldwide.",
+    "sustain_quality": "Sustain Quality",
+    "sustain_quality_p": "We continuously enhance our services and create better travel experiences for everyone.",
+    "community_growth": "Community Growth",
+    "community_growth_p": "Join our mission to build a global community of passionate travelers who love to explore."
+  },
+  "profilelabels": {
+    "profileHeading": "Profile Information",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "email": "Email",
+    "password": "Password (Optional)",
+    "phoneCode": "Phone Code",
+    "phoneNumber": "Phone Number",
+    "country": "Country",
+    "state": "State",
+    "city": "City",
+    "address1": "Address 1",
+    "address2": "Address 2"
+  },
+  "profileplaceholders": {
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "email": "Email Address",
+    "password": "New Password (leave blank to keep current)",
+    "phoneNumber": "Phone Number (e.g., 923483344559)",
+    "state": "State",
+    "city": "City",
+    "address1": "Address Line 1",
+    "address2": "Address Line 2",
+    "selectCountryCode": "Select Country Code",
+    "selectCountry": "Select Country"
+  },
+  "profiletoasts": {
+    "success": "Profile updated successfully!",
+    "error": "Failed to update profile"
+  },
+  "profilebuttons": {
+    "updateProfile": "Update Profile",
+    "updating": "Updating..."
+  },
+  "profilemessages": {
+    "loginRequired": "Please log in to view your profile."
+  },
+  "profileerrors": {
+    "firstNameRequired": "First name is required",
+    "lastNameRequired": "Last name is required",
+    "invalidEmail": "Invalid email address",
+    "phoneRequired": "Phone number is required",
+    "invalidPhone": "Enter a valid international phone number",
+    "countryCodeRequired": "Country code is required",
+    "passwordTooShort": "Password must be at least 6 characters"
+  },
+  "dashboard": {
+    "welcome_back": "Welcome back,",
+    "overview_text": "Here’s a quick look at your travel account",
+    "wallet_balance": "Wallet Balance",
+    "wallet_balance_sub": "Total Wallet Balance",
+    "bookings": "Bookings",
+    "bookings_sub": "Total Bookings",
+    "pending_invoices": "Pending Invoices",
+    "pending_invoices_sub": "Pending Invoices",
+    "all": "All",
+    "paid": "Paid",
+    "unpaid": "Unpaid",
+    "cancelled": "Cancelled",
+    "search_placeholder": "Search...",
+    "client_name": "Client Name",
+    "booking_id": "Booking ID",
+    "pnr": "PNR",
+    "payment": "Payment",
+    "booking": "Booking",
+    "date": "Date",
+    "price": "Price",
+    "no_bookings_found": "No bookings found.",
+    "showing": "Showing",
+    "of": "of",
+    "entries": "entries",
+    "prev": "Prev",
+    "next": "Next"
   }
-
 }

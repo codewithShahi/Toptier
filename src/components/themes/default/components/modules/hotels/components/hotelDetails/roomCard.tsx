@@ -6,6 +6,8 @@ import { toast } from "react-toastify";
 import { useUser } from "@hooks/use-user";
 import { useEffect, useState } from "react";
 import useCurrency from "@hooks/useCurrency";
+import RoomOption from "./roomOption";
+import PopupContainer from "./PopupContainer";
 
 interface RoomCardProps {
   room: any;
@@ -15,6 +17,7 @@ interface RoomCardProps {
 }
 
 export const RoomCard = ({ room, getAmenityIcon, options, onReserve }: RoomCardProps) => {
+  console.log("Room data 1:", room);
     const { user } = useUser();
    const {priceRateConverssion}=useCurrency()
 
@@ -61,7 +64,12 @@ export const RoomCard = ({ room, getAmenityIcon, options, onReserve }: RoomCardP
     }
   };
 
+  const [showPopup, setShowPopup] = useState(false);
+
   return (
+
+    
+
     <div className="w-full rounded-4xl bg-[#FFFFFF] hover:scale-100 hover:shadow-sm p-2 transition-all duration-200 border border-gray-100 flex flex-col h-[590px]">
       {/* Image */}
       <div className="relative h-[240px] w-full rounded-3xl overflow-hidden mb-3">
@@ -162,12 +170,46 @@ export const RoomCard = ({ room, getAmenityIcon, options, onReserve }: RoomCardP
           </div>
 
           <div className="flex gap-2">
-            <button
+            {/* <button
               className="bg-[#163C8C] text-white cursor-pointer font-[600] text-sm w-full rounded-full py-2"
               onClick={() => onReserve(room, option)}
             >
               Reserve
+            </button> */}
+            <button
+            onClick={() => setShowPopup(true)}
+              className="bg-[#163C8C] text-white cursor-pointer font-[600] text-sm w-full rounded-full py-2"
+            >
+              More Options
             </button>
+{showPopup && (
+  <PopupContainer>
+    <div
+      // overlay
+className="fixed inset-0 bg-black/40 backdrop-blur-sm flex justify-center items-center z-50"
+      onClick={() => setShowPopup(false)} // click on overlay closes
+    >
+      <div
+        // modal box (stop overlay click from bubbling)
+        className="bg-white p-6 rounded-lg w-11/12 max-w-5xl relative overflow-y-auto max-h-[90vh] animate-scale-in"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <button
+          onClick={() => setShowPopup(false)}
+          className="absolute cursor-pointer top-3 right-3 text-gray-600 text-2xl font-bold"
+          aria-label="Close popup"
+        >
+          ✕
+        </button>
+
+  <RoomOption room={room} options={options} getAmenityIcon={getAmenityIcon} onReserve={onReserve} />
+      </div>
+    </div>
+  </PopupContainer>
+)}
+
+
+            
             <button
               onClick={toggleLike}
               className="bg-[#EBEFF4] cursor-pointer hover:bg-gray-200 rounded-full p-4 transition-colors"

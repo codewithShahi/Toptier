@@ -321,5 +321,80 @@
     "sustain_quality_p": "Hizmetlerimizi sürekli geliştiriyor ve herkes için daha iyi seyahat deneyimleri yaratıyoruz.",
     "community_growth": "Topluluk Gelişimi",
     "community_growth_p": "Dünyayı keşfetmeyi seven tutkulu seyahatçilerden oluşan küresel bir topluluk kurma misyonumuza katılın."
+  },
+  "profilelabels": {
+    "profileHeading": "Profil Bilgileri",
+    "firstName": "İsim",
+    "lastName": "Soyisim",
+    "email": "E-posta",
+    "password": "Parola (isteğe bağlı)",
+    "phoneCode": "Ülke kodu",
+    "phoneNumber": "Telefon numarası",
+    "country": "Ülke",
+    "state": "Eyalet / İl",
+    "city": "Şehir",
+    "address1": "Adres 1",
+    "address2": "Adres 2"
+  },
+  "profileplaceholders": {
+    "firstName": "İsim",
+    "lastName": "Soyisim",
+    "email": "E-posta adresi",
+    "password": "Yeni parola (mevcut parolayı korumak için boş bırakın)",
+    "phoneNumber": "Telefon numarası (örneğin: 923483344559)",
+    "state": "Eyalet veya il",
+    "city": "Şehir",
+    "address1": "Adres Satırı 1",
+    "address2": "Adres Satırı 2",
+    "selectCountryCode": "Ülke kodunu seçin",
+    "selectCountry": "Ülke seçin"
+  },
+  "profiletoasts": {
+    "success": "Profil başarıyla güncellendi!",
+    "error": "Profil güncellemesi başarısız oldu"
+  },
+  "profilebuttons": {
+    "updateProfile": "Profili Güncelle",
+    "updating": "Güncelleniyor..."
+  },
+  "profilemessages": {
+    "loginRequired": "Profilinizi görüntülemek için lütfen giriş yapın."
+  },
+  "profileerrors": {
+    "firstNameRequired": "İsim gerekli",
+    "lastNameRequired": "Soyisim gerekli",
+    "invalidEmail": "Geçersiz e-posta adresi",
+    "phoneRequired": "Telefon numarası gerekli",
+    "invalidPhone": "Geçerli bir uluslararası telefon numarası girin",
+    "countryCodeRequired": "Ülke kodu gerekli",
+    "passwordTooShort": "Parola en az 6 karakter olmalıdır"
+  },
+  "dashboard": {
+    "welcome_back": "Tekrar hoş geldiniz,",
+    "overview_text": "İşte seyahat hesabınıza hızlı bir bakış",
+    "wallet_balance": "Cüzdan Bakiyesi",
+    "wallet_balance_sub": "Toplam Cüzdan Bakiyesi",
+    "bookings": "Rezervasyonlar",
+    "bookings_sub": "Toplam Rezervasyonlar",
+    "pending_invoices": "Bekleyen Faturalar",
+    "pending_invoices_sub": "Bekleyen Faturalar",
+    "all": "Hepsi",
+    "paid": "Ödendi",
+    "unpaid": "Ödenmemiş",
+    "cancelled": "İptal Edildi",
+    "search_placeholder": "Ara...",
+    "client_name": "Müşteri Adı",
+    "booking_id": "Rezervasyon ID",
+    "pnr": "PNR",
+    "payment": "Ödeme",
+    "booking": "Rezervasyon",
+    "date": "Tarih",
+    "price": "Fiyat",
+    "no_bookings_found": "Hiç rezervasyon bulunamadı.",
+    "showing": "Gösteriliyor",
+    "of": " / ",
+    "entries": "girişler",
+    "prev": "Önceki",
+    "next": "Sonraki"
   }
 }

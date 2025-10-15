@@ -120,7 +120,7 @@ export default function BookingForm() {
     hotel_phone,
     hotel_website,
   } = selectedRoom?.hotelDetails || {};
-console.log('=================' ,selectedRoom)
+
   const activePayments = payment_gateways
     ?.filter((p: any) => p.status)
     ?.map((p: any) => ({
@@ -551,7 +551,7 @@ console.log('=================' ,selectedRoom)
                   {...field}
                   id="phoneNumber"
                   type="tel"
-                  className="block border border-gray-300 rounded-xl px-3 py-4 text-base w-full outline-none focus:border-[#163C8C] focus:ring-1 focus:ring-[#163C8C]"
+                  className="block border border-gray-300 rounded-xl px-3 py-3.5 text-base w-full outline-none focus:border-[#163C8C] focus:ring-1 focus:ring-[#163C8C]"
                 />
               )}
             />

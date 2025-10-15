@@ -9,6 +9,7 @@ import HotelDetailsSearch from "./hotelDetailsSearch";
 import SwiperImageSlider from "./imageSlider";
 import { Icon } from "@iconify/react";
 import { RoomCard } from "./roomCard";
+import RoomOption from "./roomOption";
 // import BrandStories from "./brandStories";
 import { AccordionInfoCard } from "@components/core/accordians/accordian";
 import { useAppSelector } from "@lib/redux/store";
@@ -185,7 +186,11 @@ const HotelsDetails = () => {
   const isDataLoaded = !!hotelDetails;
 
   return (
+    
     <div>
+
+{/* <RoomOption/> */}
+
       <HotelDetailsSearch
         form={form}
         errors={errors}
@@ -418,18 +423,18 @@ const HotelsDetails = () => {
         ) : hotelDetails?.rooms && hotelDetails.rooms.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {hotelDetails.rooms.map((room: any) =>
-              room.options?.map((opt: any, index: number) => (
+              // room.options?.map((opt: any, index: number) => (
                 <RoomCard
-                  key={index}
+                  // key={index}
                   room={room}
-                  options={opt}
+                options={""}
                   getAmenityIcon={getAmenityIcon}
                   onReserve={(room, option) => {
                     handleReserveRoom(room, option, hotelDetails);
                     router.push(`/hotel/booking`);
                   }}
                 />
-              ))
+              // ))
             )}
           </div>
         ) : (

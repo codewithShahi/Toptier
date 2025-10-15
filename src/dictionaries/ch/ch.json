@@ -81,7 +81,7 @@
     "per_night": "/晚",
     "error_login_required": "您必须登录才能标记为收藏",
     "error_failed_fav": "更新收藏失败",
-    "success_updated_fav": "收藏已更新 ✅",
+    "success_updated_fav": "收藏已更新 ",
     "something_wrong": "出错了"
   },
   "offer_sec": {
@@ -321,5 +321,80 @@
     "sustain_quality_p": "我们不断改进服务，为所有人创造更好的旅行体验。",
     "community_growth": "社区成长",
     "community_growth_p": "加入我们的使命，建立一个热爱探索的全球旅行者社区。"
+  },
+  "profilelabels": {
+    "profileHeading": "个人资料信息",
+    "firstName": "名字",
+    "lastName": "姓氏",
+    "email": "电子邮箱",
+    "password": "密码（可选）",
+    "phoneCode": "国家代码",
+    "phoneNumber": "电话号码",
+    "country": "国家",
+    "state": "省/州",
+    "city": "城市",
+    "address1": "地址 1",
+    "address2": "地址 2"
+  },
+  "profileplaceholders": {
+    "firstName": "名字",
+    "lastName": "姓氏",
+    "email": "电子邮箱地址",
+    "password": "新密码 (若要保留当前密码请留空)",
+    "phoneNumber": "电话号码（例如： 923483344559）",
+    "state": "省或州",
+    "city": "城市",
+    "address1": "地址 行 1",
+    "address2": "地址 行 2",
+    "selectCountryCode": "选择国家代码",
+    "selectCountry": "选择国家"
+  },
+  "profiletoasts": {
+    "success": "个人资料更新成功！",
+    "error": "更新个人资料失败"
+  },
+  "profilebuttons": {
+    "updateProfile": "更新资料",
+    "updating": "正在更新…"
+  },
+  "profilemessages": {
+    "loginRequired": "请登录以查看您的个人资料。"
+  },
+  "profileerrors": {
+    "firstNameRequired": "名字为必填项",
+    "lastNameRequired": "姓氏为必填项",
+    "invalidEmail": "无效的电子邮箱地址",
+    "phoneRequired": "电话号码为必填项",
+    "invalidPhone": "请输入有效的国际电话号码",
+    "countryCodeRequired": "国家代码为必填项",
+    "passwordTooShort": "密码至少应包含 6 个字符"
+  },
+  "dashboard": {
+    "welcome_back": "欢迎回来，",
+    "overview_text": "这里是您旅行账户的快速概览",
+    "wallet_balance": "钱包余额",
+    "wallet_balance_sub": "钱包总余额",
+    "bookings": "预订",
+    "bookings_sub": "总预订数",
+    "pending_invoices": "未处理账单",
+    "pending_invoices_sub": "未处理账单",
+    "all": "全部",
+    "paid": "已付款",
+    "unpaid": "未付款",
+    "cancelled": "已取消",
+    "search_placeholder": "搜索…",
+    "client_name": "客户名称",
+    "booking_id": "预订编号",
+    "pnr": "PNR",
+    "payment": "付款",
+    "booking": "预订",
+    "date": "日期",
+    "price": "价格",
+    "no_bookings_found": "未找到预订。",
+    "showing": "显示",
+    "of": "共",
+    "entries": "条目",
+    "prev": "上一页",
+    "next": "下一页"
   }
 }

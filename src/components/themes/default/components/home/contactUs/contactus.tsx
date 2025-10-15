@@ -12,6 +12,7 @@ import useLocale from "@hooks/useLocale";
 import useDictionary from "@hooks/useDict";
 
   import L from "leaflet";
+import { useAppSelector } from "@lib/redux/store";
 
 import { useAppSelector } from "@lib/redux/store";
 
@@ -38,7 +39,9 @@ export default function Contactus() {
         const { data: dict, isLoading } = useDictionary(locale as any);
 
 
+
 const app = useAppSelector((state) => state.appData?.data);
+
 
 
 console.log("App data in contact us:", app);

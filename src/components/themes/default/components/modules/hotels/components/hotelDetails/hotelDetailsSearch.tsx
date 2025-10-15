@@ -70,10 +70,10 @@ export default function HotelDetailsSearch({
   return (
     <form onSubmit={onSubmit}>
       <div className="bg-white appHorizantalSpacing dark:bg-gray-800 rounded-3xl space-y-4 md:space-y-0 max-w-[1200px] mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3 md:gap-4 items-end">
-          {/* Check-in */}
-         <div className="sm:col-span-2 lg:col-span-2 ">
-           <label className="block text-sm text-start font-medium text-gray-500 dark:text-gray-300 mb-2">
+
+      <div className="grid grid-cols-12 gap-4">
+        <div className="w-full lg:col-span-5 col-span-12">
+          <label className="block text-sm text-start font-medium text-gray-500 dark:text-gray-300 mb-2">
              {"check-in"} {"|"} {"check-out"}
            </label>
            <CustomDateRangePicker
@@ -107,9 +107,11 @@ export default function HotelDetailsSearch({
              <ErrorMessage error={errors.checkin} />
              <ErrorMessage error={errors.checkout} />
            </div>
-         </div>
-          {/* Guests */}
-          <div className="flex flex-col">
+        </div>
+        <div className="lg:col-span-7 col-span-12">
+          <div className="grid grid-cols-12 gap-4">
+            <div className="w-full lg:col-span-4 md:col-span-6 col-span-12">
+              <div className="flex flex-col">
             <div className="relative" ref={guestsDropdownRef}>
               <label className="block text-sm text-start font-medium text-gray-500 mb-2 dark:text-gray-300">
                 {dict?.hotel_search?.guest_button?.title}
@@ -220,10 +222,9 @@ export default function HotelDetailsSearch({
             </div>
 
           </div>
-
-
-          {/* Nationality - Custom Select */}
-          <div className="relative">
+            </div>
+            <div className="w-full lg:col-span-4 md:col-span-6 col-span-12">
+              <div className="relative">
             <label className="block text-sm text-start font-medium text-gray-500 dark:text-gray-300 mb-2">
               Nationality
             </label>
@@ -284,13 +285,14 @@ export default function HotelDetailsSearch({
               />
             )}
           </div>
-
-          {/* Search Button */}
-          <div>
+            </div>
+            <div className="w-full lg:col-span-4 col-span-12">
+              <div className="flex flex-col gap-1">
+              <label htmlFor="" className="text-transparent lg:block hidden">1234567</label>
             <button
               type="submit"
               disabled={isSearching}
-              className="w-full bg-blue-900 py-2 px-4 md:px-6 cursor-pointer font-medium flex items-center justify-center hover:bg-gray-800 border border-gray-200 rounded-xl text-white dark:border-gray-600 dark:hover:bg-gray-700 gap-2 focus:outline-none transition-all duration-200"
+              className="w-full lg:mt-0 mt-2 bg-blue-900 py-2 px-4 md:px-6 cursor-pointer font-medium flex items-center justify-center hover:bg-gray-800 border border-gray-200 rounded-xl text-white dark:border-gray-600 dark:hover:bg-gray-700 gap-2 focus:outline-none transition-all duration-200"
             >
               {isSearching ? (
                 <>
@@ -308,7 +310,12 @@ export default function HotelDetailsSearch({
               )}
             </button>
           </div>
+            </div>
         </div>
+        </div>
+      </div>
+
+      
       </div>
     </form>
   );

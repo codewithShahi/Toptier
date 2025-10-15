@@ -107,7 +107,7 @@ const nationalityOptions = countries?.map((c: any) => ({
   iso: c.iso,
 })) || [];
   return (
-    <div className="md:w-full mx-auto p-4 rounded-xl">
+    <div className="md:w-full mx-auto md:p-4 rounded-xl">
       <form onSubmit={onSubmit}>
         <div className="bg-white dark:bg-gray-800 dark:text-gray-50 w-full rounded-3xl shadow-lg p-6 space-y-6">
           {/* Destination */}
@@ -198,7 +198,7 @@ const nationalityOptions = countries?.map((c: any) => ({
           </div>
 
           {/* Dates & Guests row */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 lg:grid-cols-4 lg:gap-4 lg:gap-y-0 gap-y-4">
   {/* Date Range Picker */}
 <div className="sm:col-span-2 lg:col-span-2">
   <label className="block text-sm text-start font-medium text-gray-500 dark:text-gray-300 mb-2">

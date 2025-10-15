@@ -808,7 +808,69 @@ export const hotel_invoice = async (payload: string) => {
     return { error: (error as Error).message || "An error occurred" };
   }
 };
+//====================== PRAPARE PAYMENT ========================
+interface payment1_payload {
+  booking_ref_no: string;
+  invoice_url: string;
+  payment_getway:string;
+}
+export const prapare_payment = async (payload: payment1_payload) => {
+  try {
+    const formData = new FormData();
 
+    //  match exactly with API keys
+    formData.append("booking_ref_no", payload.booking_ref_no);
+    formData.append('invoice_url', payload.invoice_url)
+    formData.append('payment_gateway', payload.payment_getway)
+
+    const response = await fetch(`${baseUrl}/invoice/pay`, {
+      method: "POST",
+      body: formData,
+    });
+
+    const data = await response.json().catch(() => null);
+    // console.log("hotel_details_result", data);
+
+    if (!response.ok || data?.status === false) {
+      return { error: data?.message || "Something went wrong" };
+    }
+
+    return data;
+  } catch (error) {
+    return { error: (error as Error).message || "An error occurred" };
+  }
+};
+
+interface processedPay_payload {
+  payload: string;
+  payment_gateway: string;
+
+}
+export const processed_payment = async (payload: processedPay_payload) => {
+  try {
+    const formData = new FormData();
+
+    //  match exactly with API keys
+    formData.append("payload", payload.payload);
+    formData.append('payment_gateway', payload.payment_gateway)
+
+    const response = await fetch(`${baseUrl}/invoice/process-payment`, {
+      method: "POST",
+      body: formData,
+    });
+
+    const data = await response.json().catch(() => null);
+    // console.log("hotel_details_result", data);
+
+    if (!response.ok || data?.status === false) {
+      return { error: data?.message || "Something went wrong" };
+    }
+
+    return data;
+  } catch (error) {
+    return { error: (error as Error).message || "An error occurred" };
+  }
+};
 // ============== CMS CONTENT PAGE =====================
 interface cms_page_payload {
   slug_url: string;
