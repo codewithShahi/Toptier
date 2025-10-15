@@ -14,7 +14,6 @@ import useDictionary from "@hooks/useDict";
   import L from "leaflet";
 import { useAppSelector } from "@lib/redux/store";
 
-import { useAppSelector } from "@lib/redux/store";
 
 
 const DefaultIcon = L.icon({
