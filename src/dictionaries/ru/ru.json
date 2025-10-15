@@ -323,51 +323,78 @@
     "community_growth_p": "Присоединяйтесь к нашей миссии по созданию глобального сообщества страстных путешественников, любящих исследовать мир."
   },
   "profilelabels": {
-      "profileHeading": "Информация профиля",
-      "firstName": "Имя",
-      "lastName": "Фамилия",
-      "email": "Электронная почта",
-      "password": "Пароль (необязательно)",
-      "phoneCode": "Код страны",
-      "phoneNumber": "Номер телефона",
-      "country": "Страна",
-      "state": "Штат / Область",
-      "city": "Город",
-      "address1": "Адрес 1",
-      "address2": "Адрес 2"
-    },
-    "profileplaceholders": {
-      "firstName": "Имя",
-      "lastName": "Фамилия",
-      "email": "Адрес электронной почты",
-      "password": "Новый пароль (оставьте пустым, чтобы сохранить текущий)",
-      "phoneNumber": "Номер телефона (напр.: 923483344559)",
-      "state": "Штат или область",
-      "city": "Город",
-      "address1": "Строка адреса 1",
-      "address2": "Строка адреса 2",
-      "selectCountryCode": "Выберите код страны",
-      "selectCountry": "Выберите страну"
-    },
-    "profiletoasts": {
-      "success": "Профиль успешно обновлён!",
-      "error": "Не удалось обновить профиль"
-    },
-    "profilebuttons": {
-      "updateProfile": "Обновить профиль",
-      "updating": "Обновление..."
-    },
-    "profilemessages": {
-      "loginRequired": "Пожалуйста, войдите в систему, чтобы просмотреть свой профиль."
-    },
-    "profileerrors": {
-      "firstNameRequired": "Требуется имя",
-      "lastNameRequired": "Требуется фамилия",
-      "invalidEmail": "Недействительный адрес электронной почты",
-      "phoneRequired": "Требуется номер телефона",
-      "invalidPhone": "Введите действительный международный номер телефона",
-      "countryCodeRequired": "Требуется код страны",
-      "passwordTooShort": "Пароль должен содержать не менее 6 символов"
-    }
-    
+    "profileHeading": "Информация профиля",
+    "firstName": "Имя",
+    "lastName": "Фамилия",
+    "email": "Электронная почта",
+    "password": "Пароль (необязательно)",
+    "phoneCode": "Код страны",
+    "phoneNumber": "Номер телефона",
+    "country": "Страна",
+    "state": "Штат / Область",
+    "city": "Город",
+    "address1": "Адрес 1",
+    "address2": "Адрес 2"
+  },
+  "profileplaceholders": {
+    "firstName": "Имя",
+    "lastName": "Фамилия",
+    "email": "Адрес электронной почты",
+    "password": "Новый пароль (оставьте пустым, чтобы сохранить текущий)",
+    "phoneNumber": "Номер телефона (напр.: 923483344559)",
+    "state": "Штат или область",
+    "city": "Город",
+    "address1": "Строка адреса 1",
+    "address2": "Строка адреса 2",
+    "selectCountryCode": "Выберите код страны",
+    "selectCountry": "Выберите страну"
+  },
+  "profiletoasts": {
+    "success": "Профиль успешно обновлён!",
+    "error": "Не удалось обновить профиль"
+  },
+  "profilebuttons": {
+    "updateProfile": "Обновить профиль",
+    "updating": "Обновление..."
+  },
+  "profilemessages": {
+    "loginRequired": "Пожалуйста, войдите в систему, чтобы просмотреть свой профиль."
+  },
+  "profileerrors": {
+    "firstNameRequired": "Требуется имя",
+    "lastNameRequired": "Требуется фамилия",
+    "invalidEmail": "Недействительный адрес электронной почты",
+    "phoneRequired": "Требуется номер телефона",
+    "invalidPhone": "Введите действительный международный номер телефона",
+    "countryCodeRequired": "Требуется код страны",
+    "passwordTooShort": "Пароль должен содержать не менее 6 символов"
+  },
+  "dashboard": {
+    "welcome_back": "С возвращением,",
+    "overview_text": "Вот краткий обзор вашего туристического аккаунта",
+    "wallet_balance": "Баланс кошелька",
+    "wallet_balance_sub": "Общий баланс кошелька",
+    "bookings": "Бронирования",
+    "bookings_sub": "Общее число бронирований",
+    "pending_invoices": "Ожидающие счета",
+    "pending_invoices_sub": "Ожидающие счета",
+    "all": "Все",
+    "paid": "Оплачено",
+    "unpaid": "Не оплаченo",
+    "cancelled": "Отменено",
+    "search_placeholder": "Поиск...",
+    "client_name": "Имя клиента",
+    "booking_id": "ID бронирования",
+    "pnr": "PNR",
+    "payment": "Оплата",
+    "booking": "Бронирование",
+    "date": "Дата",
+    "price": "Цена",
+    "no_bookings_found": "Бронирований не найдено.",
+    "showing": "Показано",
+    "of": "из",
+    "entries": "записей",
+    "prev": "Назад",
+    "next": "Вперёд"
+  }
 }

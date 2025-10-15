@@ -65,7 +65,7 @@ export default function CustomerProfile() {
     },
   });
 
-  // ✅ Load FULL user data including address fields
+  
   useEffect(() => {
     if (user) {
       reset({
@@ -113,7 +113,7 @@ export default function CustomerProfile() {
         address2: data.address2 || undefined,
       };
 
-      // ✅ Call the real server action
+      
       const result = await profile_update(payload);
 
       if (result?.error) {
@@ -122,7 +122,7 @@ export default function CustomerProfile() {
 
       toast.success(dict?.profiletoasts?.success || "Profile updated successfully!");
 
-      // ✅ Refresh the page data (including session & user)
+     
       router.refresh();
 
     } catch (err: any) {
@@ -136,7 +136,7 @@ export default function CustomerProfile() {
     }
   };
 
-  // 👇 Loading State
+  
   if (isLoading) {
     return (
       <div className="bg-gray-50 flex justify-center items-center min-h-screen">
@@ -145,7 +145,7 @@ export default function CustomerProfile() {
     );
   }
 
-  // 👇 Error State
+  
   if (isError) {
     return (
       <div className="bg-gray-50 flex justify-center items-center min-h-screen">
@@ -163,7 +163,7 @@ export default function CustomerProfile() {
     );
   }
 
-  // 👇 Login Required
+  
   if (!user) {
     return (
       <div className="bg-gray-50 flex justify-center items-center min-h-screen">
@@ -181,7 +181,7 @@ export default function CustomerProfile() {
           {dict?.profilelabels?.profileHeading || "Profile Information"}
         </h2>
 
-        {/* ✅ Form uses onSubmit — no onClick on button */}
+        
         <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
           {/* First Name */}
@@ -443,7 +443,7 @@ export default function CustomerProfile() {
           </div>
         </form>
 
-        {/* ✅ Submit Button — ONLY type="submit", NO onClick */}
+      
         <div className="mt-8 flex justify-center">
           <Button
             size="lg"
@@ -451,7 +451,7 @@ export default function CustomerProfile() {
             className={`w-full bg-blue-900 text-center flex justify-center text-white ${
               isSubmitting ? 'opacity-60 cursor-not-allowed' : ''
             }`}
-            type="submit" // ✅ This triggers form submission
+            type="submit" 
           >
             {isSubmitting ? (
               <>
