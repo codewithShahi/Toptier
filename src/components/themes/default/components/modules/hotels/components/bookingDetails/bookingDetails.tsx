@@ -6,7 +6,7 @@ import BookingForm from './bookingForm';
 import { useAppSelector } from '@lib/redux/store';
 import Image from 'next/image';
 import useCurrency from '@hooks/useCurrency';
-import useDictionary from '@hooks/useDict'; // ✅ Add dictionary hook
+import useDictionary from '@hooks/useDict'; 
 import useLocale from '@hooks/useLocale';
 
 export default function BookingDetails() {

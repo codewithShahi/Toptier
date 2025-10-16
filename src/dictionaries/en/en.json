@@ -12,8 +12,11 @@
       "child_age": "Child Age",
       "years": "years",
       "nationality": "Nationality",
-      "search_homes": "Search Homes"
-    }
+      "search_homes": "Search Homes",
+      "searching": "Searching...",
+      "signup": "Sign Up",
+      "login": "Login"
+    }  
   },
   "signup_form": {
     "heading": "Create an Account",
@@ -81,7 +84,7 @@
     "per_night": "/night",
     "error_login_required": "User must be logged in to mark as favourite",
     "error_failed_fav": "Failed to update favourite",
-    "success_updated_fav": "Updated favourites ✅",
+    "success_updated_fav": "Updated favourites ",
     "something_wrong": "Something went wrong"
   },
   "offer_sec": {
@@ -396,5 +399,23 @@
     "entries": "entries",
     "prev": "Prev",
     "next": "Next"
+  },
+
+   "hotel_search": {
+    "check_in_out_label": "Check - in | Check - out",
+    "guest_button": {
+      "title": "Guests",
+      "guest_title": "Guests",
+      "room_title": "Room(s)"
+    },
+    "nationality_label": "Nationality",
+    "search_btnText": "Search Homes",
+    "searching": "Searching...",
+    "search_btnText_mobile": "Search",
+    "rooms_label": "Rooms",
+    "adults_label": "Adults",
+    "children_label": "Children",
+    "child_age_label": "Child Age",
+    "years_label": "years"
   }
 }

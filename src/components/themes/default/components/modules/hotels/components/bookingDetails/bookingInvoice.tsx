@@ -5,9 +5,10 @@ import { Icon } from "@iconify/react";
 import { useAppSelector } from "@lib/redux/store";
 import useDictionary from "@hooks/useDict"; // ✅ Add dictionary hook
 import useLocale from "@hooks/useLocale";
-import { prapare_payment ,processed_payment} from "@src/actions";
+import { cancel_payment, prapare_payment ,processed_payment} from "@src/actions";
 import { useRouter } from "next/navigation";
 import Dropdown from "@components/core/Dropdown";
+import { Contrail_One } from "next/font/google";
 
 interface Traveller {
   traveller_type: string;
@@ -142,22 +143,24 @@ console.log('==================invoice details', invoiceDetails,selectedPaymentM
       payment_getway: selectedPaymentMethod
     })
     const result=response?.data
-
     if(response.success){
        const {payload, payment_gateway}=result
+       console.log('payload',payment_gateway)
       const payment_response= await processed_payment({
         payload:payload,
         payment_gateway:payment_gateway
       })
-      console.log('=============', payment_response)
       const payment_result= payment_response?.data
+      const url=payment_result?.checkout_url || payment_response.checkout_url
           if( payment_response.success){
-              router.push(payment_result?.checkout_url)
+           router.push(url);
           }
-                console.log('=============', payment_result)
-
     }
 
+ }
+ const handleCancellation = async()=>{
+  const response= await cancel_payment(invoiceDetails[0].booking_ref_no)
+  console.log('cancellation================', response)
  }
  const handleSelectPayment =(payment:any)=>{
   setSelectedPaymentMethod(payment.name.toLowerCase())
@@ -315,22 +318,25 @@ console.log('pnrrrrrrrrrrrr',invoiceDetails[0].pnr)
           </div>}
 
           {/* Booking Info */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 border border-gray-200 rounded-lg p-4">
-
+          <div className="grid grid-cols-2 sm:grid-cols-5 gap-4  border border-gray-200 rounded-lg p-4 ">
+                <div>
+              <div className="text-xs font-semibold text-gray-500 mb-3">{dict?.hotelInvoice?.bookingInfo?.reference}</div>
+              <div className="text-sm font-medium">{bookingData.bookingReference}</div>
+            </div>
             <div>
-              <div className="text-xs font-semibold text-gray-500 mb-1">{dict?.hotelInvoice?.bookingInfo?.reference}</div>
+              <div className="text-xs font-semibold text-gray-500 mb-3">{dict?.hotelInvoice?.bookingInfo?.reference}</div>
               <div className="text-sm font-medium">{bookingData.bookingReference}</div>
             </div>
                <div>
-              <div className="text-xs font-semibold text-gray-500 mb-1">{dict?.hotelInvoice?.bookingInfo?.bookingId}</div>
+              <div className="text-xs font-semibold text-gray-500 mb-3">{dict?.hotelInvoice?.bookingInfo?.bookingId}</div>
               <div className="text-sm font-medium">{invoiceDetails[0]?.pnr === null ? "N/A" : invoiceDetails[0]?.pnr}</div>
             </div>
             <div>
-              <div className="text-xs font-semibold text-gray-500 mb-1">{dict?.hotelInvoice?.bookingInfo?.date}</div>
+              <div className="text-xs font-semibold text-gray-500 mb-3">{dict?.hotelInvoice?.bookingInfo?.date}</div>
               <div className="text-sm font-medium">{bookingData.bookingDate}</div>
             </div>
             <div>
-              <div className="text-xs font-semibold text-gray-500 mb-1">{dict?.hotelInvoice?.bookingInfo?.location}</div>
+              <div className="text-xs font-semibold text-gray-500 mb-3">{dict?.hotelInvoice?.bookingInfo?.location}</div>
               <div className="text-sm font-medium">{bookingData.hotel.location}</div>
             </div>
           </div>
@@ -353,6 +359,11 @@ console.log('pnrrrrrrrrrrrr',invoiceDetails[0].pnr)
                     <th className="text-left p-2 font-semibold text-gray-600">
                       {dict?.hotelInvoice?.travellers?.table?.name}
                     </th>
+                     <th className="text-left p-2 font-semibold text-gray-600">
+                      { "Traveler Type"}
+                    </th>
+
+
                   </tr>
                 </thead>
                 <tbody>
@@ -363,6 +374,8 @@ console.log('pnrrrrrrrrrrrr',invoiceDetails[0].pnr)
                       <td className="p-2">
                         {t.first_name} {t.last_name}
                       </td>
+                      <td className="p-2">{t.traveller_type === "child" ? `${t.traveller_type} ( ${(t as any)?.age} year old )` :
+                      t.traveller_type}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -371,55 +384,91 @@ console.log('pnrrrrrrrrrrrr',invoiceDetails[0].pnr)
           </div>
 
           {/* Hotel Info */}
-          <div className="border border-gray-200 rounded-lg p-4 text-start">
-            <div className="flex mb-2">
-              {[...Array(bookingData.hotel.rating)].map((_, i) => (
-                <span key={i} className="text-yellow-400 text-lg">★</span>
-              ))}
-            </div>
-            <h2 className="text-xl font-bold text-gray-800 mb-2">{bookingData.hotel.name}</h2>
-            <p className="text-sm text-gray-600 mb-2">{bookingData.hotel.address}</p>
-            <div className="text-sm text-gray-700 space-y-1">
-              <div>
-                <span className="font-semibold">{dict?.hotelInvoice?.hotelInfo?.phone}</span> {bookingData.hotel.phone}
-              </div>
-              <div>
-                <span className="font-semibold">{dict?.hotelInvoice?.hotelInfo?.email}</span> {bookingData.hotel.email}
-              </div>
-              <div>
-                <span className="font-semibold">{dict?.hotelInvoice?.hotelInfo?.website}</span> {bookingData.hotel.website}
-              </div>
-            </div>
-          </div>
+       <div className="flex flex-col md:flex-row border border-gray-200 rounded-xl overflow-hidden  bg-white">
+  {/* Hotel Image */}
+  <div className="md:w-1/3 w-full">
+    <img
+      src={bookingData.hotel.image || "/images/default-hotel.jpg"}
+      alt={bookingData.hotel.name}
+      className="w-full h-40 md:h-full object-cover"
+    />
+  </div>
+
+  {/* Hotel Details */}
+  <div className="flex-1 p-5 flex flex-col justify-center">
+    <h2 className="text-2xl font-semibold text-gray-900 mb-1">{bookingData.hotel.name}</h2>
+
+    {/* Star Rating */}
+    <div className="flex items-center mb-2">
+      {[...Array(bookingData.hotel.rating)].map((_, i) => (
+        <span key={i} className="text-orange-400 text-lg">★</span>
+      ))}
+    </div>
+
+    {/* Address */}
+    <p className="text-sm text-gray-600 mb-3">
+      {bookingData.hotel.address}
+    </p>
+
+    {/* Contact Info */}
+    <div className="text-sm text-gray-700 space-y-1">
+      <div>
+        <span className="font-semibold">{dict?.hotelInvoice?.hotelInfo?.phone}</span>{" "}
+        {bookingData.hotel.phone || "N/A"}
+      </div>
+      <div>
+        <span className="font-semibold">{dict?.hotelInvoice?.hotelInfo?.email}</span>{" "}
+        {bookingData.hotel.email || "N/A"}
+      </div>
+      <div>
+        <span className="font-semibold">{dict?.hotelInvoice?.hotelInfo?.website}</span>{" "}
+        {bookingData.hotel.website || "N/A"}
+      </div>
+    </div>
+  </div>
+</div>
+
 
           {/* Room Details */}
-          <div className="border border-gray-200 rounded-lg p-4">
-            <h3 className="text-lg font-bold text-gray-800 mb-3">
-              {dict?.hotelInvoice?.roomDetails?.title}
-            </h3>
-            <p className="text-sm mb-2">
-              <span className="font-semibold">{dict?.hotelInvoice?.roomDetails?.checkin}</span> {bookingData.room.checkin}
-            </p>
-            <p className="text-sm mb-2">
-              <span className="font-semibold">{dict?.hotelInvoice?.roomDetails?.checkout}</span> {bookingData.room.checkout}
-            </p>
-            <p className="text-sm mb-2">
-              <span className="font-semibold">{dict?.hotelInvoice?.roomDetails?.type}</span> {bookingData.room.type}
-            </p>
-            <p className="text-sm">
-              <span className="font-semibold">{dict?.hotelInvoice?.roomDetails?.total}</span> {bookingData.total}
-            </p>
-          </div>
-
+       <div className="border border-gray-200 rounded-lg p-4">
+  <h3 className="text-lg font-bold text-gray-800 mb-3 border-b border-gray-200 pb-2">
+    {dict?.hotelInvoice?.roomDetails?.title}
+  </h3>
+  <table className="w-full text-sm">
+    <tbody>
+      <tr className="border-b border-gray-100">
+        <td className="font-semibold py-2 pr-4">{dict?.hotelInvoice?.roomDetails?.checkin}</td>
+        <td className="py-2">{bookingData.room.checkin}</td>
+      </tr>
+      <tr className="border-b border-gray-100">
+        <td className="font-semibold py-2 pr-4">{dict?.hotelInvoice?.roomDetails?.checkout}</td>
+        <td className="py-2">{bookingData.room.checkout}</td>
+      </tr>
+      <tr className="border-b border-gray-100">
+        <td className="font-semibold py-2 pr-4">{dict?.hotelInvoice?.roomDetails?.type}</td>
+        <td className="py-2">{bookingData.room.type}</td>
+      </tr>
+      <tr>
+        <td className="font-semibold py-2 pr-4">{dict?.hotelInvoice?.roomDetails?.total}</td>
+        <td className="py-2">{bookingData.total}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
           {/* Fare + Tax Info */}
           <div className="border border-gray-200 rounded-lg p-4">
-            <h4 className="text-2xl font-bold text-gray-800 text-center mb-3">
-              {dict?.hotelInvoice?.fareAndTax?.rateCommentTitle}
-            </h4>
-            <p className="text-gray-700 mb-4">
-              {dict?.hotelInvoice?.fareAndTax?.taxMessage
-                .replace("{tax}", invoiceDetails[0].tax || "0")}
-            </p>
+           { (invoiceDetails[0].pnr == null && invoiceDetails[0].cancellation_request === "0")  ?
+           <div>
+              <ul className="border border-gray-200 rounded">
+  <li className="p-3 border-b border-gray-200 last:border-b-0">
+    <span className="text-sm text-gray-700">
+      Payable through {"suplier name"}, acting as agent for the service operating company, details of which can be provided upon request. VAT: {''} Reference: {"pnr"};
+    </span>
+  </li>
+</ul>
+          </div>
+            :null}
+
 
             <div className="flex justify-between items-center p-3 bg-gray-50 rounded mb-2">
               <span className="text-sm font-semibold">{dict?.hotelInvoice?.fareAndTax?.taxLabel}</span>
@@ -472,6 +521,36 @@ console.log('pnrrrrrrrrrrrr',invoiceDetails[0].pnr)
         </div>
 
         {/* Buttons */}
+{/* Bottom Action Buttons Row */}
+<div className="border-t border-gray-200 bg-white py-5 px-6 flex flex-col sm:flex-row gap-3 justify-between items-center">
+  {/* Download PDF Button */}
+  <button
+    onClick={handleDownloadPDF}
+    className="flex items-center justify-center gap-2 w-full sm:w-auto bg-white border border-gray-300 hover:bg-gray-50 text-gray-800 font-semibold cursor-pointer h-11 px-6 rounded-lg shadow-sm"
+  >
+    <Icon icon="mdi:tray-arrow-down" width="20" height="20" />
+    {dict?.hotelInvoice?.buttons?.downloadPdf || "Download as PDF"}
+  </button>
+
+  {/* Send to WhatsApp Button */}
+  <button
+    onClick={handleShareWhatsApp}
+    className="flex items-center justify-center gap-2 w-full sm:w-auto bg-white border border-gray-300 hover:bg-gray-50 text-gray-800 font-semibold cursor-pointer h-11 px-6 rounded-lg shadow-sm"
+  >
+    <Icon icon="mdi:whatsapp" width="20" height="20" />
+    {dict?.hotelInvoice?.buttons?.sendToWhatsApp || "Send to WhatsApp"}
+  </button>
+
+  {/* Request for Cancellation Button */}
+  <button
+    onClick={handleCancellation}
+    className="flex items-center justify-center gap-2 w-full sm:w-auto bg-white border border-gray-300 hover:bg-gray-50 text-gray-800 font-semibold cursor-pointer h-11 px-6 rounded-lg shadow-sm"
+  >
+    <Icon icon="mdi:close" width="20" height="20" />
+    {dict?.hotelInvoice?.buttons?.requestCancellation || "Request for Cancellation"}
+  </button>
+</div>
+{/*
         <div className="border-t border-gray-200 bg-white py-5 flex flex-col sm:flex-row gap-3 justify-center items-center">
           <button
             onClick={handleDownloadPDF}
@@ -480,15 +559,8 @@ console.log('pnrrrrrrrrrrrr',invoiceDetails[0].pnr)
             <Icon icon="mdi:tray-arrow-down" width="20" height="20" />
             {dict?.hotelInvoice?.buttons?.downloadPdf}
           </button>
-          <button
-          type="submit"
-            onClick={handlePayNow}
-            className="flex items-center justify-center gap-2 bg-gray-800 hover:bg-blue-800 text-white font-semibold cursor-pointer h-11 px-12 rounded-full shadow-md min-w-[160px]"
-          >
-            <Icon icon="mdi:payment" width="20" height="20" />
-            {dict?.hotelInvoice?.buttons?.payNow}rdgdfgdfdsf
-          </button>
-        </div>
+
+        </div> */}
       </div>
     </div>
   );

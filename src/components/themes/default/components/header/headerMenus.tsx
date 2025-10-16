@@ -7,12 +7,16 @@ import HeaderLogo from "@components/themes/layout/components/common/headerLogo";
 import { useUser } from "@hooks/use-user";
 import ProfileDropdown from "./userDropDown"
 import { useAppSelector } from "@lib/redux/store";
+import useLocale from "@hooks/useLocale";
+import useDictionary from "@hooks/useDict";
 
 const HeaderMenus = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { user } = useUser();
-    const {modules , cms} = useAppSelector((state) => state.appData?.data)
+  const {modules , cms} = useAppSelector((state) => state.appData?.data)
 const activeModules = modules.filter((mod:any) => mod.status === "1");
+ const { locale } = useLocale();
+  const { data: dict } = useDictionary(locale as any);
 const uniqueModules = Array.from(
   new Map(activeModules.map((mod: any) => [mod.type, mod])).values()
 );
@@ -54,12 +58,7 @@ const headerPages = cms
   </Link>
 ))}
 
-              <Link href="/contact" className="header-nav-item">
-                Contact
-              </Link>
-              <Link href="/support" className="header-nav-item">
-                Support
-              </Link>
+
             </div>
           </nav>
         </div>
@@ -70,13 +69,13 @@ const headerPages = cms
             href="/auth/signup"
             className="border border-[#061026] text-[#061026] cursor-pointer text-center text-[16px] rounded-full w-[113px] h-[39px] pt-1.5 hover:bg-blue-50"
           >
-            Sign up
+            {dict?.home_page?.hero_section?.signup || "Sign Up"}
           </Link>
           <Link
             href="/auth/login"
             className="bg-[#163C8C] border border-[#061026] cursor-pointer text-center border-none hover:bg-gray-800 text-[16px] hover:text-white ring-0 text-white rounded-full w-[113px] h-[39px] pt-1.5 transition"
           >
-            Login
+            {dict?.home_page?.hero_section?.login || "Login"}
           </Link>
         </div> :
         <div className="hidden md:block">
@@ -86,13 +85,14 @@ const headerPages = cms
 
         {/* Mobile Toggle */}
         <button
-          className="md:hidden text-gray-700"
+          className="md:hidden text-gray-700 cursor-pointer"
           onClick={() => setIsOpen(!isOpen)}
         >
           <Icon
             icon={isOpen ? "mdi:close" : "mdi:menu"}
             width={28}
             height={28}
+            className="cursor-pointer"
           />
         </button>
       </div>
@@ -111,34 +111,23 @@ const headerPages = cms
           >
             <HeaderLogo imgClass='w-32' />
           </Link>
-          <button onClick={() => setIsOpen(false)}>
+          <button onClick={() => setIsOpen(false)} className="cursor-pointer">
             <Icon icon="mdi:close" width={28} height={28} />
           </button>
         </div>
 
         {/* Mobile Nav Links */}
-        <nav className="flex flex-col p-6 space-y-6 text-gray-700">
-          <Link
-            href="/hotels"
-            className="block header-nav-item"
-            onClick={() => setIsOpen(false)}
-          >
-            Hotels
-          </Link>
-          <Link
-            href="/contact"
-            className="block header-nav-item"
-            onClick={() => setIsOpen(false)}
-          >
-            Contact
-          </Link>
-          <Link
-            href="/support"
-            className="block header-nav-item"
-            onClick={() => setIsOpen(false)}
-          >
-            Support
-          </Link>
+     <nav className="flex flex-col p-6 space-y-3 text-gray-700">
+  {/* Dynamic Modules */}
+  {uniqueModules.map((mod: any) => (
+    <Link
+      key={mod.id}
+      href={`/${mod.type.toLowerCase()}`}
+      className="block capitalize text-gray-800 hover:text-blue-700"
+    >
+      {mod.type}
+    </Link>
+  ))}
 
           {/* Mobile Auth Buttons */}
           {!(user) ? <div className="flex flex-col gap-3 pt-4">
@@ -147,7 +136,7 @@ const headerPages = cms
               className="border border-[#061026] text-[#061026] text-center rounded-full px-7 py-2 hover:bg-blue-50"
               onClick={() => setIsOpen(false)}
             >
-              Sign up
+             {dict?.home_page?.hero_section?.signup || "Sign Up"}
             </Link>
 
             <Link
@@ -155,12 +144,15 @@ const headerPages = cms
               className="bg-[#163C8C] text-center border-none hover:text-white hover:bg-gray-800 ring-0 text-white rounded-full px-9 py-2 transition"
               onClick={() => setIsOpen(false)}
             >
-              Login
+             {dict?.home_page?.hero_section?.login || "Login"}
             </Link>
           </div> :   <div className="">
           <ProfileDropdown/>
           </div>}
         </nav>
+  {/* Static Pages */}
+
+
       </div>
 
       {/* Overlay */}

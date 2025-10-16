@@ -48,7 +48,10 @@ export const AccordionInfoCard = ({
 }: AccordionInfoCardProps) => {
   const [isOpen, setIsOpen] = useState(defaultOpen);
 
+  
   const toggle = () => setIsOpen(!isOpen);
+
+  
 
   return (
     <div className={containerClassName}>

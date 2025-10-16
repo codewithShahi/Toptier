@@ -23,6 +23,7 @@ const TestimonialSection = () => {
     </svg>
   );
 
+  
   const ChevronRight = () => (
     <svg
       width="11"
@@ -204,6 +205,11 @@ const TestimonialSection = () => {
       />
     ));
   };
+
+  // No testimonials CHECK
+  if (!Array.isArray(testimonials) || testimonials.length === 0) {
+    return null;
+  }
 
   if (totalItems === 0) return null;
 

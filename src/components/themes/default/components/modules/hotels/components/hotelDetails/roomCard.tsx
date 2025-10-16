@@ -55,7 +55,7 @@ export const RoomCard = ({ room, getAmenityIcon, options, onReserve }: RoomCardP
         return;
       }
 
-      // ✅ Toggle local state
+
       const newFavStatus = isFav === 1 ? 0 : 1;
       setIsFav(newFavStatus);
       toast.success(res?.message || "Updated favourites ✅");
@@ -68,7 +68,7 @@ export const RoomCard = ({ room, getAmenityIcon, options, onReserve }: RoomCardP
 
   return (
 
-    
+
 
     <div className="w-full rounded-4xl bg-[#FFFFFF] hover:scale-100 hover:shadow-sm p-2 transition-all duration-200 border border-gray-100 flex flex-col h-[590px]">
       {/* Image */}
@@ -178,7 +178,7 @@ export const RoomCard = ({ room, getAmenityIcon, options, onReserve }: RoomCardP
             </button> */}
             <button
             onClick={() => setShowPopup(true)}
-              className="bg-[#163C8C] text-white cursor-pointer font-[600] text-sm w-full rounded-full py-2"
+              className="bg-[#163C8C] hover:bg-gray-800 text-white cursor-pointer font-[600] text-sm w-full rounded-full py-2"
             >
               More Options
             </button>
@@ -202,14 +202,14 @@ className="fixed inset-0 bg-black/40 backdrop-blur-sm flex justify-center items-
           ✕
         </button>
 
-  <RoomOption room={room} options={options} getAmenityIcon={getAmenityIcon} onReserve={onReserve} />
+  <RoomOption room={room} options={options} getAmenityIcon={getAmenityIcon} onReserve={onReserve} roomImage={imageUrl} />
       </div>
     </div>
   </PopupContainer>
 )}
 
 
-            
+
             <button
               onClick={toggleLike}
               className="bg-[#EBEFF4] cursor-pointer hover:bg-gray-200 rounded-full p-4 transition-colors"

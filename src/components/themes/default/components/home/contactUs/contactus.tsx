@@ -116,7 +116,7 @@ console.log("App data in contact us:", app);
             </div>
 
             {/* RIGHT SIDE - MAP */}
-            <div className="col-span-12 md:col-span-8 h-[400px]">
+            <div className="col-span-12 md:col-span-8 h-[400px] w-full">
               <MapContainer
                 center={lahorePosition}
                 zoom={12}

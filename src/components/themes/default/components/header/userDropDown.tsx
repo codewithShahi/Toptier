@@ -34,7 +34,7 @@ export default function ProfileDropdown() {
   };
 
   return (
-    <div className="relative z-50" ref={dropdownRef}>
+    <div className="relative z-10" ref={dropdownRef}>
       {/* Profile Image (toggle button) */}
       <Image
         src={

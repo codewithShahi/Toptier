@@ -81,7 +81,7 @@ const HotelCard = memo(function HotelCard({
   return (
     <div
       key={hotel.hotel_id}
-      className={`bg-white p-[8px] rounded-[45px] border border-gray-200 cursor-pointer transition-all duration-300 hover:shadow-lg ${
+      className={`bg-white p-[8px] rounded-[45px] border border-gray-200  transition-all duration-300 hover:shadow-lg ${
         viewMode === "list" ? "flex flex-col sm:flex-row max-w-none" : ""
       }`}
     >
@@ -181,10 +181,11 @@ const HotelCard = memo(function HotelCard({
               <p className="text-[24px] sm:text-[28px] lg:text-[30px] font-[900]">
                 <span className="text-base">{priceRateConverssion(parseFloat(hotel.actual_price || hotel.price))}</span>{" "}
                 {/* {hotel.actual_price || hotel.price} */}
+                <span className="text-[14px] sm:text-[16px] lg:text-[14px] font-[400] text-[#5B697E]">/night</span>
               </p>
-              <p className="text-[14px] sm:text-[16px] lg:text-[17px] font-[400] text-[#5B697E]">
+              {/* <p className="text-[14px] sm:text-[16px] lg:text-[14px] font-[400] text-[#5B697E]">
                 /night
-              </p>
+              </p> */}
             </div>
           </div>
         </div>
@@ -195,7 +196,7 @@ const HotelCard = memo(function HotelCard({
           <button
             className="flex-1 cursor-pointer bg-[#163D8C] hover:bg-gray-800 text-white font-medium py-3 md:py-2.5 px-3 text-sm sm:text-base md:text-sm lg:text-base rounded-full transition-colors duration-200 focus:outline-none"
             onClick={() => onBookNow && onBookNow(hotel)}
-          >
+          > 
             {dict?.hotel_listing?.book_now || "Book Now"}
           </button>
           <button

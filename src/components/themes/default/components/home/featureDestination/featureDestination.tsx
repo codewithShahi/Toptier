@@ -113,7 +113,7 @@ const FeaturedDestinations: React.FC = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 cursor-pointer lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {destinations.map((tour) => (
             <div key={tour.id} className="bg-[#F5F5F5] rounded-[65px] w-full">
               {/* Image */}

@@ -871,6 +871,30 @@ export const processed_payment = async (payload: processedPay_payload) => {
     return { error: (error as Error).message || "An error occurred" };
   }
 };
+export const cancel_payment = async (booking_ref_no:string) => {
+  try {
+    const formData = new FormData();
+
+    //  match exactly with API keys
+    formData.append("booking_ref_no", booking_ref_no);
+
+    const response = await fetch(`${baseUrl}/invoice/process-payment`, {
+      method: "POST",
+      body: formData,
+    });
+
+    const data = await response.json().catch(() => null);
+    // console.log("hotel_details_result", data);
+
+    if (!response.ok || data?.status === false) {
+      return { error: data?.message || "Something went wrong" };
+    }
+
+    return data;
+  } catch (error) {
+    return { error: (error as Error).message || "An error occurred" };
+  }
+};
 // ============== CMS CONTENT PAGE =====================
 interface cms_page_payload {
   slug_url: string;

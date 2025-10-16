@@ -26,10 +26,11 @@ const NewsLatter: React.FC = () => {
   const [message, setMessage] = useState<{ type: "success" | "danger"; text: string } | null>(null);
   const [errors, setErrors] = useState<Partial<FormData>>({});
   const { locale } = useLocale();
-   const { data: dict } = useDictionary(locale as any);
+  const { data: dict } = useDictionary(locale as any);
+  
 
-    const app = useAppSelector((state) => state?.appData?.data);
-      const {newsletter_description, newsletter_image,newsletter_title}=app.app
+  const app = useAppSelector((state) => state?.appData?.data);
+  const { newsletter_description, newsletter_image, newsletter_title } = app.app
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -49,7 +50,7 @@ const NewsLatter: React.FC = () => {
       const res = await subscribe_to_newsLatter(formData);
 
       if (res?.error) {
-               toast.error(res.error);
+        toast.error(res.error);
         // setMessage({ type: "danger", text: res.error });
       } else {
         toast.success("Subscribed successfully!");
@@ -72,24 +73,29 @@ const NewsLatter: React.FC = () => {
     }
   };
 
+  // No testimonial CHECK
+  if (!app?.app?.newsletter_title) {
+    return null;
+  }
+
   return (
     <div className="py-4 sm:py-6 lg:py-8">
       <div className="max-w-[1200px] mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-14 appHorizantalSpacing">
           {/* Image */}
           <div className="order-2 lg:order-1">
-          <div className="relative w-full h-[250px] sm:h-[320px] lg:h-[393px]">
-  <Image
-    src={newsletter_image || "/images/newsletter.jpg"}
-    alt="Newsletter Banner"
-    fill
-    priority
-    sizes="(max-width: 640px) 100vw,
+            <div className="relative w-full h-[250px] sm:h-[320px] lg:h-[393px]">
+              <Image
+                src={newsletter_image || "/images/newsletter.jpg"}
+                alt="Newsletter Banner"
+                fill
+                priority
+                sizes="(max-width: 640px) 100vw,
            (max-width: 1024px) 100vw,
            1200px"
-    className="object-cover rounded-[20px_50px_20px_50px] sm:rounded-[30px_70px_30px_70px] lg:rounded-[40px_100px_40px_100px]"
-  />
-</div>
+                className="object-cover rounded-[20px_50px_20px_50px] sm:rounded-[30px_70px_30px_70px] lg:rounded-[40px_100px_40px_100px]"
+              />
+            </div>
 
 
           </div>
@@ -101,7 +107,7 @@ const NewsLatter: React.FC = () => {
             </p>
             <div>
               <p className="text-[28px] sm:text-[36px] lg:text-[44px] text-[#051036] font-[900] w-full lg:max-w-100 leading-13">
-               {newsletter_title}
+                {newsletter_title}
               </p>
               {/* <p className="text-[28px] sm:text-[36px] lg:text-[44px] text-[#051036] font-[900]">
                 Journey Starts Here
@@ -109,7 +115,7 @@ const NewsLatter: React.FC = () => {
             </div>
 
             <p className="text-[16px] sm:text-[17px] lg:text-[18px] font-[400] text-[#697488]">
-             { newsletter_description}
+              {newsletter_description}
             </p>
 
             {/* Input Fields */}

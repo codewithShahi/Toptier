@@ -1,8 +1,8 @@
 {
   "home_page": {
     "hero_section": {
-      "where_to": "Куда поехать?",
-      "hotel_search_placeholder": "Поиск города или отеля...",
+      "where_to": "Куда?",
+      "hotel_search_placeholder": "Поиск города или отеля…",
       "check_in": "Заезд",
       "check_out": "Выезд",
       "guests": "Гости",
@@ -12,7 +12,10 @@
       "child_age": "Возраст ребенка",
       "years": "лет",
       "nationality": "Гражданство",
-      "search_homes": "Найти жилье"
+      "search_homes": "Искать жильё",
+      "searching": "Поиск...",
+      "signup": "Зарегистрироваться",
+      "login": "Войти"
     }
   },
   "signup_form": {
@@ -20,19 +23,19 @@
     "already_account": "Уже есть аккаунт?",
     "sign_in": "Войти",
     "first_name": "Имя",
-    "first_name_placeholder": "Введите ваше имя",
+    "first_name_placeholder": "Введите имя",
     "last_name": "Фамилия",
-    "last_name_placeholder": "Введите вашу фамилию",
+    "last_name_placeholder": "Введите фамилию",
     "country_label": "Выберите страну",
     "country_placeholder": "Выберите страну",
     "phone_label": "Номер телефона",
     "phone_placeholder": "Номер телефона (+92xxxxxxxxxxx)",
-    "email_label": "Электронная почта",
+    "email_label": "Email",
     "email_placeholder": "Адрес электронной почты",
     "password_label": "Пароль",
     "password_placeholder": "Введите пароль",
     "human_label": "Я человек",
-    "agree_text": "Я соглашаюсь с",
+    "agree_text": "Я согласен с",
     "terms_of_use": "Условиями использования",
     "and": "и",
     "privacy_policy": "Политикой конфиденциальности",
@@ -43,74 +46,74 @@
     "first_name_required": "Имя обязательно",
     "last_name_required": "Фамилия обязательна",
     "email_invalid": "Неверный адрес электронной почты",
-    "phone_number_required": "Номер телефона обязателен",
+    "phone_number_required": "Требуется номер телефона",
     "phone_number_invalid": "Введите действительный международный номер телефона",
-    "country_code_required": "Код страны обязателен",
+    "country_code_required": "Требуется код страны",
     "password_min_length": "Пароль должен содержать не менее 6 символов",
-    "terms_required": "Вы должны принять условия и положения",
+    "terms_required": "Вы должны принять условия использования",
     "human_required": "Пожалуйста, подтвердите, что вы человек"
   },
   "login_form": {
     "success_message": "Вход выполнен успешно!",
     "text": "Войти",
-    "email_message": "Электронная почта обязательна",
-    "password_message": "Пароль обязателен",
-    "new_user": "Новый пользователь? ",
+    "email_message": "Требуется email",
+    "password_message": "Требуется пароль",
+    "new_user": "Новый пользователь?",
     "create_account": "Создать аккаунт",
-    "email": "Электронная почта",
-    "email_placeholder": "Введите вашу электронную почту",
+    "email": "Email",
+    "email_placeholder": "Введите email",
     "password": "Пароль",
-    "password_placeholder": "Введите ваш пароль",
+    "password_placeholder": "Введите пароль",
     "remember_me": "Запомнить меня",
     "forgot_password": "Забыли пароль?",
     "login_button": "Войти"
   },
   "featured_dest": {
-    "dest_heading": "Популярные направления",
-    "dest_subheading": "Откройте для себя самые впечатляющие и востребованные туристические места, отобранные для незабываемых впечатлений по всему миру.",
-    "no_featured_dest": "Нет популярных направлений",
+    "dest_heading": "Избранное направление",
+    "dest_subheading": "Откройте для себя самые потрясающие и популярные туристические места по всему миру.",
+    "no_featured_dest": "Нет избранных направлений",
     "dest_explore": "Исследовать сейчас",
-    "error": "Вы должны войти в систему, чтобы добавить в избранное"
+    "error": "Для добавления в избранное необходимо войти"
   },
   "featured_hotels": {
-    "heading": "Популярные отели",
-    "subheading": "Насладитесь мировым уровнем комфорта и непревзойденным гостеприимством в самом сердце рая.",
-    "no_amenities": "Удобства не найдены",
+    "heading": "Избранные отели",
+    "subheading": "Наслаждайтесь комфортом мирового класса и непревзойденным гостеприимством в сердце рая.",
+    "no_amenities": "Услуги не найдены",
     "book_now": "Забронировать сейчас",
-    "loading": "Загрузка...",
+    "loading": "Загрузка…",
     "per_night": "/ночь",
-    "error_login_required": "Вы должны войти в систему, чтобы добавить в избранное",
+    "error_login_required": "Необходимо войти, чтобы добавить в избранное",
     "error_failed_fav": "Не удалось обновить избранное",
-    "success_updated_fav": "Избранное обновлено ✅",
+    "success_updated_fav": "Избранное обновлено",
     "something_wrong": "Что-то пошло не так"
   },
   "offer_sec": {
-    "offer_heading": "Почему стоит выбрать нас",
-    "offer_subheading": "Получите непревзойденные туристические услуги с нами, где ваше удовлетворение — наш главный приоритет."
+    "offer_heading": "Почему выбирают нас",
+    "offer_subheading": "Испытайте непревзойденные туристические услуги с нами, ведь ваш комфорт — наш главный приоритет."
   },
   "testi_sec": {
-    "testi_see_room": "Посмотреть номер",
-    "testi_heading": "Что говорят наши ",
-    "testi_heading_2": "гости ",
-    "testi_subheading": "Узнайте, почему путешественники доверяют нам — реальные отзывы о комфорте, удобстве и незабываемых проживаниях",
-    "testi_autoplay": "Автовоспроизведение • Нажмите, чтобы приостановить"
+    "testi_see_room": "Посмотреть комнату",
+    "testi_heading": "Что говорят",
+    "testi_heading_2": "наши гости",
+    "testi_subheading": "Узнайте, почему путешественники доверяют нам — реальные отзывы о комфорте, удобстве и незабываемом проживании",
+    "testi_autoplay": "Автовоспроизведение • Нажмите, чтобы поставить на паузу"
   },
   "news_letter_sec": {
     "letter": "Новостная рассылка",
     "letter_name": "имя",
     "letter_name_placeholder": "Имя",
-    "letter_email": "электронная почта",
+    "letter_email": "email",
     "letter_email_placeholder": "Электронная почта",
     "letter_continue": "Продолжить"
   },
   "footer": {
-    "subheading": "Откройте для себя экстраординарные проживания с нашими тщательно отобранными отелями и эксклюзивным доступом к лучшим направлениям мира.",
+    "subheading": "Получите доступ к исключительным отелям и лучшим направлениям мира.",
     "connect": "Оставайтесь на связи",
     "subconnect": "Подпишитесь, чтобы получать советы по путешествиям, эксклюзивные предложения и последние обновления.",
-    "email_placeholder": "Введите вашу электронную почту",
-    "subscribing": "Подписка...",
+    "email_placeholder": "Введите email",
+    "subscribing": "Подписка…",
     "subscribe": "Подписаться",
-    "success": "Подписка оформлена успешно",
+    "success": "Успешно подписано",
     "copyright": "Все права защищены.",
     "title_explore": "Исследовать",
     "title_support": "Поддержка",
@@ -122,67 +125,67 @@
     "search_hotels": "Поиск отелей",
     "search_by_hotel_name": "поиск по названию отеля",
     "per_night": "(за ночь)",
-    "price_range": "Диапазон цен",
+    "price_range": "Ценовой диапазон",
     "hotel_stars": "Звезды отеля",
-    "stars": "звезды",
-    "reset_filters": "Сбросить фильтры",
+    "stars": "звёзды",
+    "reset_filters": "Сброс фильтров",
     "apply": "Применить",
-    "hotels_found": "найдено отелей",
-    "loading_more": "Загрузка еще",
-    "searching_for_hotels": "Поиск отелей...",
+    "hotels_found": "отелей найдено",
+    "loading_more": "Загрузка ещё…",
+    "searching_for_hotels": "Поиск отелей…",
     "no_hotels_found": "Отели не найдены",
     "search_criteria": "Попробуйте изменить фильтры или критерии поиска",
     "reset_all_filters": "Сбросить все фильтры",
-    "filters_search": "Фильтры и поиск",
+    "filters_search": "Фильтры & Поиск",
     "apply_filters": "Применить фильтры",
     "hotels": "отели",
-    "sort": "Сортировать",
+    "sort": "Сортировка",
     "rating": "Рейтинг",
-    "low_to_high": "От дешевых к дорогим",
-    "high_to_low": "От дорогих к дешевым",
-    "name_a_to_z": "Название (А–Я)",
+    "low_to_high": "От низкого к высокому",
+    "high_to_low": "От высокого к низкому",
+    "name_a_to_z": "Название (A-Z)",
     "book_now": "Забронировать сейчас"
   },
   "contact": {
-    "contact_us": "Свяжитесь с нами",
+    "contact_us": "Связаться с нами",
     "address": "Адрес",
-    "email": "Электронная почта",
+    "email": "Email",
     "phone": "Телефон"
   },
   "hotelDetails": {
     "hotelNamePlaceholder": "Название отеля",
-    "aboutThisProperty": "Об этом отеле",
-    "noAmenities": "Удобства не найдены",
+    "aboutThisProperty": "О собственности",
+    "noAmenities": "Услуги не найдены",
     "showMore": "Показать больше",
     "chooseYourRoom": "Выберите номер",
     "noRoomsAvailable": "Нет доступных номеров на выбранные даты.",
-    "theToptierWayToTravel": "Премиальный способ путешествовать",
-    "noBrandStories": "Истории бренда недоступны для этого отеля.",
-    "needToKnowDetails": "Важная информация",
+    "theToptierWayToTravel": "Путь Toptier к путешествию",
+    "noBrandStories": "Нет историй бренда.",
+    "needToKnowDetails": "Важно знать",
     "frequentlyAskedQuestions": "Часто задаваемые вопросы",
     "noSimilarHotels": "Похожие отели не найдены.",
     "readMore": "Читать далее",
-    "readLess": "Скрыть",
-    "topRated": "Высокий рейтинг",
+    "readLess": "Свернуть",
+    "topRated": "Высоко оценено",
     "freeCancellation": "Бесплатная отмена",
     "bestPriceGuarantee": "Гарантия лучшей цены",
     "map": "Карта",
-    "unableToLoad": "Не удалось загрузить данные об отеле",
+    "unableToLoad": "Не удалось загрузить детали отеля",
     "pleaseTryAgain": "Пожалуйста, попробуйте позже.",
-    "allAmenities": "Все удобства",
+    "allAmenities": "Все услуги",
     "youmightAlsoLike": "Вам также может понравиться"
   },
   "bookingForm": {
     "personalInformation": {
       "title": "Личная информация",
-      "subtitle": "Укажите имя человека, который будет регистрироваться.",
+      "subtitle": "Укажите имя человека при заезде.",
       "firstNameLabel": "Имя",
       "lastNameLabel": "Фамилия",
       "addressLabel": "Адрес"
     },
     "contactInformation": {
       "title": "Контактная информация",
-      "subtitle": "Мы отправим подтверждение на этот адрес электронной почты.",
+      "subtitle": "Мы отправим подтверждение на этот email.",
       "emailLabel": "Адрес электронной почты",
       "nationalityLabel": "Гражданство",
       "currentCountryLabel": "Текущая страна",
@@ -190,31 +193,31 @@
       "phoneNumberLabel": "Номер телефона"
     },
     "travelersInformation": {
-      "title": "Информация о путешественниках",
-      "subtitle": "Важные детали для завершения бронирования",
+      "title": "Информация путешественников",
+      "subtitle": "Важные данные для завершения бронирования",
       "adultTraveller": "Взрослый путешественник",
       "childTraveller": "Детский путешественник",
       "titleLabel": "Обращение"
     },
     "paymentMethod": {
       "title": "Способ оплаты",
-      "subtitle": "Безопасные и защищенные транзакции. Ваши личные данные защищены.",
-      "noPaymentMethods": "Способы оплаты недоступны"
+      "subtitle": "Безопасные транзакции. Ваша личная информация защищена.",
+      "noPaymentMethods": "Способы оплаты отсутствуют"
     },
     "cancellationPolicy": {
       "title": "Политика отмены",
-      "acceptText": "Я принимаю политику отмены для этого бронирования и",
-      "termsAndConditions": "Условия использования"
+      "acceptText": "Я принимаю политику отмены этого бронирования и",
+      "termsAndConditions": "Условия & положения"
     },
     "buttons": {
       "confirmAndBook": "Подтвердить и забронировать",
-      "processing": "Обработка..."
+      "processing": "Обработка…"
     },
     "errors": {
       "firstNameRequired": "Имя обязательно",
       "lastNameRequired": "Фамилия обязательна",
       "addressRequired": "Адрес обязателен",
-      "invalidEmail": "Неверный адрес электронной почты",
+      "invalidEmail": "Неверный email",
       "nationalityRequired": "Гражданство обязательно",
       "currentCountryRequired": "Текущая страна обязательна",
       "countryCodeRequired": "Код страны обязателен",
@@ -222,14 +225,14 @@
       "invalidPhoneNumber": "Введите действительный международный номер телефона",
       "atLeastOneTraveller": "Требуется хотя бы один путешественник",
       "titleRequired": "Обращение обязательно",
-      "paymentMethodRequired": "Пожалуйста, выберите способ оплаты",
+      "paymentMethodRequired": "Выберите способ оплаты",
       "acceptPolicyRequired": "Вы должны принять политику отмены"
     },
     "titles": {
       "mr": "Г-н",
       "mrs": "Г-жа",
-      "ms": "Г-жа",
-      "dr": "Д-р"
+      "ms": "",
+      "dr": "Др"
     }
   },
   "bookingDetails": {
@@ -242,40 +245,40 @@
     "nights": "Ночи",
     "guests": "Гости",
     "roomPrice": "Цена номера",
-    "toptierFee": "Комиссия Toptier",
+    "toptierFee": "Сбор Toptier",
     "total": "Итого",
     "adults": "Взрослые",
     "children": "Дети"
   },
   "hotelInvoice": {
     "errors": {
-      "noInvoiceFound": "Данные счета не найдены."
+      "noInvoiceFound": "Информация по счёту не найдена."
     },
     "header": {
       "paymentStatus": "Статус оплаты:",
       "bookingStatus": "Статус бронирования:",
       "phone": "Телефон:",
-      "email": "Электронная почта:"
+      "email": "Email:"
     },
-    "bookingNote": "Оплата производится через Toptier Travel, выступающий в качестве агента компании-поставщика услуг.",
+    "bookingNote": "Запрос на отмену отправлен. мы обновим, как только изменим статус",
     "bookingInfo": {
-      "bookingId": "ID бронирования",
-      "reference": "Справочный номер",
+      "bookingId": "PNR",
+      "reference": "Ссылка",
       "date": "Дата",
-      "location": "Местоположение"
+      "location": "Место"
     },
     "travellers": {
       "title": "Путешественники",
       "table": {
         "no": "№",
-        "sr": "№",
+        "sr": "Sr",
         "name": "Имя"
       }
     },
     "hotelInfo": {
       "phone": "Телефон:",
-      "email": "Электронная почта:",
-      "website": "Веб-сайт:"
+      "email": "Email:",
+      "website": "Сайт:"
     },
     "roomDetails": {
       "title": "Детали номера",
@@ -286,21 +289,21 @@
     },
     "fareAndTax": {
       "rateCommentTitle": "Комментарий к тарифу",
-      "taxMessage": "Предполагаемая сумма налогов и сборов за это бронирование: {tax}, подлежит оплате по прибытии. Городской налог может варьироваться в зависимости от размещения. Время заезда: 14:00–00:00. Время выезда: 12:30–12:00.",
-      "taxLabel": "НАЛОГИ",
+      "taxMessage": "Ориентировочная общая сумма налогов и сборов за бронирование: {tax} оплачивается при заселении. Городской налог может отличаться в зависимости от жилья. Чек-ин 14:00-00:00. Чек-аут 12:30-12:00.",
+      "taxLabel": "НАЛОГ",
       "totalLabel": "Итого"
     },
     "customer": {
       "title": "Клиент",
-      "email": "Электронная почта:",
+      "email": "Email:",
       "contact": "Контакт:",
       "address": "Адрес:"
     },
     "customerCare": {
       "title": "Служба поддержки",
-      "email": "Электронная почта:",
+      "email": "Email:",
       "contact": "Контакт:",
-      "website": "Веб-сайт:"
+      "website": "Сайт:"
     },
     "buttons": {
       "downloadPdf": "Скачать PDF",
@@ -313,25 +316,25 @@
   "support": {
     "heading": "Поддержка",
     "p_1": "В",
-    "p_3": "мы стремимся помочь вам исследовать мир с комфортом и уверенностью. Ваша поддержка помогает нам продолжать предлагать лучшие туристические впечатления, выгодные предложения по отелям и вдохновение для каждого путешественника.",
-    "contact_us": "Свяжитесь с нами",
-    "empower_travelers": "Поддержите путешественников",
+    "p_3": "мы стремимся помочь вам исследовать мир с комфортом и уверенностью. Ваша поддержка помогает нам продолжать предлагать лучшие туристические впечатления, предложения отелей и вдохновение для каждого путешественника.",
+    "contact_us": "Связаться с нами",
+    "empower_travelers": "Обеспечение путешественников",
     "empower_travelers_p": "Ваш вклад помогает путешественникам открывать скрытые жемчужины и надежные направления по всему миру.",
-    "sustain_quality": "Поддерживайте качество",
-    "sustain_quality_p": "Мы постоянно улучшаем наши услуги и создаем лучшие впечатления от путешествий для всех.",
+    "sustain_quality": "Поддержка качества",
+    "sustain_quality_p": "Мы постоянно совершенствуем наши услуги и создаем лучшие впечатления от путешествий для всех.",
     "community_growth": "Рост сообщества",
-    "community_growth_p": "Присоединяйтесь к нашей миссии по созданию глобального сообщества страстных путешественников, любящих исследовать мир."
+    "community_growth_p": "Присоединяйтесь к нашей миссии по созданию глобального сообщества увлечённых путешественников."
   },
   "profilelabels": {
     "profileHeading": "Информация профиля",
     "firstName": "Имя",
     "lastName": "Фамилия",
-    "email": "Электронная почта",
+    "email": "Email",
     "password": "Пароль (необязательно)",
-    "phoneCode": "Код страны",
+    "phoneCode": "Код телефона",
     "phoneNumber": "Номер телефона",
     "country": "Страна",
-    "state": "Штат / Область",
+    "state": "Регион",
     "city": "Город",
     "address1": "Адрес 1",
     "address2": "Адрес 2"
@@ -341,8 +344,8 @@
     "lastName": "Фамилия",
     "email": "Адрес электронной почты",
     "password": "Новый пароль (оставьте пустым, чтобы сохранить текущий)",
-    "phoneNumber": "Номер телефона (напр.: 923483344559)",
-    "state": "Штат или область",
+    "phoneNumber": "Номер телефона (например: 923483344559)",
+    "state": "Регион",
     "city": "Город",
     "address1": "Строка адреса 1",
     "address2": "Строка адреса 2",
@@ -355,34 +358,34 @@
   },
   "profilebuttons": {
     "updateProfile": "Обновить профиль",
-    "updating": "Обновление..."
+    "updating": "Обновление…"
   },
   "profilemessages": {
-    "loginRequired": "Пожалуйста, войдите в систему, чтобы просмотреть свой профиль."
+    "loginRequired": "Пожалуйста, войдите, чтобы просмотреть профиль."
   },
   "profileerrors": {
-    "firstNameRequired": "Требуется имя",
-    "lastNameRequired": "Требуется фамилия",
-    "invalidEmail": "Недействительный адрес электронной почты",
+    "firstNameRequired": "Имя обязательно",
+    "lastNameRequired": "Фамилия обязательна",
+    "invalidEmail": "Неверный email",
     "phoneRequired": "Требуется номер телефона",
     "invalidPhone": "Введите действительный международный номер телефона",
     "countryCodeRequired": "Требуется код страны",
-    "passwordTooShort": "Пароль должен содержать не менее 6 символов"
+    "passwordTooShort": "Пароль должен содержать минимум 6 символов"
   },
   "dashboard": {
     "welcome_back": "С возвращением,",
     "overview_text": "Вот краткий обзор вашего туристического аккаунта",
     "wallet_balance": "Баланс кошелька",
-    "wallet_balance_sub": "Общий баланс кошелька",
+    "wallet_balance_sub": "Общий баланс",
     "bookings": "Бронирования",
-    "bookings_sub": "Общее число бронирований",
-    "pending_invoices": "Ожидающие счета",
-    "pending_invoices_sub": "Ожидающие счета",
+    "bookings_sub": "Всего бронирований",
+    "pending_invoices": "Неоплаченные счета",
+    "pending_invoices_sub": "Неоплаченные счета",
     "all": "Все",
     "paid": "Оплачено",
-    "unpaid": "Не оплаченo",
+    "unpaid": "Не оплачено",
     "cancelled": "Отменено",
-    "search_placeholder": "Поиск...",
+    "search_placeholder": "Поиск…",
     "client_name": "Имя клиента",
     "booking_id": "ID бронирования",
     "pnr": "PNR",
@@ -390,11 +393,28 @@
     "booking": "Бронирование",
     "date": "Дата",
     "price": "Цена",
-    "no_bookings_found": "Бронирований не найдено.",
-    "showing": "Показано",
+    "no_bookings_found": "Бронирования не найдены.",
+    "showing": "Показ",
     "of": "из",
     "entries": "записей",
     "prev": "Назад",
-    "next": "Вперёд"
+    "next": "Вперед"
+  },
+  "hotel_search": {
+    "check_in_out_label": "Заезд | Выезд",
+    "guest_button": {
+      "title": "Гости",
+      "guest_title": "Гости",
+      "room_title": "Комната(ы)"
+    },
+    "nationality_label": "Гражданство",
+    "search_btnText": "Искать жильё",
+    "searching": "Поиск…",
+    "search_btnText_mobile": "Поиск",
+    "rooms_label": "Номера",
+    "adults_label": "Взрослые",
+    "children_label": "Дети",
+    "child_age_label": "Возраст ребенка",
+    "years_label": "лет"
   }
 }

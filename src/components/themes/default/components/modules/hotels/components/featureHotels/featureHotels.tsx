@@ -29,16 +29,16 @@ interface Hotel {
 const FeaturedHotels: React.FC = () => {
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [hotels, setHotels] = useState<Hotel[]>([]);
-  // ✅ Track loading per hotel ID
   const [loadingHotelId, setLoadingHotelId] = useState<string | null>(null);
   const { locale } = useLocale();
-   const { data: dict } = useDictionary(locale as any);
+  const { data: dict } = useDictionary(locale as any);
 
-  const { featured_hotels } = useAppSelector((state) => state.appData?.data);
+  const { featured_hotels } = useAppSelector((state) => state.appData?.data || {});
   const { user } = useUser();
   const router = useRouter();
   const dispatch = useAppDispatch();
- const {priceRateConverssion}=useCurrency()
+  const { priceRateConverssion } = useCurrency();
+
   const amenityIcons: Record<string, string> = {
     pool: "mdi:pool",
     swimming: "mdi:pool",
@@ -72,8 +72,10 @@ const FeaturedHotels: React.FC = () => {
   };
 
   useEffect(() => {
-    if (featured_hotels && Array.isArray(featured_hotels)) {
+    if (Array.isArray(featured_hotels)) {
       setHotels(featured_hotels);
+    } else {
+      setHotels([]);
     }
   }, [featured_hotels]);
 
@@ -133,7 +135,7 @@ const FeaturedHotels: React.FC = () => {
 
       const res = await addToFavourite(payload);
       if (res?.error) {
-        toast.error(dict?.featured_hotels?.error_failed_fav|| "Failed to update favourite");
+        toast.error(dict?.featured_hotels?.error_failed_fav || "Failed to update favourite");
         return;
       }
 
@@ -142,7 +144,7 @@ const FeaturedHotels: React.FC = () => {
           h.id === hotel.id ? { ...h, favorite: h.favorite === 1 ? 0 : 1 } : h
         )
       );
-      toast.success(res?.message || "Updated favourites ✅");
+      toast.success(res?.message || "Updated favourites ");
     } catch (err) {
       toast.error(dict?.featured_hotels?.something_wrong || "Something went wrong");
     }
@@ -164,7 +166,6 @@ const FeaturedHotels: React.FC = () => {
   };
 
   const detailsBookNowHandler = async (hotel: Hotel) => {
-    // ✅ Set loading for THIS hotel only
     setLoadingHotelId(hotel.id);
 
     try {
@@ -208,10 +209,13 @@ const FeaturedHotels: React.FC = () => {
     } catch (error) {
       console.error("Booking redirect failed:", error);
     } finally {
-      // ✅ Clear loading after navigation starts
       setLoadingHotelId(null);
     }
   };
+
+  if (!Array.isArray(featured_hotels) || featured_hotels.length === 0) {
+    return null;
+  }
 
   return (
     <div className="w-full max-w-[1200px] mx-auto mt-8 appHorizantalSpacing py-6">
@@ -220,20 +224,21 @@ const FeaturedHotels: React.FC = () => {
           className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-4"
           style={{ fontFamily: "Urbanist, sans-serif" }}
         >
-           {dict?.featured_hotels?.heading || "Featured Hotels"}
+          {dict?.featured_hotels?.heading || "Featured Hotels"}
         </h1>
         <p
           className="text-base sm:text-lg text-[#697488] max-w-md mx-auto leading-relaxed px-4"
           style={{ fontFamily: "Urbanist, sans-serif" }}
         >
-          {dict?.featured_hotels?.subheading || "Explore our handpicked selection of top-rated hotels, offering exceptional comfort and unforgettable experiences worldwide."}
+          {dict?.featured_hotels?.subheading ||
+            "Explore our handpicked selection of top-rated hotels, offering exceptional comfort and unforgettable experiences worldwide."}
         </p>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 items-start">
-        {hotels?.map((hotel, index) => (
+        {hotels.map((hotel, index) => (
           <div
             key={hotel.id || index}
-            className="bg-[#F5F5F5] p-3 rounded-[65px] cursor-pointer transition-all duration-300"
+            className="bg-[#F5F5F5] p-3 rounded-[65px] transition-all duration-300"
             onMouseEnter={() => setHoveredId(hotel.id)}
             onMouseLeave={() => setHoveredId(null)}
           >
@@ -265,7 +270,7 @@ const FeaturedHotels: React.FC = () => {
               <div className="flex justify-between items-center pl-2">
                 <div className="flex gap-2 items-center">
                   <p className="text-[24px] sm:text-[28px] lg:text-[30px] font-[900]">
-                    {priceRateConverssion(parseFloat( hotel.price))}
+                    {priceRateConverssion(parseFloat(hotel.price))}
                   </p>
                   <p className="text-[14px] sm:text-[16px] lg:text-[17px] font-[400] text-[#5B697E]">
                     {dict?.featured_hotels?.per_night || "per night"}

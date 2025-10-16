@@ -15,12 +15,14 @@ import Select from "@components/core/select";
 import { boolean } from "zod";
 import CustomDateRangePicker from "@components/core/dateRange/dateRange";
 import { addDays, format } from 'date-fns';
+import useLocale from "@hooks/useLocale";
 // import useHotelSearch from "@hooks/useHotelSearch"; // Import the hook
 
 export default function HotelSearch() {
   const { lang } = useParams();
   const { data: dict, isLoading } = useDictionary(lang as any);
   const [direction] = useDirection();
+  const { locale } = useLocale();
   const router = useRouter();
   const { countries } = useCountries()
 
@@ -50,7 +52,7 @@ export default function HotelSearch() {
   const guestsDropdownRef = useRef<HTMLDivElement>(null);
   const destinationDropdownRef = useRef<HTMLDivElement>(null);
   const destInputRef = useRef<HTMLInputElement | null>(null);
-  const [isNationalityOpen, setIsNationalityOpen]=useState<boolean>(false)
+  const [isNationalityOpen, setIsNationalityOpen] = useState<boolean>(false)
   // Outside click handler for dropdowns
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -65,9 +67,9 @@ export default function HotelSearch() {
     return () => document.removeEventListener("mousedown", handler);
   }, [setShowDestinationDropdown, setShowGuestsDropdown]);
 
-const onSubmit = async (e: React.FormEvent) => {
-  handleSubmit(e)
-};
+  const onSubmit = async (e: React.FormEvent) => {
+    handleSubmit(e)
+  };
 
 
 
@@ -100,12 +102,12 @@ const onSubmit = async (e: React.FormEvent) => {
   );
 
 
-// Format countries for react-select
-const nationalityOptions = countries?.map((c: any) => ({
-  value: c.iso,
-  label: c.nicename || c.name,
-  iso: c.iso,
-})) || [];
+  // Format countries for react-select
+  const nationalityOptions = countries?.map((c: any) => ({
+    value: c.iso,
+    label: c.nicename || c.name,
+    iso: c.iso,
+  })) || [];
   return (
     <div className="md:w-full mx-auto md:p-4 rounded-xl">
       <form onSubmit={onSubmit}>
@@ -113,7 +115,7 @@ const nationalityOptions = countries?.map((c: any) => ({
           {/* Destination */}
           <div className="relative" ref={destinationDropdownRef}>
             <label className="block text-sm text-start font-medium text-gray-500 dark:text-gray-300 mb-2">
-              {/* {"where to? "}  */} {dict?.home_page?.hero_section?.where_to || "Where to?" }
+              {/* {"where to? "}  */} {dict?.home_page?.hero_section?.where_to || "Where to?"}
             </label>
             <div className="relative">
               <div className={`absolute ${direction === "ltr" ? "left-3" : "right-2"} top-1/2 transform -translate-y-1/2 text-gray-400`}>
@@ -199,43 +201,44 @@ const nationalityOptions = countries?.map((c: any) => ({
 
           {/* Dates & Guests row */}
           <div className="grid grid-cols-1 lg:grid-cols-4 lg:gap-4 lg:gap-y-0 gap-y-4">
+            {/* Date Range Picker */}
+            <div className="sm:col-span-2 lg:col-span-2 ">
+              <label className="block text-sm text-start font-medium text-gray-500 dark:text-gray-300 mb-2">
+                {dict?.home_page?.hero_section?.check_in || "Check in"} {"|"} {dict?.home_page?.hero_section?.check_out || "Check out"}
+              </label>
+              <CustomDateRangePicker
+
+                initialStartDate={
+                  form.checkin
+                    ? new Date(form.checkin)
+                    : new Date()
+                }
+                initialEndDate={
+                  form.checkout
+                    ? new Date(form.checkout)
+                    : addDays(new Date(), 1)
+                }
+                onChange={(range) => {
+
+                  //  safely extract the selection from the date range picker
+                  const { startDate, endDate } = range || range;
+
+                  if (startDate && endDate) {
+                    //  format using date-fns (avoids timezone shift from toISOString)
+                    const checkin = format(startDate, "yyyy-MM-dd");
+                    const checkout = format(endDate, "yyyy-MM-dd");
+                    //  update your form or state
+                    updateForm({ checkin, checkout });
+
+                  }
+                }}
+              />
+              <div className="flex space-x-2 mt-1">
+                <ErrorMessage error={errors.checkin} />
+                <ErrorMessage error={errors.checkout} />
+              </div>
+            </div>
   {/* Date Range Picker */}
-<div className="sm:col-span-2 lg:col-span-2">
-  <label className="block text-sm text-start font-medium text-gray-500 dark:text-gray-300 mb-2">
-    {dict?.home_page?.hero_section?.check_in} {"|"} {dict?.home_page?.hero_section?.check_out}
-  </label>
-  <CustomDateRangePicker
-
-   initialStartDate={
-  form.checkin
-    ? new Date(form.checkin)
-    : new Date()
-}
-initialEndDate={
-  form.checkout
-    ? new Date(form.checkout)
-    : addDays(new Date(), 1)
-}
-onChange={(range) => {
-
-  //  safely extract the selection from the date range picker
-  const { startDate, endDate } = range || range;
-
-  if (startDate && endDate) {
-    //  format using date-fns (avoids timezone shift from toISOString)
-    const checkin = format(startDate, "yyyy-MM-dd");
-    const checkout = format(endDate, "yyyy-MM-dd");
-    //  update your form or state
-    updateForm({ checkin, checkout });
-
-  }
-}}
-  />
-  <div className="flex space-x-2 mt-1">
-    <ErrorMessage error={errors.checkin} />
-    <ErrorMessage error={errors.checkout} />
-  </div>
-</div>
 
             {/* Guests */}
             <div className="relative" ref={guestsDropdownRef}>
@@ -253,13 +256,14 @@ onChange={(range) => {
                     <path d="M7.01698 6.91855C8.65463 6.91855 9.98221 5.59097 9.98221 3.95332C9.98221 2.31568 8.65463 0.988098 7.01698 0.988098C5.37933 0.988098 4.05176 2.31568 4.05176 3.95332C4.05176 5.59097 5.37933 6.91855 7.01698 6.91855Z" stroke="#8C96A5" strokeWidth="1.11196" />
                     <path d="M12.9476 12.4783C12.9476 14.3205 12.9476 15.8142 7.01712 15.8142C1.08667 15.8142 1.08667 14.3205 1.08667 12.4783C1.08667 10.6362 3.74203 9.14246 7.01712 9.14246C10.2922 9.14246 12.9476 10.6362 12.9476 12.4783Z" stroke="#8C96A5" strokeWidth="1.11196" />
                   </svg>
+                  {/* span */}
                 </div>
                 <span className="font-medium text-[14px]">
                   {totalGuests}  {totalGuests === 1 ? "Guest" : "Guests"} {form.rooms > 0 ? `, ${form.rooms} ${form.rooms === 1 ? "Room" : "Rooms"}` : ""}
                 </span>
                 <Icon icon="mdi:chevron-down" width={20} height={20} className={`text-gray-600 transition-transform duration-200 ${showGuestsDropdown ? "rotate-180" : ""}`} />
               </button>
-
+              {/* dfsflslfsldflsdkfjdsflsdjf */}
               {showGuestsDropdown && (
                 <div className="absolute z-20 w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg mt-1 md:min-w-[350px] max-h-auto overflow-visible">
                   <div className="p-4 space-y-4">
@@ -316,145 +320,144 @@ onChange={(range) => {
 
                     {/* Children */}
                     <div className="flex flex-col ">
-                       <div className="flex items-center justify-between px-1">
-                      <span className="text-sm font-medium text-blue-900 dark:text-blue-300">
-                        {dict?.home_page?.hero_section?.children || "Children"}
-                      </span>
-                      <div className="flex items-center gap-3">
-                        <button
-                          type="button"
-                          onClick={() => updateForm({ children: Math.max(0, form.children - 1) })}
-                          className="w-8 h-8 cursor-pointer flex items-center justify-center rounded-full border dark:border-gray-600 text-blue-900 dark:text-blue-300 bg-white dark:bg-gray-800 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors"
-                        >
-                          -
-                        </button>
-                        <span className="text-blue-900 dark:text-blue-300 min-w-[1.25rem] text-center font-medium">
-                          {form.children}
+                      <div className="flex items-center justify-between px-1">
+                        <span className="text-sm font-medium text-blue-900 dark:text-blue-300">
+                          {dict?.home_page?.hero_section?.children || "Children"}
                         </span>
-                        <button
-                          type="button"
-                          onClick={() => updateForm({ children: form.children + 1 })}
-                          className="w-8 h-8 flex items-center cursor-pointer justify-center rounded-full border dark:border-gray-600 text-blue-900 dark:text-blue-300 bg-white dark:bg-gray-800 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors"
-                        >
-                          +
-                        </button>
+                        <div className="flex items-center gap-3">
+                          <button
+                            type="button"
+                            onClick={() => updateForm({ children: Math.max(0, form.children - 1) })}
+                            className="w-8 h-8 cursor-pointer flex items-center justify-center rounded-full border dark:border-gray-600 text-blue-900 dark:text-blue-300 bg-white dark:bg-gray-800 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors"
+                          >
+                            -
+                          </button>
+                          <span className="text-blue-900 dark:text-blue-300 min-w-[1.25rem] text-center font-medium">
+                            {form.children}
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => updateForm({ children: form.children + 1 })}
+                            className="w-8 h-8 flex items-center cursor-pointer justify-center rounded-full border dark:border-gray-600 text-blue-900 dark:text-blue-300 bg-white dark:bg-gray-800 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors"
+                          >
+                            +
+                          </button>
+                        </div>
+
+
                       </div>
+                      {/* Child Ages */}
 
+                      {form.children > 0 && (
+                        <div className="mt-4 px-1">
+                          <div className="grid grid-cols-1 sm:grid-cols-2  gap-3 mt-2">
+                            {Array.from({ length: form.children }, (_, index) => {
+                              const currentAge = form.children_ages?.[index] ?? 0;
+                              return (
+                                <div key={index} className="flex flex-col">
+                                  <label className="text-xs text-start font-medium text-gray-700 mb-1">
+                                    Child Age {index + 1}
+                                  </label>
+                                  <Dropdown
+                                    label={
+                                      <span className="block text-left w-full  px-1 py-2 text-sm text-gray-700">
+                                        {currentAge || 1} {dict?.home_page?.hero_section?.years || "years"}
+                                      </span>
+                                    }
+                                    buttonClassName="w-full text-left border flex  justify-between items-center border-gray-200 rounded-xl px-2.5 py-2 text-sm focus:outline-none hover:bg-gray-50"
+                                    dropDirection="down"
+                                  >
+                                    {({ onClose }) => (
+                                      <div className="max-h-48 overflow-y-auto p-1 ">
+                                        {Array.from({ length: 12 }, (_, i) => i + 1).map((age) => (  // starts from 1 now
+                                          <button
+                                            key={age}
+                                            type="button"
+                                            onClick={() => {
+                                              const newAges =
+                                                Array.isArray(form.children_ages) && form.children_ages.length > 0
+                                                  ? [...form.children_ages]
+                                                  : [1];
 
-                    </div>
-{/* Child Ages */}
+                                              newAges[index] = age;
+                                              updateForm({ children_ages: newAges });
+                                              onClose();
+                                            }}
+                                            className={`w-full text-left cursor-pointer px-3 py-3 mb-1 text-sm rounded-lg ${currentAge === age
+                                                ? 'bg-gray-200 text-gray-700 font-medium'
+                                                : 'text-gray-700 hover:bg-gray-100'
+                                              }`}
+                                          >
+                                            {age} {dict?.home_page?.hero_section?.years || "years"}
+                                          </button>
+                                        ))}
+                                      </div>
+                                    )}
+                                  </Dropdown>
 
-                  {form.children > 0 && (
-  <div className="mt-4 px-1">
-    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-2">
-      {Array.from({ length: form.children }, (_, index) => {
-        const currentAge = form.children_ages?.[index] ?? 0;
-        return (
-          <div key={index} className="flex flex-col">
-            <label className="text-xs text-start font-medium text-gray-700 mb-1">
-              Child Age {index + 1}
-            </label>
-           <Dropdown
-  label={
-    <span className="block text-left w-full px-1 py-2 text-sm text-gray-700">
-      {currentAge || 1} {dict?.home_page?.hero_section?.years || "years"}
-    </span>
-  }
-  buttonClassName="w-full text-left border flex justify-between items-center border-gray-200 rounded-xl px-2.5 py-2 text-sm focus:outline-none hover:bg-gray-50"
-  dropDirection="down"
->
-  {({ onClose }) => (
-    <div className="max-h-48 overflow-y-auto p-1">
-      {Array.from({ length: 12 }, (_, i) => i + 1).map((age) => (  // starts from 1 now
-        <button
-          key={age}
-          type="button"
-          onClick={() => {
-            const newAges =
-              Array.isArray(form.children_ages) && form.children_ages.length > 0
-                ? [...form.children_ages]
-                : [1];
-
-            newAges[index] = age;
-            updateForm({ children_ages: newAges });
-            onClose();
-          }}
-          className={`w-full text-left px-3 py-3 mb-1 text-sm rounded-lg ${
-            currentAge === age
-              ? 'bg-gray-200 text-gray-700 font-medium'
-              : 'text-gray-700 hover:bg-gray-100'
-          }`}
-        >
-          {age} {dict?.home_page?.hero_section?.years || "years"}
-        </button>
-      ))}
-    </div>
-  )}
-</Dropdown>
-
-          </div>
-        );
-      })}
-    </div>
-  </div>
-)}
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      )}
 
                     </div>
 
                     {/* ============ NATIONALITY ============ */}
 
-<div className="relative px-1">
-  <label className="block text-sm text-start font-medium text-blue-900 mt-2 ps-1 dark:text-gray-300 mb-2">
-    {dict?.home_page?.hero_section?.nationality || "Nationality"}
-  </label>
-  <Select
-    options={nationalityOptions}
-    value={nationalityOptions.find((opt:any) => opt.value === form.nationality) || null}
-    onChange={(option: any) => {
-      updateForm({ nationality: option?.value || '' });
-    }}
-    isSearchable
-    placeholder="Select Nationality"
-    className="w-full"
-     onMenuOpen={() => setIsNationalityOpen(true)}   // detect dropdown open
-          onMenuClose={() => setIsNationalityOpen(false)} // detect dropdown close
-    classNames={{
-      control: () =>
-        'w-full font-medium pl-3 py-2.5 text-sm text-gray-700 placeholder-gray-400 bg-white hover:bg-gray-100 border border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 shadow-none',
-      valueContainer: () => 'flex items-center gap-2 px-1',
-      singleValue: () => 'flex items-center gap-2',
-      placeholder: () => 'text-gray-400',
-      indicatorsContainer: () => 'absolute right-3 top-3',
-    }}
-    components={{
-      Option: ({ data, ...props }) => (
-        <div
-          {...props.innerProps}
-          className="px-3 py-2 cursor-pointer flex items-center gap-2 hover:bg-gray-100"
-        >
-          <Icon icon={`flagpack:${data.iso?.toLowerCase()}`} width="20" height="15" />
-          <span>{data.label}</span>
-        </div>
-      ),
-      SingleValue: ({ data }) => (
-        <div className="flex items-center gap-2">
-          <Icon icon={`flagpack:${data.iso?.toLowerCase()}`} width="20" height="15" />
-          <span>{data.label}</span>
-        </div>
-      ),
-      DropdownIndicator: () => (
-        <Icon
-          icon="mdi:keyboard-arrow-down"
+                    <div className="relative px-1">
+                      <label className="block text-sm text-start font-medium  text-blue-900 mt-2 ps-1 dark:text-gray-300 mb-2">
+                        {dict?.home_page?.hero_section?.nationality || "Nationality"}
+                      </label>
+                      <Select
+                        options={nationalityOptions}
+                        value={nationalityOptions.find((opt: any) => opt.value === form.nationality) || null}
+                        onChange={(option: any) => {
+                          updateForm({ nationality: option?.value || '' });
+                        }}
+                        isSearchable
+                        placeholder="Select Nationality"
+                        className="w-full"
+                        onMenuOpen={() => setIsNationalityOpen(true)}   // detect dropdown open
+                        onMenuClose={() => setIsNationalityOpen(false)} // detect dropdown close
+                        classNames={{
+                          control: () =>
+                            'w-full font-medium pl-3 py-2.5 cursor-pointer text-sm text-gray-700 placeholder-gray-400 bg-white hover:bg-gray-100 border border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 shadow-none',
+                          valueContainer: () => 'flex items-center gap-2 px-1',
+                          singleValue: () => 'flex items-center gap-2',
+                          placeholder: () => 'text-gray-400',
+                          indicatorsContainer: () => 'absolute right-3 top-3',
+                        }}
+                        components={{
+                          Option: ({ data, ...props }) => (
+                            <div
+                              {...props.innerProps}
+                              className="px-3 py-2 cursor-pointer flex items-center gap-2 hover:bg-gray-100"
+                            >
+                              <Icon icon={`flagpack:${data.iso?.toLowerCase()}`} width="20" height="15" />
+                              <span>{data.label}</span>
+                            </div>
+                          ),
+                          SingleValue: ({ data }) => (
+                            <div className="flex items-center gap-2">
+                              <Icon icon={`flagpack:${data.iso?.toLowerCase()}`} width="20" height="15" />
+                              <span>{data.label}</span>
+                            </div>
+                          ),
+                          DropdownIndicator: () => (
+                            <Icon
+                              icon="mdi:keyboard-arrow-down"
 
-          width="20"
-          height="20"
-          className={`text-gray-600 transi duration-100 ease-in-out ${isNationalityOpen ? 'rotate-180' : "rotate-0"}`}
-        />
-      ),
-      IndicatorSeparator: () => null,
-    }}
-  />
-</div>
+                              width="20"
+                              height="20"
+                              className={`text-gray-600 transi duration-100 ease-in-out ${isNationalityOpen ? 'rotate-180' : "rotate-0"}`}
+                            />
+                          ),
+                          IndicatorSeparator: () => null,
+                        }}
+                      />
+                    </div>
 
 
                   </div>
@@ -474,7 +477,7 @@ onChange={(range) => {
                 {isSearching ? (
                   <>
                     <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                    <span>Searching...</span>
+                    {dict?.home_page?.hero_section?.searching || "Searching..."}
                   </>
                 ) : (
                   <>

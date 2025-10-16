@@ -4,6 +4,7 @@ import { addDays, format } from 'date-fns';
 import { DateRangePicker, Range, RangeKeyDict } from 'react-date-range';
 import 'react-date-range/dist/styles.css';
 import 'react-date-range/dist/theme/default.css';
+import useDirection from '@hooks/useDirection';
 
 interface CustomDateRangePickerProps {
   onChange: (range: { startDate: Date; endDate: Date }) => void;
@@ -23,9 +24,10 @@ export default function CustomDateRangePicker({
       key: 'selection',
     },
   ]);
-  
+
   const [isOpen, setIsOpen] = useState(false);
   const pickerRef = useRef<HTMLDivElement>(null);
+  const [direction] = useDirection();
 
   const handleSelect = (ranges: RangeKeyDict) => {
     const newRange = ranges.selection as Range;
@@ -64,12 +66,14 @@ export default function CustomDateRangePicker({
       : 'Select Date Range';
 
   return (
-    <div className="relative w-full" ref={pickerRef}>
+    <div className={`relative w-full`} ref={pickerRef} dir={direction}>
       {/* Input / Button */}
       <button
         type="button"
         onClick={togglePicker}
-        className="w-full border border-gray-200 rounded-xl px-4 py-2 text-left focus:outline-none hover:border-gray-300 transition-colors"
+
+        className="w-full border border-gray-200 rounded-xl px-4 py-2 cursor-pointer text-start focus:outline-none hover:border-gray-300 transition-colors"
+
       >
         {formattedRange}
       </button>
@@ -77,10 +81,7 @@ export default function CustomDateRangePicker({
       {/* Date Range Picker Popup */}
       {isOpen && (
         <div
-          className="
-            absolute z-50 mt-2 bg-white rounded-xl shadow-lg
-            w-auto left-0
-          "
+          className={`absolute z-50 mt-2 bg-white rounded-xl shadow-lg w-auto left-0 overflow-hidden`}
         >
           <DateRangePicker
             onChange={handleSelect}

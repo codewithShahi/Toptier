@@ -116,7 +116,7 @@ export default function CustomerProfile() {
       
       const result = await profile_update(payload as any);
 
-// const 
+
       if (result?.error) {
         throw new Error(result.error);
       }
