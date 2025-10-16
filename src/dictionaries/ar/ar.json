@@ -5,27 +5,27 @@
       "hotel_search_placeholder": "ابحث عن مدينة أو فندق...",
       "check_in": "تسجيل الوصول",
       "check_out": "تسجيل المغادرة",
-      "guests": "النزلاء",
+      "guests": "الضيوف",
       "rooms": "الغرف",
-      "adults": "البالغين",
+      "adults": "البالغون",
       "children": "الأطفال",
       "child_age": "عمر الطفل",
       "years": "سنوات",
       "nationality": "الجنسية",
-      "search_homes": "ابحث عن أماكن الإقامة",
-      "searching": "جاري البحث...",
-      "signup": "التسجيل",
+      "search_homes": "البحث عن منازل",
+      "searching": "جارٍ البحث...",
+      "signup": "إنشاء حساب",
       "login": "تسجيل الدخول"
     }
   },
   "signup_form": {
     "heading": "إنشاء حساب",
-    "already_account": "هل لديك حساب مسبقاً؟",
+    "already_account": "هل لديك حساب بالفعل؟",
     "sign_in": "تسجيل الدخول",
     "first_name": "الاسم الأول",
     "first_name_placeholder": "أدخل اسمك الأول",
     "last_name": "اسم العائلة",
-    "last_name_placeholder": "أدخل اسم العائلة",
+    "last_name_placeholder": "أدخل اسم عائلتك",
     "country_label": "اختر الدولة",
     "country_placeholder": "اختر الدولة",
     "phone_label": "رقم الهاتف",
@@ -34,7 +34,7 @@
     "email_placeholder": "عنوان البريد الإلكتروني",
     "password_label": "كلمة المرور",
     "password_placeholder": "أدخل كلمة المرور",
-    "human_label": "أنا إنسان",
+    "human_label": "أنا لست روبوتًا",
     "agree_text": "أوافق على",
     "terms_of_use": "شروط الاستخدام",
     "and": "و",
@@ -45,13 +45,13 @@
   "errors": {
     "first_name_required": "الاسم الأول مطلوب",
     "last_name_required": "اسم العائلة مطلوب",
-    "email_invalid": "عنوان البريد الإلكتروني غير صالح",
+    "email_invalid": "عنوان بريد إلكتروني غير صالح",
     "phone_number_required": "رقم الهاتف مطلوب",
-    "phone_number_invalid": "أدخل رقم هاتف دولي صالح",
+    "phone_number_invalid": "يرجى إدخال رقم هاتف دولي صالح",
     "country_code_required": "رمز الدولة مطلوب",
-    "password_min_length": "يجب أن تكون كلمة المرور 6 أحرف على الأقل",
-    "terms_required": "يجب قبول الشروط والأحكام",
-    "human_required": "يرجى تأكيد أنك إنسان"
+    "password_min_length": "يجب أن تتكون كلمة المرور من 6 أحرف على الأقل",
+    "terms_required": "يجب أن توافق على الشروط والأحكام",
+    "human_required": "يرجى تأكيد أنك لست روبوتًا"
   },
   "login_form": {
     "success_message": "تم تسجيل الدخول بنجاح!",
@@ -69,37 +69,37 @@
     "login_button": "تسجيل الدخول"
   },
   "featured_dest": {
-    "dest_heading": "وجهة مميزة",
-    "dest_subheading": "اكتشف أجمل الوجهات العالمية المميزة لتجارب لا تُنسى.",
-    "no_featured_dest": "لا توجد وجهة مميزة",
+    "dest_heading": "الوجهات المميزة",
+    "dest_subheading": "اكتشف أكثر الوجهات السياحية إبهارًا وطلبًا، المختارة خصيصًا لتجارب لا تُنسى حول العالم.",
+    "no_featured_dest": "لا توجد وجهات مميزة",
     "dest_explore": "استكشف الآن",
-    "error": "يجب أن تكون مسجلاً للدخول لوضع كمفضَّل"
+    "error": "يجب تسجيل الدخول لوضعها في المفضلة"
   },
   "featured_hotels": {
-    "heading": "فنادق مميزة",
-    "subheading": "تجربة رفاهية وخدمة لا مثيل لها في قلب الجمال.",
-    "no_amenities": "لا توجد مرافق",
+    "heading": "الفنادق المميزة",
+    "subheading": "استمتع براحة عالمية المستوى وضيافة لا مثيل لها في قلب الجنة.",
+    "no_amenities": "لم يتم العثور على مرافق",
     "book_now": "احجز الآن",
-    "loading": "جار التحميل...",
+    "loading": "جارٍ التحميل...",
     "per_night": "/ليلة",
-    "error_login_required": "يجب تسجيل الدخول لإضافة للمفضلة",
+    "error_login_required": "يجب تسجيل الدخول لوضعها في المفضلة",
     "error_failed_fav": "فشل تحديث المفضلة",
     "success_updated_fav": "تم تحديث المفضلة",
     "something_wrong": "حدث خطأ ما"
   },
   "offer_sec": {
-    "offer_heading": "لماذا تختارنا",
-    "offer_subheading": "اختبر خدمات سفر لا مثيل لها معنا، حيث رضاك أولويتنا."
+    "offer_heading": "لماذا تختارنا؟",
+    "offer_subheading": "استمتع بخدمات سفر لا مثيل لها معنا، حيث رضاك هو أولويتنا القصوى."
   },
   "testi_sec": {
-    "testi_see_room": "شاهد الغرفة",
+    "testi_see_room": "عرض الغرفة",
     "testi_heading": "ماذا يقول ",
-    "testi_heading_2": "ضيوفنا",
-    "testi_subheading": "اكتشف سبب ثقة المسافرين بنا — مراجعات حقيقية للراحة والراحة والإقامة.",
-    "testi_autoplay": "تشغيل تلقائي • المس للتوقِف"
+    "testi_heading_2": "ضيوفنا؟",
+    "testi_subheading": "شاهد لماذا يثق المسافرون بنا — آراء حقيقية عن الراحة والسهولة وإقامات لا تُنسى",
+    "testi_autoplay": "تشغيل تلقائي • اضغط للتوقف"
   },
   "news_letter_sec": {
-    "letter": "نشرة إخبارية",
+    "letter": "النشرة الإخبارية",
     "letter_name": "الاسم",
     "letter_name_placeholder": "الاسم",
     "letter_email": "البريد الإلكتروني",
@@ -107,43 +107,43 @@
     "letter_continue": "متابعة"
   },
   "footer": {
-    "subheading": "افتح إقامات استثنائية معنا وخبرة منسقة بعناية في أرقى الوجهات العالمية.",
+    "subheading": "افتح أبواب الإقامات الاستثنائية مع فنادقنا المختارة بعناية ووصول حصري إلى أفضل الوجهات في العالم.",
     "connect": "ابقَ على تواصل",
-    "subconnect": "اشترك للحصول على نصائح السفر، عروض حصرية وآخر التحديثات.",
+    "subconnect": "اشترك للحصول على نصائح السفر وعروض حصرية وأحدث التحديثات.",
     "email_placeholder": "أدخل بريدك الإلكتروني",
-    "subscribing": "جار الاشتراك...",
+    "subscribing": "جارٍ الاشتراك...",
     "subscribe": "اشترك",
     "success": "تم الاشتراك بنجاح",
     "copyright": "جميع الحقوق محفوظة.",
-    "title_explore": "استكشاف",
+    "title_explore": "استكشف",
     "title_support": "الدعم",
     "title_company": "الشركة",
     "title_downloads": "التنزيلات"
   },
   "hotel_listing": {
     "advanced_search": "بحث متقدم",
-    "search_hotels": "ابحث عن فنادق",
-    "search_by_hotel_name": "ابحث حسب اسم الفندق",
+    "search_hotels": "البحث عن فنادق",
+    "search_by_hotel_name": "البحث باسم الفندق",
     "per_night": "(لكل ليلة)",
     "price_range": "نطاق السعر",
     "hotel_stars": "نجوم الفندق",
     "stars": "نجوم",
-    "reset_filters": "إعادة ضبط الفلاتر",
+    "reset_filters": "إعادة تعيين الفلاتر",
     "apply": "تطبيق",
     "hotels_found": "تم العثور على فنادق",
-    "loading_more": "تحميل المزيد",
-    "searching_for_hotels": "جار البحث عن فنادق...",
+    "loading_more": "جارٍ تحميل المزيد",
+    "searching_for_hotels": "جارٍ البحث عن فنادق...",
     "no_hotels_found": "لم يتم العثور على فنادق",
-    "search_criteria": "حاول تعديل عوامل التصفية أو المعايير",
-    "reset_all_filters": "إعادة ضبط جميع الفلاتر",
-    "filters_search": "الفلاتر & البحث",
+    "search_criteria": "جرب تعديل الفلاتر أو معايير البحث",
+    "reset_all_filters": "إعادة تعيين جميع الفلاتر",
+    "filters_search": "الفلاتر والبحث",
     "apply_filters": "تطبيق الفلاتر",
     "hotels": "فنادق",
-    "sort": "ترتيب",
+    "sort": "فرز",
     "rating": "التقييم",
-    "low_to_high": "من الأقل للأعلى",
-    "high_to_low": "من الأعلى للأقل",
-    "name_a_to_z": "الاسم (أ-ي)",
+    "low_to_high": "من الأدنى إلى الأعلى",
+    "high_to_low": "من الأعلى إلى الأدنى",
+    "name_a_to_z": "الاسم (أ–ي)",
     "book_now": "احجز الآن"
   },
   "contact": {
@@ -154,31 +154,31 @@
   },
   "hotelDetails": {
     "hotelNamePlaceholder": "اسم الفندق",
-    "aboutThisProperty": "عن هذه الملكية",
-    "noAmenities": "لا توجد مرافق",
+    "aboutThisProperty": "عن هذا العقار",
+    "noAmenities": "لم يتم العثور على مرافق",
     "showMore": "عرض المزيد",
     "chooseYourRoom": "اختر غرفتك",
-    "noRoomsAvailable": "لا توجد غرف متاحة للتواريخ المحددة.",
-    "theToptierWayToTravel": "طريقة Toptier للسفر",
-    "noBrandStories": "لا توجد قصص علامة تجارية",
-    "needToKnowDetails": "التفاصيل المهمة",
-    "frequentlyAskedQuestions": "الأسئلة المتكررة",
-    "noSimilarHotels": "لا توجد فنادق مشابهة.",
+    "noRoomsAvailable": "لا توجد غرف متاحة للتاريخ المحدد.",
+    "theToptierWayToTravel": "طريقة TopTier للسفر",
+    "noBrandStories": "لا توجد قصص علامة تجارية متاحة لهذا العقار.",
+    "needToKnowDetails": "التفاصيل الأساسية",
+    "frequentlyAskedQuestions": "الأسئلة الشائعة",
+    "noSimilarHotels": "لم يتم العثور على فنادق مشابهة.",
     "readMore": "اقرأ المزيد",
-    "readLess": "اقرأ أقل",
-    "topRated": "الأعلى تقييماً",
+    "readLess": "عرض أقل",
+    "topRated": "الأعلى تقييمًا",
     "freeCancellation": "إلغاء مجاني",
     "bestPriceGuarantee": "ضمان أفضل سعر",
-    "map": "خريطة",
-    "unableToLoad": "يتعذر تحميل تفاصيل الفندق",
+    "map": "الخريطة",
+    "unableToLoad": "تعذر تحميل تفاصيل الفندق",
     "pleaseTryAgain": "يرجى المحاولة مرة أخرى لاحقًا.",
     "allAmenities": "جميع المرافق",
-    "youmightAlsoLike": "قد يعجبك أيضاً"
+    "youmightAlsoLike": "قد يعجبك أيضًا"
   },
   "bookingForm": {
     "personalInformation": {
       "title": "المعلومات الشخصية",
-      "subtitle": "أخبرنا باسم الشخص عند تسجيل الوصول.",
+      "subtitle": "أخبرنا باسم الشخص الذي سيقوم بالتسجيل.",
       "firstNameLabel": "الاسم الأول",
       "lastNameLabel": "اسم العائلة",
       "addressLabel": "العنوان"
@@ -194,45 +194,45 @@
     },
     "travelersInformation": {
       "title": "معلومات المسافرين",
-      "subtitle": "تفاصيل مهمة لإكمال الحجز",
+      "subtitle": "تفاصيل مهمة لإكمال حجزك",
       "adultTraveller": "مسافر بالغ",
       "childTraveller": "مسافر طفل",
       "titleLabel": "اللقب"
     },
     "paymentMethod": {
       "title": "طريقة الدفع",
-      "subtitle": "عمليات آمنة ومحمية. معلوماتك الشخصية محمية.",
+      "subtitle": "معاملات آمنة ومحمية. معلوماتك الشخصية محمية.",
       "noPaymentMethods": "لا توجد طرق دفع متاحة"
     },
     "cancellationPolicy": {
       "title": "سياسة الإلغاء",
-      "acceptText": "أقبل سياسة الإلغاء لهذا الحجز و",
+      "acceptText": "أوافق على سياسة الإلغاء لهذا الحجز و",
       "termsAndConditions": "الشروط والأحكام"
     },
     "buttons": {
-      "confirmAndBook": "تأكيد والحجز",
-      "processing": "جاري المعالجة..."
+      "confirmAndBook": "تأكيد والจอง",
+      "processing": "قيد المعالجة..."
     },
     "errors": {
       "firstNameRequired": "الاسم الأول مطلوب",
       "lastNameRequired": "اسم العائلة مطلوب",
       "addressRequired": "العنوان مطلوب",
-      "invalidEmail": "البريد الإلكتروني غير صالح",
+      "invalidEmail": "عنوان بريد إلكتروني غير صالح",
       "nationalityRequired": "الجنسية مطلوبة",
       "currentCountryRequired": "الدولة الحالية مطلوبة",
       "countryCodeRequired": "رمز الدولة مطلوب",
       "phoneNumberRequired": "رقم الهاتف مطلوب",
-      "invalidPhoneNumber": "أدخل رقم هاتف دولي صالح",
-      "atLeastOneTraveller": "مطلوب مسافر واحد على الأقل",
+      "invalidPhoneNumber": "يرجى إدخال رقم هاتف دولي صالح",
+      "atLeastOneTraveller": "يجب إدخال مسافر واحد على الأقل",
       "titleRequired": "اللقب مطلوب",
-      "paymentMethodRequired": "يرجى اختيار طريقة الدفع",
-      "acceptPolicyRequired": "يجب قبول سياسة الإلغاء"
+      "paymentMethodRequired": "يرجى اختيار طريقة دفع",
+      "acceptPolicyRequired": "يجب أن توافق على سياسة الإلغاء"
     },
     "titles": {
       "mr": "السيد",
       "mrs": "السيدة",
-      "ms": "آنسة",
-      "dr": "دكتور"
+      "ms": "الآنسة",
+      "dr": "الدكتور"
     }
   },
   "bookingDetails": {
@@ -242,12 +242,12 @@
     "checkinDate": "تاريخ الوصول",
     "checkoutDate": "تاريخ المغادرة",
     "roomQuantity": "عدد الغرف",
-    "nights": "ليالٍ",
-    "guests": "النزلاء",
+    "nights": "الليالي",
+    "guests": "الضيوف",
     "roomPrice": "سعر الغرفة",
-    "toptierFee": "رسوم Toptier",
+    "toptierFee": "رسوم TopTier",
     "total": "الإجمالي",
-    "adults": "البالغين",
+    "adults": "البالغون",
     "children": "الأطفال"
   },
   "hotelInvoice": {
@@ -260,18 +260,20 @@
       "phone": "الهاتف:",
       "email": "البريد الإلكتروني:"
     },
-    "bookingNote": "طلب الإلغاء أُرسل. سنحدث الحالة في أقرب وقت.",
+    "bookingNote": "تم إرسال طلب الإلغاء. سنقوم بالتحديث فور تغيير الحالة",
     "bookingInfo": {
-      "bookingId": "PNR",
-      "reference": "مرجع",
+      "bookingId": "رقم الحجز",
+      "bookingpnr": "PNR",
+      "proceed": "متابعة",
+      "reference": "المرجع",
       "date": "التاريخ",
       "location": "الموقع"
     },
     "travellers": {
       "title": "المسافرون",
       "table": {
-        "no": "لا",
-        "sr": "مس رقم",
+        "no": "رقم",
+        "sr": "تسلسلي",
         "name": "الاسم"
       }
     },
@@ -288,42 +290,44 @@
       "total": "الإجمالي:"
     },
     "fareAndTax": {
-      "rateCommentTitle": "تعليق السعر",
-      "taxMessage": "المبلغ الإجمالي المقدر للضرائب والرسوم لهذا الحجز: {tax} يُدفع عند الوصول. قد تختلف ضريبة المدينة حسب مكان الإقامة. ساعة تسجيل الوصول 14:00-00:00. ساعة تسجيل المغادرة 12:30-12:00.",
+      "rateCommentTitle": "ملاحظة السعر",
+      "taxMessage": "المبلغ التقديري للضرائب والرسوم لهذا الحجز: {tax} مستحق الدفع عند الوصول. قد تختلف ضريبة المدينة حسب مكان الإقامة. وقت تسجيل الوصول من 14:00 إلى 00:00. وقت تسجيل المغادرة من 12:30 إلى 12:00.",
       "taxLabel": "الضريبة",
-      "totalLabel": "إجمالي"
+      "totalLabel": "الإجمالي"
     },
     "customer": {
       "title": "العميل",
       "email": "البريد الإلكتروني:",
-      "contact": "الاتصال:",
+      "contact": "جهة الاتصال:",
       "address": "العنوان:"
     },
     "customerCare": {
       "title": "خدمة العملاء",
       "email": "البريد الإلكتروني:",
-      "contact": "الاتصال:",
+      "contact": "جهة الاتصال:",
       "website": "الموقع الإلكتروني:"
     },
     "buttons": {
-      "downloadPdf": "تحميل PDF",
-      "payNow": "ادفع الآن"
+      "downloadPdf": "تنزيل PDF",
+      "payNow": "ادفع الآن",
+      "sendToWhatsApp": "إرسال عبر واتساب",
+      "requestCancellation": "طلب إلغاء"
     },
     "alert": {
-      "pdfNotImplemented": "سيتم تنفيذ وظيفة تنزيل PDF لاحقاً."
+      "pdfNotImplemented": "سيتم تنفيذ ميزة تنزيل ملف PDF لاحقًا."
     }
   },
   "support": {
     "heading": "الدعم",
     "p_1": "في",
-    "p_3": "، نحن شغوفون بمساعدتك على اكتشاف العالم براحة وثقة. دعمك يساعدنا على تقديم أفضل عروض السفر والفنادق والإلهام لكل مسافر.",
+    "p_3": "، نحن شغوفون بمساعدتك على استكشاف العالم براحة وثقة. يساعدنا دعمك على مواصلة تقديم أفضل تجارب السفر وعروض الفنادق والإلهام لكل مسافر.",
     "contact_us": "اتصل بنا",
     "empower_travelers": "تمكين المسافرين",
-    "empower_travelers_p": "مساهمتك تساعد المسافرين في اكتشاف الوجهات الخفية والموثوقة حول العالم.",
+    "empower_travelers_p": "يساعدك تبرعك المسافرين على اكتشاف الوجهات المخفية والموثوقة حول العالم.",
     "sustain_quality": "الحفاظ على الجودة",
-    "sustain_quality_p": "نحن نحسّن خدماتنا باستمرار ونُطوّر تجارب سفر أفضل للجميع.",
+    "sustain_quality_p": "نحن نعمل باستمرار على تحسين خدماتنا وتقديم تجارب سفر أفضل للجميع.",
     "community_growth": "نمو المجتمع",
-    "community_growth_p": "انضم إلى مهمتنا لبناء مجتمع عالمي من المسافرين الشغوفين بالاكتشاف."
+    "community_growth_p": "انضم إلينا في مهمتنا لبناء مجتمع عالمي من المسافرين المتحمسين الذين يحبون الاستكشاف."
   },
   "profilelabels": {
     "profileHeading": "معلومات الملف الشخصي",
@@ -334,7 +338,7 @@
     "phoneCode": "رمز الهاتف",
     "phoneNumber": "رقم الهاتف",
     "country": "الدولة",
-    "state": "المحافظة",
+    "state": "الولاية",
     "city": "المدينة",
     "address1": "العنوان 1",
     "address2": "العنوان 2"
@@ -343,9 +347,9 @@
     "firstName": "الاسم الأول",
     "lastName": "اسم العائلة",
     "email": "عنوان البريد الإلكتروني",
-    "password": "كلمة مرور جديدة (اتركها فارغة إذا لم تُرِد التغيير)",
+    "password": "كلمة مرور جديدة (اتركها فارغة للإبقاء على الحالية)",
     "phoneNumber": "رقم الهاتف (مثال: 923483344559)",
-    "state": "المحافظة",
+    "state": "الولاية",
     "city": "المدينة",
     "address1": "سطر العنوان 1",
     "address2": "سطر العنوان 2",
@@ -354,40 +358,40 @@
   },
   "profiletoasts": {
     "success": "تم تحديث الملف الشخصي بنجاح!",
-    "error": "فشل في تحديث الملف الشخصي"
+    "error": "فشل تحديث الملف الشخصي"
   },
   "profilebuttons": {
     "updateProfile": "تحديث الملف الشخصي",
-    "updating": "جارٍ التحديث..."
+    "updating": "قيد التحديث..."
   },
   "profilemessages": {
-    "loginRequired": "يرجى تسجيل الدخول لعرض الملف الشخصي."
+    "loginRequired": "يرجى تسجيل الدخول لعرض ملفك الشخصي."
   },
   "profileerrors": {
     "firstNameRequired": "الاسم الأول مطلوب",
     "lastNameRequired": "اسم العائلة مطلوب",
-    "invalidEmail": "عنوان البريد الإلكتروني غير صالح",
+    "invalidEmail": "عنوان بريد إلكتروني غير صالح",
     "phoneRequired": "رقم الهاتف مطلوب",
-    "invalidPhone": "أدخل رقم هاتف دولي صالح",
+    "invalidPhone": "يرجى إدخال رقم هاتف دولي صالح",
     "countryCodeRequired": "رمز الدولة مطلوب",
-    "passwordTooShort": "يجب أن تكون كلمة المرور 6 أحرف على الأقل"
+    "passwordTooShort": "يجب أن تتكون كلمة المرور من 6 أحرف على الأقل"
   },
   "dashboard": {
-    "welcome_back": "مرحباً بعودتك،",
-    "overview_text": "إليك لمحة سريعة عن حسابك السياحي",
+    "welcome_back": "مرحبًا بك مجددًا،",
+    "overview_text": "إليك نظرة سريعة على حسابك للسفر",
     "wallet_balance": "رصيد المحفظة",
-    "wallet_balance_sub": "الرصيد الكلي للمحفظة",
+    "wallet_balance_sub": "إجمالي رصيد المحفظة",
     "bookings": "الحجوزات",
-    "bookings_sub": "مجموع الحجوزات",
+    "bookings_sub": "إجمالي الحجوزات",
     "pending_invoices": "الفواتير المعلقة",
     "pending_invoices_sub": "الفواتير المعلقة",
     "all": "الكل",
     "paid": "مدفوع",
     "unpaid": "غير مدفوع",
-    "cancelled": "ملغي",
+    "cancelled": "ملغى",
     "search_placeholder": "بحث...",
     "client_name": "اسم العميل",
-    "booking_id": "معرف الحجز",
+    "booking_id": "رقم الحجز",
     "pnr": "PNR",
     "payment": "الدفع",
     "booking": "الحجز",
@@ -396,23 +400,23 @@
     "no_bookings_found": "لم يتم العثور على حجوزات.",
     "showing": "عرض",
     "of": "من",
-    "entries": "مدخلات",
+    "entries": "إدخالات",
     "prev": "السابق",
     "next": "التالي"
   },
   "hotel_search": {
-    "check_in_out_label": "تسجيل الوصول | المغادرة",
+    "check_in_out_label": "تسجيل الوصول | تسجيل المغادرة",
     "guest_button": {
-      "title": "النزلاء",
-      "guest_title": "النزلاء",
-      "room_title": "غرفة(غرف)"
+      "title": "الضيوف",
+      "guest_title": "الضيوف",
+      "room_title": "الغرف"
     },
     "nationality_label": "الجنسية",
-    "search_btnText": "ابحث عن أماكن الإقامة",
-    "searching": "جاري البحث...",
+    "search_btnText": "البحث عن منازل",
+    "searching": "جارٍ البحث...",
     "search_btnText_mobile": "بحث",
     "rooms_label": "الغرف",
-    "adults_label": "البالغين",
+    "adults_label": "البالغون",
     "children_label": "الأطفال",
     "child_age_label": "عمر الطفل",
     "years_label": "سنوات"

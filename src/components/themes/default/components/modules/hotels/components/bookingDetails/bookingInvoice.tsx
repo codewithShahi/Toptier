@@ -270,7 +270,7 @@ console.log('pnrrrrrrrrrrrr',invoiceDetails[0].pnr)
               handleSelectPayment(method);
               onClose();
             }}
-            className={`w-full flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg ${
+            className={`w-full flex items-center gap-3 cursor-pointer px-3 py-2.5 text-sm rounded-lg ${
               selectedPaymentMethod === method.id
                 ? "bg-blue-100 text-blue-900"
                 : "text-gray-700 hover:bg-gray-100"
@@ -294,13 +294,13 @@ console.log('pnrrrrrrrrrrrr',invoiceDetails[0].pnr)
   <button
     onClick={handlePayNow}
     disabled={!selectedPaymentMethod}
-    className={`px-6 py-2.5 rounded-lg font-bold text-white w-full ${
+    className={`px-6 py-2.5 rounded-lg cursor-pointer font-medium text-white w-full ${
       !selectedPaymentMethod
         ? "bg-gray-400 cursor-not-allowed"
-        : "bg-blue-900 hover:bg-blue-700"
+        : "bg-blue-900 hover:bg-gray-800"
     }`}
   >
-    Proceed
+    {dict?.hotelInvoice?.bookingInfo?.proceed}
   </button>
 
   {/* Total Amount */}
@@ -320,15 +320,15 @@ console.log('pnrrrrrrrrrrrr',invoiceDetails[0].pnr)
           {/* Booking Info */}
           <div className="grid grid-cols-2 sm:grid-cols-5 gap-4  border border-gray-200 rounded-lg p-4 ">
                 <div>
-              <div className="text-xs font-semibold text-gray-500 mb-3">{dict?.hotelInvoice?.bookingInfo?.reference}</div>
-              <div className="text-sm font-medium">{bookingData.bookingReference}</div>
+              <div className="text-xs font-semibold text-gray-500 mb-3">{dict?.hotelInvoice?.bookingInfo?.bookingId}</div>
+              <div className="text-sm font-medium">{bookingData.bookingId}</div>
             </div>
             <div>
               <div className="text-xs font-semibold text-gray-500 mb-3">{dict?.hotelInvoice?.bookingInfo?.reference}</div>
               <div className="text-sm font-medium">{bookingData.bookingReference}</div>
             </div>
                <div>
-              <div className="text-xs font-semibold text-gray-500 mb-3">{dict?.hotelInvoice?.bookingInfo?.bookingId}</div>
+              <div className="text-xs font-semibold text-gray-500 mb-3">{dict?.hotelInvoice?.bookingInfo?.bookingpnr}</div>
               <div className="text-sm font-medium">{invoiceDetails[0]?.pnr === null ? "N/A" : invoiceDetails[0]?.pnr}</div>
             </div>
             <div>

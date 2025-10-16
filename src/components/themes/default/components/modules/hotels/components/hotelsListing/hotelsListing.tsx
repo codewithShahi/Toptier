@@ -61,8 +61,8 @@ const onShowMaphandler=(hotel:any)=>{
 
   const { allHotelsData: hotelsData,
       isloadingMore, listRef,
-        detailsBookNowHandler,isProcessingRef,loadMoreData } = useHotelSearch()
-
+        detailsBookNowHandler,isProcessingRef,loadMoreData ,noMoreData} = useHotelSearch()
+console.log('===================== more dat', noMoreData)
   const safeHotelsData = Array.isArray(hotelsData) && hotelsData?.length > 0
     ? hotelsData
     : Array.isArray(hotelsData)
@@ -486,10 +486,15 @@ function getOptionLabel(option: string) {
             )}
 
             {/* Load More */}
-            {isloadingMore &&
+            {isloadingMore  &&
               <div className="w-full flex items-center justify-center">
-                <div className="w-[50%] py-2 my-5 flex gap-2 items-center justify-center rounded-full border border-blue-900 bg-white ">
+                <div className="w-[50%] py-2 my-5 flex gap-2 items-center justify-center rounded-full border border-blue-900  ">
                   <Spinner size={30} className="mr-1 text-blue-900" /> <p className="text-base font-medium text-blue-900 ">{dict?.hotel_listing?.loading_more || "Loading more"}</p>
+                </div>
+              </div> }
+             {noMoreData && !isloadingMore && !isLoading && !isFilterLoading && hotelsData?.length > 0 && <div className="w-full flex items-center justify-center">
+                <div className="w-[50%] py-2 my-5 flex gap-2 items-center justify-center rounded-full bg-white ">
+                  <p className="text-base font-medium text-blue-900 ">{dict?.hotel_listing?.no_more_Data || "No more data found"}</p>
                 </div>
               </div>
             }

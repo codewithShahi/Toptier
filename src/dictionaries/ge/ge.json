@@ -2,25 +2,25 @@
   "home_page": {
     "hero_section": {
       "where_to": "Wohin?",
-      "hotel_search_placeholder": "Stadt oder Hotel suchen…",
-      "check_in": "Check-in",
-      "check_out": "Check-out",
+      "hotel_search_placeholder": "Stadt oder Hotel suchen...",
+      "check_in": "Anreise",
+      "check_out": "Abreise",
       "guests": "Gäste",
       "rooms": "Zimmer",
       "adults": "Erwachsene",
       "children": "Kinder",
-      "child_age": "Kindesalter",
+      "child_age": "Kinderalter",
       "years": "Jahre",
       "nationality": "Nationalität",
       "search_homes": "Unterkünfte suchen",
-      "searching": "Suche...",
+      "searching": "Suche läuft...",
       "signup": "Registrieren",
       "login": "Anmelden"
     }
   },
   "signup_form": {
     "heading": "Konto erstellen",
-    "already_account": "Schon ein Konto?",
+    "already_account": "Haben Sie bereits ein Konto?",
     "sign_in": "Anmelden",
     "first_name": "Vorname",
     "first_name_placeholder": "Geben Sie Ihren Vornamen ein",
@@ -31,13 +31,13 @@
     "phone_label": "Telefonnummer",
     "phone_placeholder": "Telefonnummer (+92xxxxxxxxxxx)",
     "email_label": "E-Mail",
-    "email_placeholder": "E-Mail Adresse",
+    "email_placeholder": "E-Mail-Adresse",
     "password_label": "Passwort",
     "password_placeholder": "Passwort eingeben",
-    "human_label": "Ich bin menschlich",
-    "agree_text": "Ich stimme zu",
+    "human_label": "Ich bin kein Roboter",
+    "agree_text": "Ich stimme den",
     "terms_of_use": "Nutzungsbedingungen",
-    "and": "und",
+    "and": "und der",
     "privacy_policy": "Datenschutzrichtlinie",
     "create_account_button": "Konto erstellen",
     "success_message": "Registrierung erfolgreich! 🎉"
@@ -45,58 +45,58 @@
   "errors": {
     "first_name_required": "Vorname ist erforderlich",
     "last_name_required": "Nachname ist erforderlich",
-    "email_invalid": "Ungültige E-Mail Adresse",
+    "email_invalid": "Ungültige E-Mail-Adresse",
     "phone_number_required": "Telefonnummer ist erforderlich",
-    "phone_number_invalid": "Geben Sie eine gültige internationale Telefonnummer ein",
+    "phone_number_invalid": "Bitte geben Sie eine gültige internationale Telefonnummer ein",
     "country_code_required": "Ländercode ist erforderlich",
-    "password_min_length": "Passwort muss mindestens 6 Zeichen lang sein",
-    "terms_required": "Sie müssen den Nutzungsbedingungen zustimmen",
-    "human_required": "Bitte bestätigen Sie, dass Sie menschlich sind"
+    "password_min_length": "Das Passwort muss mindestens 6 Zeichen lang sein",
+    "terms_required": "Sie müssen die Allgemeinen Geschäftsbedingungen akzeptieren",
+    "human_required": "Bitte bestätigen Sie, dass Sie kein Roboter sind"
   },
   "login_form": {
-    "success_message": "Login erfolgreich!",
+    "success_message": "Anmeldung erfolgreich!",
     "text": "Anmelden",
     "email_message": "E-Mail ist erforderlich",
     "password_message": "Passwort ist erforderlich",
-    "new_user": "Neuer Nutzer?",
+    "new_user": "Neuer Benutzer?",
     "create_account": "Konto erstellen",
     "email": "E-Mail",
     "email_placeholder": "Geben Sie Ihre E-Mail ein",
     "password": "Passwort",
-    "password_placeholder": "Passwort eingeben",
+    "password_placeholder": "Geben Sie Ihr Passwort ein",
     "remember_me": "Angemeldet bleiben",
     "forgot_password": "Passwort vergessen?",
     "login_button": "Anmelden"
   },
   "featured_dest": {
-    "dest_heading": "Top-Ziel",
-    "dest_subheading": "Entdecken Sie die atemberaubendsten und begehrtesten Reiseziele für unvergessliche Erlebnisse weltweit.",
-    "no_featured_dest": "Keine Top-Ziele verfügbar",
+    "dest_heading": "Empfohlenes Reiseziel",
+    "dest_subheading": "Entdecken Sie die atemberaubendsten und begehrtesten Reiseziele der Welt – kuratiert für unvergessliche Erlebnisse.",
+    "no_featured_dest": "Kein empfohlenes Reiseziel",
     "dest_explore": "Jetzt entdecken",
-    "error": "Benutzer muss eingeloggt sein, um als Favorit zu markieren"
+    "error": "Sie müssen angemeldet sein, um Favoriten hinzuzufügen"
   },
   "featured_hotels": {
     "heading": "Empfohlene Hotels",
-    "subheading": "Erleben Sie Weltklasse-Komfort und unvergleichliche Gastfreundschaft im Herzen des Paradieses.",
-    "no_amenities": "Keine Annehmlichkeiten gefunden",
+    "subheading": "Erleben Sie erstklassigen Komfort und unvergleichliche Gastfreundschaft im Herzen des Paradieses.",
+    "no_amenities": "Keine Ausstattung gefunden",
     "book_now": "Jetzt buchen",
-    "loading": "Lädt…",
+    "loading": "Wird geladen...",
     "per_night": "/Nacht",
-    "error_login_required": "Benutzer muss eingeloggt sein, um Favorit hinzuzufügen",
-    "error_failed_fav": "Favorit-Aktualisierung fehlgeschlagen",
+    "error_login_required": "Sie müssen angemeldet sein, um Favoriten hinzuzufügen",
+    "error_failed_fav": "Favoriten konnten nicht aktualisiert werden",
     "success_updated_fav": "Favoriten aktualisiert",
     "something_wrong": "Etwas ist schiefgelaufen"
   },
   "offer_sec": {
-    "offer_heading": "Warum uns wählen",
-    "offer_subheading": "Erleben Sie unübertroffene Reisedienstleistungen mit uns, bei denen Ihre Zufriedenheit oberste Priorität hat."
+    "offer_heading": "Warum uns wählen?",
+    "offer_subheading": "Erleben Sie unvergleichlichen Reiseservice mit uns – Ihre Zufriedenheit hat höchste Priorität."
   },
   "testi_sec": {
     "testi_see_room": "Zimmer ansehen",
-    "testi_heading": "Was unsere",
+    "testi_heading": "Was unsere ",
     "testi_heading_2": "Gäste sagen",
-    "testi_subheading": "Sehen Sie, warum Reisende uns vertrauen – echte Bewertungen zu Komfort, Bequemlichkeit und unvergesslichem Aufenthalt",
-    "testi_autoplay": "Automatisch abspielend • Tippen zum Pausieren"
+    "testi_subheading": "Sehen Sie, warum Reisende uns vertrauen – echte Bewertungen zu Komfort, Bequemlichkeit und unvergesslichen Aufenthalten",
+    "testi_autoplay": "Automatische Wiedergabe • Zum Pausieren antippen"
   },
   "news_letter_sec": {
     "letter": "Newsletter",
@@ -107,11 +107,11 @@
     "letter_continue": "Weiter"
   },
   "footer": {
-    "subheading": "Entdecken Sie außergewöhnliche Unterkünfte mit unseren sorgfältig kuratierten Hotels und exklusivem Zugang zu den schönsten Reisezielen der Welt.",
+    "subheading": "Entdecken Sie außergewöhnliche Unterkünfte mit unseren sorgfältig ausgewählten Hotels und exklusivem Zugang zu den besten Reisezielen der Welt.",
     "connect": "Bleiben Sie verbunden",
-    "subconnect": "Abonnieren Sie, um Reisetipps, exklusive Angebote und die neuesten Updates zu erhalten.",
+    "subconnect": "Abonnieren Sie unseren Newsletter für Reisetipps, exklusive Angebote und die neuesten Updates.",
     "email_placeholder": "Geben Sie Ihre E-Mail ein",
-    "subscribing": "Abonnieren…",
+    "subscribing": "Wird abonniert...",
     "subscribe": "Abonnieren",
     "success": "Erfolgreich abonniert",
     "copyright": "Alle Rechte vorbehalten.",
@@ -123,26 +123,26 @@
   "hotel_listing": {
     "advanced_search": "Erweiterte Suche",
     "search_hotels": "Hotels suchen",
-    "search_by_hotel_name": "Nach Hotelnamen suchen",
+    "search_by_hotel_name": "nach Hotelname suchen",
     "per_night": "(pro Nacht)",
     "price_range": "Preisspanne",
     "hotel_stars": "Hotelsterne",
     "stars": "Sterne",
     "reset_filters": "Filter zurücksetzen",
-    "apply": "Übernehmen",
+    "apply": "Anwenden",
     "hotels_found": "Hotels gefunden",
-    "loading_more": "Mehr laden…",
-    "searching_for_hotels": "Hotelsuche…",
+    "loading_more": "Mehr laden",
+    "searching_for_hotels": "Suche nach Hotels...",
     "no_hotels_found": "Keine Hotels gefunden",
-    "search_criteria": "Versuchen Sie, Ihre Filter oder Suchkriterien anzupassen",
+    "search_criteria": "Passen Sie Ihre Filter oder Suchkriterien an",
     "reset_all_filters": "Alle Filter zurücksetzen",
     "filters_search": "Filter & Suche",
     "apply_filters": "Filter anwenden",
     "hotels": "Hotels",
     "sort": "Sortieren",
     "rating": "Bewertung",
-    "low_to_high": "Von niedrig nach hoch",
-    "high_to_low": "Von hoch nach niedrig",
+    "low_to_high": "Preis aufsteigend",
+    "high_to_low": "Preis absteigend",
     "name_a_to_z": "Name (A–Z)",
     "book_now": "Jetzt buchen"
   },
@@ -155,83 +155,83 @@
   "hotelDetails": {
     "hotelNamePlaceholder": "Hotelname",
     "aboutThisProperty": "Über diese Unterkunft",
-    "noAmenities": "Keine Annehmlichkeiten gefunden",
+    "noAmenities": "Keine Ausstattung gefunden",
     "showMore": "Mehr anzeigen",
     "chooseYourRoom": "Wählen Sie Ihr Zimmer",
-    "noRoomsAvailable": "Keine Zimmer verfügbar für die ausgewählten Daten.",
-    "theToptierWayToTravel": "Der Toptier-Weg zu reisen",
-    "noBrandStories": "Keine Markengeschichten verfügbar",
-    "needToKnowDetails": "Wissenswerte Details",
+    "noRoomsAvailable": "Für Ihre ausgewählten Daten sind keine Zimmer verfügbar.",
+    "theToptierWayToTravel": "Der TopTier-Reisestil",
+    "noBrandStories": "Für diese Unterkunft sind keine Markengeschichten verfügbar.",
+    "needToKnowDetails": "Wichtige Informationen",
     "frequentlyAskedQuestions": "Häufig gestellte Fragen",
     "noSimilarHotels": "Keine ähnlichen Hotels gefunden.",
     "readMore": "Mehr lesen",
-    "readLess": "Weniger lesen",
-    "topRated": "Top bewertet",
+    "readLess": "Weniger anzeigen",
+    "topRated": "Bestbewertet",
     "freeCancellation": "Kostenlose Stornierung",
     "bestPriceGuarantee": "Bestpreisgarantie",
     "map": "Karte",
-    "unableToLoad": "Hotel-Details konnten nicht geladen werden",
-    "pleaseTryAgain": "Bitte später erneut versuchen.",
-    "allAmenities": "Alle Annehmlichkeiten",
+    "unableToLoad": "Hoteldetails konnten nicht geladen werden",
+    "pleaseTryAgain": "Bitte versuchen Sie es später erneut.",
+    "allAmenities": "Alle Ausstattungsmerkmale",
     "youmightAlsoLike": "Das könnte Ihnen auch gefallen"
   },
   "bookingForm": {
     "personalInformation": {
       "title": "Persönliche Informationen",
-      "subtitle": "Teilen Sie uns den Namen der Person mit, die eincheckt.",
+      "subtitle": "Geben Sie den Namen der eincheckenden Person an.",
       "firstNameLabel": "Vorname",
       "lastNameLabel": "Nachname",
       "addressLabel": "Adresse"
     },
     "contactInformation": {
       "title": "Kontaktinformationen",
-      "subtitle": "Wir senden Ihre Bestätigung an diese E-Mail.",
-      "emailLabel": "E-Mail Adresse",
-      "nationalityLabel": "Nationalität",
+      "subtitle": "Wir senden Ihre Bestätigung an diese E-Mail-Adresse.",
+      "emailLabel": "E-Mail-Adresse",
+      "nationalityLabel": "Staatsangehörigkeit",
       "currentCountryLabel": "Aktuelles Land",
       "phoneCodeLabel": "Ländervorwahl",
       "phoneNumberLabel": "Telefonnummer"
     },
     "travelersInformation": {
-      "title": "Reiseinformationen",
-      "subtitle": "Wichtige Details für die Buchungsabwicklung",
+      "title": "Reisende",
+      "subtitle": "Wichtige Angaben zur Buchungsvollendung",
       "adultTraveller": "Erwachsener Reisender",
-      "childTraveller": "Kind Reisender",
-      "titleLabel": "Titel"
+      "childTraveller": "Kind",
+      "titleLabel": "Anrede"
     },
     "paymentMethod": {
       "title": "Zahlungsmethode",
-      "subtitle": "Sichere Transaktionen. Ihre persönlichen Daten sind geschützt.",
+      "subtitle": "Sichere und geschützte Transaktionen. Ihre persönlichen Daten sind geschützt.",
       "noPaymentMethods": "Keine Zahlungsmethoden verfügbar"
     },
     "cancellationPolicy": {
-      "title": "Stornierungsrichtlinie",
-      "acceptText": "Ich akzeptiere die Stornierungsrichtlinie für diese Buchung und die",
-      "termsAndConditions": "AGB"
+      "title": "Stornierungsbedingungen",
+      "acceptText": "Ich akzeptiere die Stornierungsbedingungen für diese Buchung sowie die",
+      "termsAndConditions": "Allgemeinen Geschäftsbedingungen"
     },
     "buttons": {
       "confirmAndBook": "Bestätigen & Buchen",
-      "processing": "Verarbeitung…"
+      "processing": "Wird verarbeitet..."
     },
     "errors": {
       "firstNameRequired": "Vorname ist erforderlich",
       "lastNameRequired": "Nachname ist erforderlich",
       "addressRequired": "Adresse ist erforderlich",
-      "invalidEmail": "Ungültige E-Mail Adresse",
-      "nationalityRequired": "Nationalität ist erforderlich",
+      "invalidEmail": "Ungültige E-Mail-Adresse",
+      "nationalityRequired": "Staatsangehörigkeit ist erforderlich",
       "currentCountryRequired": "Aktuelles Land ist erforderlich",
       "countryCodeRequired": "Ländervorwahl ist erforderlich",
       "phoneNumberRequired": "Telefonnummer ist erforderlich",
-      "invalidPhoneNumber": "Geben Sie eine gültige internationale Telefonnummer ein",
+      "invalidPhoneNumber": "Bitte geben Sie eine gültige internationale Telefonnummer ein",
       "atLeastOneTraveller": "Mindestens ein Reisender ist erforderlich",
-      "titleRequired": "Titel ist erforderlich",
-      "paymentMethodRequired": "Bitte Zahlungsmethode auswählen",
-      "acceptPolicyRequired": "Sie müssen die Stornierungsrichtlinie akzeptieren"
+      "titleRequired": "Anrede ist erforderlich",
+      "paymentMethodRequired": "Bitte wählen Sie eine Zahlungsmethode",
+      "acceptPolicyRequired": "Sie müssen die Stornierungsbedingungen akzeptieren"
     },
     "titles": {
       "mr": "Herr",
       "mrs": "Frau",
-      "ms": "Fräulein",
+      "ms": "Frau",
       "dr": "Dr."
     }
   },
@@ -245,7 +245,7 @@
     "nights": "Nächte",
     "guests": "Gäste",
     "roomPrice": "Zimmerpreis",
-    "toptierFee": "Toptier Gebühr",
+    "toptierFee": "TopTier-Gebühr",
     "total": "Gesamt",
     "adults": "Erwachsene",
     "children": "Kinder"
@@ -260,9 +260,11 @@
       "phone": "Telefon:",
       "email": "E-Mail:"
     },
-    "bookingNote": "Stornierungsanfrage gesendet. Wir aktualisieren, sobald sich der Status ändert",
+    "bookingNote": "Stornierungsanfrage gesendet. Wir aktualisieren den Status sobald möglich.",
     "bookingInfo": {
-      "bookingId": "PNR",
+      "bookingId": "Buchungsnummer",
+      "bookingpnr": "PNR",
+      "proceed": "Fortfahren",
       "reference": "Referenz",
       "date": "Datum",
       "location": "Ort"
@@ -271,14 +273,14 @@
       "title": "Reisende",
       "table": {
         "no": "Nr.",
-        "sr": "Sr",
+        "sr": "Nr.",
         "name": "Name"
       }
     },
     "hotelInfo": {
       "phone": "Telefon:",
       "email": "E-Mail:",
-      "website": "Webseite:"
+      "website": "Website:"
     },
     "roomDetails": {
       "title": "Zimmerdetails",
@@ -288,9 +290,9 @@
       "total": "Gesamt:"
     },
     "fareAndTax": {
-      "rateCommentTitle": "Tarifkommentar",
-      "taxMessage": "Geschätzter Gesamtbetrag an Steuern & Gebühren für diese Buchung: {tax} zahlbar bei Ankunft. Die Stadtssteuer kann je nach Unterkunft variieren. Check-in 14:00-00:00. Check-out 12:30-12:00.",
-      "taxLabel": "STEUER",
+      "rateCommentTitle": "Preiskommentar",
+      "taxMessage": "Geschätzte Gesamtsumme an Steuern & Gebühren für diese Buchung: {tax}, zahlbar bei Ankunft. Die Kurtaxe kann je nach Unterkunft variieren. Check-in: 14:00–00:00 Uhr. Check-out: 12:30–12:00 Uhr.",
+      "taxLabel": "STEUERN",
       "totalLabel": "Gesamt"
     },
     "customer": {
@@ -303,38 +305,40 @@
       "title": "Kundenservice",
       "email": "E-Mail:",
       "contact": "Kontakt:",
-      "website": "Webseite:"
+      "website": "Website:"
     },
     "buttons": {
       "downloadPdf": "PDF herunterladen",
-      "payNow": "Jetzt bezahlen"
+      "payNow": "Jetzt bezahlen",
+      "sendToWhatsApp": "Über WhatsApp senden",
+      "requestCancellation": "Stornierung anfragen"
     },
     "alert": {
-      "pdfNotImplemented": "PDF-Download Funktion wird später implementiert."
+      "pdfNotImplemented": "Die PDF-Download-Funktion wird zu einem späteren Zeitpunkt implementiert."
     }
   },
   "support": {
     "heading": "Support",
     "p_1": "Bei",
-    "p_3": "sind wir leidenschaftlich daran interessiert, Ihnen zu helfen, die Welt mit Komfort und Vertrauen zu erkunden. Ihre Unterstützung hilft uns, weiterhin die besten Reiseerlebnisse, Hotelangebote und Inspirationen für jeden Reisenden anzubieten.",
+    "p_3": "lieben wir es, Ihnen zu helfen, die Welt komfortabel und sicher zu entdecken. Ihre Unterstützung ermöglicht es uns, weiterhin die besten Reiseerlebnisse, Hotelangebote und Inspirationen für jeden Reisenden anzubieten.",
     "contact_us": "Kontaktieren Sie uns",
     "empower_travelers": "Reisende stärken",
-    "empower_travelers_p": "Ihr Beitrag hilft Reisenden, versteckte Juwelen und vertrauenswürdige Ziele weltweit zu entdecken.",
-    "sustain_quality": "Qualität sichern",
-    "sustain_quality_p": "Wir verbessern kontinuierlich unsere Dienste und schaffen bessere Reiseerlebnisse für alle.",
-    "community_growth": "Gemeinschaftswachstum",
-    "community_growth_p": "Schließen Sie sich unserer Mission an, eine globale Gemeinschaft leidenschaftlicher Reisender aufzubauen."
+    "empower_travelers_p": "Ihre Unterstützung hilft Reisenden, verborgene Schätze und vertrauenswürdige Ziele weltweit zu entdecken.",
+    "sustain_quality": "Qualität bewahren",
+    "sustain_quality_p": "Wir verbessern unsere Dienstleistungen kontinuierlich, um bessere Reiseerlebnisse für alle zu schaffen.",
+    "community_growth": "Gemeinschaft aufbauen",
+    "community_growth_p": "Treten Sie unserer Mission bei, eine globale Gemeinschaft leidenschaftlicher Entdecker zu schaffen."
   },
   "profilelabels": {
     "profileHeading": "Profilinformationen",
     "firstName": "Vorname",
     "lastName": "Nachname",
     "email": "E-Mail",
-    "password": "Passwort (Optional)",
-    "phoneCode": "Telefon-Code",
+    "password": "Passwort (optional)",
+    "phoneCode": "Ländervorwahl",
     "phoneNumber": "Telefonnummer",
     "country": "Land",
-    "state": "Bundesland",
+    "state": "Bundesland / Region",
     "city": "Stadt",
     "address1": "Adresse 1",
     "address2": "Adresse 2"
@@ -342,10 +346,10 @@
   "profileplaceholders": {
     "firstName": "Vorname",
     "lastName": "Nachname",
-    "email": "E-Mail Adresse",
-    "password": "Neues Passwort (leer lassen, um aktuell beizubehalten)",
-    "phoneNumber": "Telefonnummer (z. B. 923483344559)",
-    "state": "Bundesland",
+    "email": "E-Mail-Adresse",
+    "password": "Neues Passwort (leer lassen, um aktuelles zu behalten)",
+    "phoneNumber": "Telefonnummer (z. B. 923483344559)",
+    "state": "Bundesland / Region",
     "city": "Stadt",
     "address1": "Adresszeile 1",
     "address2": "Adresszeile 2",
@@ -361,47 +365,47 @@
     "updating": "Wird aktualisiert..."
   },
   "profilemessages": {
-    "loginRequired": "Bitte melden Sie sich an, um Ihr Profil anzusehen."
+    "loginRequired": "Bitte melden Sie sich an, um Ihr Profil anzuzeigen."
   },
   "profileerrors": {
     "firstNameRequired": "Vorname ist erforderlich",
     "lastNameRequired": "Nachname ist erforderlich",
-    "invalidEmail": "Ungültige E-Mail Adresse",
+    "invalidEmail": "Ungültige E-Mail-Adresse",
     "phoneRequired": "Telefonnummer ist erforderlich",
-    "invalidPhone": "Geben Sie eine gültige internationale Telefonnummer ein",
+    "invalidPhone": "Bitte geben Sie eine gültige internationale Telefonnummer ein",
     "countryCodeRequired": "Ländervorwahl ist erforderlich",
-    "passwordTooShort": "Passwort muss mindestens 6 Zeichen lang sein"
+    "passwordTooShort": "Das Passwort muss mindestens 6 Zeichen lang sein"
   },
   "dashboard": {
     "welcome_back": "Willkommen zurück,",
-    "overview_text": "Hier ist ein kurzer Überblick über Ihr Reise-Konto",
-    "wallet_balance": "Kontostand",
-    "wallet_balance_sub": "Gesamtkontostand",
+    "overview_text": "Hier ist ein schneller Überblick über Ihr Reisekonto",
+    "wallet_balance": "Guthaben",
+    "wallet_balance_sub": "Gesamtguthaben",
     "bookings": "Buchungen",
-    "bookings_sub": "Gesamtbuchungen",
+    "bookings_sub": "Gesamte Buchungen",
     "pending_invoices": "Ausstehende Rechnungen",
     "pending_invoices_sub": "Ausstehende Rechnungen",
     "all": "Alle",
     "paid": "Bezahlt",
     "unpaid": "Unbezahlt",
     "cancelled": "Storniert",
-    "search_placeholder": "Suche...",
+    "search_placeholder": "Suchen...",
     "client_name": "Kundenname",
-    "booking_id": "Buchungs-ID",
+    "booking_id": "Buchungsnummer",
     "pnr": "PNR",
     "payment": "Zahlung",
     "booking": "Buchung",
     "date": "Datum",
     "price": "Preis",
     "no_bookings_found": "Keine Buchungen gefunden.",
-    "showing": "Zeigt an",
+    "showing": "Zeige",
     "of": "von",
-    "entries": "Einträge",
+    "entries": "Einträgen",
     "prev": "Zurück",
     "next": "Weiter"
   },
   "hotel_search": {
-    "check_in_out_label": "Check-in | Check-out",
+    "check_in_out_label": "Anreise | Abreise",
     "guest_button": {
       "title": "Gäste",
       "guest_title": "Gäste",
@@ -409,12 +413,12 @@
     },
     "nationality_label": "Nationalität",
     "search_btnText": "Unterkünfte suchen",
-    "searching": "Suche...",
+    "searching": "Suche läuft...",
     "search_btnText_mobile": "Suchen",
     "rooms_label": "Zimmer",
     "adults_label": "Erwachsene",
     "children_label": "Kinder",
-    "child_age_label": "Kindesalter",
+    "child_age_label": "Kinderalter",
     "years_label": "Jahre"
   }
 }

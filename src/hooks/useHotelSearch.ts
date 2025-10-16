@@ -119,6 +119,7 @@ const useHotelSearch = () => {
   const [locationError, setLocationError] = useState("");
   const [activeIndex, setActiveIndex] = useState(-1);
   const [isloadingMore, setIsLoadingMore] = useState(false);
+const [noMoreData, setNoMoreData] = useState(false);
   const [selectedHotel, setSelectedHotel] = useState<any>({});
   const [selectedRomm, setSelectedRoom] = useState<any>({});
   // FIX 1: Add separate loading states
@@ -378,12 +379,13 @@ const useHotelSearch = () => {
   const loadMoreData = useCallback(
     async (filters?: any) => {
       // e?.preventDefault();
-      if (isloadingMore || isProcessingRef.current) return;
+      if ( isloadingMore || isProcessingRef.current) return;
       const { priceRange, selectedRating } = filters;
       const from_price = priceRange[0];
       const to_price = priceRange[1];
 
       setIsLoadingMore(true);
+      setNoMoreData(false)
       try {
         const savedForm = localStorage.getItem("hotelSearchForm");
         if (!savedForm) return;
@@ -409,21 +411,24 @@ const useHotelSearch = () => {
           hotelModuleNames
         );
         if (result.success.length > 0) {
-          // const existingIds = new Set(allHotelsData.map((h) => h.hotel_id));
-          // const newHotels = result.success.filter(
-          //   (hotel) => hotel?.hotel_id && !existingIds.has(hotel.hotel_id)
-          // );
-
           if (result.success.length > 0) {
             const updatedHotels = [...allHotelsData, ...result.success];
             dispatch(setHotels(updatedHotels));
             queryClient.setQueryData(["hotel-search"], updatedHotels);
             setPage(nextPage);
+            setIsLoadingMore(false);
+                    setNoMoreData(false); // Reset the flag
+
+
             return { success: true, data: result.success };
+
           } else {
+                                setNoMoreData(true);
             return { success: false, error: "No new hotels found" };
           }
         } else {
+          setIsLoadingMore(false);
+             setNoMoreData(true);
           return { success: false, error: "No more data" };
         }
       } catch (err) {
@@ -431,6 +436,8 @@ const useHotelSearch = () => {
         return { success: false, error: "Load more failed" };
       } finally {
         setIsLoadingMore(false);
+
+
       }
     },
     [
@@ -595,6 +602,7 @@ const useHotelSearch = () => {
     setIsLoadingMore,
     isloadingMore, // For load more button
     allHotelsData,
+    noMoreData,
     hotels_Data,
     searchError: hotelSearchMutation.error,
     listRef,

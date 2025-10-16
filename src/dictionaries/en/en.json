@@ -16,7 +16,7 @@
       "searching": "Searching...",
       "signup": "Sign Up",
       "login": "Login"
-    }  
+    }
   },
   "signup_form": {
     "heading": "Create an Account",
@@ -132,6 +132,7 @@
     "apply": "Apply",
     "hotels_found": "hotels found",
     "loading_more": "Loading more",
+    "no_more_Data": "No more data found",
     "searching_for_hotels": "Searching for hotels...",
     "no_hotels_found": "No hotels found",
     "search_criteria": "Try adjusting your filters or search criteria",
@@ -262,7 +263,9 @@
     },
     "bookingNote": "Cancellation request sent. we will update as soon as we change the status",
     "bookingInfo": {
-      "bookingId": "PNR",
+      "bookingId": "Booking ID",
+      "bookingpnr": "PNR",
+      "proceed": "Proceed",
       "reference": "Reference",
       "date": "Date",
       "location": "Location"
@@ -307,7 +310,9 @@
     },
     "buttons": {
       "downloadPdf": "Download PDF",
-      "payNow": "Pay Now"
+      "payNow": "Pay Now",
+      "sendToWhatsApp": "Send to WhatsApp",
+      "requestCancellation": "Request for Cancellation"
     },
     "alert": {
       "pdfNotImplemented": "PDF download functionality will be implemented later."
