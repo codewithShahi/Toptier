@@ -817,7 +817,7 @@ export const cancel_payment = async (booking_ref_no:string) => {
     //  match exactly with API keys
     formData.append("booking_ref_no", booking_ref_no);
 
-    const response = await fetch(`${baseUrl}/invoice/process-payment`, {
+    const response = await fetch(`${baseUrl}/hotels/cancellation`, {
       method: "POST",
       body: formData,
     });

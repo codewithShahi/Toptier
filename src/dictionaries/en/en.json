@@ -12,7 +12,7 @@
       "child_age": "Child Age",
       "years": "years",
       "nationality": "Nationality",
-      "search_homes": "Search Homes",
+      "search_hotels": "Search Hotels",
       "searching": "Searching...",
       "signup": "Sign Up",
       "login": "Login"
@@ -414,7 +414,7 @@
       "room_title": "Room(s)"
     },
     "nationality_label": "Nationality",
-    "search_btnText": "Search Homes",
+    "search_btnText": "Search Hotels",
     "searching": "Searching...",
     "search_btnText_mobile": "Search",
     "rooms_label": "Rooms",

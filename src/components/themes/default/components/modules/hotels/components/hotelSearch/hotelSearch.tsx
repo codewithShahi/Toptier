@@ -499,7 +499,7 @@ export default function HotelSearch() {
                     </svg>
                     <span className="hidden md:block text-white dark:text-gray-50 font-normal">
                       {/* {isLoading ? "Loading..." : dict?.hotel_search?.search_btnText} */}
-                      {dict?.home_page?.hero_section?.search_homes || "Search Homes"}
+                      {dict?.home_page?.hero_section?.search_hotels || "Search Hotels"}
                     </span>
                   </>
                 )}

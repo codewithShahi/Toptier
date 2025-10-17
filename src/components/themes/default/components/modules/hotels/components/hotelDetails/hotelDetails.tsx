@@ -149,9 +149,9 @@ const HotelsDetails = () => {
     room: "mdi:bed",
     hair: "mdi:hair-dryer",
     luxury: "mdi:crown",
-     dinner: "mdi:food-steak",       // 🍽️ dinner/meal icon
-  booking: "mdi:calendar-check",  // 📅 confirmed booking/reservation
-  board: "mdi:clipboard-list",    // 📝 board/notice/list icon
+    dinner: "mdi:food-steak",       // 🍽️ dinner/meal icon
+    booking: "mdi:calendar-check",  // 📅 confirmed booking/reservation
+    board: "mdi:clipboard-list",    // 📝 board/notice/list icon
   };
 
   const getAmenityIcon = (amenity: string): string => {
@@ -170,40 +170,40 @@ const HotelsDetails = () => {
     tempDiv.innerHTML = html;
     return tempDiv.textContent || tempDiv.innerText || "";
   };
-// Add this function to your HotelsDetails component
+  // Add this function to your HotelsDetails component
 
-const handleSuggestionClick = (hotel: any) => {
-  // Get current search parameters from state
-  const { checkin, checkout, rooms, adults, children, nationality } = searchParams;
+  const handleSuggestionClick = (hotel: any) => {
+    // Get current search parameters from state
+    const { checkin, checkout, rooms, adults, children, nationality } = searchParams;
 
-  // Generate URL-friendly hotel name slug
-  const hotelNameSlug = hotel.name.toLowerCase().replace(/\s+/g, "-");
+    // Generate URL-friendly hotel name slug
+    const hotelNameSlug = hotel.name.toLowerCase().replace(/\s+/g, "-");
 
-  // Construct new URL with updated hotel ID and name, but same search params
-  const newUrl = `/hotelDetails/${hotel.id}/${hotelNameSlug}/${checkin}/${checkout}/${rooms}/${adults}/${children}/${nationality}`;
+    // Construct new URL with updated hotel ID and name, but same search params
+    const newUrl = `/hotelDetails/${hotel.id}/${hotelNameSlug}/${checkin}/${checkout}/${rooms}/${adults}/${children}/${nationality}`;
 
-  // Save hotel info to localStorage for supplier_name
-  const hotelData = {
-    hotel_id: hotel.id,
-    name: hotel.name,
-    supplier_name: hotel.supplier_name || supplier_name, // Use existing supplier_name if not provided
-    module: "hotels", // Static module
-    checkin,
-    checkout,
-    rooms,
-    adults,
-    children,
-    nationality
+    // Save hotel info to localStorage for supplier_name
+    const hotelData = {
+      hotel_id: hotel.id,
+      name: hotel.name,
+      supplier_name: hotel.supplier_name || supplier_name, // Use existing supplier_name if not provided
+      module: "hotels", // Static module
+      checkin,
+      checkout,
+      rooms,
+      adults,
+      children,
+      nationality
+    };
+
+    localStorage.setItem("currentHotel", JSON.stringify(hotelData));
+
+    // Navigate to new hotel details page
+    router.push(newUrl);
   };
 
-  localStorage.setItem("currentHotel", JSON.stringify(hotelData));
-
-  // Navigate to new hotel details page
-  router.push(newUrl);
-};
-
-// Update your HotelSuggestionSlider component call to pass the handler:
-// <HotelSuggestionSlider hotels={featured_hotels} onHotelClick={handleSuggestionClick} />
+  // Update your HotelSuggestionSlider component call to pass the handler:
+  // <HotelSuggestionSlider hotels={featured_hotels} onHotelClick={handleSuggestionClick} />
   const getFaqIcon = (question: string) => {
     const lowerQ = question.toLowerCase();
     if (lowerQ.includes("check-in") || lowerQ.includes("check out")) return "mdi:calendar-outline";
@@ -248,7 +248,7 @@ const handleSuggestionClick = (hotel: any) => {
       <section className="manor&spa py-4 max-w-[1200px] mx-auto appHorizantalSpacing">
         {isLoading ? (
           <div className="grid grid-cols-12 gap-4">
-            {/* Left Column - Description */}
+            {/* Left Column - Description Skeleton */}
             <div className="lg:col-span-8 col-span-12 ">
               <h1 className="text-[22px] font-[700] mb-3">{dict?.hotelDetails?.hotelNamePlaceholder}</h1>
               <Skeleton variant="text" width="70%" height={20} className="mb-1" />
@@ -263,7 +263,7 @@ const handleSuggestionClick = (hotel: any) => {
               </div>
             </div>
 
-            {/* Right Column - Amenities */}
+            {/* Right Column - Amenities Skeleton */}
             <div className="lg:col-span-4 col-span-12 lg:mt-0 mt-6">
               <h1 className="text-[22px] font-[700] mb-3">{dict?.hotelDetails?.aboutThisProperty}</h1>
               <Skeleton variant="text" width="50%" height={28} className="mb-4" />
@@ -283,25 +283,18 @@ const handleSuggestionClick = (hotel: any) => {
             {hotelDetails?.desc && hotelDetails.desc.trim() !== "" && (
               <div className="lg:col-span-8 col-span-12 flex flex-col gap-2 lg:pe-4">
                 <h1 className="text-2xl font-[800]">{hotelDetails?.name}</h1>
-
                 <p className="text-md font-[500] text-[#9297A0] md:hidden block">{hotelDetails?.address}</p>
                 <div className="flex items-center pb-1">
-                  {/* <div>
-                    <svg width="14" height="14" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M8.54662 14.6615L4.40353 17.1574C4.2205 17.2739 4.02915 17.3238 3.82949 17.3071C3.62982 17.2905 3.45511 17.2239 3.30536 17.1075C3.15561 16.991 3.03914 16.8456 2.95594 16.6712C2.87275 16.4968 2.85611 16.3011 2.90603 16.0842L4.00419 11.367L0.335316 8.19734C0.168927 8.04759 0.0651005 7.87687 0.023836 7.68519C-0.0174285 7.49351 -0.00511573 7.30649 0.0607743 7.12413C0.126664 6.94177 0.226498 6.79202 0.360275 6.67488C0.494051 6.55774 0.677079 6.48287 0.909358 6.45025L5.75128 6.02596L7.62316 1.58338C7.70635 1.38371 7.83547 1.23396 8.01051 1.13412C8.18555 1.03429 8.36425 0.984375 8.54662 0.984375C8.72898 0.984375 8.90768 1.03429 9.08272 1.13412C9.25776 1.23396 9.38688 1.38371 9.47007 1.58338L11.342 6.02596L16.1839 6.45025C16.4168 6.48353 16.5998 6.55841 16.733 6.67488C16.8661 6.79135 16.9659 6.9411 17.0325 7.12413C17.099 7.30716 17.1117 7.49451 17.0704 7.68619C17.0291 7.87787 16.925 8.04825 16.7579 8.19734L13.089 11.367L14.1872 16.0842C14.2371 16.3005 14.2205 16.4962 14.1373 16.6712C14.0541 16.8462 13.9376 16.9917 13.7879 17.1075C13.6381 17.2233 13.4634 17.2898 13.2637 17.3071C13.0641 17.3244 12.8727 17.2745 12.6897 17.1574L8.54662 14.6615Z" fill="#FE9A00" />
-                    </svg>
-                  </div> */}
                   <div className="flex items-center pt-1">
-                    {/* All stars same golden color — no orange first star */}
                     {Array.from({
-                      length: Math.min(5, Math.floor(hotelDetails?.stars || 0))
+                      length: Math.min(5, Math.floor(Number(hotelDetails?.stars) || 0))
                     }).map((_, i) => (
                       <svg
                         key={i}
                         width="14"
                         height="14"
                         viewBox="0 0 14 14"
-                        fill="#FFD700" 
+                        fill="#FFD700"
                         xmlns="http://www.w3.org/2000/svg"
                         className="pl-0.5 first:pl-0"
                       >
@@ -309,7 +302,6 @@ const handleSuggestionClick = (hotel: any) => {
                       </svg>
                     ))}
 
-                    {/* Dot separator */}
                     {hotelDetails?.stars > 0 && hotelDetails?.address && (
                       <span className="pl-2">
                         <svg width="7" height="7" viewBox="0 0 7 8" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -318,7 +310,6 @@ const handleSuggestionClick = (hotel: any) => {
                       </span>
                     )}
 
-                    {/* Address */}
                     <span className="text-md pl-2 font-[500] text-[#9297A0] line-clamp-2 lg:line-clamp-1" title={hotelDetails?.address}>
                       {hotelDetails?.address}
                     </span>
@@ -368,8 +359,6 @@ const handleSuggestionClick = (hotel: any) => {
                   )}
                 </div>
 
-
-                {/* Badges: only if desc exists */}
                 <div className="flex md:gap-3 gap-1 mt-8">
                   <div className="flex gap-1 py-1 bg-[#DBFCE7] rounded-[7.45px] md:px-3 px-1 items-center">
                     <svg width="17" height="17" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -417,22 +406,28 @@ const handleSuggestionClick = (hotel: any) => {
               </div>
             )}
 
-            {/* Right Column: Amenities — show if hotelDetails exists (even if amenities are missing) */}
+            
             {hotelDetails && (
               <div className="lg:col-span-4 col-span-12 lg:mt-0 mt-6 pl-8">
                 <h1 className="text-[22px] font-[700]">{dict?.hotelDetails?.aboutThisProperty}</h1>
 
-                {/* Use real amenities if available, else fallback to default ones */}
                 {(() => {
-                  const defaultAmenities = ["Free Wi-Fi", "Room Cleaning"];
-                  const amenitiesToShow =
-                    hotelDetails.amenities && hotelDetails.amenities.length > 0
-                      ? hotelDetails.amenities.slice(0, 4)
-                      : defaultAmenities;
+                  let amenitiesArray: string[] = [];
+                  const raw = hotelDetails.amenities;
+
+                  if (Array.isArray(raw)) {
+                    amenitiesArray = raw;
+                  } else if (typeof raw === 'string' && raw.trim()) {
+                    amenitiesArray = raw.split(/[,;]\s*/).map(s => s.trim()).filter(Boolean);
+                  }
+
+                  const amenitiesToShow = amenitiesArray.length > 0
+                    ? amenitiesArray.slice(0, 4)
+                    : ["Free Wi-Fi", "Room Cleaning"];
 
                   return (
                     <div className="grid grid-cols-2 gap-x-3 gap-y-6 mt-4">
-                      {amenitiesToShow.map((amenity: string, idx: number) => (
+                      {amenitiesToShow.map((amenity, idx) => (
                         <div key={idx} className="flex gap-3 items-start">
                           <div className="min-w-10 min-h-10 flex items-center justify-center rounded-lg bg-green-100 flex-shrink-0">
                             <Icon
@@ -451,9 +446,15 @@ const handleSuggestionClick = (hotel: any) => {
                   );
                 })()}
 
-                {/* "Show More" button only for real amenities with more than 4 items */}
-                {hotelDetails.amenities &&
-                  hotelDetails.amenities.length > 4 && (
+                {(() => {
+                  let amenitiesArray: string[] = [];
+                  const raw = hotelDetails.amenities;
+                  if (Array.isArray(raw)) {
+                    amenitiesArray = raw;
+                  } else if (typeof raw === 'string' && raw.trim()) {
+                    amenitiesArray = raw.split(/[,;]\s*/).map(s => s.trim()).filter(Boolean);
+                  }
+                  return amenitiesArray.length > 4 && (
                     <div className="mt-6 text-center">
                       <button
                         onClick={() => setIsModalOpen(true)}
@@ -462,7 +463,8 @@ const handleSuggestionClick = (hotel: any) => {
                         {dict?.hotelDetails?.showMore}
                       </button>
                     </div>
-                  )}
+                  );
+                })()}
               </div>
             )}
           </div>
@@ -495,10 +497,10 @@ const handleSuggestionClick = (hotel: any) => {
           </div>
         ) : hotelDetails?.rooms && hotelDetails.rooms.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {hotelDetails.rooms.map((room: any, index:number) => (
+            {hotelDetails.rooms.map((room: any, index: number) => (
               <RoomCard
 
-              key={index}
+                key={index}
 
                 room={room}
                 options={""}
@@ -566,8 +568,8 @@ const handleSuggestionClick = (hotel: any) => {
 
       {/* Suggested Hotels — ONLY if featured_hotels has data */}
       {Array.isArray(featured_hotels) && featured_hotels.length > 0 && (
-        <HotelSuggestionSlider hotels={featured_hotels}   onHotelClick={handleSuggestionClick}
-/>
+        <HotelSuggestionSlider hotels={featured_hotels} onHotelClick={handleSuggestionClick}
+        />
       )}
 
       {/* General FAQs — ONLY if data exists */}
