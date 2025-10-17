@@ -148,7 +148,7 @@ export default function HotelSearch() {
                   {locationLoading ? (
                     <div className="bg-white flex items-center justify-center min-h-24 gap-2 p-3 text-sm text-gray-500">
                       <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-400"></div>
-                      <span>Searching...</span>
+                      <span>{dict?.hotel_search?.searching}</span>
                     </div>
                   ) : (
                     <>
@@ -265,7 +265,7 @@ export default function HotelSearch() {
                 </span>
                 <Icon icon="mdi:chevron-down" width={20} height={20} className={`text-gray-600 transition-transform duration-200 ${showGuestsDropdown ? "rotate-180" : ""}`} />
               </button>
-              {/* dfsflslfsldflsdkfjdsflsdjf */}
+             
               {showGuestsDropdown && (
                 <div className="absolute z-20 w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg mt-1 md:min-w-[350px] max-h-auto overflow-visible">
                   <div className="p-4 space-y-4">
@@ -362,7 +362,7 @@ export default function HotelSearch() {
                                   </label>
                                   <Dropdown
                                     label={
-                                      <span className="block text-left w-full  px-1 py-2 text-sm text-gray-700">
+                                      <span className="block text-left w-full   px-1 py-2 text-sm text-gray-700">
                                         {currentAge || 1} {dict?.home_page?.hero_section?.years || "years"}
                                       </span>
                                     }
@@ -484,7 +484,7 @@ export default function HotelSearch() {
               <div className="mt-3 md:mt-7" />
               <button
                 type="submit"
-                // disabled={isSearching}
+                
                 className="w-full bg-blue-900 py-2 px-6 cursor-pointer font-medium flex items-center hover:bg-gray-800 border border-gray-200 rounded-xl text-white dark:border-gray-600 dark:hover:bg-gray-700 justify-center gap-2 focus:outline-none transition-all duration-200"
               >
                 {isSearching ? (

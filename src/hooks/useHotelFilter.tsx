@@ -257,7 +257,6 @@ const updateRatingFilter = useCallback(
       );
       //  Sync to Redux
       dispatch(setHotels(result.success));
-
       // Optional: update React Query cache if you're using it elsewhere
       queryClient.setQueryData(["hotel-search"], result.success);
     } catch (err) {
@@ -294,7 +293,6 @@ const updateRatingFilter = useCallback(
 const resetFilters = useCallback(async (e?: any) => {
     try {
       setIsFilterLoading(true);
-
       // Reset filter state first
       setFilters({
         priceRange: [priceRange.min, priceRange.max],

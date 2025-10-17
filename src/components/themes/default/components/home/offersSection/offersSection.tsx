@@ -55,7 +55,7 @@ const OfferSection = () => {
                 className="relative max-w-[410px] max-h-[270px] bg-[#163C8C] rounded-2xl p-6 text-white overflow-hidden"
               >
                 {/*=========== Content */}
-                <div className="relative z-10 text-left flex flex-col justify-between h-full">
+                <div className="relative z-8 text-left flex flex-col justify-between h-full">
                   <div>
                     <h3
                       className="text-2xl font-bold mb-3"

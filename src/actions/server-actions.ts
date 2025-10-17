@@ -19,7 +19,6 @@ export async function getDomain(): Promise<string> {
   if (parts.length > 2) {
     return parts.slice(-2).join(".");
   }
-
   return host;
 }
 // ============== COMMON HEADER ================
@@ -265,11 +264,11 @@ export const signIn = async (payload: { email: string; password: string }) => {
     const formData = new FormData();
     formData.append("email", payload.email);
     formData.append("password", payload.password);
-    formData.append("api_key", api_key ?? ""); // ✅ add api_key if needed
+    formData.append("api_key", api_key ?? ""); //  add api_key if needed
     const response = await fetch(`${baseUrl}/login`, {
       method: "POST",
       body: formData,
-      // ❌ don't set Content-Type, browser sets it for FormData
+      //  don't set Content-Type, browser sets it for FormData
     });
 
     const data = await response.json().catch(() => null);
@@ -419,67 +418,7 @@ export const change_password = async (payload: {
   }
 };
 
-// =================== HOTEL SEARCH ===================
-// interface HotelSearchPayload {
-//   destination: string;
-//   checkin: string;
-//   checkout: string;
-//   rooms: number;
-//   adults: number;
-//   children: number;
-//   nationality: string;
-//   page:number
-//   modules:string
-//    price_from: string,
-//     price_to: string,
-//     rating: string
-// }
 
-// export const hotel_search = async (payload: HotelSearchPayload) => {
-//   try {
-//     //  const cookieStore = cookies();
-//     // // read modules from cookie
-//     // const modulesCookie = cookieStore.get("modules");
-//     // // const modules = modulesCookie ? modulesCookie.split(",") : ["stuba"]; // fallback
-//     // console.log('stored modules in http only coooo', modulesCookie)
-//     const formData = new FormData();
-//     formData.append("city", String(payload.destination));
-//     formData.append("checkin", payload.checkin);
-//     formData.append("checkout", payload.checkout);
-//     formData.append("rooms", String(payload.rooms));
-//     formData.append("adults", String(payload.adults));
-//     formData.append("childs", String(payload.children));
-//     formData.append("nationality", payload.nationality);
-//     formData.append("language","en")
-//     formData.append("currency","usd")
-//     formData.append("child_age","0")
-//     formData.append('module_name',payload.modules)
-//     formData.append("pagination", String(payload.page));
-//     formData.append("price_from",payload.price_from || "")
-//     formData.append('price_to',payload.price_to || "")
-//     formData.append('price_low_to_high', "")
-//     formData.append('rating',payload.rating || "")
-
-//     console.log('seaarch_payaod',formData)
-//     const response = await fetch(`${baseUrl}/hotel_search`, {
-//       method: "POST",
-//       body: formData,
-//       headers: {
-//         Accept: "application/json, text/plain, */*",
-//       },
-//     });
-
-//     const data = await response.json().catch(() => null);
-//     console.log('search result',data.response.length)
-//     if (!response.ok || data?.status === false) {
-//       return { error: data?.message || "Something went wrong" };
-//     }
-
-//     return data;
-//   } catch (error) {
-//     return { error: (error as Error).message || "An error occurred" };
-//   }
-// };
 
 // for multi models
 interface HotelSearchPayload {

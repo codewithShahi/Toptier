@@ -85,8 +85,9 @@ const HotelInvoice: React.FC<HotelInvoiceProps> = ({ invoiceDetails }) => {
   const data = invoiceDetails[0];
   const travellers: Traveller[] = JSON.parse(data.guest || "[]");
   const rooms: RoomData[] = JSON.parse(data.room_data || "[]");
+const parsedBookingData = JSON.parse(invoiceDetails[0].booking_data);
+const rateComments=parsedBookingData.ratecomments
 
-console.log('==================invoice details', invoiceDetails,selectedPaymentMethod)
   // Generate the invoice URL for QR code
   const invoiceUrl = `${window.location.origin}/hotel/invoice/${data.booking_ref_no}`;
 
@@ -145,7 +146,6 @@ console.log('==================invoice details', invoiceDetails,selectedPaymentM
     const result=response?.data
     if(response.success){
        const {payload, payment_gateway}=result
-       console.log('payload',payment_gateway)
       const payment_response= await processed_payment({
         payload:payload,
         payment_gateway:payment_gateway
@@ -178,7 +178,7 @@ View Invoice: ${invoiceUrl}`;
     const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, "_blank");
   };
-console.log('pnrrrrrrrrrrrr',invoiceDetails[0].pnr)
+console.log('pnrrrrrrrrrrrr bookingData',bookingData)
   return (
     <div className="min-h-screen bg-gray-100 py-6 sm:py-10 px-4 sm:px-6">
       <div
@@ -313,6 +313,19 @@ console.log('pnrrrrrrrrrrrr',invoiceDetails[0].pnr)
         {/* Booking Details */}
         <div className="p-6 space-y-6">
           {/* Booking Note */}
+          { bookingData.paymentStatus ==="paid"  ?
+           <div>
+              <ul className="border border-gray-200 rounded-lg mb-2">
+  <li className="p-3 border-b border-gray-200 last:border-b-0">
+<p className="">
+  Payable through <span className="font-medium">{invoiceDetails[0]?.supplier}</span>, acting as agent for the service operating company,
+  details of which can be provided upon request. VAT: <span className="font-medium">{invoiceDetails[0]?.vat}</span> Reference:{" "}
+  <span className="font-medium">{invoiceDetails[0]?.pnr ? invoiceDetails[0]?.pnr : "N/A"}</span>
+</p>
+  </li>
+</ul>
+          </div>
+           :null}
           {invoiceDetails[0].cancellation_request ==="1" && <div className="border bg-red-100 border-red-200 rounded-lg p-4 text-start">
             {dict?.hotelInvoice?.bookingNote}
           </div>}
@@ -456,18 +469,21 @@ console.log('pnrrrrrrrrrrrr',invoiceDetails[0].pnr)
   </table>
 </div>
           {/* Fare + Tax Info */}
-          <div className="border border-gray-200 rounded-lg p-4">
+          <div className="border border-gray-200 rounded-xl p-4">
            { (invoiceDetails[0].pnr == null && invoiceDetails[0].cancellation_request === "0")  ?
            <div>
-              <ul className="border border-gray-200 rounded">
+            <div><h3  className="font-bold text-center pb-2">Rate Comment</h3></div>
+              <ul className="border border-gray-200 rounded-lg mb-2">
   <li className="p-3 border-b border-gray-200 last:border-b-0">
-    <span className="text-sm text-gray-700">
-      Payable through {"suplier name"}, acting as agent for the service operating company, details of which can be provided upon request. VAT: {''} Reference: {"pnr"};
-    </span>
+<p className="">
+  Payable through <span className="font-medium">{invoiceDetails[0]?.supplier}</span>, acting as agent for the service operating company,
+  details of which can be provided upon request. VAT: <span className="font-medium">{invoiceDetails[0]?.vat}</span> Reference:{" "}
+  <span className="font-medium">{invoiceDetails[0]?.pnr ? invoiceDetails[0]?.pnr : "N/A"}</span>
+</p>
   </li>
 </ul>
           </div>
-            :null}
+           :null}
 
 
             <div className="flex justify-between items-center p-3 bg-gray-50 rounded mb-2">
