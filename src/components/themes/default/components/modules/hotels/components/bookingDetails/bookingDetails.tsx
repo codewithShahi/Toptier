@@ -6,8 +6,9 @@ import BookingForm from './bookingForm';
 import { useAppSelector } from '@lib/redux/store';
 import Image from 'next/image';
 import useCurrency from '@hooks/useCurrency';
-import useDictionary from '@hooks/useDict'; 
+import useDictionary from '@hooks/useDict';
 import useLocale from '@hooks/useLocale';
+import StripeProvider from '@lib/stripeProvider';
 
 export default function BookingDetails() {
   const selectedRoom = useAppSelector((state) => state.root.selectedRoom);
@@ -74,7 +75,10 @@ export default function BookingDetails() {
           <div className="border-b border-[#CACACA] mb-8"></div>
 
           {/* Render the form */}
-          <BookingForm />
+          <StripeProvider>
+            <BookingForm />
+          </StripeProvider>
+
         </div>
 
         {/* Right Side Summary */}

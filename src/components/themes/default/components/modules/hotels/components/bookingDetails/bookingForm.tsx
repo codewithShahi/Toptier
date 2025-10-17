@@ -12,8 +12,10 @@ import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import Select from '@components/core/select';
 import { AccordionInfoCard } from '@components/core/accordians/accordian';
-import useDictionary from '@hooks/useDict'; // ✅ Add this
+import useDictionary from '@hooks/useDict'; //  Add this
 import useLocale from '@hooks/useLocale';
+import { useStripe, useElements, CardElement } from '@stripe/react-stripe-js';
+
 
 // Get dict for error messages
 const useBookingFormSchema = (dict: any) => {
@@ -38,20 +40,72 @@ const useBookingFormSchema = (dict: any) => {
         })
       )
       .min(1, dict?.bookingForm?.errors?.atLeastOneTraveller),
-    paymentMethod: z.string().min(1, dict?.bookingForm?.errors?.paymentMethodRequired),
+    // paymentMethod: z.string().min(1, dict?.bookingForm?.errors?.paymentMethodRequired),
+
+    // Payment Card Fields (conditionally required)
+    cardName: z.string().optional(),
+    cardNumber: z.string().optional(),
+    cardExpiry: z.string().optional(),
+    cardCvv: z.string().optional(),
+    cardZip: z.string().optional(),
+
     acceptPolicy: z
       .boolean()
       .refine((val) => val === true, {
         message: dict?.bookingForm?.errors?.acceptPolicyRequired,
       }),
+  }).superRefine((data, ctx) => {
+    const {  cardName, cardNumber, cardExpiry, cardCvv, cardZip } = data;
+
+    // if (paymentMethod === 'credit_card') {
+      if (!cardName || cardName.trim() === '') {
+        ctx.addIssue({
+          path: ['cardName'],
+          message: dict?.bookingForm?.errors?.cardNameRequired || 'Cardholder name is required',
+          code: 'custom',
+        });
+      // }
+
+      if (!cardNumber || !/^\d{13,19}$/.test(cardNumber.replace(/\s+/g, ''))) {
+        ctx.addIssue({
+          path: ['cardNumber'],
+          message: dict?.bookingForm?.errors?.invalidCardNumber || 'Invalid card number',
+          code: 'custom',
+        });
+      }
+
+      if (!cardExpiry || !/^(0[1-9]|1[0-2])\/([0-9]{2})$/.test(cardExpiry)) {
+        ctx.addIssue({
+          path: ['cardExpiry'],
+          message: dict?.bookingForm?.errors?.invalidCardExpiry || 'Invalid expiration date (MM/YY)',
+          code: 'custom',
+        });
+      }
+
+      if (!cardCvv || !/^\d{3,4}$/.test(cardCvv)) {
+        ctx.addIssue({
+          path: ['cardCvv'],
+          message: dict?.bookingForm?.errors?.invalidCardCvv || 'Invalid CVV (3-4 digits)',
+          code: 'custom',
+        });
+      }
+
+      if (!cardZip || !/^\d{5}(?:[-\s]\d{4})?$/.test(cardZip)) {
+        ctx.addIssue({
+          path: ['cardZip'],
+          message: dict?.bookingForm?.errors?.invalidCardZip || 'Invalid ZIP code',
+          code: 'custom',
+        });
+      }
+    }
   });
 };
 
 export type BookingFormValues = z.infer<ReturnType<typeof useBookingFormSchema>>;
 
 export default function BookingForm() {
-    const { locale } = useLocale();
-   const { data: dict } = useDictionary(locale as any);
+  const { locale } = useLocale();
+  const { data: dict } = useDictionary(locale as any);
 
   const bookingSchema = useBookingFormSchema(dict);
 
@@ -65,7 +119,11 @@ export default function BookingForm() {
     phoneCountryCode: '',
     phoneNumber: '',
     travellers: [{ title: dict?.bookingForm?.titles?.mr, firstName: '', lastName: '' }],
-    paymentMethod: '',
+    cardName: '',
+    cardNumber: '',
+    cardExpiry: '',
+    cardCvv: '',
+    cardZip: '',
     acceptPolicy: false,
   };
 
@@ -89,6 +147,9 @@ export default function BookingForm() {
   const { payment_gateways } = useAppSelector((state) => state.appData?.data);
   const selectedHotel = useAppSelector((state) => state.root.selectedHotel);
   const selectedRoom = useAppSelector((state) => state.root.selectedRoom);
+  const stripe = useStripe();
+const elements = useElements();
+
   const router = useRouter();
   const { hotelDetails } = selectedRoom || {};
   const [isTitleOpen, setIsTitleOpen] = useState<number | null>(null);
@@ -104,9 +165,9 @@ export default function BookingForm() {
 
   const curruntBooking = localStorage.getItem('hotelSearchForm');
   const saveBookingData = curruntBooking ? JSON.parse(curruntBooking) : {};
-  const { adults = 0, children = 0, nationality, checkin, checkout ,} = saveBookingData;
+  const { adults = 0, children = 0, nationality, checkin, checkout } = saveBookingData;
   const travelers = adults + children;
-  const { price, markup_price, id: option_id, currency: booking_currency,extrabeds_quantity,extrabed_price,quantity ,markup_price_per_night,per_day,service_fee,child , currency} = selectedRoom?.option || {};
+  const { price, markup_price, id: option_id, currency: booking_currency, extrabeds_quantity, extrabed_price, quantity, markup_price_per_night, per_day, service_fee, child, currency } = selectedRoom?.option || {};
   const {
     id: hotel_id,
     address: hotel_address,
@@ -130,7 +191,6 @@ export default function BookingForm() {
       icon: p.icon || null,
     })) || [];
 
-
   const excludedCodes = ['0', '381', '599'];
   const countryList = Array.isArray(rawCountries)
     ? rawCountries
@@ -141,7 +201,6 @@ export default function BookingForm() {
         }))
         .filter((c) => c.iso && c.name && !excludedCodes.includes(c.phonecode))
     : [];
-
 
   const countryOptions = countryList.map((c) => ({
     value: c.iso,
@@ -186,8 +245,45 @@ export default function BookingForm() {
       const response = await hotel_booking(bookingPayload);
       return response;
     },
-    onSuccess: (data) => {
-      router.push(`/hotel/invoice/${data.booking_ref_no}`);
+    onSuccess: async(data) => {
+          if (!stripe || !elements) {
+    console.warn("Stripe not loaded yet");
+    return;
+  }
+
+  const cardElement = elements.getElement(CardElement);
+  if (!cardElement) {
+    console.error("Card element not found");
+    return;
+  }
+
+  // 1 Create PaymentIntent on the server
+  const res = await fetch('/api/paymentIntent', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ amount: price, currency: currency, booking_ref_no:data.booking_ref_no,module_type:supplier_name , email:data?.user_email}),
+  });
+
+  const { clientSecret , success_url} = await res.json();
+  // 2 Confirm payment on client
+  const result = await stripe.confirmCardPayment(clientSecret, {
+    payment_method: {
+      card: cardElement,
+      billing_details: {
+        name: data.cardName,
+        email: data.email,
+      },
+    },
+  });
+
+  if (result.error) {
+    console.error(result.error.message);
+  } else if (result.paymentIntent?.status === 'succeeded') {
+    // Continue with booking process here
+  }
+
+
+      router.push(success_url);
     },
     onError: (error) => {
       console.error('Booking failed:', error);
@@ -195,6 +291,7 @@ export default function BookingForm() {
   });
 
   const onSubmit = async (data: BookingFormValues) => {
+
     if (!data) return;
     const {
       firstName,
@@ -206,7 +303,11 @@ export default function BookingForm() {
       phoneCountryCode,
       phoneNumber,
       travellers,
-      paymentMethod,
+      cardName,
+      cardNumber,
+      cardExpiry,
+      cardCvv,
+      cardZip,
     } = data;
 
     const guestPayload = (travellers || []).map((traveller: any, index: number) => ({
@@ -215,7 +316,7 @@ export default function BookingForm() {
       first_name: traveller.firstName || '',
       last_name: traveller.lastName || '',
       nationality: nationality || '',
-     age:""
+      age: "",
     }));
 
     const bookingPayload = {
@@ -240,13 +341,13 @@ export default function BookingForm() {
       hotel_address: hotel_address || '',
       room_data: [
         {
-  room_id:option_id,
-  room_name:selectedRoom?.room?.name,
-  room_price: price,
-  room_qaunitity:quantity,
-  room_extrabed_price: extrabed_price,
-  room_extrabed: extrabeds_quantity,
-  room_actual_price: price
+          room_id: option_id,
+          room_name: selectedRoom?.room?.name,
+          room_price: price,
+          room_qaunitity: quantity,
+          room_extrabed_price: extrabed_price,
+          room_extrabed: extrabeds_quantity,
+          room_actual_price: price,
         },
       ],
       location: hotel_location || '',
@@ -264,7 +365,6 @@ export default function BookingForm() {
       user_id: '',
       guest: guestPayload,
       nationality: nationality || '',
-      payment_gateway: paymentMethod || '',
       user_data: {
         first_name: firstName || '',
         last_name: lastName || '',
@@ -274,11 +374,27 @@ export default function BookingForm() {
         nationality: nationality || 'pk',
         country_code: nationality || 'pk',
       },
+      // Add card details if applicable
+
+        card: {
+          name: cardName,
+          number: cardNumber,
+          expiry: cardExpiry,
+          cvv: cardCvv,
+          zip: cardZip,
+        },
+
     };
+
+  //  const response = await hotel_booking(bookingPayload);
     bookHotel(bookingPayload);
   };
 
+
+
+
   const getCountryByIso = (iso: string) => countryList.find((c) => c.iso === iso);
+
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
@@ -675,69 +791,98 @@ export default function BookingForm() {
         ))}
       </div>
 
-      {/* Payment Method */}
-      <div className="flex flex-col gap-3 mb-2">
-        <h3 className="text-xl text-[#0F172BE5] font-semibold">
-          {dict?.bookingForm?.paymentMethod?.title}
-        </h3>
-        <p className="text-[#0F172B66] text-base font-medium">
-          {dict?.bookingForm?.paymentMethod?.subtitle}
-        </p>
-        <div className="w-full">
-          <Controller
-            name="paymentMethod"
-            control={control}
-            render={({ field }) => (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {activePayments.length > 0 ? (
-                  activePayments.map((payment: any, index: number) => (
-                    <div
-                      key={index}
-                      onClick={() => field.onChange(payment.name)}
-                      className={`relative border rounded-xl p-4 cursor-pointer transition-all w-full ${
-                        field.value === payment.name
-                          ? 'border-[#163C8C] bg-[#163C8C]/5'
-                          : 'border-gray-300 hover:border-[#163C8C]/50'
-                      }`}
-                    >
-                      {field.value === payment.name && (
-                        <div className="absolute top-4 right-3 w-6 h-6 rounded-full bg-[#163C8C] flex items-center justify-center">
-                          <svg
-                            className="w-4 h-4 text-white"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth="2"
-                              d="M5 13l4 4L19 7"
-                            />
-                          </svg>
-                        </div>
-                      )}
-                      <div className="flex items-center gap-3">
-                        {payment.icon ? (
-                          <img src={payment.icon} alt={payment.name} className="w-10 h-6 object-contain flex-shrink-0" />
-                        ) : (
-                          <Icon icon="gg:credit-card" width="24" height="24" />
-                        )}
-                        <span className="text-base font-medium text-[#0F172B] truncate">{payment.label}</span>
-                      </div>
-                    </div>
-                  ))
-                ) : (
-                  <div className="col-span-full text-gray-500 py-4">
-                    {dict?.bookingForm?.paymentMethod?.noPaymentMethods}
-                  </div>
-                )}
-              </div>
-            )}
-          />
-        </div>
+
+      {/* Conditional Credit Card Form */}
+<div className="flex flex-col gap-3 mb-12">
+  <h3 className="text-xl text-[#0F172BE5] font-semibold">
+    Payment Method
+  </h3>
+  <p className="text-[#0F172B66] text-base font-medium">
+    Select your preferred payment method
+  </p>
+
+  {/* <Controller
+    name="paymentMethod"
+    control={control}
+    render={({ field }) => (
+      <div className="space-y-3">
+        {activePayments.map((payment: any) => (
+          <label
+            key={payment.id}
+            className="flex items-center gap-3 p-4 border border-gray-300 rounded-xl cursor-pointer hover:border-[#163C8C] transition-colors"
+          >
+            <input
+              type="radio"
+              value={payment.name}
+              checked={field.value === payment.name}
+              onChange={() => field.onChange(payment.name)}
+              className="w-5 h-5 text-[#163C8C] focus:ring-[#163C8C]"
+            />
+            <span className="text-base font-medium text-[#0F172BE5]">
+              {payment.label}
+            </span>
+          </label>
+        ))}
       </div>
+    )}
+  />
+  {errors.paymentMethod && (
+    <p className="text-red-500 text-sm mt-1">{errors.paymentMethod.message}</p>
+  )} */}
+</div>
+
+{/* Conditional Credit Card Form - Updated */}
+{/* {selectedPaymentMethod === 'credit_card' && ( */}
+  <div className="flex flex-col gap-3 mb-12">
+    <h3 className="text-xl text-[#0F172BE5] font-semibold">
+      Card Information
+    </h3>
+
+    <div className="w-full max-w-2xl">
+      <label className="block text-base font-medium text-[#5B697E] mb-2">
+        Cardholder Name
+      </label>
+      <Controller
+        name="cardName"
+        control={control}
+        render={({ field }) => (
+          <input
+            {...field}
+            type="text"
+            placeholder="John Doe"
+            className="block border border-gray-300 rounded-xl px-3 py-4 text-base w-full outline-none focus:border-[#163C8C] focus:ring-1 focus:ring-[#163C8C]"
+          />
+        )}
+      />
+      {errors.cardName && (
+        <p className="text-red-500 text-sm mt-1">{errors.cardName.message}</p>
+      )}
+    </div>
+
+    <div className="w-full max-w-2xl">
+      <label className="block text-base font-medium text-[#5B697E] mb-2">
+        Card Details
+      </label>
+      <div className="border border-gray-300 rounded-xl px-3 py-4">
+        <CardElement
+          options={{
+            style: {
+              base: {
+                fontSize: '16px',
+                color: '#424770',
+                '::placeholder': { color: '#aab7c4' },
+              },
+              invalid: { color: '#9e2146' },
+            },
+          }}
+        />
+      </div>
+    </div>
+  </div>
+{/* )} */}
+
+
+
 
       {/* Cancellation Policy */}
       <div className="flex flex-col gap-4 mt-3">

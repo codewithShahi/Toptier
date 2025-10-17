@@ -626,7 +626,7 @@ export interface BookingPayload {
   hotel_email: string;
   hotel_website: string;
   hotel_address: string;
-  room_data: RoomData[];
+  room_data: any[];
   location: string;
   location_cords: string;
   hotel_img: string;
@@ -996,5 +996,24 @@ export const profile_update = async (payload: ProfileUpdatePayload) => {
     return { success: true, data };
   } catch (error) {
     return { error: (error as Error).message || "An error occurred while updating profile" };
+  }
+};
+
+// ========================= get gateayyyyyyyyyy==================
+export const fetch_gateway = async () => {
+  try {
+   const response = await fetch(`${baseUrl}/get_gateway`, {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+      },
+    });
+    const data = await response.json().catch(() => null);
+    if (!response.ok || data?.status === false) {
+      return { error: data?.message || "Something went wrong" };
+    }
+    return data;
+  } catch (error) {
+    return { error: (error as Error).message || "An error occurred" };
   }
 };
