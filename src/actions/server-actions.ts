@@ -889,13 +889,15 @@ export const fetch_dashboard_data = async (payload: dashboardPayload) => {
      const userinfo = (await getSession()) as SessionUser | null;
     const user_id = userinfo?.user?.user_id ?? "";
     const formData = new FormData();
+    console.log("=============",user_id)
     // match exactly with API keys
     formData.append("api_key", api_key ?? "");
     formData.append("user_id",user_id );
     formData.append("page", payload.page);
-    formData.append("limit", payload.limit);
-    formData.append("search", payload.search);
-    formData.append("payment_status", payload.payment_status);
+    formData.append("limit","6");
+    formData.append("search", payload.search ?? "");
+    formData.append("payment_status", payload.payment_status ?? "");
+    formData.append("type", "customer");
     const response = await fetch(`${baseUrl}/user_bookings`, {
       method: "POST",
       body: formData,
@@ -903,13 +905,11 @@ export const fetch_dashboard_data = async (payload: dashboardPayload) => {
         Accept: "application/json, text/plain, */*",
       },
     });
-
     const data = await response.json().catch(() => null);
-
+console.log("===================",data)
     if (!response.ok || data?.status === false) {
       return { error: data?.message || "Something went wrong" };
     }
-
     return data;
   } catch (error) {
     return { error: (error as Error).message || "An error occurred" };

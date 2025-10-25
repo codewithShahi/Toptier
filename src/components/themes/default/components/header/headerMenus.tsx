@@ -145,13 +145,13 @@ console.log("app data in header,filteredModules",filteredModules);
             href="/auth/login"
             className="block text-sm font-medium rounded-xl px-4 py-2 text-gray-700 hover:bg-blue-50"
           >
-            Login
+            {dict?.header?.login || "Login"}
           </Link>
           <Link
             href="/auth/signup"
             className="block text-sm font-medium rounded-xl px-4 py-2 text-gray-700 hover:bg-blue-50"
           >
-            Signup
+            {dict?.header?.signup || "Signup"}
           </Link>
         </div>
       </Dropdown>
