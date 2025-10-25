@@ -4,6 +4,7 @@ import { Icon } from "@iconify/react";
 import useCurrency from "@hooks/useCurrency";
 import { useRouter } from "next/navigation";
 import { merge } from "lodash";
+import getCurrencySymbol from "@src/utils/getCurrencySymbals";
 
 // type Room = {
 //   id?: string | number;
@@ -130,11 +131,9 @@ const RoomOption: React.FC<{
 
                     </span>
                   </td>
-                  <td className="bg-gray-100  font-bold px-4 py-2">{
-                    priceRateConverssion(
-                      parseFloat(String(opt?.price ?? options?.price ?? room?.price ?? 0))
-                    )
-                  }</td>
+                  <td className="bg-gray-100  font-bold px-4 py-2">
+                      {getCurrencySymbol(opt.currency)}{" "}{opt.markup_price}
+                   </td>
                   <td className="bg-gray-200 py-3 font-medium">
                     <div className="flex flex-col items-center text-center gap-2">
                       <button

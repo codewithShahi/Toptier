@@ -104,8 +104,27 @@
     "letter_name_placeholder": "Name",
     "letter_email": "email",
     "letter_email_placeholder": "Email",
-    "letter_continue": "Continue"
+    "letter_continue": "Continue",
+    "errors": {
+      "name_too_short": "Name must be at least 2 characters",
+      "email_invalid": "Invalid email address"
+    }
   },
+  "header": {
+      "paymentStatus": "Payment Status:",
+      "bookingStatus": "Booking Status:",
+      "phone": "Phone:",
+      "email": "Email:",
+      "Agent": "Agent",
+      "Customer":"Customer",
+      "login":"Login",
+      "signup":"Signup",
+      "hotels":"Hotels",
+      "contact":"Contact",
+      "support":"Support",
+      "agents":"Agents",
+      "customers":"Customers"
+    },
   "footer": {
     "subheading": "Unlock extraordinary stays with our expert-curated hotels and exclusive access to the world's finest destinations.",
     "connect": "Stay Connected",
@@ -255,12 +274,18 @@
     "errors": {
       "noInvoiceFound": "No invoice details found."
     },
+
     "header": {
       "paymentStatus": "Payment Status:",
       "bookingStatus": "Booking Status:",
       "phone": "Phone:",
-      "email": "Email:"
+      "email": "Email:",
+      "Agent": "Agent",
+      "Customer": "Customer",
+      "login": "Login",
+      "signup": "Signup"
     },
+
     "bookingNote": "Cancellation request sent. we will update as soon as we change the status",
     "bookingInfo": {
       "bookingId": "Booking ID",
@@ -288,6 +313,7 @@
       "checkin": "Checkin:",
       "checkout": "Checkout:",
       "type": "Type:",
+      "quantity": "Quantity",
       "total": "Total:"
     },
     "fareAndTax": {
@@ -405,8 +431,7 @@
     "prev": "Prev",
     "next": "Next"
   },
-
-   "hotel_search": {
+  "hotel_search": {
     "check_in_out_label": "Check - in | Check - out",
     "guest_button": {
       "title": "Guests",

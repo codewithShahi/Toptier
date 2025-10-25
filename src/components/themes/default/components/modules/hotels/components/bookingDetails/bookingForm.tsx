@@ -15,8 +15,6 @@ import { AccordionInfoCard } from '@components/core/accordians/accordian';
 import useDictionary from '@hooks/useDict'; //  Add this
 import useLocale from '@hooks/useLocale';
 import { useStripe, useElements, CardElement } from '@stripe/react-stripe-js';
-
-
 // Get dict for error messages
 const useBookingFormSchema = (dict: any) => {
   return z.object({
@@ -27,16 +25,18 @@ const useBookingFormSchema = (dict: any) => {
     nationality: z.string().min(1, dict?.bookingForm?.errors?.nationalityRequired),
     currentCountry: z.string().min(1, dict?.bookingForm?.errors?.currentCountryRequired),
     phoneCountryCode: z.string().min(1, dict?.bookingForm?.errors?.countryCodeRequired),
-    phoneNumber: z
-      .string()
-      .min(8, dict?.bookingForm?.errors?.phoneNumberRequired)
-      .regex(/^\+?[1-9]\d{7,14}$/, dict?.bookingForm?.errors?.invalidPhoneNumber),
+phoneNumber: z
+  .string()
+  .min(1, dict?.bookingForm?.errors?.phoneNumberRequired || "Phone number is required"),
+
+
     travellers: z
       .array(
         z.object({
           title: z.string().min(1, dict?.bookingForm?.errors?.titleRequired),
           firstName: z.string().min(1, dict?.bookingForm?.errors?.firstNameRequired),
           lastName: z.string().min(1, dict?.bookingForm?.errors?.lastNameRequired),
+          age: z.string().optional(),
         })
       )
       .min(1, dict?.bookingForm?.errors?.atLeastOneTraveller),
@@ -106,7 +106,7 @@ export type BookingFormValues = z.infer<ReturnType<typeof useBookingFormSchema>>
 export default function BookingForm() {
   const { locale } = useLocale();
   const { data: dict } = useDictionary(locale as any);
-
+  const [isProcessingPayment, setIsProcessingPayment] = useState(false);
   const bookingSchema = useBookingFormSchema(dict);
 
   const defaultValues: BookingFormValues = {
@@ -118,7 +118,7 @@ export default function BookingForm() {
     currentCountry: '',
     phoneCountryCode: '',
     phoneNumber: '',
-    travellers: [{ title: dict?.bookingForm?.titles?.mr, firstName: '', lastName: '' }],
+    travellers: [{ title: dict?.bookingForm?.titles?.mr, firstName: '', lastName: '', age: '' }],
     cardName: '',
     cardNumber: '',
     cardExpiry: '',
@@ -145,11 +145,14 @@ export default function BookingForm() {
 
   const { countries: rawCountries } = useCountries();
   const { payment_gateways } = useAppSelector((state) => state.appData?.data);
-  const selectedHotel = useAppSelector((state) => state.root.selectedHotel);
   const selectedRoom = useAppSelector((state) => state.root.selectedRoom);
+  const {option}=selectedRoom||{};
+    const rootState = useAppSelector((state) => state.root);
   const stripe = useStripe();
 const elements = useElements();
-
+const [bookingReference, setBookingReference] = useState<string>(
+  new Date().toISOString().replace(/[-T:.Z]/g, "").slice(0, 14)
+);
   const router = useRouter();
   const { hotelDetails } = selectedRoom || {};
   const [isTitleOpen, setIsTitleOpen] = useState<number | null>(null);
@@ -235,64 +238,87 @@ const elements = useElements();
         title: dict?.bookingForm?.titles?.mr,
         firstName: '',
         lastName: '',
+
       }));
       setValue('travellers', initialTravellers);
     }
   }, [setValue, nationality, travelers, dict]);
 
-  const { mutate: bookHotel, isPending } = useMutation({
-    mutationFn: async (bookingPayload: any) => {
-      const response = await hotel_booking(bookingPayload);
-      return response;
-    },
-    onSuccess: async(data) => {
-          if (!stripe || !elements) {
-    console.warn("Stripe not loaded yet");
+const { mutate: bookHotel, isPending } = useMutation({
+  mutationFn: async (bookingPayload: any) => {
+    const response = await hotel_booking(bookingPayload);
+    return response;
+  },
+
+onSuccess: async (data) => {
+  if (!stripe || !elements) {
+    setIsProcessingPayment(false);
     return;
   }
 
   const cardElement = elements.getElement(CardElement);
   if (!cardElement) {
-    console.error("Card element not found");
+    alert("Card element not found");
+    setIsProcessingPayment(false);
     return;
   }
 
-  // 1 Create PaymentIntent on the server
-  const res = await fetch('/api/paymentIntent', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ amount: price, currency: currency, booking_ref_no:data.booking_ref_no,module_type:supplier_name , email:data?.user_email}),
-  });
+  try {
+    const res = await fetch("/api/paymentIntent", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        amount: price,
+        currency,
+        booking_ref_no: data.booking_ref_no,
+        module_type: supplier_name,
+        email: data?.user_email,
+      }),
+    });
 
-  const { clientSecret , success_url} = await res.json();
-  // 2 Confirm payment on client
-  const result = await stripe.confirmCardPayment(clientSecret, {
-    payment_method: {
-      card: cardElement,
-      billing_details: {
-        name: data.cardName,
-        email: data.email,
+    const { clientSecret, success_url } = await res.json();
+
+    const result = await stripe.confirmCardPayment(clientSecret, {
+      payment_method: {
+        card: cardElement,
+        billing_details: {
+          name: data.cardName,
+          email: data.email,
+        },
       },
-    },
-  });
+    });
 
-  if (result.error) {
-    console.error(result.error.message);
-  } else if (result.paymentIntent?.status === 'succeeded') {
-    // Continue with booking process here
+    if (result.error) {
+      console.error("Payment failed:", result.error.message);
+      alert("Payment failed: " + result.error.message);
+      setIsProcessingPayment(false); //  Stop loading on error
+    } else if (result.paymentIntent?.status === 'succeeded') {
+      // Redirect happens here → no need to reset state manually
+      router.replace(success_url);
+      // Optional: you can leave state as-is since user leaves the page
+    } else {
+      alert("Payment did not succeed. Please try again.");
+      setIsProcessingPayment(false); //  Stop loading
+    }
+  } catch (error) {
+    console.error("Payment process error:", error);
+    alert("An error occurred. Please try again.");
+    setIsProcessingPayment(false); //  Stop loading
   }
+},
+
+  onError: (error) => {
+    console.error("Booking failed:", error);
+  },
+});
 
 
-      router.push(success_url);
-    },
-    onError: (error) => {
-      console.error('Booking failed:', error);
-    },
-  });
+const onSubmit = async (data: BookingFormValues) => {
+  if (!data) return;
 
-  const onSubmit = async (data: BookingFormValues) => {
+  setIsProcessingPayment(true);
 
-    if (!data) return;
+  try {
     const {
       firstName,
       lastName,
@@ -310,16 +336,20 @@ const elements = useElements();
       cardZip,
     } = data;
 
+    // ✅ Fix guest type to 'child' not 'childs'
     const guestPayload = (travellers || []).map((traveller: any, index: number) => ({
-      traveller_type: index < adults ? 'adults' : 'childs',
+      traveller_type: index < adults ? 'adults' : 'child',
       title: traveller.title || '',
       first_name: traveller.firstName || '',
       last_name: traveller.lastName || '',
       nationality: nationality || '',
-      age: "",
+      age: '',
+      dob_day: '',
+      dob_month: '',
+      dob_year: '',
     }));
-
     const bookingPayload = {
+      booking_ref_no: bookingReference,
       price_original: price || 0,
       price_markup: markup_price || 0,
       vat: 0,
@@ -374,23 +404,83 @@ const elements = useElements();
         nationality: nationality || 'pk',
         country_code: nationality || 'pk',
       },
-      // Add card details if applicable
-
-        card: {
-          name: cardName,
-          number: cardNumber,
-          expiry: cardExpiry,
-          cvv: cardCvv,
-          zip: cardZip,
-        },
-
+      card: {
+        name: cardName,
+        number: cardNumber,
+        expiry: cardExpiry,
+        cvv: cardCvv,
+        zip: cardZip,
+      },
     };
 
-  //  const response = await hotel_booking(bookingPayload);
-    bookHotel(bookingPayload);
-  };
+    //  Run hotel booking and paymentIntent API in parallel for performance
+ const [bookingResponse, paymentRes] = await Promise.all([
 
+      hotel_booking(bookingPayload as any),
+      fetch("/api/paymentIntent", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          amount: price,
+          currency: booking_currency,
+          booking_ref_no: bookingReference,
+          module_type: supplier_name,
+          email,
+        }),
+      }),
+    ]);
 
+    const bookingData = await bookingResponse;
+    const paymentData = await paymentRes.json();
+    const { clientSecret, success_url } = paymentData;
+
+    if (!stripe || !elements) {
+      alert("Stripe not initialized");
+      setIsProcessingPayment(false);
+      return;
+    }
+
+    if (!clientSecret) {
+      console.error("Missing clientSecret from payment API:");
+      alert("Payment setup failed. Please try again.");
+      setIsProcessingPayment(false);
+      return;
+    }
+
+    const cardElement = elements.getElement(CardElement);
+    if (!cardElement) {
+      alert("Card element not found");
+      setIsProcessingPayment(false);
+      return;
+    }
+
+    // ✅ Confirm payment
+    const result = await stripe.confirmCardPayment(clientSecret, {
+      payment_method: {
+        card: cardElement,
+        billing_details: {
+          name: cardName,
+          email,
+        },
+      },
+    });
+
+    if (result.error) {
+      console.error("Payment failed:", result.error.message);
+      alert(`Payment failed: ${result.error.message}`);
+      setIsProcessingPayment(false);
+    } else if (result.paymentIntent?.status === 'succeeded') {
+      router.replace(success_url);
+    } else {
+      alert("Payment did not succeed. Please try again.");
+      setIsProcessingPayment(false);
+    }
+  } catch (error) {
+    console.error("Payment process error:", error);
+    alert("An error occurred. Please try again.");
+    setIsProcessingPayment(false);
+  }
+};
 
 
   const getCountryByIso = (iso: string) => countryList.find((c) => c.iso === iso);
@@ -695,53 +785,77 @@ const elements = useElements();
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-[1fr_1.5fr_1.5fr] gap-4">
               <div className="w-full">
-                <label htmlFor={`travellers.${index}.title`} className="block text-base font-medium text-[#5B697E] mb-2">
-                  {dict?.bookingForm?.travelersInformation?.titleLabel}
-                </label>
-                <Controller
-                  name={`travellers.${index}.title`}
-                  control={control}
-                  render={({ field }) => (
-                    <div
-                      className="relative"
-                      ref={(el) => {
-                        titleRefs.current[index] = el;
-                      }}
-                    >
-                      <button
-                        type="button"
-                        onClick={() => setIsTitleOpen(isTitleOpen === index ? null : index)}
-                        className="flex cursor-pointer items-center justify-between w-full px-3 py-4 border border-gray-300 rounded-xl text-base focus:outline-none focus:border-[#163C8C]"
-                      >
-                        {field.value || `Select ${dict?.bookingForm?.travelersInformation?.titleLabel}`}
-                        <Icon
-                          icon="material-symbols:keyboard-arrow-up"
-                          width="24"
-                          height="24"
-                          className={`h-5 w-5 text-gray-500 transition-transform ${
-                            isTitleOpen === index ? 'rotate-0' : 'rotate-180'
-                          }`}
-                        />
-                      </button>
-                      {isTitleOpen === index && (
-                        <div className="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-lg shadow">
-                          {titles.map((title) => (
-                            <div
-                              key={title}
-                              onClick={() => {
-                                field.onChange(title);
-                                setIsTitleOpen(null);
-                              }}
-                              className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                            >
-                              {title}
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  )}
-                />
+             {index < adults ? (
+  // 🔹 Adults — show title dropdown as usual
+  <>
+    <label
+      htmlFor={`travellers.${index}.title`}
+      className="block text-base font-medium text-[#5B697E] mb-2"
+    >
+      {dict?.bookingForm?.travelersInformation?.titleLabel}
+    </label>
+    <Controller
+      name={`travellers.${index}.title`}
+      control={control}
+      render={({ field }) => (
+        <div
+          className="relative"
+          ref={(el) => {
+            titleRefs.current[index] = el;
+          }}
+        >
+          <button
+            type="button"
+            onClick={() => setIsTitleOpen(isTitleOpen === index ? null : index)}
+            className="flex cursor-pointer items-center justify-between w-full px-3 py-4 border border-gray-300 rounded-xl text-base focus:outline-none focus:border-[#163C8C]"
+          >
+            {field.value || `Select ${dict?.bookingForm?.travelersInformation?.titleLabel}`}
+            <Icon
+              icon="material-symbols:keyboard-arrow-up"
+              width="24"
+              height="24"
+              className={`h-5 w-5 text-gray-500 transition-transform ${
+                isTitleOpen === index ? 'rotate-0' : 'rotate-180'
+              }`}
+            />
+          </button>
+          {isTitleOpen === index && (
+            <div className="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-lg shadow">
+              {titles.map((title) => (
+                <div
+                  key={title}
+                  onClick={() => {
+                    field.onChange(title);
+                    setIsTitleOpen(null);
+                  }}
+                  className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                >
+                  {title}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+    />
+  </>
+) : (
+  // 🔹 Children — show disabled input with age
+  <>
+    <label
+      className="block text-base font-medium text-[#5B697E] mb-2"
+    >
+      {dict?.bookingForm?.travelersInformation?.ageLabel || "Child Age"}
+    </label>
+    <input
+      type="text"
+      value={`${option?.children_ages?.split(',')[index - adults]?.trim() || ''} years`}
+      disabled
+      className="block border border-gray-300 rounded-xl px-3 py-4 text-base w-full bg-gray-100 text-gray-700 cursor-not-allowed"
+    />
+  </>
+)}
+
                 {errors.travellers?.[index]?.title && (
                   <p className="text-red-500 text-sm mt-1">{errors.travellers[index].title?.message}</p>
                 )}
@@ -798,9 +912,8 @@ const elements = useElements();
     Payment Method
   </h3>
   <p className="text-[#0F172B66] text-base font-medium">
-    Select your preferred payment method
+    Safe Secure transaction.Your personal information is protected.
   </p>
-
   {/* <Controller
     name="paymentMethod"
     control={control}
@@ -886,25 +999,28 @@ const elements = useElements();
 
       {/* Cancellation Policy */}
       <div className="flex flex-col gap-4 mt-3">
-        <h3 className="text-xl text-[#0F172BE5] font-semibold">
-          {dict?.bookingForm?.cancellationPolicy?.title}
-        </h3>
 
-        {hotelDetails?.cancellation !== "" && (
-          <AccordionInfoCard
-            title={dict?.bookingForm?.cancellationPolicy?.title}
-            showDescription={false}
-            showLeftIcon={false}
-            titleClassName="text-red-500"
-          >
-            <div className="bg-red-100 text-red-500 p-4 w-full rounded-lg">
-              <p
-                className="text-[#0F172B66] text-base font-medium"
-                dangerouslySetInnerHTML={{ __html: hotelDetails.cancellation }}
-              />
-            </div>
-          </AccordionInfoCard>
-        )}
+
+    {hotelDetails?.cancellation !== "" && (
+  <>
+    <h3 className="text-xl text-[#0F172BE5] font-semibold">
+      {dict?.bookingForm?.cancellationPolicy?.title}
+    </h3>
+    <AccordionInfoCard
+      title={dict?.bookingForm?.cancellationPolicy?.title}
+      showDescription={false}
+      showLeftIcon={false}
+      titleClassName="text-red-500"
+    >
+      <div className="bg-red-100 text-red-500 p-4 w-full rounded-lg">
+        <p
+          className="text-[#0F172B66] text-base font-medium"
+          dangerouslySetInnerHTML={{ __html: hotelDetails.cancellation }}
+        />
+      </div>
+    </AccordionInfoCard>
+  </>
+)}
 
         <Controller
           name="acceptPolicy"
@@ -930,22 +1046,24 @@ const elements = useElements();
       </div>
 
       {/* Submit Button */}
-      <button
-        type="submit"
-        disabled={isPending}
-        className={`w-full text-lg text-white py-3 font-medium rounded-lg mt-5 transition-colors focus:ring-2 focus:ring-offset-2 flex items-center justify-center gap-2 ${
-          isPending ? 'bg-gray-400 cursor-not-allowed' : 'bg-[#163C8C] hover:bg-[#0f2d6b] cursor-pointer focus:ring-[#163C8C]'
-        }`}
-      >
-        {isPending ? (
-          <>
-            <Icon icon="svg-spinners:ring-resize" width="20" height="20" className="text-white" />
-            {dict?.bookingForm?.buttons?.processing}
-          </>
-        ) : (
-          dict?.bookingForm?.buttons?.confirmAndBook
-        )}
-      </button>
+     <button
+  type="submit"
+  disabled={isPending || isProcessingPayment} //  Block during booking OR payment
+  className={`w-full text-lg text-white py-3 font-medium rounded-lg mt-5 transition-colors focus:ring-2 focus:ring-offset-2 flex items-center justify-center gap-2 ${
+    (isPending || isProcessingPayment)
+      ? 'bg-gray-400 cursor-not-allowed'
+      : 'bg-[#163C8C] hover:bg-[#0f2d6b] cursor-pointer focus:ring-[#163C8C]'
+  }`}
+>
+  {(isPending || isProcessingPayment) ? (
+    <>
+      <Icon icon="svg-spinners:ring-resize" width="20" height="20" className="text-white" />
+      {dict?.bookingForm?.buttons?.processing}
+    </>
+  ) : (
+    dict?.bookingForm?.buttons?.confirmAndBook
+  )}
+</button>
     </form>
   );
 }

@@ -9,11 +9,10 @@ import {
 import { z } from "zod";
 import { useAppSelector } from "@lib/redux/store";
 import { usePathname, useRouter } from "next/navigation";
-import { setHotels, setSeletecHotel } from "@lib/redux/base";
+import { currency, setHotels, setSeletecHotel } from "@lib/redux/base";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 
-// Schema and interfaces remain the same...
 const hotelSearchSchema = z
   .object({
     destination: z.string().min(2, "Destination must be at least 2 characters"),
@@ -112,6 +111,8 @@ const useHotelSearch = () => {
   const hotelSearch_path = usePathname();
   // console.log("hotelSearch_path", hotelSearch_path);
   const queryClient = useQueryClient();
+    const {country, currency, locale}=useAppSelector((state)=>state.root)
+
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [showGuestsDropdown, setShowGuestsDropdown] = useState(false);
   const [showDestinationDropdown, setShowDestinationDropdown] = useState(false);
@@ -119,7 +120,7 @@ const useHotelSearch = () => {
   const [locationError, setLocationError] = useState("");
   const [activeIndex, setActiveIndex] = useState(-1);
   const [isloadingMore, setIsLoadingMore] = useState(false);
-const [noMoreData, setNoMoreData] = useState(false);
+  const [noMoreData, setNoMoreData] = useState(false);
   const [selectedHotel, setSelectedHotel] = useState<any>({});
   const [selectedRomm, setSelectedRoom] = useState<any>({});
   // FIX 1: Add separate loading states
@@ -407,6 +408,9 @@ const [noMoreData, setNoMoreData] = useState(false);
             price_from: from_price, // or keep current filters if needed
             price_to: to_price,
             rating: selectedRating > 1 ? selectedRating : "",
+            currency:currency,
+            language:locale,
+            child_age: parsedForm.children_ages || [],
           },
           hotelModuleNames
         );
@@ -459,16 +463,15 @@ const [noMoreData, setNoMoreData] = useState(false);
     const selectedNationality = localStorage.getItem("hotelSearchForm");
     //  generate slug
     const slugName = hotel.name.toLowerCase().replace(/\s+/g, "-");
-    let nationality;
+    let parsedFormData:any;
     let suplier_name;
     if (selectedNationality) {
-      const parsedData = JSON.parse(selectedNationality); // now it's an object
-      nationality = parsedData.nationality; // safely access nationality
+       parsedFormData = JSON.parse(selectedNationality); // now it's an object
 
       // console.log("Nationality:", nationality);
     }
     //  construct URL
-    const url = `/hotelDetails/${hotel.hotel_id}/${slugName}/${form.checkin}/${form.checkout}/${form.rooms}/${form.adults}/${form.children}/${nationality}`;
+    const url = `/hotelDetails/${hotel.hotel_id}/${slugName}/${form.checkin}/${form.checkout}/${form.rooms}/${form.adults}/${parsedFormData.children}/${parsedFormData.nationality}`;
     dispatch(setSeletecHotel(hotel));
     //  navigate
     router.push(url);

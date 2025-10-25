@@ -7,6 +7,7 @@ import { hotel_search_multi } from "@src/actions";
 import useHotelSearch from "@hooks/useHotelSearch";
 import { setHotels } from "@lib/redux/base";
 import { useDispatch } from "react-redux";
+import { useAppSelector } from "@lib/redux/store";
 
 interface Props {
   slug?: string[];
@@ -19,9 +20,11 @@ const HotelsListingMain = ({ slug }: Props) => {
   const slugArr = Array.isArray(slug) ? slug : [];
   const city = slugArr[0]?.replace(/-/g, " ") ?? "";
   const isSlugValid = slugArr.length === 7 && slugArr.every(Boolean);
-
-
+  const {country, currency, locale}=useAppSelector((state)=>state.root)
   const enabled = isSlugValid && !!hotelModuleNames?.length;
+ const savedForm = localStorage.getItem("hotelSearchForm");
+  if (!savedForm) return;
+  const parsedForm: any = JSON.parse(savedForm);
 
   const { data, isLoading, error } = useQuery({
     queryKey: ["hotels", ...slugArr],
@@ -40,6 +43,9 @@ const HotelsListingMain = ({ slug }: Props) => {
           price_from: "1",
           price_to: "5000",
           rating: "",
+          language:locale,
+          currency:currency,
+           child_age: parsedForm.children_ages || [],
         },
         hotelModuleNames
       );

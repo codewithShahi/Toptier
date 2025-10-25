@@ -9,6 +9,7 @@ import useCurrency from '@hooks/useCurrency';
 import useDictionary from '@hooks/useDict';
 import useLocale from '@hooks/useLocale';
 import StripeProvider from '@lib/stripeProvider';
+import getCurrencySymbol from '@src/utils/getCurrencySymbals';
 
 export default function BookingDetails() {
   const selectedRoom = useAppSelector((state) => state.root.selectedRoom);
@@ -37,7 +38,7 @@ export default function BookingDetails() {
 
   // Add markup only if toptierFee is greater than 0
   const finalTotal = baseTotal + (toptierFee > 0 ? toptierFee : 0);
-
+ console.log('=================selectedRoom',option)
   return (
     <section className="bg-[#F9FAFB] w-full">
       <div className="min-h-screen w-full max-w-[1200px] mx-auto justify-between flex flex-col md:flex-row lg:flex-row p-4 md:p-6 lg:p-12 mb-6 gap-8 appHorizantalSpacing">
@@ -143,15 +144,16 @@ export default function BookingDetails() {
               <div className="flex justify-between border-t border-gray-200 pt-3">
                 <span className="text-gray-600">{dict?.bookingDetails?.roomPrice}</span>
                 <span className="font-semibold text-[#0F172B]">
-                  {priceRateConverssion(parseFloat(String(price)))}
+                   {getCurrencySymbol(currency)}{" "}{markup_price}
+
                 </span>
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-600">{dict?.bookingDetails?.toptierFee}</span>
                 <span className="font-semibold text-[#0F172B]">
-                  {toptierFee === 0
-                    ? priceRateConverssion(0)
-                    : priceRateConverssion(parseFloat(String(markup_price)))}
+{toptierFee === 0
+                    ? `${getCurrencySymbol(currency as any)} 0`
+                    : `${getCurrencySymbol(currency)} ${markup_price}`}
                 </span>
               </div>
               <div className="flex justify-between items-center border-t border-gray-300 pt-3 mt-2">
@@ -159,7 +161,8 @@ export default function BookingDetails() {
                   {dict?.bookingDetails?.total}
                 </span>
                 <span className="text-lg font-bold text-[#163C8C]">
-                  {priceRateConverssion(parseFloat(String(finalTotal)))}
+                  {getCurrencySymbol(currency)} {finalTotal}
+
                 </span>
               </div>
             </div>

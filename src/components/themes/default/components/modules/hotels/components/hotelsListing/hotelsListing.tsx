@@ -62,7 +62,6 @@ const onShowMaphandler=(hotel:any)=>{
   const { allHotelsData: hotelsData,
       isloadingMore, listRef,
         detailsBookNowHandler,isProcessingRef,loadMoreData ,noMoreData} = useHotelSearch()
-console.log('===================== more dat', noMoreData)
   const safeHotelsData = Array.isArray(hotelsData) && hotelsData?.length > 0
     ? hotelsData
     : Array.isArray(hotelsData)

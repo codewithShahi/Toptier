@@ -12,6 +12,7 @@ import Spinner from "@components/core/Spinner";
 import useDictionary from "@hooks/useDict";
 import useLocale from "@hooks/useLocale";
 import useCurrency from "@hooks/useCurrency";
+import getCurrencySymbals  from "@src/utils/getCurrencySymbals";
 
 interface Hotel {
   id: string;
@@ -34,6 +35,8 @@ const FeaturedHotels: React.FC = () => {
   const { data: dict } = useDictionary(locale as any);
 
   const { featured_hotels } = useAppSelector((state) => state.appData?.data || {});
+    const { currency } = useAppSelector((state) => state.root || {});
+
   const { user } = useUser();
   const router = useRouter();
   const dispatch = useAppDispatch();
@@ -270,7 +273,7 @@ const FeaturedHotels: React.FC = () => {
               <div className="flex justify-between items-center pl-2">
                 <div className="flex gap-2 items-center">
                   <p className="text-[24px] sm:text-[28px] lg:text-[30px] font-[900]">
-                    {priceRateConverssion(parseFloat(hotel.price))}
+                    {getCurrencySymbals(currency)}{" "}{hotel.price}
                   </p>
                   <p className="text-[14px] sm:text-[16px] lg:text-[17px] font-[400] text-[#5B697E]">
                     {dict?.featured_hotels?.per_night || "per night"}

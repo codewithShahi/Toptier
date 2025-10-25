@@ -25,6 +25,8 @@ import useDictionary from "@hooks/useDict";
 const HotelsDetails = () => {
   const params = useParams();
   const router = useRouter();
+  const {country, currency, locale:language}=useAppSelector((state)=>state.root)
+
   const slugArr = (params?.slug as string[]) || [];
   const { locale } = useLocale();
   const { data: dict } = useDictionary(locale as any);
@@ -44,7 +46,9 @@ const HotelsDetails = () => {
     children: initialChildren,
     nationality: initialNationality,
   });
-
+ const savedForm = localStorage.getItem("hotelSearchForm");
+        if (!savedForm) return;
+        const parsedForm: any = JSON.parse(savedForm);
   // Helper to update URL
   const updateUrl = useCallback((params: typeof searchParams, hotelName: string) => {
     const slugName = hotelName.toLowerCase().replace(/\s+/g, "-");
@@ -96,10 +100,10 @@ const HotelsDetails = () => {
         rooms: searchParams.rooms,
         adults: searchParams.adults,
         childs: searchParams.children,
-        child_age: "",
+        child_age: parsedForm.children_ages || [],
         nationality: searchParams.nationality,
-        language: "en",
-        currency: "USD",
+        language: language,
+        currency: currency,
         supplier_name: supplier_name, // Now using URL-derived value
       }),
     enabled: !!hotel_id,
@@ -111,7 +115,7 @@ const HotelsDetails = () => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isClamped, setIsClamped] = useState(false);
   const textRef = useRef<HTMLDivElement>(null);
-
+console.log('hotel details',hotelDetails)
   useEffect(() => {
     if (textRef.current && hotelDetails?.desc) {
       const { scrollHeight, clientHeight } = textRef.current;
@@ -125,34 +129,40 @@ const HotelsDetails = () => {
   const savedhotel = localStorage.getItem("currentHotel");
   if (!savedhotel) return null;
 
-  const parsedForm: any = JSON.parse(savedhotel);
-  const { supplier_name } = parsedForm;
+  const parsedHotel: any = JSON.parse(savedhotel);
+  const { supplier_name } = parsedHotel;
   // Get initial values from URL or fallback
 
-  const amenityIcons: Record<string, string> = {
-    pool: "mdi:pool",
-    swimming: "mdi:pool",
-    fitness: "mdi:dumbbell",
-    gym: "mdi:dumbbell",
-    spa: "mdi:spa",
-    restaurant: "mdi:silverware-fork-knife",
-    bar: "mdi:glass-cocktail",
-    wifi: "mdi:wifi",
-    shuttle: "mdi:bus",
-    airport: "mdi:airplane",
-    non: "mdi:smoke-detector-off",
-    smoke: "mdi:smoke-detector-off",
-    coffee: "mdi:coffee",
-    tea: "mdi:coffee",
-    beach: "mdi:beach",
-    breakfast: "mdi:food-croissant",
-    room: "mdi:bed",
-    hair: "mdi:hair-dryer",
-    luxury: "mdi:crown",
-    dinner: "mdi:food-steak",       // 🍽️ dinner/meal icon
-    booking: "mdi:calendar-check",  // 📅 confirmed booking/reservation
-    board: "mdi:clipboard-list",    // 📝 board/notice/list icon
-  };
+
+ const amenityIcons: Record<string, string> = {
+  pool: "mdi:pool",
+  swimming: "mdi:pool",
+  fitness: "mdi:dumbbell",
+  gym: "mdi:dumbbell",
+  spa: "mdi:spa",
+  restaurant: "mdi:silverware-fork-knife",
+  bar: "mdi:glass-cocktail",
+  wifi: "mdi:wifi", // already present
+  tv: "mdi:television-classic", // ✅ added
+  aircondition: "mdi:air-conditioner", // ✅ added (use lowercase + no space)
+  "air conditioning": "mdi:air-conditioner", // optional: handle this variation too
+
+  shuttle: "mdi:bus",
+  airport: "mdi:airplane",
+  non: "mdi:smoke-detector-off",
+  smoke: "mdi:smoke-detector-off",
+  coffee: "mdi:coffee",
+  tea: "mdi:coffee",
+  beach: "mdi:beach",
+  breakfast: "mdi:food-croissant",
+  room: "mdi:bed",
+  hair: "mdi:hair-dryer",
+  luxury: "mdi:crown",
+  dinner: "mdi:food-steak",
+  booking: "mdi:calendar-check",
+  board: "mdi:clipboard-list",
+};
+
 
   const getAmenityIcon = (amenity: string): string => {
     const lower = amenity.toLowerCase();
@@ -202,8 +212,13 @@ const HotelsDetails = () => {
     router.push(newUrl);
   };
 
-  // Update your HotelSuggestionSlider component call to pass the handler:
-  // <HotelSuggestionSlider hotels={featured_hotels} onHotelClick={handleSuggestionClick} />
+
+
+
+
+// Update your HotelSuggestionSlider component call to pass the handler:
+// <HotelSuggestionSlider hotels={featured_hotels} onHotelClick={handleSuggestionClick} />
+
   const getFaqIcon = (question: string) => {
     const lowerQ = question.toLowerCase();
     if (lowerQ.includes("check-in") || lowerQ.includes("check out")) return "mdi:calendar-outline";
@@ -216,7 +231,6 @@ const HotelsDetails = () => {
     return "mdi:check-circle-outline";
   };
 
-  const isDataLoaded = !!hotelDetails;
 
   return (
     <div>
@@ -277,7 +291,7 @@ const HotelsDetails = () => {
               </div>
             </div>
           </div>
-        ) : isDataLoaded ? (
+        ) : hotelDetails ? (
           <div className="grid grid-cols-12">
             {/* Left Column: Only show if desc exists */}
             {hotelDetails?.desc && hotelDetails.desc.trim() !== "" && (
@@ -406,67 +420,61 @@ const HotelsDetails = () => {
               </div>
             )}
 
-            
-            {hotelDetails && (
-              <div className="lg:col-span-4 col-span-12 lg:mt-0 mt-6 pl-8">
-                <h1 className="text-[22px] font-[700]">{dict?.hotelDetails?.aboutThisProperty}</h1>
 
-                {(() => {
-                  let amenitiesArray: string[] = [];
-                  const raw = hotelDetails.amenities;
+            {/* Right Column: Amenities — show if hotelDetails exists (even if amenities are missing) */}
+       {hotelDetails && (
+  <div className="lg:col-span-4 col-span-12 lg:mt-0 mt-6 pl-8">
+    <h1 className="text-[22px] font-[700]">{dict?.hotelDetails?.aboutThisProperty}</h1>
 
-                  if (Array.isArray(raw)) {
-                    amenitiesArray = raw;
-                  } else if (typeof raw === 'string' && raw.trim()) {
-                    amenitiesArray = raw.split(/[,;]\s*/).map(s => s.trim()).filter(Boolean);
-                  }
+    {(() => {
+      const defaultAmenities = ["Free Wi-Fi", "Room Cleaning"];
 
-                  const amenitiesToShow = amenitiesArray.length > 0
-                    ? amenitiesArray.slice(0, 4)
-                    : ["Free Wi-Fi", "Room Cleaning"];
+      // ✅ Filter out empty or whitespace-only strings
+      const validAmenities = Array.isArray(hotelDetails.amenities)
+        ? hotelDetails.amenities.filter((item:any) => item && item.trim() !== '')
+        : [];
 
-                  return (
-                    <div className="grid grid-cols-2 gap-x-3 gap-y-6 mt-4">
-                      {amenitiesToShow.map((amenity, idx) => (
-                        <div key={idx} className="flex gap-3 items-start">
-                          <div className="min-w-10 min-h-10 flex items-center justify-center rounded-lg bg-green-100 flex-shrink-0">
-                            <Icon
-                              icon={getAmenityIcon(amenity)}
-                              className="text-gray-700"
-                              width={20}
-                              height={20}
-                            />
-                          </div>
-                          <p className="text-base font-[500] text-gray-700 break-words pt-2">
-                            {amenity}
-                          </p>
-                        </div>
-                      ))}
-                    </div>
-                  );
-                })()}
+      const amenitiesToShow = validAmenities.length > 0
+        ? validAmenities.slice(0, 4)
+        : defaultAmenities;
 
-                {(() => {
-                  let amenitiesArray: string[] = [];
-                  const raw = hotelDetails.amenities;
-                  if (Array.isArray(raw)) {
-                    amenitiesArray = raw;
-                  } else if (typeof raw === 'string' && raw.trim()) {
-                    amenitiesArray = raw.split(/[,;]\s*/).map(s => s.trim()).filter(Boolean);
-                  }
-                  return amenitiesArray.length > 4 && (
-                    <div className="mt-6 text-center">
-                      <button
-                        onClick={() => setIsModalOpen(true)}
-                        className="text-[#163C8C] text-lg cursor-pointer rounded-full py-1.5 px-4 w-full max-w-xs mx-auto font-medium font-urbanist border border-[#163C8C] hover:bg-[#163C8C] hover:text-white transition-colors"
-                      >
-                        {dict?.hotelDetails?.showMore}
-                      </button>
-                    </div>
-                  );
-                })()}
+      return (
+        <div className="grid grid-cols-2 gap-x-3 gap-y-6 mt-4">
+          {amenitiesToShow.map((amenity: string, idx: number) => (
+            <div key={idx} className="flex gap-3 items-start">
+              <div className="min-w-10 min-h-10 flex items-center justify-center rounded-lg bg-green-100 flex-shrink-0">
+                <Icon
+                  icon={getAmenityIcon(amenity)}
+                  className="text-gray-700"
+                  width={20}
+                  height={20}
+                />
+
               </div>
-            )}
+              <p className="text-base font-[500] text-gray-700 break-words pt-2">
+                {amenity}
+              </p>
+            </div>
+          ))}
+        </div>
+      );
+    })()}
+
+    {/* ✅ Show "Show More" only if real, valid amenities > 4 */}
+    {Array.isArray(hotelDetails.amenities) &&
+      hotelDetails.amenities.filter((item:any) => item && item.trim() !== '').length > 4 && (
+        <div className="mt-6 text-center">
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="text-[#163C8C] text-lg cursor-pointer rounded-full py-1.5 px-4 w-full max-w-xs mx-auto font-medium font-urbanist border border-[#163C8C] hover:bg-[#163C8C] hover:text-white transition-colors"
+          >
+            {dict?.hotelDetails?.showMore}
+          </button>
+        </div>
+      )}
+  </div>
+)}
+
           </div>
         ) : (
           <div className="col-span-full text-center py-12">
@@ -630,6 +638,6 @@ const HotelsDetails = () => {
       )}
     </div>
   );
-};
+}
 
 export default HotelsDetails;

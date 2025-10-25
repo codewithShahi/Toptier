@@ -1,7 +1,7 @@
 // components/RoomCard.tsx
 import { Icon } from "@iconify/react";
 import { addToFavourite } from "@src/actions";
-import { getCurrencySymbol } from "@src/utils/getCurrencySymbals";
+import  getCurrencySymbol  from "@src/utils/getCurrencySymbals";
 import { toast } from "react-toastify";
 import { useUser } from "@hooks/use-user";
 import { useEffect, useState } from "react";
@@ -17,12 +17,10 @@ interface RoomCardProps {
 }
 
 export const RoomCard = ({ room, getAmenityIcon, options, onReserve }: RoomCardProps) => {
-  console.log("Room data 1:", room);
-    const { user } = useUser();
-   const {priceRateConverssion}=useCurrency()
-
+  const { user } = useUser();
+  const {priceRateConverssion}=useCurrency()
   const option = options || {};
-  const price = option.markup_price || room.markup_price || room.actual_price;
+  const price = room.markup_price
   const currency = room.currency || "USD";
   const imageUrl = room.img || "/images/auth_bg.jpg";
 
@@ -107,23 +105,37 @@ export const RoomCard = ({ room, getAmenityIcon, options, onReserve }: RoomCardP
 
           {/* Amenities */}
           <div className="flex flex-col gap-y-2 py-2 text-[#112233E5]">
-            {room.amenities && room.amenities.length > 0 ? (
-              room.amenities.slice(0, 3).map((amenity: string, idx: number) => (
-                <div key={idx} className="flex gap-2 items-center">
-                  <div className="min-w-6 min-h-6 flex items-center justify-center">
-                    <Icon
-                      icon={getAmenityIcon(amenity)}
-                      className="text-gray-700"
-                      width={16}
-                      height={16}
-                    />
-                  </div>
-                  <p className="text-sm font-[500]">{amenity}</p>
-                </div>
-              ))
-            ) : (
-              <p className="text-sm text-gray-500">No amenities listed</p>
-            )}
+        {(() => {
+  const defaultAmenities = ['Free Wi-Fi', 'Air Conditioning', 'TV'];
+
+  // ✅ Filter out invalid (empty/whitespace) amenities safely
+  const validAmenities = Array.isArray(room.amenities)
+    ? room.amenities.filter((item:any) => item && item.trim() !== '')
+    : [];
+
+  const amenitiesToShow = validAmenities.length > 0
+    ? validAmenities.slice(0, 3)
+    : defaultAmenities;
+
+  return amenitiesToShow.length > 0 ? (
+    amenitiesToShow.map((amenity: string, idx: number) => (
+      <div key={idx} className="flex gap-2 items-center">
+        <div className="min-w-6 min-h-6 flex items-center justify-center">
+          <Icon
+            icon={getAmenityIcon(amenity)}
+            className="text-gray-700"
+            width={16}
+            height={16}
+          />
+        </div>
+        <p className="text-sm font-[500]">{amenity}</p>
+      </div>
+    ))
+  ) : (
+    <p className="text-sm text-gray-500">No amenities listed</p>
+  );
+})()}
+
 
             {options.breakfast === "1" && (
               <div className="flex gap-2 items-center">
@@ -163,7 +175,7 @@ export const RoomCard = ({ room, getAmenityIcon, options, onReserve }: RoomCardP
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center">
               <h2 className="text-xl font-[900] text-[#0F172B]">
-                {priceRateConverssion(parseFloat(price))}
+                 {getCurrencySymbol(currency)}{" "}{price}
               </h2>
               <p className="text-[#5B697E] text-sm font-[500] ps-1">/night</p>
             </div>

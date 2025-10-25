@@ -4,6 +4,7 @@ import { setHotels } from "@lib/redux/base";
 import { useDispatch } from "react-redux";
 import {  useQueryClient } from "@tanstack/react-query";
 import { hotel_search_multi } from "@src/actions";
+import { useAppSelector } from "@lib/redux/store";
 
 
 interface HotelData {
@@ -52,6 +53,8 @@ const useHotelFilter = () => {
   });
 const {hotelSearchMutation,form,hotelModuleNames,removeDuplicates,setIsSearching,isSearching,setIsInitialLoading,handleSubmit,callAllModulesAPI,allHotelsData}=useHotelSearch()
     const dispatch = useDispatch();
+      const {country, currency, locale}=useAppSelector((state)=>state.root)
+
 const queryClient = useQueryClient();
   const [selectedStars, setSelectedStars] = useState<number | null>(null);
   const [isFilterLoading, setIsFilterLoading] = useState(false);
@@ -78,7 +81,7 @@ useEffect(() => {
     const amenitiesSet = new Set<string>();
     hotelsData.forEach(hotel => {
       if (hotel.amenities && Array.isArray(hotel.amenities)) {
-        hotel.amenities.forEach(amenity => amenitiesSet.add(amenity));
+        hotel.amenities.forEach((amenity:any) => amenitiesSet.add(amenity));
       }
     });
 
@@ -197,6 +200,9 @@ const updatePriceRange = useCallback(
             price_from: String(newRange[0]),
             price_to: String(newRange[1]),
             rating: "", // keep current rating
+            currency:currency,
+            language:locale,
+             child_age: parsedForm.children_ages || [],
           },
           hotelModuleNames
         );
@@ -252,6 +258,10 @@ const updateRatingFilter = useCallback(
           price_from: String(filters.priceRange[0]),
           price_to: String(filters.priceRange[1]),
           rating: String(rating),
+          currency:currency,
+          language:locale,
+          child_age: parsedForm.children_ages || [],
+
         },
         hotelModuleNames
       );

@@ -4,8 +4,10 @@ import { useAppDispatch, useAppSelector } from "@lib/redux/store";
 import { Icon } from "@iconify/react";
 import { setCurrency } from "@lib/redux/base";
 import useCurrency from "@hooks/useCurrency"; // 👈 Import your custom hook
+import { useRouter } from "next/navigation"; //  import router
+import { setAppData } from "@lib/redux/appData/actions";
 
-// ✅ Map of symbols/logos by currency name
+//  Map of symbols/logos by currency name
 const currencyMap: Record<string, React.ReactNode> = {
   USD: <Icon icon="flag:gb-4x3" width="22" height="22" />,
   EUR: <Icon icon="flag:eu-4x3" width="22" height="22" />,
@@ -17,6 +19,7 @@ export default function CurrencyDropdown() {
   const dispatch = useAppDispatch();
   const { currencies } = useAppSelector((state) => state.appData?.data);
   const { currency } = useCurrency(); // use your hook
+   const router = useRouter();
 
   const [selected, setSelected] = useState<string>(currency || "USD");
   const [open, setOpen] = useState(false);
@@ -68,12 +71,16 @@ export default function CurrencyDropdown() {
           {currencies?.map((c: any) => (
             <button
               key={c.iso}
-              onClick={() => {
-                setSelected(c.name);
-                setOpen(false);
-                dispatch(setCurrency(c.name)); // ✅ update redux
-                localStorage.setItem("currency", c.name); // ✅ persist
-              }}
+              onClick={async () => {
+  setSelected(c.name);
+  setOpen(false);
+  dispatch(setCurrency(c.name));
+  localStorage.setItem("currency", c.name);
+  await dispatch(setAppData());
+  router.replace("/"); // navigate to home
+  router.refresh(); // force a refresh / re-render
+}}
+
               className={`flex items-center cursor-pointer gap-3 px-4 py-3 rounded-md text-sm text-gray-500 dark:text-gray-300 w-full text-left hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors ${
                 selected === c.name ? "bg-gray-100 dark:bg-gray-700" : ""
               }`}

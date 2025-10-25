@@ -51,15 +51,21 @@ interface SessionUser {
   exp?: number;
 }
 
-export const fetchAppData = async () => {
+
+interface appDataPayload {
+  language: string;
+  currency: string;
+}
+export const fetchAppData = async (payload: appDataPayload) => {
+  console.log("fetchAppData payload", payload);
   try {
     // explicitly type userinfo
     const userinfo = (await getSession()) as SessionUser | null;
     const user_id = userinfo?.user?.user_id ?? "";
     const formData = new FormData();
     formData.append("api_key", api_key ?? "");
-    formData.append("language", "en");
-    formData.append("currency", "usd");
+    formData.append("language", payload.language);
+    formData.append("currency", payload.currency);
 
     if (user_id) {
       formData.append("user_id", user_id);
@@ -352,44 +358,7 @@ export const activate_account = async (payload: {
   }
 };
 
-//---------------------------- UPDATE PROFILE ---------------------------
-interface User {
-  address1: string;
-  country_id: number;
-  email: string;
-  first_name: string;
-  last_name: string;
-  phone: string;
-  user_id: string;
-}
-export const update_profile = async (payload: User) => {
-  const formData = new URLSearchParams(
-    Object.entries({
-      ...payload,
-    }).reduce((acc, [key, value]) => {
-      acc[key] = String(value); // ✅ convert all values to string
-      return acc;
-    }, {} as Record<string, string>)
-  );
 
-  try {
-    const response = await fetch(`${baseUrl}/update-profile`, {
-      method: "POST",
-      body: formData.toString(),
-      headers: await getHeaders("application/x-www-form-urlencoded"),
-    });
-    const data = await response.json().catch(() => null);
-
-    if (!response.ok || data?.status === false) {
-      return { error: data?.message || "Something went wrong" };
-    }
-    const user = decodeBearerToken(data.data);
-    await createSession(user);
-    return { success: "Logged in successfully" };
-  } catch (error) {
-    return { error: (error as Error).message || "An error occurred" };
-  }
-};
 
 //====================== CHANGE PASSWORD =========================//
 
@@ -433,6 +402,9 @@ interface HotelSearchPayload {
   price_from: string;
   price_to: string;
   rating: string;
+  language:string;
+  currency:string;
+  child_age?: string[];
   // Remove `modules` from this interface if you're handling it externally
 }
 // This function handles ONE module
@@ -445,15 +417,22 @@ export const hotel_search = async (payload: HotelSearchPayload & { modules: stri
   formData.append("adults", String(payload.adults));
   formData.append("childs", String(payload.children));
   formData.append("nationality", payload.nationality);
-  formData.append("language", "en");
-  formData.append("currency", "usd");
-  formData.append("child_age", "0");
+  formData.append("language", payload.language);
+  formData.append("currency", payload.currency);
   formData.append("module_name", payload.modules); //  single module
   formData.append("pagination", String(payload.page));
   formData.append("price_from", payload.price_from || "");
   formData.append("price_to", payload.price_to || "");
   formData.append("price_low_to_high", "");
   formData.append("rating", payload.rating || "");
+  console.log("hotel search payload", payload);
+  if (payload.child_age && payload.child_age.length > 0) {
+    const formattedAges = payload.child_age.map((age) => ({ ages: age }));
+    formData.append("child_age", JSON.stringify(formattedAges));
+  } else {
+    formData.append("child_age", "[]"); // send empty array if no children
+  }
+
 
   try {
     const response = await fetch(`${baseUrl}/hotel_search`, {
@@ -505,7 +484,6 @@ export const hotel_search_multi = async (
     })
     .filter(Boolean) // remove nulls
     .flat(); // flatten into single array
-  console.log("range filter data ", successful);
   return {
     success: successful,
     total: successful.length,
@@ -519,7 +497,7 @@ interface HotelDetailsPayload {
   rooms: number;
   adults: number;
   childs: number;
-  child_age: string;
+  child_age: string[];
   nationality: string;
   language: string;
   currency: string;
@@ -532,18 +510,22 @@ export const hotel_details = async (payload: HotelDetailsPayload) => {
     //  match exactly with API keys
 
     formData.append("hotel_id", String(payload.hotel_id));
-    formData.append("checkin", payload.checkin);
+      formData.append("checkin", payload.checkin);
     formData.append("checkout", payload.checkout);
     formData.append("rooms", String(payload.rooms));
     formData.append("adults", String(payload.adults));
     formData.append("childs", String(payload.childs));
-    formData.append("child_age", payload.child_age || "0");
     formData.append("nationality", payload.nationality || "PK");
     formData.append("language", payload.language || "en");
     formData.append("currency", payload.currency || "usd");
     formData.append("supplier_name", payload.supplier_name || "");
-console.log('detailss paylaod', formData)
-
+    formData.append("child_age","0" );
+     if (payload.child_age && payload.child_age.length > 0) {
+    const formattedAges = payload.child_age.map((age: string) => ({ ages: age }));
+    formData.append("child_age", JSON.stringify(formattedAges));
+  } else {
+    formData.append("child_age", "[]"); // send empty array if no children
+  }
     const response = await fetch(`${baseUrl}/hotel_details`, {
       method: "POST",
       body: formData,
@@ -553,7 +535,7 @@ console.log('detailss paylaod', formData)
     });
 
     const data = await response.json().catch(() => null);
-    console.log('===============details',JSON.stringify(data))
+
     if (!response.ok || data?.status === false) {
       return { error: data?.message || "Something went wrong" };
     }
@@ -644,6 +626,7 @@ export interface BookingPayload {
   nationality: string;
   payment_gateway?: string;
   user_data: UserData;
+  booking_ref_no: string;
 }
 
 interface SessionUser {
@@ -665,6 +648,7 @@ export const hotel_booking = async (payload: BookingPayload) => {
     const user_id = userinfo?.user?.user_id ?? "";
     const formData = new FormData();
     //  Append normal fields
+    formData.append("booking_ref_no", payload.booking_ref_no || "");
     formData.append("price_original", String(payload.price_original));
     formData.append("price_markup", String(payload.price_markup));
     formData.append("vat", String(payload.vat));
@@ -957,7 +941,6 @@ export const profile_update = async (payload: ProfileUpdatePayload) => {
       formData.append(key, String(value));
     }
   }
-
   try {
     const response = await fetch(`${baseUrl}/profile_update`, {
       method: "POST",
@@ -966,33 +949,11 @@ export const profile_update = async (payload: ProfileUpdatePayload) => {
     });
 
     const data = await response.json().catch(() => null);
-
+    const userData=data.user[0]
     if (!response.ok || data?.status === false) {
       return { error: data?.message || "Failed to update profile" };
     }
-
-    const session = await getSession();
-    if (session?.user) {
-      const newSession = {
-        ...session,
-        user: {
-          ...session.user,
-          user_id: String(payload.user_id),
-          first_name: payload.first_name,
-          last_name: payload.last_name,
-          email: payload.email,
-          phone: payload.phone,
-          phone_country_code: String(payload.phone_country_code),
-          country_code: String(payload.country_code),
-          state: payload.state,
-          city: payload.city,
-          address1: payload.address1,
-          address2: payload.address2,
-        },
-      };
-      await createSession(newSession as any);
-    }
-
+    await createSession(userData as any);
     return { success: true, data };
   } catch (error) {
     return { error: (error as Error).message || "An error occurred while updating profile" };
