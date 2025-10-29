@@ -28,6 +28,7 @@ export function AuthGuard({ children }: AuthGuardProps): React.JSX.Element | nul
         return;
       }
 
+
       setIsChecking(false);
     }
   }, [user, error, isLoading, router]);

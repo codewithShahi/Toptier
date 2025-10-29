@@ -2,25 +2,12 @@
 import { createSession, getSession, logout } from "@lib/session";
 import { baseUrl, api_key } from "./actions";
 import { decodeBearerToken } from "@src/utils/decodeToken";
-import { headers } from "next/headers";
-
+import { cookies, headers } from "next/headers";
+import { userInfo } from "os";
+import { z } from 'zod';
 // console.log("base",baseUrl);
 
-// ============== GET DYNAMIC DOMAIN ===============
-export async function getDomain(): Promise<string> {
-  const h = await headers();
-  const host = h.get("domain") || "booknow.co";
 
-  if (host.includes("localhost")) {
-    return "booknow.co"; // default for local dev
-  }
-
-  const parts = host.split(".");
-  if (parts.length > 2) {
-    return parts.slice(-2).join(".");
-  }
-  return host;
-}
 // ============== COMMON HEADER ================
 export async function getHeaders(contentType: string = "application/x-www-form-urlencoded") {
   // const domain = await getDomain();
@@ -57,7 +44,6 @@ interface appDataPayload {
   currency: string;
 }
 export const fetchAppData = async (payload: appDataPayload) => {
-  console.log("fetchAppData payload", payload);
   try {
     // explicitly type userinfo
     const userinfo = (await getSession()) as SessionUser | null;
@@ -265,46 +251,185 @@ export const sign_up = async (signUpData: {
 };
 
 //---------------------------- LOGIN --------------------------------------//
-export const signIn = async (payload: { email: string; password: string }) => {
+// export const signIn = async (payload: { email: string; password: string }) => {
+//   try {
+//     const formData = new FormData();
+//     formData.append("email", payload.email);
+//     formData.append("password", payload.password);
+//     formData.append("api_key", api_key ?? ""); //  add api_key if needed
+//     const response = await fetch(`${baseUrl}/login`, {
+//       method: "POST",
+//       body: formData,
+//       //  don't set Content-Type, browser sets it for FormData
+//     });
+
+//     const data = await response.json().catch(() => null);
+//     if (!response.ok || data?.status === false) {
+//       return { error: data?.message || "Something went wrong" };
+//     }
+//     const userinfo = data?.data;
+//     // const user = decodeBearerToken(data.data);
+//     await createSession(userinfo);
+//     //   const cookie = await cookies();
+//     //     const token = await cookie.get('access-token')?.value || '';
+//     // const saveed_token=await save_token({user_id:userinfo.user_id, token:token})
+//     // // return { success: "Logged in successfully" };
+//     // console.log("sign in user info", saveed_token);
+//     return data;
+//   } catch (error) {
+//     return { error: (error as Error).message || "An error occurred" };
+//   }
+// };
+
+
+
+const signInSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(1),
+});
+
+export type SignInState =
+  | { success: true }
+  | { success: false; error: string };
+
+export async function signIn(
+  prevState: SignInState,
+  formData: FormData
+): Promise<SignInState> {
   try {
-    const formData = new FormData();
-    formData.append("email", payload.email);
-    formData.append("password", payload.password);
-    formData.append("api_key", api_key ?? ""); //  add api_key if needed
+    const email = formData.get('email') as string;
+    const password = formData.get('password') as string;
+
+    // Validate
+    signInSchema.parse({ email, password });
+
+    // Call your API
+
+
+    const body = new FormData();
+    body.append('email', email);
+    body.append('password', password);
+    if (api_key) body.append('api_key', api_key);
+
     const response = await fetch(`${baseUrl}/login`, {
-      method: "POST",
-      body: formData,
-      //  don't set Content-Type, browser sets it for FormData
+      method: 'POST',
+      body,
     });
 
-    const data = await response.json().catch(() => null);
+    const data = await response.json();
+
     if (!response.ok || data?.status === false) {
-      return { error: data?.message || "Something went wrong" };
+      return { success: false, error: data?.message || 'Invalid credentials' };
     }
-    const userinfo = data?.data;
-    // const user = decodeBearerToken(data.data);
-    await createSession(userinfo);
-
-    return { success: "Logged in successfully" };
+    // ✅ Create session (this runs on server, so cookies() works!)
+    await createSession(data.data);
+    await save_token();
+    return { success: true };
   } catch (error) {
-    return { error: (error as Error).message || "An error occurred" };
+    if (error instanceof z.ZodError) {
+      return { success: false, error: 'Invalid input' };
+    }
+    return { success: false, error: 'An unexpected error occurred' };
   }
-};
-
+}
 export const signOut = async () => {
+   const userinfo = (await getSession()) as any | null;
   try {
-    await logout();
+    //  Ensure user_id is always a string
+    const userId =
+      typeof userinfo === 'object' && userinfo !== null
+        ? (userinfo.user_id || userinfo?.user?.user_id || '')
+        : '';
+
+    const formData = new FormData();
+    formData.append('user_id', String(userId)); //always a string
+    // formData.append('token', String(token));
+    const response = await fetch(`${baseUrl}/logout`, {
+      method: 'POST',
+      body: formData,
+    });
+    const data = await response.json().catch(() => null);
+     await logout();
+    if (!response.ok || data?.status === false) {
+      return { error: data?.message || 'Something went wrong' };
+    }
     return { success: "Logged out successfully" };
   } catch (error) {
-    return { error: (error as Error).message || "An error occurred" };
+    return { error: (error as Error).message || 'An error occurred' };
   }
 };
+
 
 export const getUser = async () => {
   const session = await getSession();
   return session?.user;
 };
+//------------- SAVE TOKEN --------------------//
+export const save_token = async () => {
+   const userinfo = (await getSession()) as any | null;
+  const cookie = await cookies();
+  const token = cookie.get('access-token')?.value || '';
+  try {
+    //  Ensure user_id is always a string
+    const userId =
+      typeof userinfo === 'object' && userinfo !== null
+        ? (userinfo.user_id || userinfo?.user?.user_id || '')
+        : '';
 
+    const formData = new FormData();
+    formData.append('user_id', String(userId)); // ✅ always a string
+    formData.append('token', String(token));
+
+    const response = await fetch(`${baseUrl}/save_token`, {
+      method: 'POST',
+      body: formData,
+    });
+
+    const data = await response.json().catch(() => null);
+    if (!response.ok || data?.status === false) {
+      return { error: data?.message || 'Something went wrong' };
+    }
+    return data;
+  } catch (error) {
+    return { error: (error as Error).message || 'An error occurred' };
+  }
+};
+//------------------------ VERIFY_TOKEN -----------------------------//
+export const verify_token = async () => {
+   const userinfo = (await getSession()) as any | null;
+  const cookie = await cookies();
+  const token = cookie.get('access-token')?.value || '';
+  try {
+    //  Ensure user_id is always a string
+    const userId =
+      typeof userinfo === 'object' && userinfo !== null
+        ? (userinfo.user_id || userinfo?.user?.user_id || '')
+        : '';
+
+    const formData = new FormData();
+    formData.append('user_id', String(userId)); // ✅ always a string
+    formData.append('token', String(token));
+
+    const response = await fetch(`${baseUrl}/verify_token`, {
+      method: 'POST',
+      body: formData,
+    });
+
+    const data = await response.json().catch(() => null);
+    if (!response.ok || data?.status === false) {
+      return { error: data?.message || 'Something went wrong' };
+    }
+
+    return data;
+  } catch (error) {
+    return { error: (error as Error).message || 'An error occurred' };
+  }
+};
+export const getAccessToken = async () => {
+  const cookie = await cookies();
+  const token = cookie.get('access-token')?.value || '';
+  return token;
+};
 //------------------------ FORGET PASSWORD -----------------------------//
 export const forget_password = async (payload: {
   email: string;
@@ -425,7 +550,6 @@ export const hotel_search = async (payload: HotelSearchPayload & { modules: stri
   formData.append("price_to", payload.price_to || "");
   formData.append("price_low_to_high", "");
   formData.append("rating", payload.rating || "");
-  console.log("hotel search payload", payload);
   if (payload.child_age && payload.child_age.length > 0) {
     const formattedAges = payload.child_age.map((age) => ({ ages: age }));
     formData.append("child_age", JSON.stringify(formattedAges));
@@ -508,9 +632,8 @@ export const hotel_details = async (payload: HotelDetailsPayload) => {
   try {
     const formData = new FormData();
     //  match exactly with API keys
-
     formData.append("hotel_id", String(payload.hotel_id));
-      formData.append("checkin", payload.checkin);
+    formData.append("checkin", payload.checkin);
     formData.append("checkout", payload.checkout);
     formData.append("rooms", String(payload.rooms));
     formData.append("adults", String(payload.adults));
@@ -520,7 +643,7 @@ export const hotel_details = async (payload: HotelDetailsPayload) => {
     formData.append("currency", payload.currency || "usd");
     formData.append("supplier_name", payload.supplier_name || "");
     formData.append("child_age","0" );
-     if (payload.child_age && payload.child_age.length > 0) {
+     if(payload.child_age && payload.child_age.length > 0) {
     const formattedAges = payload.child_age.map((age: string) => ({ ages: age }));
     formData.append("child_age", JSON.stringify(formattedAges));
   } else {
@@ -683,6 +806,7 @@ export const hotel_booking = async (payload: BookingPayload) => {
     formData.append("payment_gateway", payload.payment_gateway ?? "");
     formData.append("user_id", user_id ?? "");
 
+
     // Append JSON fields (must stringify)
     formData.append("room_data", JSON.stringify(payload.room_data));
     formData.append("booking_data", JSON.stringify(payload.booking_data));
@@ -692,10 +816,7 @@ export const hotel_booking = async (payload: BookingPayload) => {
       method: "POST",
       body: formData,
     });
-
     const data = await response.json().catch(() => null);
-    // console.log("hotel_booking_result", data);
-
     if (!response.ok || data?.status === false) {
       return { error: data?.message || "Something went wrong" };
     }
@@ -720,7 +841,6 @@ export const hotel_invoice = async (payload: string) => {
     });
 
     const data = await response.json().catch(() => null);
-    // console.log("hotel_details_result", data);
 
     if (!response.ok || data?.status === false) {
       return { error: data?.message || "Something went wrong" };
@@ -740,7 +860,6 @@ interface payment1_payload {
 export const prapare_payment = async (payload: payment1_payload) => {
   try {
     const formData = new FormData();
-
     //  match exactly with API keys
     formData.append("booking_ref_no", payload.booking_ref_no);
     formData.append('invoice_url', payload.invoice_url)
@@ -752,7 +871,6 @@ export const prapare_payment = async (payload: payment1_payload) => {
     });
 
     const data = await response.json().catch(() => null);
-    // console.log("hotel_details_result", data);
 
     if (!response.ok || data?.status === false) {
       return { error: data?.message || "Something went wrong" };
@@ -783,7 +901,6 @@ export const processed_payment = async (payload: processedPay_payload) => {
     });
 
     const data = await response.json().catch(() => null);
-    // console.log("hotel_details_result", data);
 
     if (!response.ok || data?.status === false) {
       return { error: data?.message || "Something went wrong" };
@@ -807,7 +924,7 @@ export const cancel_payment = async (booking_ref_no:string) => {
     });
 
     const data = await response.json().catch(() => null);
-    // console.log("hotel_details_result", data);
+     
 
     if (!response.ok || data?.status === false) {
       return { error: data?.message || "Something went wrong" };
@@ -888,13 +1005,14 @@ export const fetch_dashboard_data = async (payload: dashboardPayload) => {
   try {
      const userinfo = (await getSession()) as SessionUser | null;
     const user_id = userinfo?.user?.user_id ?? "";
+   
     const formData = new FormData();
-    console.log("=============",user_id)
+    
     // match exactly with API keys
     formData.append("api_key", api_key ?? "");
     formData.append("user_id",user_id );
     formData.append("page", payload.page);
-    formData.append("limit","6");
+    formData.append("limit",payload.limit);
     formData.append("search", payload.search ?? "");
     formData.append("payment_status", payload.payment_status ?? "");
     formData.append("type", "customer");
@@ -906,7 +1024,7 @@ export const fetch_dashboard_data = async (payload: dashboardPayload) => {
       },
     });
     const data = await response.json().catch(() => null);
-console.log("===================",data)
+   
     if (!response.ok || data?.status === false) {
       return { error: data?.message || "Something went wrong" };
     }
