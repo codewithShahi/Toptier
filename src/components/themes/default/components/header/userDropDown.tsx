@@ -9,6 +9,7 @@ import { useUser } from "@hooks/use-user";
 import { Icon } from "@iconify/react";
 import useLocale from "@hooks/useLocale";
 import useDictionary from "@hooks/useDict";
+import { toast } from "react-toastify";
 
 export default function ProfileDropdown() {
   const [open, setOpen] = useState(false);
@@ -35,8 +36,10 @@ export default function ProfileDropdown() {
       setIsRTL(
         d.toLowerCase() === "rtl" || lang.toLowerCase().startsWith("ar")
       );
-    } catch {}
-  },[]);
+    } catch {
+      setIsRTL(false);
+    }
+  }, []);
 
   // close when clicking outside
   useEffect(() => {
@@ -55,7 +58,8 @@ export default function ProfileDropdown() {
   const handleLogout = async () => {
     await signOut();
     await checkSession?.();
-    router.refresh();
+    toast.success("Logged out successfully");
+    router.push("/auth/login");
   };
 
   const defaultImage =
